@@ -1,6 +1,6 @@
+import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/page_link.dart';
-import './Home.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:adobe_xd/specific_rect_clip.dart';
 
