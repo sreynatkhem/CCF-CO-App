@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/screens/home/Listdrawer.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -5,11 +6,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:adobe_xd/specific_rect_clip.dart';
 import 'package:adobe_xd/page_link.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
-class Home extends StatelessWidget {
+import 'Menu.dart';
+
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
   Home({
     Key key,
   }) : super(key: key);
+}
+
+class _HomeState extends State<Home> {
+  int _currentIndex = 0;
+  PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   _drawerList(context) {
     final String id = '0401';
@@ -87,15 +110,33 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Header(
       drawer: new Drawer(
         child: _drawerList(context),
       ),
-      appBar: new AppBar(
-        title: new Text("CHOK CHEY"),
-        backgroundColor: blueColor,
+      headerText: 'Chok Chey',
+      body: SizedBox.expand(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => _currentIndex = index);
+          },
+          children: <Widget>[
+            Container(
+              child: Menu(),
+            ),
+            Container(
+              color: Colors.red,
+            ),
+            Container(
+              color: Colors.green,
+            ),
+            Container(
+              color: Colors.blue,
+            ),
+          ],
+        ),
       ),
-      body: new Text("Drawer Body"),
       // body: Stack(
       //   children: <Widget>[
       //     Transform.translate(
@@ -400,6 +441,35 @@ class Home extends StatelessWidget {
       //     ),
       //   ],
       // ),
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: _currentIndex,
+        onItemSelected: (index) {
+          setState(() => _currentIndex = index);
+          _pageController.jumpToPage(index);
+        },
+        items: <BottomNavyBarItem>[
+          BottomNavyBarItem(
+              title: Text('Home'),
+              icon: Icon(Icons.home),
+              textAlign: TextAlign.center,
+              activeColor: blueColor),
+          BottomNavyBarItem(
+              title: Text('Category'),
+              icon: Icon(Icons.apps),
+              textAlign: TextAlign.center,
+              activeColor: blueColor),
+          BottomNavyBarItem(
+              title: Text('Search'),
+              icon: Icon(Icons.search),
+              textAlign: TextAlign.center,
+              activeColor: blueColor),
+          BottomNavyBarItem(
+              title: Text('Setting'),
+              icon: Icon(Icons.settings),
+              textAlign: TextAlign.center,
+              activeColor: blueColor),
+        ],
+      ),
     );
   }
 }
