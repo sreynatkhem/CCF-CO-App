@@ -1,4 +1,5 @@
-import 'package:chokchey_finance/Login.dart';
+import 'package:chokchey_finance/route/route.dart';
+import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,14 +7,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  // @override
+  // Widget build(BuildContext context) {
+  //   return new MaterialApp(initialRoute: '/login', routes: routes);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -29,7 +31,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  // Widget build(BuildContext context) {
+  //   return Login();
+  // }
   Widget build(BuildContext context) {
-    return Login();
+    return WillPopScope(
+      child: Scaffold(
+        body: Container(child: Login()),
+      ),
+      onWillPop: () async => false,
+    );
   }
 }
