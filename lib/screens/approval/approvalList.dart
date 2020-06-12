@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:chokchey_finance/components/cardListApproval.dart';
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ApprovalLists extends StatefulWidget {
   @override
@@ -18,13 +20,14 @@ class _ApprovalListsState extends State<ApprovalLists>
   TextEditingController _searchQuery;
   bool _isSearching = false;
   String searchQuery = "Search query";
-  Future<Album> futureAlbum;
+
+  // borderRadius
 
   @override
   void initState() {
     super.initState();
     _searchQuery = new TextEditingController();
-    futureAlbum = ApprovalListApi().fetchQuote();
+    // futureAlbum = fetchAlbum();
   }
 
   void _startSearch() {
@@ -86,7 +89,7 @@ class _ApprovalListsState extends State<ApprovalLists>
             color: Colors.white30,
             fontFamily: 'Segoe UI',
             fontSize: fontSizeSm,
-            fontWeight: fontWeight),
+            fontWeight: fontWeight700),
       ),
       style: const TextStyle(color: Colors.white, fontSize: 16.0),
       onChanged: updateSearchQuery,
@@ -124,8 +127,11 @@ class _ApprovalListsState extends State<ApprovalLists>
     ];
   }
 
-  final image = '';
-  List<String> litems = ["1", "2", "3", "4", "5"];
+  var isLoading = false;
+  onApprove(value) {
+    return print('object');
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -136,61 +142,15 @@ class _ApprovalListsState extends State<ApprovalLists>
         actions: _buildActions(),
         backgroundColor: blueColor,
       ),
-      // body: Container(
-      //   padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-      //   height: 220,
-      //   width: double.maxFinite,
-      //   child: Card(
-      //     elevation: 5,
-      //   ),
-      // ),
-      body: Container(
-          child: FutureBuilder<Album>(
-        future: futureAlbum,
+      body: FutureBuilder<List<Approval>>(
+        future: fetchApprovals(http.Client()),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            print(snapshot);
-            // return Text(snapshot.data.id);
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-
-          // By default, show a loading spinner.
-          return CircularProgressIndicator();
+          if (snapshot.hasError) print(snapshot.error);
+          return snapshot.hasData
+              ? ApprovalListCard(approvalList: snapshot.data)
+              : Center(child: CircularProgressIndicator());
         },
-      )
-          //   padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-          //   child: new ListView.builder(
-          //       itemCount: futureAlbum,
-          //       itemBuilder: (BuildContext ctxt, int index) {
-          //         return new Card(
-          //           child: Row(
-          //             children: <Widget>[
-          //               Container(
-          //                 width: 70.0,
-          //                 height: 70.0,
-          //                 decoration: BoxDecoration(
-          //                   borderRadius:
-          //                       BorderRadius.all(Radius.elliptical(45.5, 46.0)),
-          //                   image: DecorationImage(
-          //                     image: AssetImage('assets/images/profile.jpg'),
-          //                     fit: BoxFit.cover,
-          //                   ),
-          //                   boxShadow: [
-          //                     BoxShadow(
-          //                       color: const Color(0x29000000),
-          //                       offset: Offset(0, 3),
-          //                       blurRadius: 6,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //               Text(litems[index])
-          //             ],
-          //           ),
-          //         );
-          //       }),
-          ),
+      ),
     );
   }
 }

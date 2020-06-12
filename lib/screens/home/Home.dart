@@ -111,11 +111,11 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Header(
-      drawer: new Drawer(
+      drawers: new Drawer(
         child: _drawerList(context),
       ),
-      headerText: 'Chok Chey',
-      body: SizedBox.expand(
+      headerTexts: 'Chok Chey',
+      bodys: SizedBox.expand(
         child: PageView(
           controller: _pageController,
           onPageChanged: (index) {
@@ -441,7 +441,7 @@ class _HomeState extends State<Home> {
       //     ),
       //   ],
       // ),
-      bottomNavigationBar: BottomNavyBar(
+      bottomNavigationBars: BottomNavyBar(
         selectedIndex: _currentIndex,
         onItemSelected: (index) {
           setState(() => _currentIndex = index);
