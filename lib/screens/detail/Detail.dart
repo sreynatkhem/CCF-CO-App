@@ -1,369 +1,300 @@
-import 'package:chokchey_finance/screens/home/Home.dart';
+import 'dart:io';
+import 'package:chokchey_finance/components/button.dart';
+import 'package:chokchey_finance/components/buttonPlus.dart';
+import 'package:chokchey_finance/components/cardListApproval.dart';
+import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/modals/index.dart';
+import 'package:chokchey_finance/services/approvalList.dart';
+import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
-import 'package:adobe_xd/page_link.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:adobe_xd/specific_rect_clip.dart';
+import 'package:http/http.dart' as http;
 
-class Detail extends StatelessWidget {
-  Detail({
-    Key key,
-  }) : super(key: key);
+class Detail extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      body: Stack(
-        children: <Widget>[
-          Transform.translate(
-            offset: Offset(321.0, 105.0),
-            child: Text(
-              '1',
-              style: TextStyle(
-                fontFamily: 'Segoe UI',
-                fontSize: 18,
-                color: const Color(0xffffffff),
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.left,
+  _DetailState createState() => new _DetailState();
+}
+
+class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      new GlobalKey<ScaffoldState>();
+
+  TextEditingController _searchQuery;
+  bool _isSearching = false;
+  String searchQuery = "Search query";
+  double _widtdButton = 120.0;
+  double _heightButton = 45.0;
+  double _borderRadius = 12.0;
+
+  // borderRadius
+
+  @override
+  void initState() {
+    _controller = new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 180),
+    );
+
+    _animation = new CurvedAnimation(
+      parent: _controller,
+      curve: new Interval(0.0, 1.0, curve: Curves.linear),
+    );
+
+    _animation2 = new CurvedAnimation(
+      parent: _controller,
+      curve: new Interval(0.5, 1.0, curve: Curves.linear),
+    );
+
+    _animation3 = new CurvedAnimation(
+      parent: _controller,
+      curve: new Interval(0.8, 1.0, curve: Curves.linear),
+    );
+    _controller.reverse();
+    super.initState();
+    _searchQuery = new TextEditingController();
+    // futureAlbum = fetchAlbum();
+  }
+
+  void _startSearch() {
+    print("open search box");
+    ModalRoute.of(context)
+        .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  void _clearSearchQuery() {
+    print("close search box");
+    setState(() {
+      _searchQuery.clear();
+      updateSearchQuery("Search query");
+    });
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    var horizontalTitleAlignment =
+        Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
+
+    return new InkWell(
+      onTap: () => scaffoldKey.currentState.openDrawer(),
+      child: new Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: horizontalTitleAlignment,
+          children: <Widget>[
+            Text(
+              'Approval Lists',
+              style: mainTitleStyle,
             ),
-          ),
-          Transform.translate(
-            offset: Offset(226.0, 98.0),
-            child: Container(
-              width: 124.0,
-              height: 35.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: const Color(0xff0abab5),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(43.0, 98.0),
-            child: Container(
-              width: 124.0,
-              height: 35.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: const Color(0xffc34d7c),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(79.0, 100.0),
-            child: Text(
-              'Reject',
-              style: TextStyle(
-                fontFamily: 'Segoe UI',
-                fontSize: 20,
-                color: const Color(0xffffffff),
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(251.0, 97.5),
-            child: Text(
-              'Approve',
-              style: TextStyle(
-                fontFamily: 'Segoe UI',
-                fontSize: 20,
-                color: const Color(0xffffffff),
-                height: 1.35,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Stack(
-            children: <Widget>[
-              Container(
-                width: 375.0,
-                height: 77.0,
-                decoration: BoxDecoration(
-                  color: const Color(0xff0abab5),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset(160.0, 25.81),
-                child: Text(
-                  'Detail',
-                  style: TextStyle(
-                    fontFamily: 'Segoe UI',
-                    fontSize: 20,
-                    color: const Color(0xffffffff),
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Transform.translate(
-                offset: Offset(12.0, 25.18),
-                child: PageLink(
-                  links: [
-                    PageLinkInfo(
-                      transition: LinkTransition.Fade,
-                      ease: Curves.easeOut,
-                      duration: 0.3,
-                      pageBuilder: () => Home(),
-                    ),
-                  ],
-                  child: Container(
-                    width: 47.0,
-                    height: 30.0,
-                    decoration: BoxDecoration(
-                      color: const Color(0xff0abab5),
-                    ),
-                  ),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset(29.0, 32.55),
-                child:
-                    // Adobe XD layer: 'ic_keyboard_arrow_l…' (shape)
-                    SvgPicture.string(
-                  _svg_wy2231,
-                  allowDrawingOutsideViewBox: true,
-                ),
-              ),
-            ],
-          ),
-          Transform.translate(
-            offset: Offset(24.0, 171.0),
-            child: Text(
-              'Loan New Approval Information',
-              style: TextStyle(
-                fontFamily: 'Segoe UI',
-                fontSize: 15,
-                color: const Color(0xff313030),
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(23.5, 213.0),
-            child: SpecificRectClip(
-              rect: Rect.fromLTWH(0, 0, 327.5, 512),
-              child: UnconstrainedBox(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  width: 328,
-                  height: 620,
-                  child: GridView.count(
-                    primary: false,
-                    padding: EdgeInsets.all(0),
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    crossAxisCount: 1,
-                    childAspectRatio: 2.3429,
-                    children: [
-                      {},
-                      {},
-                      {},
-                      {},
-                    ].map((map) {
-                      return Transform.translate(
-                        offset: Offset(-23.5, -218.0),
-                        child: Stack(
-                          children: <Widget>[
-                            Transform.translate(
-                              offset: Offset(23.5, 275.5),
-                              child: SvgPicture.string(
-                                _svg_theuwc,
-                                allowDrawingOutsideViewBox: true,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(24.0, 218.0),
-                              child:
-                                  // Adobe XD layer: '1617972-200' (shape)
-                                  Container(
-                                width: 46.0,
-                                height: 46.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.elliptical(23.0, 23.0)),
-                                  image: DecorationImage(
-                                    image: const AssetImage(
-                                        'assets/images/requested.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: const Color(0xff707070)),
-                                ),
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(23.5, 357.5),
-                              child: SvgPicture.string(
-                                _svg_26s21g,
-                                allowDrawingOutsideViewBox: true,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(24.0, 300.0),
-                              child:
-                                  // Adobe XD layer: '1617972-200' (shape)
-                                  Container(
-                                width: 46.0,
-                                height: 46.0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.elliptical(23.0, 23.0)),
-                                  image: DecorationImage(
-                                    image: const AssetImage(
-                                        'assets/images/approval.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: const Color(0xff707070)),
-                                ),
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(91.0, 218.0),
-                              child: Text(
-                                'Skyeang Sren',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 15,
-                                  color: const Color(0xff313030),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(91.0, 296.0),
-                              child: Text(
-                                'Skyeang Sren',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 15,
-                                  color: const Color(0xff313030),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(91.0, 240.0),
-                              child: Text(
-                                '102240 / 0120',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 11,
-                                  color: const Color(0xff888383),
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(91.0, 318.0),
-                              child: Text(
-                                '102240 / 0120',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 11,
-                                  color: const Color(0xff888383),
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(91.0, 255.0),
-                              child: Text(
-                                '18-05-2020',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 11,
-                                  color: const Color(0xff888383),
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(91.0, 333.0),
-                              child: Text(
-                                '18-05-2020',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 11,
-                                  color: const Color(0xff888383),
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(286.0, 300.0),
-                              child: Text(
-                                '19-05-2020',
-                                style: TextStyle(
-                                  fontFamily: 'Segoe UI',
-                                  fontSize: 12,
-                                  color: const Color(0xff313030),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(-6.0, 1.0),
-            child: Stack(
-              children: <Widget>[
-                Transform.translate(
-                  offset: Offset(304.0, 599.0),
-                  child: Container(
-                    width: 59.0,
-                    height: 58.0,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.all(Radius.elliptical(29.5, 29.0)),
-                      color: const Color(0xff0abab5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x29000000),
-                          offset: Offset(0, 3),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Transform.translate(
-                  offset: Offset(327.0, 621.0),
-                  child:
-                      // Adobe XD layer: 'ic_add_24px' (shape)
-                      SvgPicture.string(
-                    _svg_ixa5t5,
-                    allowDrawingOutsideViewBox: true,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-}
 
-const String _svg_wy2231 =
-    '<svg viewBox="29.0 32.6 9.8 16.1" ><path transform="translate(21.0, 27.05)" d="M 17.83779907226563 19.73672294616699 L 11.75721549987793 13.56613159179688 L 17.83779907226563 7.395540237426758 L 15.96582794189453 5.499999046325684 L 7.999999046325684 13.56613159179688 L 15.96582794189453 21.63226318359375 L 17.83779907226563 19.73672294616699 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_theuwc =
-    '<svg viewBox="23.5 275.5 327.0 1.0" ><path transform="translate(23.5, 275.5)" d="M 0 0 L 327 0" fill="none" fill-opacity="0.2" stroke="#888383" stroke-width="1" stroke-opacity="0.2" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_26s21g =
-    '<svg viewBox="23.5 357.5 327.0 1.0" ><path transform="translate(23.5, 357.5)" d="M 0 0 L 327 0" fill="none" fill-opacity="0.2" stroke="#888383" stroke-width="1" stroke-opacity="0.2" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
-const String _svg_ixa5t5 =
-    '<svg viewBox="327.0 621.0 14.0 14.0" ><path transform="translate(322.0, 616.0)" d="M 19 13 L 13 13 L 13 19 L 11 19 L 11 13 L 5 13 L 5 11 L 11 11 L 11 5 L 13 5 L 13 11 L 19 11 L 19 13 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';
+  Widget _buildSearchField() {
+    return new TextField(
+      controller: _searchQuery,
+      autofocus: true,
+      decoration: const InputDecoration(
+        hintText: 'Search...',
+        border: InputBorder.none,
+        hintStyle: const TextStyle(
+            color: Colors.white30,
+            fontFamily: 'Segoe UI',
+            fontSize: fontSizeSm,
+            fontWeight: fontWeight700),
+      ),
+      style: const TextStyle(color: Colors.white, fontSize: 16.0),
+      onChanged: updateSearchQuery,
+    );
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+    print("search query " + newQuery);
+  }
+
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        new IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+
+    return <Widget>[
+      new IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  var isLoading = false;
+  onApprove(value) {
+    return print('object');
+  }
+
+  int _angle = 90;
+  bool _isRotated = true;
+
+  AnimationController _controller;
+  Animation<double> _animation;
+  Animation<double> _animation2;
+  Animation<double> _animation3;
+  void _rotate() {
+    setState(() {
+      if (_isRotated) {
+        _angle = 45;
+        _isRotated = false;
+        _controller.forward();
+      } else {
+        _angle = 90;
+        _isRotated = true;
+        _controller.reverse();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Header(
+        headerTexts: 'Detail',
+        bodys: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 0,
+                child: Container(
+                    padding: EdgeInsets.only(top: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Button(
+                            widtdButton: _widtdButton,
+                            heightButton: _heightButton,
+                            borderRadius: _borderRadius,
+                            onPressed: () {},
+                            color: blueColor,
+                            text: 'Authrize'),
+                        Padding(padding: EdgeInsets.only(right: 5)),
+                        Button(
+                            widtdButton: _widtdButton,
+                            heightButton: _heightButton,
+                            borderRadius: _borderRadius,
+                            onPressed: () {},
+                            color: Colors.green,
+                            text: 'Return'),
+                        Padding(padding: EdgeInsets.only(right: 5)),
+                        Button(
+                            widtdButton: _widtdButton,
+                            heightButton: _heightButton,
+                            borderRadius: _borderRadius,
+                            onPressed: () {},
+                            color: Colors.red,
+                            text: 'Reject'),
+                        Padding(padding: EdgeInsets.only(right: 5)),
+                      ],
+                    )),
+              ),
+              Expanded(
+                flex: 1,
+                child: FutureBuilder<List<Approval>>(
+                  future: fetchApprovals(http.Client()),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) print(snapshot.error);
+                    return snapshot.hasData
+                        ? ApprovalListCard(approvalList: snapshot.data)
+                        : Center(child: CircularProgressIndicator());
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+        floatingActionButtons: new Stack(children: <Widget>[
+          ButtonPlus(
+            bottom: 200.0,
+            right: 24.0,
+            animation3: _animation3,
+            color: new Color(0xFF9E9E9E),
+            text: 'GG1',
+            onTap: () {
+              if (_angle == 45.0) {
+                print("GG1");
+              }
+            },
+          ),
+          ButtonPlus(
+            bottom: 144.0,
+            right: 24.0,
+            animation3: _animation3,
+            color: new Color(0xFF00BFA5),
+            text: 'GG2',
+            onTap: () {
+              if (_angle == 45.0) {
+                print("GG2");
+              }
+            },
+          ),
+          ButtonPlus(
+            bottom: 88.0,
+            right: 24.0,
+            animation3: _animation3,
+            color: new Color(0xFFE57373),
+            text: 'GG3',
+            onTap: () {
+              if (_angle == 45.0) {
+                print("GG3");
+              }
+            },
+          ),
+          new Positioned(
+            bottom: 16.0,
+            right: 16.0,
+            child: new Material(
+                color: new Color(0xFFE57373),
+                type: MaterialType.circle,
+                elevation: 6.0,
+                child: new GestureDetector(
+                  child: new Container(
+                      width: 56.0,
+                      height: 56.00,
+                      child: new InkWell(
+                        onTap: _rotate,
+                        child: new Center(
+                            child: new RotationTransition(
+                          turns: new AlwaysStoppedAnimation(_angle / 360),
+                          child: new Icon(
+                            Icons.add,
+                            color: new Color(0xFFFFFFFF),
+                          ),
+                        )),
+                      )),
+                )),
+          ),
+        ]));
+  }
+}
