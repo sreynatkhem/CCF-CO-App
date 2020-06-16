@@ -1,21 +1,24 @@
+import 'dart:convert';
+
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/detail/Detail.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
-class ApprovalListCard extends StatelessWidget {
-  final List<Approval> approvalList;
+class DetailApprovalListCard extends StatelessWidget {
+  final List<DetailApproval> approvalListDetail;
   final images = const AssetImage('assets/images/request.png');
-  ApprovalListCard({Key key, this.approvalList}) : super(key: key);
+  DetailApprovalListCard({Key key, this.approvalListDetail}) : super(key: key);
 
   onClickCard(value, context) {
+    print('value: ${value.title}');
     Navigator.push(context, MaterialPageRoute(builder: (context) => Detail()));
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: approvalList.length,
+        itemCount: approvalListDetail.length,
         padding: const EdgeInsets.only(top: 20.0),
         itemBuilder: (context, index) {
           return Container(
@@ -29,7 +32,7 @@ class ApprovalListCard extends StatelessWidget {
                 child: InkWell(
                     splashColor: Colors.blue.withAlpha(30),
                     onTap: () {
-                      onClickCard(approvalList[index], context);
+                      onClickCard(approvalListDetail[index], context);
                     },
                     child:
                         Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
@@ -44,7 +47,7 @@ class ApprovalListCard extends StatelessWidget {
                         children: <Widget>[
                           Container(
                               child: Text(
-                            '[Loan] Application - Approval',
+                            'helo',
                             style: mainTitleBlack,
                           )),
                           Padding(padding: EdgeInsets.only(bottom: 2)),

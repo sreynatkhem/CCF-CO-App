@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/components/buttonPlus.dart';
 import 'package:chokchey_finance/components/cardListApproval.dart';
+import 'package:chokchey_finance/components/detailApproval.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
+import 'package:chokchey_finance/services/detialJson.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -221,12 +223,13 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
               ),
               Expanded(
                 flex: 1,
-                child: FutureBuilder<List<Approval>>(
-                  future: fetchApprovals(http.Client()),
+                child: FutureBuilder<List<DetailApproval>>(
+                  future: fetchDetail(http.Client()),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) print(snapshot.error);
                     return snapshot.hasData
-                        ? ApprovalListCard(approvalList: snapshot.data)
+                        ? DetailApprovalListCard(
+                            approvalListDetail: snapshot.data)
                         : Center(child: CircularProgressIndicator());
                   },
                 ),
