@@ -1,10 +1,16 @@
+import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
+import 'package:chokchey_finance/services/login.dart';
+import 'package:chokchey_finance/services/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 class Login extends StatefulWidget {
   final ImageProvider chokchey;
@@ -20,13 +26,12 @@ class _LoginState extends State<Login> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final chokchey = const AssetImage('assets/images/chokchey.png');
+  bool _isLogin = false;
+
   @override
   void initState() {
     super.initState();
     getStore();
-    // _getThingsOnStartup().then((value){
-    //   print('Async done');
-    // });
   }
 
   getStore() async {
@@ -39,18 +44,44 @@ class _LoginState extends State<Login> {
     });
   }
 
-// Create storage
-  onClickLogin(context) async {
+// Create storage Login
+  Future<void> onClickLogin(context) async {
+    setState(() {
+      _isLogin = true;
+    });
     final String valueEmail = email.text;
     final String valuePassword = password.text;
-
-    if (valueEmail == 'Ramon' && valuePassword == '123') {
-      await storage.write(key: "email", value: "Ramon");
-      await storage.write(key: "password", value: "123");
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-          ModalRoute.withName("/login"));
+    await storage.write(key: "email", value: valueEmail);
+    await storage.write(key: "password", value: valuePassword);
+    var client = http.Client();
+    try {
+      var response = await client.get(fireBaseUrl);
+      var user = jsonDecode(response.body);
+      user.forEach(([key, value]) async => {
+            if (key['user_id'] == valueEmail)
+              {
+                setState(() {
+                  _isLogin = false;
+                }),
+                await storage.write(key: "user_name", value: key['user_name']),
+                await storage.write(key: "user_id", value: key['user_id']),
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                    ModalRoute.withName("/login"))
+              }
+            else
+              {
+                setState(() {
+                  _isLogin = false;
+                }),
+              }
+          });
+    } catch (error) {
+      client.close();
+      setState(() {
+        _isLogin = false;
+      });
     }
   }
 
@@ -63,9 +94,8 @@ class _LoginState extends State<Login> {
           child: Column(
             children: <Widget>[
               Container(
-                width: 172.0,
-                height: 172.0,
-                margin: EdgeInsets.only(top: 20),
+                width: 300.0,
+                height: 250.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(42.0),
                   image: DecorationImage(
@@ -76,13 +106,24 @@ class _LoginState extends State<Login> {
               ),
               Text(
                 'Welcome',
-                style: mainTextStyle,
-                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: fontFamily,
+                  fontSize: fontSizeLg,
+                  color: blueColor,
+                  fontWeight: fontWeight700,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 5),
               ),
               Text(
                 ' CHOK CHEY Finance',
-                style: mainTextStyle,
-                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: fontFamily,
+                  fontSize: fontSizeLg,
+                  color: blueColor,
+                  fontWeight: fontWeight700,
+                ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 20),
@@ -91,7 +132,7 @@ class _LoginState extends State<Login> {
                     autofocus: true,
                     controller: email,
                     decoration: InputDecoration(
-                        labelText: 'Email or Username',
+                        labelText: 'User ID',
                         hintText: email.text,
                         labelStyle: TextStyle(fontSize: 15))),
               ),

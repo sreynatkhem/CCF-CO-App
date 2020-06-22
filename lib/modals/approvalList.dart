@@ -1,15 +1,39 @@
 class Approval {
-  final int id;
-  final String title;
-  final String thumbnailUrl;
+  final String standardCodeDomainName2;
+  final String authorizationRequestBranchCode;
+  final String standardCodeDomainName1;
+  final String authorizationRequestEmpNo;
+  final String authorizationRequestDate;
+  final String authorizationRequestTime;
+  final String branchName;
+  final String authorizationRequestEmpName;
+  final String loanApprovalApplicationNo;
 
-  Approval({this.id, this.title, this.thumbnailUrl});
+  Approval({
+    this.standardCodeDomainName2,
+    this.authorizationRequestBranchCode,
+    this.standardCodeDomainName1,
+    this.authorizationRequestEmpNo,
+    this.authorizationRequestDate,
+    this.authorizationRequestTime,
+    this.branchName,
+    this.authorizationRequestEmpName,
+    this.loanApprovalApplicationNo,
+  });
 
   factory Approval.fromJson(Map<String, dynamic> json) {
     return Approval(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      thumbnailUrl: json['thumbnailUrl'] as String,
+      standardCodeDomainName2: json['standardCodeDomainName2'] as String,
+      authorizationRequestBranchCode:
+          json['authorizationRequestBranchCode'] as String,
+      standardCodeDomainName1: json['standardCodeDomainName1'] as String,
+      authorizationRequestEmpNo: json['authorizationRequestEmpNo'] as String,
+      authorizationRequestDate: json['authorizationRequestDate'] as String,
+      authorizationRequestTime: json['authorizationRequestTime'] as String,
+      branchName: json['branchName'] as String,
+      authorizationRequestEmpName:
+          json['authorizationRequestEmpName'] as String,
+      loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String,
     );
   }
 }

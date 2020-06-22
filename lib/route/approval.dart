@@ -6,5 +6,5 @@ import 'package:chokchey_finance/screens/login/Login.dart';
 final routes = {
   '/': (context) => new Home(),
   '/approvl': (context) => new Approval(),
-  '/detail': (context) => new Detail(),
+  // '/detail': (context) => new Detail(),
 };

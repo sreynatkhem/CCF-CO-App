@@ -33,3 +33,5 @@ final mainTitleBlack = TextStyle(
     fontSize: fontSizeSm,
     color: Colors.black,
     fontWeight: fontWeight500);
+
+//service const
