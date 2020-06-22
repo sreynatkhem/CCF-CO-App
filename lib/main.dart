@@ -1,8 +1,10 @@
 import 'package:chokchey_finance/route/route.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stetho/flutter_stetho.dart';
 
 void main() {
+  Stetho.initialize();
   runApp(MyApp());
 }
 

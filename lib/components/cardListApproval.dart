@@ -1,7 +1,9 @@
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/detail/Detail.dart';
+import 'package:chokchey_finance/services/detialJson.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ApprovalListCard extends StatelessWidget {
   final List<Approval> approvalList;
@@ -9,7 +11,12 @@ class ApprovalListCard extends StatelessWidget {
   ApprovalListCard({Key key, this.approvalList}) : super(key: key);
 
   onClickCard(value, context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Detail()));
+    print("value: ${value.loanApprovalApplicationNo}");
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Detail(value.loanApprovalApplicationNo)));
   }
 
   @override
@@ -44,15 +51,18 @@ class ApprovalListCard extends StatelessWidget {
                         children: <Widget>[
                           Container(
                               child: Text(
-                            '[Loan] Application - Approval',
+                            approvalList[index].standardCodeDomainName2,
                             style: mainTitleBlack,
                           )),
                           Padding(padding: EdgeInsets.only(bottom: 2)),
-                          Text('Application No: 0120202020502040'),
+                          Text(
+                              'Application No: ${approvalList[index].loanApprovalApplicationNo}'),
                           Padding(padding: EdgeInsets.only(bottom: 2)),
-                          Text('102240-Sykeang Sren[Stung Meanchey]'),
+                          Text(
+                              '${approvalList[index].authorizationRequestEmpNo}-${approvalList[index].authorizationRequestEmpName}[${approvalList[index].branchName}]'),
                           Padding(padding: EdgeInsets.only(bottom: 2)),
-                          Text('18-05-2020 09:35 AM')
+                          Text(
+                              '${approvalList[index].authorizationRequestDate} ${approvalList[index].authorizationRequestTime}')
                         ],
                       ),
                       Container(
