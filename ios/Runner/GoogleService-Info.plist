@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>805483562052-pejp1qotc96tjjs52vjro5d1quvmclr6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.805483562052-pejp1qotc96tjjs52vjro5d1quvmclr6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDeGM37nCDGB_HpDeUs1S_oxzj_Adl8lME</string>
+	<key>GCM_SENDER_ID</key>
+	<string>805483562052</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.chokcheyFinance</string>
+	<key>PROJECT_ID</key>
+	<string>cff-application-test</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cff-application-test.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:805483562052:ios:fe4f86b5852af911c56811</string>
+	<key>DATABASE_URL</key>
+	<string>https://cff-application-test.firebaseio.com</string>
+</dict>
+</plist>

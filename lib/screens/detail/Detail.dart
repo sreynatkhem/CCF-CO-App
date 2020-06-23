@@ -192,7 +192,7 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    registerApproval(http.Client(), loanApprovalApplicationNo, 80).then(
+    registerApproval(http.Client(), loanApprovalApplicationNo, 20).then(
       (_) => setState(() {
         _isLoading = false;
         Navigator.pop(context);
@@ -218,7 +218,7 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    rejectFunction(http.Client(), loanApprovalApplicationNo, 80).then(
+    rejectFunction(http.Client(), loanApprovalApplicationNo, 90).then(
       (_) => setState(() {
         _isLoading = false;
         Navigator.pop(context);

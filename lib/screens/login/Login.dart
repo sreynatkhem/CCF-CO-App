@@ -4,6 +4,7 @@ import 'package:chokchey_finance/services/login.dart';
 import 'package:chokchey_finance/services/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:adobe_xd/page_link.dart';
@@ -35,7 +36,7 @@ class _LoginState extends State<Login> {
   }
 
   getStore() async {
-    String ids = await storage.read(key: 'id');
+    String ids = await storage.read(key: 'valueid');
     String passwords = await storage.read(key: 'password');
 
     setState(() {
@@ -46,57 +47,47 @@ class _LoginState extends State<Login> {
 
 // Create storage Login
   Future<void> onClickLogin(context) async {
-    // setState(() {
-    //   _isLogin = true;
-    // });
     final String valueid = id.text;
     final String valuePassword = password.text;
 
-    // await storage.write(key: "id", value: valueid);
-    // await storage.write(key: "password", value: valuePassword);
-    // final String valueid = '102100';
-    // final String valuePassword = 'password.text';
-    final client = http.Client();
-    await client
-        .get(fireBaseUrl)
-        .then((value) => jsonDecode(value.body).map((k) {
-              print("K: $k");
-              if (k['user_id'] == valueid) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                    ModalRoute.withName("/login"));
-              }
-            }));
-    // final user = await jsonDecode(response.body);
-    // user.forEach(([key, value]) => {
-    //       print('user_id: ${key['user_id']}'),
-    //       print('valueid: $valueid'),
-    //       if (key['user_id'] == valueid)
-    //         {
-    //           print('user_id: ${key['user_id']}'),
-    //           setState(() {
-    //             _isLogin = false;
-    //           }),
-    //           // storage.write(key: "user_name", value: key['user_name']),
-    //           // storage.write(key: "user_id", value: key['user_id']),
-    //           Navigator.pushAndRemoveUntil(
-    //               context,
-    //               MaterialPageRoute(builder: (context) => Home()),
-    //               ModalRoute.withName("/login"))
-    //         }
-    //       else
-    //         {
-    //           setState(() {
-    //             _isLogin = false;
-    //           }),
-    //         }
-    //     });
+    await storage.write(key: "valueid", value: valueid);
+    await storage.write(key: "password", value: valuePassword);
+
+    await FirebaseDatabase.instance
+        .reference()
+        .child("userID")
+        .once()
+        .then((dataSnapshot) => {
+              dataSnapshot.value.forEach(([key, value]) async => {
+                    if (key['user_id'] == valueid && valuePassword == '1234')
+                      {
+                        print('user_id: ${key['user_id']}'),
+                        setState(() {
+                          _isLogin = false;
+                        }),
+                        await storage.write(
+                            key: "user_name", value: key['user_name']),
+                        await storage.write(
+                            key: "user_id", value: key['user_id']),
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                            ModalRoute.withName("/login"))
+                      }
+                    else
+                      {
+                        setState(() {
+                          _isLogin = false;
+                        }),
+                      }
+                  }),
+            });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
         child: SingleChildScrollView(
@@ -157,17 +148,13 @@ class _LoginState extends State<Login> {
                     )),
               ),
               Container(
-                width: 375,
+                width: 320,
                 height: 45,
                 margin: EdgeInsets.only(top: 40, bottom: 20),
-                // child: RaisedButton(
-                //   padding: const EdgeInsets.all(8.0),
-                //   textColor: Colors.white,
-                //   color: blueColor,
-                //   onPressed: () => print('hello world'),
-                //   child: new Text("Log In"),
-                // ),
                 child: FlatButton(
+                  color: blueColor,
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.all(8.0),
                   onPressed: () async {
                     showDialog(
                         context: context,
@@ -180,7 +167,7 @@ class _LoginState extends State<Login> {
                   },
                   // onPressed: () => {onClickLogin(context)},
                   child: Text(
-                    "Flat Button",
+                    "Log In",
                   ),
                 ),
               ),
