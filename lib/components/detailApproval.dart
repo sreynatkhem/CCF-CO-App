@@ -5,7 +5,14 @@ import 'package:jiffy/jiffy.dart';
 
 class DetailApprovalListCard extends StatelessWidget {
   final List<DetailApproval> approvalListDetail;
+
   final images = const AssetImage('assets/images/request.png');
+  final _imagesList = const AssetImage('assets/images/list.png');
+  final _imagesFindApproval =
+      const AssetImage('assets/images/findApproval.png');
+  final _imageReturn = const AssetImage('assets/images/return.png');
+  final _imageReject = const AssetImage('assets/images/reject.png');
+
   DetailApprovalListCard({Key key, this.approvalListDetail}) : super(key: key);
 
   onClickCard(value, context) {
@@ -59,6 +66,51 @@ class DetailApprovalListCard extends StatelessWidget {
     }
   }
 
+  statusApprovalImage(value) {
+    switch (value) {
+      case '10':
+        {
+          return _imagesFindApproval;
+        }
+        break;
+
+      case '20':
+        {
+          return _imagesList;
+        }
+        break;
+
+      case '30':
+        {
+          return _imagesFindApproval;
+        }
+        break;
+
+      case '80':
+        {
+          return _imageReturn;
+        }
+        break;
+
+      case '90':
+        {
+          _imageReject;
+        }
+        break;
+      case '':
+        {
+          _imagesFindApproval;
+        }
+        break;
+
+      default:
+        {
+          _imagesFindApproval;
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -68,6 +120,11 @@ class DetailApprovalListCard extends StatelessWidget {
           var dateTime = approvalListDetail[index].applicationDate;
           var status =
               statusApproval(approvalListDetail[index].evaluateStatusCode);
+          var imageStatus = approvalListDetail[index].evaluateStatusCode != null
+              ? statusApprovalImage(
+                  approvalListDetail[index].evaluateStatusCode)
+              : _imagesList;
+
           return Container(
             height: 110,
             margin: EdgeInsets.only(bottom: 5.0),
@@ -84,11 +141,15 @@ class DetailApprovalListCard extends StatelessWidget {
                         children: <Widget>[
                           Row(
                             children: <Widget>[
+                              Padding(padding: EdgeInsets.only(left: 5)),
                               Image(
-                                image: images,
-                                width: 80,
+                                image: imageStatus != null
+                                    ? imageStatus
+                                    : _imagesFindApproval,
+                                width: 75,
                                 height: 70,
                               ),
+                              Padding(padding: EdgeInsets.only(right: 5)),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,

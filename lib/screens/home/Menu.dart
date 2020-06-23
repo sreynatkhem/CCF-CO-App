@@ -37,10 +37,11 @@ class _MenuState extends State<Menu> {
             text: 'Approval Lists',
           ),
           MenuCard(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Approved()),
-            ),
+            onTap: () => null,
+            //  Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => Approved()),
+            // ),
             color: lightBlue,
             imageNetwork: aprroved,
             text: 'Approved',
