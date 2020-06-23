@@ -1,34 +1,42 @@
 import 'dart:io';
 import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/components/buttonPlus.dart';
-import 'package:chokchey_finance/components/cardListApproval.dart';
+import 'package:chokchey_finance/services/approvalList.dart';
+import 'package:chokchey_finance/services/reject.dart';
+import 'package:chokchey_finance/services/returnFuc.dart';
+import 'package:http/http.dart' as http;
 import 'package:chokchey_finance/components/detailApproval.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/modals/index.dart';
-import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:chokchey_finance/services/detialJson.dart';
+import 'package:chokchey_finance/services/registerApproval.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class Detail extends StatefulWidget {
+  final loanApprovalApplicationNo;
+  Detail(this.loanApprovalApplicationNo);
   @override
-  _DetailState createState() => new _DetailState();
+  _DetailState createState() => new _DetailState(loanApprovalApplicationNo);
 }
 
 class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
+  _DetailState(this.loanApprovalApplicationNo);
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
   TextEditingController _searchQuery;
-  bool _isSearching = false;
-  String searchQuery = "Search query";
-  double _widtdButton = 120.0;
-  double _heightButton = 45.0;
-  double _borderRadius = 12.0;
 
   // borderRadius
+  bool _isSearching = false;
+  String searchQuery = "Search query";
+  double _widtdButton = 100.0;
+  double _heightButton = 40.0;
+  double _borderRadius = 12.0;
+  final loanApprovalApplicationNo;
+
+  // body fetch data
 
   @override
   void initState() {
@@ -154,7 +162,7 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     ];
   }
 
-  var isLoading = false;
+  var _isLoading = false;
   onApprove(value) {
     return print('object');
   }
@@ -180,70 +188,127 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     });
   }
 
+  authrize(context) {
+    setState(() {
+      _isLoading = true;
+    });
+    registerApproval(http.Client(), loanApprovalApplicationNo, 80).then(
+      (_) => setState(() {
+        _isLoading = false;
+        Navigator.pop(context);
+        fetchApprovals(http.Client());
+      }),
+    );
+  }
+
+  returnFuc(context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    returnFunction(http.Client(), loanApprovalApplicationNo, 80).then(
+      (_) => setState(() {
+        _isLoading = false;
+        Navigator.pop(context);
+        fetchApprovals(http.Client());
+      }),
+    );
+  }
+
+  reject(context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    rejectFunction(http.Client(), loanApprovalApplicationNo, 80).then(
+      (_) => setState(() {
+        _isLoading = false;
+        Navigator.pop(context);
+        fetchApprovals(http.Client());
+      }),
+    );
+  }
+
+  _refreshDetail(context) async {
+    await fetchDetail(http.Client(), loanApprovalApplicationNo);
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Header(
         headerTexts: 'Detail',
-        bodys: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                flex: 0,
-                child: Container(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Button(
-                            widtdButton: _widtdButton,
-                            heightButton: _heightButton,
-                            borderRadius: _borderRadius,
-                            onPressed: () {},
-                            color: blueColor,
-                            text: 'Authrize'),
-                        Padding(padding: EdgeInsets.only(right: 5)),
-                        Button(
-                            widtdButton: _widtdButton,
-                            heightButton: _heightButton,
-                            borderRadius: _borderRadius,
-                            onPressed: () {},
-                            color: Colors.green,
-                            text: 'Return'),
-                        Padding(padding: EdgeInsets.only(right: 5)),
-                        Button(
-                            widtdButton: _widtdButton,
-                            heightButton: _heightButton,
-                            borderRadius: _borderRadius,
-                            onPressed: () {},
-                            color: Colors.red,
-                            text: 'Reject'),
-                        Padding(padding: EdgeInsets.only(right: 5)),
-                      ],
-                    )),
-              ),
-              Expanded(
-                flex: 1,
-                child: FutureBuilder<List<DetailApproval>>(
-                  future: fetchDetail(http.Client()),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) print(snapshot.error);
-                    return snapshot.hasData
-                        ? DetailApprovalListCard(
-                            approvalListDetail: snapshot.data)
-                        : Center(child: CircularProgressIndicator());
-                  },
-                ),
+        bodys: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
               )
-            ],
-          ),
-        ),
+            : RefreshIndicator(
+                onRefresh: () => _refreshDetail(context),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 0,
+                        child: Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Button(
+                                    widtdButton: _widtdButton,
+                                    heightButton: _heightButton,
+                                    borderRadius: _borderRadius,
+                                    onPressed: () {
+                                      authrize(context);
+                                    },
+                                    color: blueColor,
+                                    text: 'Authrize'),
+                                Padding(padding: EdgeInsets.only(right: 5)),
+                                Button(
+                                    widtdButton: _widtdButton,
+                                    heightButton: _heightButton,
+                                    borderRadius: _borderRadius,
+                                    onPressed: () {
+                                      returnFuc(context);
+                                    },
+                                    color: Colors.green,
+                                    text: 'Return'),
+                                Padding(padding: EdgeInsets.only(right: 5)),
+                                Button(
+                                    widtdButton: _widtdButton,
+                                    heightButton: _heightButton,
+                                    borderRadius: _borderRadius,
+                                    onPressed: () {
+                                      reject(context);
+                                    },
+                                    color: Colors.red,
+                                    text: 'Reject'),
+                                Padding(padding: EdgeInsets.only(right: 5)),
+                              ],
+                            )),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: FutureBuilder<List<DetailApproval>>(
+                          future: fetchDetail(
+                              http.Client(), loanApprovalApplicationNo),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData
+                                ? DetailApprovalListCard(
+                                    approvalListDetail: snapshot.data)
+                                : Center(child: CircularProgressIndicator());
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
         floatingActionButtons: new Stack(children: <Widget>[
           ButtonPlus(
             bottom: 200.0,
             right: 24.0,
             animation3: _animation3,
             color: new Color(0xFF9E9E9E),
-            text: 'GG1',
+            text: 'Co-Borrower / Gu',
             onTap: () {
               if (_angle == 45.0) {
                 print("GG1");
@@ -255,10 +320,10 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
             right: 24.0,
             animation3: _animation3,
             color: new Color(0xFF00BFA5),
-            text: 'GG2',
+            text: 'Collateral Info',
             onTap: () {
               if (_angle == 45.0) {
-                print("GG2");
+                print("Collateral Info");
               }
             },
           ),
@@ -267,10 +332,10 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
             right: 24.0,
             animation3: _animation3,
             color: new Color(0xFFE57373),
-            text: 'GG3',
+            text: 'Application Information',
             onTap: () {
               if (_angle == 45.0) {
-                print("GG3");
+                print("Application Information");
               }
             },
           ),
@@ -281,11 +346,19 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
                 color: new Color(0xFFE57373),
                 type: MaterialType.circle,
                 elevation: 6.0,
+                // child: Container(
+                //     width: 56.0,
+                //     height: 56.00,
+                //     child: RaisedButton(
+                //       onPressed: null,
+                //     )),
                 child: new GestureDetector(
                   child: new Container(
                       width: 56.0,
                       height: 56.00,
                       child: new InkWell(
+                        borderRadius: BorderRadius.circular(100),
+                        splashColor: Colors.red,
                         onTap: _rotate,
                         child: new Center(
                             child: new RotationTransition(
@@ -295,6 +368,10 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
                             color: new Color(0xFFFFFFFF),
                           ),
                         )),
+                        // splashColor: Colors.red, // inkwell color
+                        // child: SizedBox(
+                        //     width: 56, height: 56, child: Icon(Icons.menu)),
+                        // onTap: () {},
                       )),
                 )),
           ),

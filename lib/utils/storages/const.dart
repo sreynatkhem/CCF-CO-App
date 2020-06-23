@@ -33,3 +33,45 @@ final mainTitleBlack = TextStyle(
     fontSize: fontSizeSm,
     color: Colors.black,
     fontWeight: fontWeight500);
+
+Function statusApproval(value) {
+  switch (value) {
+    case 10:
+      {
+        'Request';
+      }
+      break;
+
+    case 20:
+      {
+        'Approve';
+      }
+      break;
+
+    case 30:
+      {
+        'Final Approve';
+      }
+      break;
+
+    case 80:
+      {
+        'Return';
+      }
+      break;
+
+    case 90:
+      {
+        'Reject';
+      }
+      break;
+
+    default:
+      {
+        // ''
+      }
+      break;
+  }
+}
+
+//service const

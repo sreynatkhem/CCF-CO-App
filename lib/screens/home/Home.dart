@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:adobe_xd/specific_rect_clip.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'Menu.dart';
 
@@ -21,6 +22,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
   PageController _pageController;
+  final storage = new FlutterSecureStorage();
+
+  String userId = '';
+  String userName = '';
+
+  final profile = const AssetImage('assets/images/profile_create.jpg');
+  final profile2 = const AssetImage('assets/images/profile2.jpg');
 
   @override
   void initState() {
@@ -32,6 +40,22 @@ class _HomeState extends State<Home> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    getStoreUser();
+    super.didChangeDependencies();
+  }
+
+  getStoreUser() async {
+    String user_id = await storage.read(key: 'user_id');
+
+    String user_name = await storage.read(key: 'user_name');
+    setState(() {
+      userName = user_name ?? '';
+      userId = user_id ?? '';
+    });
   }
 
   _drawerList(context) {
@@ -52,15 +76,13 @@ class _HomeState extends State<Home> {
                       margin: EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                'https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/21760012/original/d4c0c142f91f012c9a8a9c9aeef3bac28036f15b/create-your-cartoon-style-flat-avatar-or-icon.jpg'),
-                            fit: BoxFit.fill),
+                        image:
+                            DecorationImage(image: profile, fit: BoxFit.fill),
                       ),
                     ),
                   ),
                   Text(
-                    "Ramon Oem",
+                    userName ?? '',
                     style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -68,7 +90,7 @@ class _HomeState extends State<Home> {
                   ),
                   Center(
                     child: Text(
-                      " Your ID: $id ",
+                      " Your ID: ${userId ?? null} ",
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,

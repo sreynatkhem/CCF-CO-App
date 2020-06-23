@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class ButtonPlus extends StatelessWidget {
@@ -37,8 +38,8 @@ class ButtonPlus extends StatelessWidget {
                     text,
                     style: new TextStyle(
                       fontSize: 13.0,
-                      fontFamily: 'Roboto',
-                      color: new Color(0xFF9E9E9E),
+                      fontFamily: fontFamily,
+                      color: Colors.black54,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -56,6 +57,8 @@ class ButtonPlus extends StatelessWidget {
                           width: 40.0,
                           height: 40.0,
                           child: new InkWell(
+                            borderRadius: BorderRadius.circular(100),
+                            splashColor: Colors.red,
                             onTap: onTap,
                             child: new Center(
                               child: new Icon(

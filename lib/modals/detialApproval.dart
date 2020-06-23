@@ -1,27 +1,34 @@
 class DetailApproval {
-  final String auth;
-  final String branch;
-  final String employeeNo;
-  final String employeeName;
-  final String registerDate;
-  final String approvalDate;
+  final String authorizerEmpName;
+  final String authorizationBranchCode;
+  final String authorizerEmployeeNo;
+  final String applicationDate;
+  final String loanApprovalApplicationNo;
+  final String acceptanceDate;
+  final String evaluateStatusCode;
+  final String authorizationDate;
 
-  DetailApproval(
-      {this.auth,
-      this.branch,
-      this.employeeNo,
-      this.employeeName,
-      this.registerDate,
-      this.approvalDate});
+  DetailApproval({
+    this.authorizerEmpName,
+    this.authorizationBranchCode,
+    this.authorizerEmployeeNo,
+    this.applicationDate,
+    this.loanApprovalApplicationNo,
+    this.acceptanceDate,
+    this.evaluateStatusCode,
+    this.authorizationDate,
+  });
 
   factory DetailApproval.fromJson(Map<String, dynamic> json) {
     return DetailApproval(
-      auth: json['auth'] as String,
-      branch: json['branch'] as String,
-      employeeNo: json['employeeNo'] as String,
-      employeeName: json['employeeName'] as String,
-      registerDate: json['registerDate'] as String,
-      approvalDate: json['approvalDate'] as String,
+      authorizerEmpName: json['authorizerEmpName'] as String,
+      authorizationBranchCode: json['authorizationBranchCode'] as String,
+      authorizerEmployeeNo: json['authorizerEmployeeNo'] as String,
+      applicationDate: json['applicationDate'] as String,
+      loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String,
+      acceptanceDate: json['acceptanceDate'] as String,
+      evaluateStatusCode: json['evaluateStatusCode'] as String,
+      authorizationDate: json['authorizationDate'] as String,
     );
   }
 }
