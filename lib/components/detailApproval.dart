@@ -13,6 +13,52 @@ class DetailApprovalListCard extends StatelessWidget {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => Detail(value.)));
   }
 
+  statusApproval(value) {
+    print("value: $value");
+    switch (value) {
+      case '10':
+        {
+          return Text('Request');
+        }
+        break;
+
+      case '20':
+        {
+          return Text('Approve');
+        }
+        break;
+
+      case '30':
+        {
+          return Text('Final Approve');
+        }
+        break;
+
+      case '80':
+        {
+          return Text('Return');
+        }
+        break;
+
+      case '90':
+        {
+          return Text('Reject');
+        }
+        break;
+      case '':
+        {
+          return Text('');
+        }
+        break;
+
+      default:
+        {
+          return Text('');
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -20,6 +66,8 @@ class DetailApprovalListCard extends StatelessWidget {
         padding: const EdgeInsets.only(top: 20.0),
         itemBuilder: (context, index) {
           var dateTime = approvalListDetail[index].applicationDate;
+          var status =
+              statusApproval(approvalListDetail[index].evaluateStatusCode);
           return Container(
             height: 110,
             margin: EdgeInsets.only(bottom: 5.0),
@@ -64,17 +112,14 @@ class DetailApprovalListCard extends StatelessWidget {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text(
-                                approvalListDetail[index].acceptanceDate == ''
-                                    ? ''
-                                    : 'Approved',
-                                style: mainTitleBlack,
-                              ),
+                              status,
                               Padding(padding: EdgeInsets.only(bottom: 2)),
-                              Text(approvalListDetail[index].acceptanceDate ==
-                                      ''
-                                  ? ''
-                                  : approvalListDetail[index].acceptanceDate),
+                              Text(
+                                  approvalListDetail[index].authorizationDate ==
+                                          ''
+                                      ? ''
+                                      : approvalListDetail[index]
+                                          .authorizationDate),
                               Text(''),
                               Padding(padding: EdgeInsets.only(right: 100))
                             ],

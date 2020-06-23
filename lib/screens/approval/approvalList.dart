@@ -132,6 +132,10 @@ class _ApprovalListsState extends State<ApprovalLists>
     return print('object');
   }
 
+  _refreshApproval(context) async {
+    await fetchApprovals(http.Client());
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -142,14 +146,17 @@ class _ApprovalListsState extends State<ApprovalLists>
         actions: _buildActions(),
         backgroundColor: blueColor,
       ),
-      body: FutureBuilder<List<Approval>>(
-        future: fetchApprovals(http.Client()),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) print(snapshot.error);
-          return snapshot.hasData
-              ? ApprovalListCard(approvalList: snapshot.data)
-              : Center(child: CircularProgressIndicator());
-        },
+      body: RefreshIndicator(
+        onRefresh: () => _refreshApproval(context),
+        child: FutureBuilder<List<Approval>>(
+          future: fetchApprovals(http.Client()),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) print(snapshot.error);
+            return snapshot.hasData
+                ? ApprovalListCard(approvalList: snapshot.data)
+                : Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

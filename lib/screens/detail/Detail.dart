@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/components/buttonPlus.dart';
+import 'package:chokchey_finance/services/approvalList.dart';
+import 'package:chokchey_finance/services/reject.dart';
+import 'package:chokchey_finance/services/returnFuc.dart';
 import 'package:http/http.dart' as http;
 import 'package:chokchey_finance/components/detailApproval.dart';
 import 'package:chokchey_finance/components/header.dart';
@@ -28,8 +31,8 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   // borderRadius
   bool _isSearching = false;
   String searchQuery = "Search query";
-  double _widtdButton = 120.0;
-  double _heightButton = 45.0;
+  double _widtdButton = 100.0;
+  double _heightButton = 40.0;
   double _borderRadius = 12.0;
   final loanApprovalApplicationNo;
 
@@ -185,23 +188,47 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     });
   }
 
-  authrize() {
+  authrize(context) {
     setState(() {
       _isLoading = true;
     });
     registerApproval(http.Client(), loanApprovalApplicationNo, 80).then(
       (_) => setState(() {
         _isLoading = false;
+        Navigator.pop(context);
+        fetchApprovals(http.Client());
       }),
     );
   }
 
-  returnFuc() {
-    print('returnFuc');
+  returnFuc(context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    returnFunction(http.Client(), loanApprovalApplicationNo, 80).then(
+      (_) => setState(() {
+        _isLoading = false;
+        Navigator.pop(context);
+        fetchApprovals(http.Client());
+      }),
+    );
   }
 
-  reject() {
-    print('returnFuc');
+  reject(context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    rejectFunction(http.Client(), loanApprovalApplicationNo, 80).then(
+      (_) => setState(() {
+        _isLoading = false;
+        Navigator.pop(context);
+        fetchApprovals(http.Client());
+      }),
+    );
+  }
+
+  _refreshDetail(context) async {
+    await fetchDetail(http.Client(), loanApprovalApplicationNo);
   }
 
   @override
@@ -212,70 +239,67 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Container(
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 0,
-                      child: Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Button(
-                                  widtdButton: _widtdButton,
-                                  heightButton: _heightButton,
-                                  borderRadius: _borderRadius,
-                                  onPressed: () {
-                                    authrize();
-                                  },
-                                  color: blueColor,
-                                  text: 'Authrize'),
-                              Padding(padding: EdgeInsets.only(right: 5)),
-                              Button(
-                                  widtdButton: _widtdButton,
-                                  heightButton: _heightButton,
-                                  borderRadius: _borderRadius,
-                                  onPressed: () {
-                                    returnFuc();
-                                  },
-                                  color: Colors.green,
-                                  text: 'Return'),
-                              Padding(padding: EdgeInsets.only(right: 5)),
-                              Button(
-                                  widtdButton: _widtdButton,
-                                  heightButton: _heightButton,
-                                  borderRadius: _borderRadius,
-                                  onPressed: () {
-                                    reject();
-                                  },
-                                  color: Colors.red,
-                                  text: 'Reject'),
-                              Padding(padding: EdgeInsets.only(right: 5)),
-                            ],
-                          )),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: FutureBuilder<List<DetailApproval>>(
-                        future: fetchDetail(
-                            http.Client(), loanApprovalApplicationNo),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) print(snapshot.error);
-                          // if (snapshot.data) print(snapshot.data);
-                          print('snapshot: ${snapshot.data}');
-                          // setState(() {
-                          //   value:
-                          //   snapshot.data;
-                          // });
-                          return snapshot.hasData
-                              ? DetailApprovalListCard(
-                                  approvalListDetail: snapshot.data)
-                              : Center(child: CircularProgressIndicator());
-                        },
+            : RefreshIndicator(
+                onRefresh: () => _refreshDetail(context),
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 0,
+                        child: Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Button(
+                                    widtdButton: _widtdButton,
+                                    heightButton: _heightButton,
+                                    borderRadius: _borderRadius,
+                                    onPressed: () {
+                                      authrize(context);
+                                    },
+                                    color: blueColor,
+                                    text: 'Authrize'),
+                                Padding(padding: EdgeInsets.only(right: 5)),
+                                Button(
+                                    widtdButton: _widtdButton,
+                                    heightButton: _heightButton,
+                                    borderRadius: _borderRadius,
+                                    onPressed: () {
+                                      returnFuc(context);
+                                    },
+                                    color: Colors.green,
+                                    text: 'Return'),
+                                Padding(padding: EdgeInsets.only(right: 5)),
+                                Button(
+                                    widtdButton: _widtdButton,
+                                    heightButton: _heightButton,
+                                    borderRadius: _borderRadius,
+                                    onPressed: () {
+                                      reject(context);
+                                    },
+                                    color: Colors.red,
+                                    text: 'Reject'),
+                                Padding(padding: EdgeInsets.only(right: 5)),
+                              ],
+                            )),
                       ),
-                    )
-                  ],
+                      Expanded(
+                        flex: 1,
+                        child: FutureBuilder<List<DetailApproval>>(
+                          future: fetchDetail(
+                              http.Client(), loanApprovalApplicationNo),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData
+                                ? DetailApprovalListCard(
+                                    approvalListDetail: snapshot.data)
+                                : Center(child: CircularProgressIndicator());
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
         floatingActionButtons: new Stack(children: <Widget>[

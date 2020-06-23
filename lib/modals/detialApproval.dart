@@ -5,6 +5,8 @@ class DetailApproval {
   final String applicationDate;
   final String loanApprovalApplicationNo;
   final String acceptanceDate;
+  final String evaluateStatusCode;
+  final String authorizationDate;
 
   DetailApproval({
     this.authorizerEmpName,
@@ -13,6 +15,8 @@ class DetailApproval {
     this.applicationDate,
     this.loanApprovalApplicationNo,
     this.acceptanceDate,
+    this.evaluateStatusCode,
+    this.authorizationDate,
   });
 
   factory DetailApproval.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,8 @@ class DetailApproval {
       applicationDate: json['applicationDate'] as String,
       loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String,
       acceptanceDate: json['acceptanceDate'] as String,
+      evaluateStatusCode: json['evaluateStatusCode'] as String,
+      authorizationDate: json['authorizationDate'] as String,
     );
   }
 }

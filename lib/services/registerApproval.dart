@@ -16,7 +16,7 @@ Future<List<Approval>> registerApproval(
   String user_name = await storage.read(key: 'user_name');
 
   final bodyRow =
-      "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"$evaluateStatusCode\",\n    \"loanApprovalApplicationNo\": \"0120202002050330\",\n    \"authorizationOpinionContents\": \"Please re-check on loan fund purpose \"\n    }\n}";
+      "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"80\",\n    \"loanApprovalApplicationNo\": \"$loanApprovalApplicationNo\",\n    \"authorizationOpinionContents\": \"Please re-check on loan fund purpose \"\n    }\n}";
 
   try {
     final response = await client.post(baseUrl + 'LRA0004',
@@ -25,8 +25,7 @@ Future<List<Approval>> registerApproval(
         },
         body: bodyRow);
     final parsed = jsonDecode(response.body);
-    final list = parsed['body']['approvalList'];
-    return list.map<Approval>((json) => Approval.fromJson(json)).toList();
+    print("parsed: $parsed");
   } catch (error) {
     client.close();
     print('error: $error');

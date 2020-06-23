@@ -56,7 +56,8 @@ class ApprovalListCard extends StatelessWidget {
                           )),
                           Padding(padding: EdgeInsets.only(bottom: 2)),
                           Text(
-                              'Application No: ${approvalList[index].loanApprovalApplicationNo}'),
+                            'Application No: ${approvalList[index].loanApprovalApplicationNo}',
+                          ),
                           Padding(padding: EdgeInsets.only(bottom: 2)),
                           Text(
                               '${approvalList[index].authorizationRequestEmpNo}-${approvalList[index].authorizationRequestEmpName}[${approvalList[index].branchName}]'),
@@ -66,7 +67,7 @@ class ApprovalListCard extends StatelessWidget {
                         ],
                       ),
                       Container(
-                          padding: EdgeInsets.only(left: 15),
+                          padding: EdgeInsets.only(left: 0),
                           child: Icon(Icons.keyboard_arrow_right)),
                     ]))),
           );

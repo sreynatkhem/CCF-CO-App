@@ -23,7 +23,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final storage = new FlutterSecureStorage();
-  final TextEditingController email = TextEditingController();
+  final TextEditingController id = TextEditingController();
   final TextEditingController password = TextEditingController();
   final chokchey = const AssetImage('assets/images/chokchey.png');
   bool _isLogin = false;
@@ -35,54 +35,63 @@ class _LoginState extends State<Login> {
   }
 
   getStore() async {
-    String emails = await storage.read(key: 'email');
+    String ids = await storage.read(key: 'id');
     String passwords = await storage.read(key: 'password');
 
     setState(() {
-      email.text = emails;
+      id.text = ids;
       password.text = passwords;
     });
   }
 
 // Create storage Login
   Future<void> onClickLogin(context) async {
-    setState(() {
-      _isLogin = true;
-    });
-    final String valueEmail = email.text;
+    // setState(() {
+    //   _isLogin = true;
+    // });
+    final String valueid = id.text;
     final String valuePassword = password.text;
-    await storage.write(key: "email", value: valueEmail);
-    await storage.write(key: "password", value: valuePassword);
-    var client = http.Client();
-    try {
-      var response = await client.get(fireBaseUrl);
-      var user = jsonDecode(response.body);
-      user.forEach(([key, value]) async => {
-            if (key['user_id'] == valueEmail)
-              {
-                setState(() {
-                  _isLogin = false;
-                }),
-                await storage.write(key: "user_name", value: key['user_name']),
-                await storage.write(key: "user_id", value: key['user_id']),
+
+    // await storage.write(key: "id", value: valueid);
+    // await storage.write(key: "password", value: valuePassword);
+    // final String valueid = '102100';
+    // final String valuePassword = 'password.text';
+    final client = http.Client();
+    await client
+        .get(fireBaseUrl)
+        .then((value) => jsonDecode(value.body).map((k) {
+              print("K: $k");
+              if (k['user_id'] == valueid) {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => Home()),
-                    ModalRoute.withName("/login"))
+                    ModalRoute.withName("/login"));
               }
-            else
-              {
-                setState(() {
-                  _isLogin = false;
-                }),
-              }
-          });
-    } catch (error) {
-      client.close();
-      setState(() {
-        _isLogin = false;
-      });
-    }
+            }));
+    // final user = await jsonDecode(response.body);
+    // user.forEach(([key, value]) => {
+    //       print('user_id: ${key['user_id']}'),
+    //       print('valueid: $valueid'),
+    //       if (key['user_id'] == valueid)
+    //         {
+    //           print('user_id: ${key['user_id']}'),
+    //           setState(() {
+    //             _isLogin = false;
+    //           }),
+    //           // storage.write(key: "user_name", value: key['user_name']),
+    //           // storage.write(key: "user_id", value: key['user_id']),
+    //           Navigator.pushAndRemoveUntil(
+    //               context,
+    //               MaterialPageRoute(builder: (context) => Home()),
+    //               ModalRoute.withName("/login"))
+    //         }
+    //       else
+    //         {
+    //           setState(() {
+    //             _isLogin = false;
+    //           }),
+    //         }
+    //     });
   }
 
   @override
@@ -130,10 +139,10 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: TextField(
                     autofocus: true,
-                    controller: email,
+                    controller: id,
                     decoration: InputDecoration(
                         labelText: 'User ID',
-                        hintText: email.text,
+                        hintText: id.text,
                         labelStyle: TextStyle(fontSize: 15))),
               ),
               Container(
@@ -151,14 +160,28 @@ class _LoginState extends State<Login> {
                 width: 375,
                 height: 45,
                 margin: EdgeInsets.only(top: 40, bottom: 20),
-                child: RaisedButton(
-                  padding: const EdgeInsets.all(8.0),
-                  textColor: Colors.white,
-                  color: blueColor,
-                  onPressed: () {
-                    onClickLogin(context);
+                // child: RaisedButton(
+                //   padding: const EdgeInsets.all(8.0),
+                //   textColor: Colors.white,
+                //   color: blueColor,
+                //   onPressed: () => print('hello world'),
+                //   child: new Text("Log In"),
+                // ),
+                child: FlatButton(
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        });
+                    await onClickLogin(context);
                   },
-                  child: new Text("Log In"),
+                  // onPressed: () => {onClickLogin(context)},
+                  child: Text(
+                    "Flat Button",
+                  ),
                 ),
               ),
               Text(

@@ -24,8 +24,8 @@ class _HomeState extends State<Home> {
   PageController _pageController;
   final storage = new FlutterSecureStorage();
 
-  String userId;
-  String userName;
+  String userId = '';
+  String userName = '';
 
   final profile = const AssetImage('assets/images/profile_create.jpg');
   final profile2 = const AssetImage('assets/images/profile2.jpg');
@@ -53,10 +53,9 @@ class _HomeState extends State<Home> {
 
     String user_name = await storage.read(key: 'user_name');
     setState(() {
-      userName = user_name;
-      userId = user_id;
+      userName = user_name ?? '';
+      userId = user_id ?? '';
     });
-    print("userName: $userName");
   }
 
   _drawerList(context) {
@@ -83,7 +82,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Text(
-                    userName,
+                    userName ?? '',
                     style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -91,7 +90,7 @@ class _HomeState extends State<Home> {
                   ),
                   Center(
                     child: Text(
-                      " Your ID: $userId ",
+                      " Your ID: ${userId ?? null} ",
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,

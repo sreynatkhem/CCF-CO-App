@@ -15,8 +15,9 @@ class MenuCard extends StatelessWidget {
       child: new Card(
         color: color,
         child: new Container(
-          padding: new EdgeInsets.all(32.0),
+          // padding: new EdgeInsets.all(0.0),
           child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image(
                 image: imageNetwork,
