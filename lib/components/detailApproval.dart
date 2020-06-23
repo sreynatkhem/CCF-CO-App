@@ -78,9 +78,7 @@ class DetailApprovalListCard extends StatelessWidget {
                 ),
                 child: InkWell(
                     splashColor: Colors.blue.withAlpha(30),
-                    onTap: () {
-                      onClickCard(approvalListDetail[index], context);
-                    },
+                    onTap: () {},
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
