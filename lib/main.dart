@@ -67,3 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+//  routes: {
+//         "/": (context) => InitialPage(),  //This is what you are missing i guess
+//         "/home": (context) => HomePage(),
+//         "/page1": (context) => Page1(),
+//       },

@@ -5,9 +5,12 @@ final String fontFamily = 'Segoe UI';
 const fontSizeLg = 20.0;
 const fontSizeSm = 18.0;
 const fontSizeXs = 15.0;
+const fontSizeXxs = 13.0;
 
-const fontWeight700 = FontWeight.w700;
 const fontWeight500 = FontWeight.w400;
+const fontWeight700 = FontWeight.w700;
+const fontWeight800 = FontWeight.w800;
+const fontWeight900 = FontWeight.w900;
 
 final mainTextStyle = TextStyle(
   fontFamily: fontFamily,
@@ -30,48 +33,18 @@ final textTextStyle = TextStyle(
 
 final mainTitleBlack = TextStyle(
     fontFamily: fontFamily,
-    fontSize: fontSizeSm,
+    fontSize: fontSizeXs,
     color: Colors.black,
-    fontWeight: fontWeight500);
+    fontWeight: fontWeight800);
 
-Function statusApproval(value) {
-  switch (value) {
-    case 10:
-      {
-        'Request';
-      }
-      break;
+final normalTitle = TextStyle(
+  fontFamily: fontFamily,
+  fontSize: fontSizeSm,
+  color: Colors.white,
+);
 
-    case 20:
-      {
-        'Approve';
-      }
-      break;
-
-    case 30:
-      {
-        'Final Approve';
-      }
-      break;
-
-    case 80:
-      {
-        'Return';
-      }
-      break;
-
-    case 90:
-      {
-        'Reject';
-      }
-      break;
-
-    default:
-      {
-        // ''
-      }
-      break;
-  }
-}
-
-//service const
+final normalTitleblack = TextStyle(
+  fontFamily: fontFamily,
+  fontSize: fontSizeXs,
+  color: Colors.black,
+);

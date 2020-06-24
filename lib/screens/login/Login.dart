@@ -6,6 +6,7 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -24,10 +25,15 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final storage = new FlutterSecureStorage();
+
   final TextEditingController id = TextEditingController();
   final TextEditingController password = TextEditingController();
+
   final chokchey = const AssetImage('assets/images/chokchey.png');
+
   bool _isLogin = false;
+
+  final focus = FocusNode();
 
   @override
   void initState() {
@@ -116,7 +122,7 @@ class _LoginState extends State<Login> {
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: fontSizeLg,
-                  color: blueColor,
+                  color: logolightGreen,
                   fontWeight: fontWeight700,
                 ),
               ),
@@ -128,16 +134,25 @@ class _LoginState extends State<Login> {
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: fontSizeLg,
-                  color: blueColor,
+                  color: logolightGreen,
                   fontWeight: fontWeight700,
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 20),
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: TextField(
+                child: TextFormField(
                     autofocus: true,
                     controller: id,
+                    maxLength: 6,
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.number,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(focus);
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
                     decoration: InputDecoration(
                         labelText: 'User ID',
                         hintText: id.text,
@@ -148,7 +163,19 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.only(left: 20, right: 15),
                 child: TextField(
                     controller: password,
+                    focusNode: focus,
                     obscureText: true,
+                    onSubmitted: (s) async {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
+                      await onClickLogin(context);
+                    },
+                    textInputAction: TextInputAction.done,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       hintText: password.text,
@@ -159,7 +186,7 @@ class _LoginState extends State<Login> {
                 height: 45,
                 margin: EdgeInsets.only(top: 40, bottom: 20),
                 child: FlatButton(
-                  color: blueColor,
+                  color: logolightGreen,
                   textColor: Colors.white,
                   padding: const EdgeInsets.all(8.0),
                   onPressed: () async {
