@@ -1,66 +1,69 @@
 import 'dart:async';
-import 'dart:io' show Platform;
-
+import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 
 Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // final FirebaseApp app = await FirebaseApp.configure(
-  //   name: 'userID',
-  //   options: Platform.isIOS
-  //       ? const FirebaseOptions(
-  //           googleAppID: '1:805483562052:android:ed75b94bbcef00b3c56811',
-  //           gcmSenderID: '805483562052',
-  //           databaseURL: 'https://cff-application-test.firebaseio.com',
-  //         )
-  //       : const FirebaseOptions(
-  //           googleAppID: '1:805483562052:ios:84c9ecab5a575bd9c56811',
-  //           apiKey: 'AIzaSyB7llYDJa-csVh54U-RPSziUssDAc4wtaM',
-  //           databaseURL: 'https://cff-application-test.firebaseio.com',
-  //         ),
-  // );
   Stetho.initialize();
-  runApp(MyApp());
+  runApp(MyHomePage());
 }
 
-class MyApp extends StatelessWidget {
-  // @override
-  // Widget build(BuildContext context) {
-  //   return new MaterialApp(initialRoute: '/login', routes: routes);
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Login(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: Login(),
+//     );
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  // MyHomePage({Key key, this.title}) : super(key: key);
+  // final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final storage = new FlutterSecureStorage();
+  bool _isLogin = false;
+
   @override
-  // Widget build(BuildContext context) {
-  //   return Login();
-  // }
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    isLogin();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future<void> isLogin() async {
+    String ids = await storage.read(key: 'valueid');
+    if (ids != null) {
+      setState(() {
+        _isLogin = true;
+      });
+    } else {
+      setState(() {
+        _isLogin = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Scaffold(
-        body: Container(child: Login()),
-      ),
-      onWillPop: () async => false,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: _isLogin ? Home() : Login(),
     );
   }
 }

@@ -32,17 +32,24 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     getStore();
   }
 
-  getStore() async {
+  Future<void> getStore() async {
     String ids = await storage.read(key: 'valueid');
     String passwords = await storage.read(key: 'password');
-
-    setState(() {
-      id.text = ids;
-      password.text = passwords;
-    });
+    if (mounted) {
+      setState(() {
+        id.text = ids;
+        password.text = passwords;
+      });
+    }
   }
 
 // Create storage Login
