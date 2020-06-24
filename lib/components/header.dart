@@ -8,12 +8,14 @@ class Header extends StatelessWidget {
       this.headerTexts,
       this.drawers,
       this.bottomNavigationBars,
-      this.floatingActionButtons});
+      this.floatingActionButtons,
+      this.actionsNotification});
   final bodys;
   final headerTexts;
   final drawers;
   final bottomNavigationBars;
   final floatingActionButtons;
+  final actionsNotification;
 
   @override
   Widget build(BuildContext context) {
@@ -24,45 +26,8 @@ class Header extends StatelessWidget {
           headerTexts,
           style: mainTitleStyle,
         ),
-        actions: <Widget>[
-          // Using Stack to show Notification Badge
-          new Stack(
-            children: <Widget>[
-              new IconButton(
-                  icon: Icon(
-                    Icons.notifications,
-                    size: 25,
-                  ),
-                  onPressed: () {}),
-              12 != 0
-                  ? new Positioned(
-                      right: 11,
-                      top: 11,
-                      child: new Container(
-                        padding: EdgeInsets.all(2),
-                        decoration: new BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 14,
-                          minHeight: 14,
-                        ),
-                        child: Text(
-                          '12',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
-                  : new Container()
-            ],
-          ),
-        ],
-        backgroundColor: blueColor,
+        actions: actionsNotification,
+        backgroundColor: logolightGreen,
       ),
       body: bodys,
       bottomNavigationBar: bottomNavigationBars,

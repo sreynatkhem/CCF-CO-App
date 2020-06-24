@@ -62,11 +62,11 @@ class _HomeState extends State<Home> {
     final String id = '0401';
     return Drawer(
       child: Container(
-        color: blueColor,
+        color: logolightGreen,
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(color: blueColor),
+              decoration: BoxDecoration(color: logolightGreen),
               child: Column(
                 children: <Widget>[
                   Flexible(
@@ -137,6 +137,44 @@ class _HomeState extends State<Home> {
         child: _drawerList(context),
       ),
       headerTexts: 'Chok Chey',
+      actionsNotification: <Widget>[
+        // Using Stack to show Notification Badge
+        new Stack(
+          children: <Widget>[
+            new IconButton(
+                icon: Icon(
+                  Icons.notifications,
+                  size: 25,
+                ),
+                onPressed: () {}),
+            0 != 0
+                ? new Positioned(
+                    right: 11,
+                    top: 11,
+                    child: new Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '12',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                : new Container()
+          ],
+        ),
+      ],
       bodys: SizedBox.expand(
         child: PageView(
           controller: _pageController,
@@ -148,321 +186,17 @@ class _HomeState extends State<Home> {
               child: Menu(),
             ),
             Container(
-              color: Colors.red,
+              color: Colors.white,
             ),
             Container(
-              color: Colors.green,
+              color: Colors.white,
             ),
             Container(
-              color: Colors.blue,
+              color: Colors.white,
             ),
           ],
         ),
       ),
-      // body: Stack(
-      //   children: <Widget>[
-      //     Transform.translate(
-      //       offset: Offset(24.0, 150.0),
-      //       child: Text(
-      //         'Approval List',
-      //         style: TextStyle(
-      //           fontFamily: 'Segoe UI',
-      //           fontSize: 15,
-      //           color: const Color(0xff313030),
-      //           fontWeight: FontWeight.w700,
-      //         ),
-      //         textAlign: TextAlign.left,
-      //       ),
-      //     ),
-      //     Stack(
-      //       children: <Widget>[
-      //         Transform.translate(
-      //           offset: Offset(303.0, 149.0),
-      //           child: SvgPicture.string(
-      //             _svg_99hgzt,
-      //             allowDrawingOutsideViewBox: true,
-      //           ),
-      //         ),
-      //         Transform.translate(
-      //           offset: Offset(325.0, 148.0),
-      //           child: Text(
-      //             '5',
-      //             style: TextStyle(
-      //               fontFamily: 'Segoe UI',
-      //               fontSize: 18,
-      //               color: const Color(0xffffffff),
-      //               fontWeight: FontWeight.w700,
-      //             ),
-      //             textAlign: TextAlign.left,
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     Transform.translate(
-      //       offset: Offset(6.0, 175.0),
-      //       child: PageLink(
-      //         links: [
-      //           PageLinkInfo(
-      //             transition: LinkTransition.Fade,
-      //             ease: Curves.easeOut,
-      //             duration: 0.3,
-      //             pageBuilder: () => Detail(),
-      //           ),
-      //         ],
-      //         child: SpecificRectClip(
-      //           rect: Rect.fromLTWH(0, 0, 363, 540),
-      //           child: UnconstrainedBox(
-      //             alignment: Alignment.topLeft,
-      //             child: Container(
-      //               width: 363,
-      //               height: 649,
-      //               child: GridView.count(
-      //                 primary: false,
-      //                 padding: EdgeInsets.all(0),
-      //                 mainAxisSpacing: 1,
-      //                 crossAxisSpacing: 20,
-      //                 crossAxisCount: 1,
-      //                 childAspectRatio: 2.814,
-      //                 children: [
-      //                   {},
-      //                   {},
-      //                   {},
-      //                   {},
-      //                   {},
-      //                 ].map((map) {
-      //                   return Transform.translate(
-      //                     offset: Offset(-11.0, -168.0),
-      //                     child: Stack(
-      //                       children: <Widget>[
-      //                         Transform.translate(
-      //                           offset: Offset(20.0, 174.0),
-      //                           child: Container(
-      //                             width: 345.0,
-      //                             height: 111.0,
-      //                             decoration: BoxDecoration(
-      //                               color: const Color(0xffffffff),
-      //                               boxShadow: [
-      //                                 BoxShadow(
-      //                                   color: const Color(0x29000000),
-      //                                   offset: Offset(0, 3),
-      //                                   blurRadius: 6,
-      //                                 ),
-      //                               ],
-      //                             ),
-      //                           ),
-      //                         ),
-      //                         Transform.translate(
-      //                           offset: Offset(41.0, 183.0),
-      //                           child: Text(
-      //                             '[]',
-      //                             style: TextStyle(
-      //                               fontFamily: 'Segoe UI',
-      //                               fontSize: 20,
-      //                               color: const Color(0xffffffff),
-      //                               fontWeight: FontWeight.w700,
-      //                             ),
-      //                             textAlign: TextAlign.left,
-      //                           ),
-      //                         ),
-      //                         Transform.translate(
-      //                           offset: Offset(31.0, 182.0),
-      //                           child: Text(
-      //                             '[Loan] Application - Approval',
-      //                             style: TextStyle(
-      //                               fontFamily: 'Segoe UI',
-      //                               fontSize: 15,
-      //                               color: const Color(0xff020202),
-      //                               fontWeight: FontWeight.w700,
-      //                             ),
-      //                             textAlign: TextAlign.left,
-      //                           ),
-      //                         ),
-      //                         Transform.translate(
-      //                           offset: Offset(31.0, 203.0),
-      //                           child: Text(
-      //                             'Application No: 0120202020502040',
-      //                             style: TextStyle(
-      //                               fontFamily: 'Segoe UI',
-      //                               fontSize: 13,
-      //                               color: const Color(0xff313030),
-      //                               fontWeight: FontWeight.w700,
-      //                             ),
-      //                             textAlign: TextAlign.left,
-      //                           ),
-      //                         ),
-      //                         Transform.translate(
-      //                           offset: Offset(31.0, 221.0),
-      //                           child: Text(
-      //                             '102240-Sykeang Sren[Stung Meanchey]',
-      //                             style: TextStyle(
-      //                               fontFamily: 'Segoe UI',
-      //                               fontSize: 13,
-      //                               color: const Color(0xff313030),
-      //                               fontWeight: FontWeight.w700,
-      //                             ),
-      //                             textAlign: TextAlign.left,
-      //                           ),
-      //                         ),
-      //                         Transform.translate(
-      //                           offset: Offset(31.0, 238.0),
-      //                           child: Text(
-      //                             '18-05-2020 09:35 AM',
-      //                             style: TextStyle(
-      //                               fontFamily: 'Segoe UI',
-      //                               fontSize: 13,
-      //                               color: const Color(0xff888383),
-      //                               fontWeight: FontWeight.w700,
-      //                             ),
-      //                             textAlign: TextAlign.left,
-      //                           ),
-      //                         ),
-      //                         Transform.translate(
-      //                           offset: Offset(331.0, 208.0),
-      //                           child:
-      //                               // Adobe XD layer: 'arrow-right' (shape)
-      //                               Container(
-      //                             width: 24.0,
-      //                             height: 24.0,
-      //                             decoration: BoxDecoration(
-      //                               image: DecorationImage(
-      //                                 image: const AssetImage(
-      //                                     'assets/images/arrow_right.png'),
-      //                                 fit: BoxFit.fill,
-      //                               ),
-      //                             ),
-      //                           ),
-      //                         ),
-      //                       ],
-      //                     ),
-      //                   );
-      //                 }).toList(),
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //     Transform.translate(
-      //       offset: Offset(0.0, 20.0),
-      //       child: Stack(
-      //         children: <Widget>[
-      //           Transform.translate(
-      //             offset: Offset(15.0, 77.0),
-      //             child: Container(
-      //               width: 345.0,
-      //               height: 40.0,
-      //               decoration: BoxDecoration(
-      //                 borderRadius: BorderRadius.circular(20.0),
-      //                 color: const Color(0xffffffff),
-      //                 border: Border.all(
-      //                     width: 2.0, color: const Color(0xffe8e8e8)),
-      //                 boxShadow: [
-      //                   BoxShadow(
-      //                     color: const Color(0x0d000000),
-      //                     offset: Offset(0, 10),
-      //                     blurRadius: 99,
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ),
-      //           Transform.translate(
-      //             offset: Offset(34.14, 89.68),
-      //             child: SvgPicture.string(
-      //               _svg_cqepgq,
-      //               allowDrawingOutsideViewBox: true,
-      //             ),
-      //           ),
-      //           Transform.translate(
-      //             offset: Offset(146.0, 89.5),
-      //             child: Text(
-      //               'Find Approval',
-      //               style: TextStyle(
-      //                 fontFamily: 'Josefin Sans',
-      //                 fontSize: 15,
-      //                 color: const Color(0xcc888383),
-      //                 height: 1,
-      //               ),
-      //               textAlign: TextAlign.left,
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //     Stack(
-      //       children: <Widget>[
-      //         Container(
-      //           width: 375.0,
-      //           height: 77.0,
-      //           decoration: BoxDecoration(
-      //             color: const Color(0xff0abab5),
-      //           ),
-      //         ),
-      //         Transform.translate(
-      //           offset: Offset(135.0, 30.0),
-      //           child: Text(
-      //             'CHOKCHEY',
-      //             style: TextStyle(
-      //               fontFamily: 'Segoe UI',
-      //               fontSize: 20,
-      //               color: const Color(0xffffffff),
-      //               fontWeight: FontWeight.w700,
-      //             ),
-      //             textAlign: TextAlign.left,
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     Transform.translate(
-      //       offset: Offset(-6.0, 4.0),
-      //       child: Stack(
-      //         children: <Widget>[
-      //           Transform.translate(
-      //             offset: Offset(12.0, 25.0),
-      //             child: PageLink(
-      //               links: [
-      //                 PageLinkInfo(
-      //                   transition: LinkTransition.Fade,
-      //                   ease: Curves.easeOut,
-      //                   duration: 0.3,
-      //                   pageBuilder: () => Profile(
-      //                     profile:
-      //                         const AssetImage('assets/images/profile.jpg'),
-      //                   ),
-      //                 ),
-      //               ],
-      //               child: Container(
-      //                 width: 47.0,
-      //                 height: 30.0,
-      //                 decoration: BoxDecoration(
-      //                   color: const Color(0xff0abab5),
-      //                 ),
-      //               ),
-      //             ),
-      //           ),
-      //           Transform.translate(
-      //             offset: Offset(25.0, 33.0),
-      //             child:
-      //                 // Adobe XD layer: 'ic_reorder_24px' (shape)
-      //                 SvgPicture.string(
-      //               _svg_ft13kl,
-      //               allowDrawingOutsideViewBox: true,
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //     Transform.translate(
-      //       offset: Offset(335.0, 36.0),
-      //       child:
-      //           // Adobe XD layer: 'ic_notifications_24…' (shape)
-      //           SvgPicture.string(
-      //         _svg_7n42va,
-      //         allowDrawingOutsideViewBox: true,
-      //       ),
-      //     ),
-      //   ],
-      // ),
       bottomNavigationBars: BottomNavyBar(
         selectedIndex: _currentIndex,
         onItemSelected: (index) {
@@ -474,22 +208,22 @@ class _HomeState extends State<Home> {
               title: Text('Home'),
               icon: Icon(Icons.home),
               textAlign: TextAlign.center,
-              activeColor: blueColor),
+              activeColor: logolightGreen),
           BottomNavyBarItem(
               title: Text('Category'),
               icon: Icon(Icons.apps),
               textAlign: TextAlign.center,
-              activeColor: blueColor),
+              activeColor: logolightGreen),
           BottomNavyBarItem(
               title: Text('Search'),
               icon: Icon(Icons.search),
               textAlign: TextAlign.center,
-              activeColor: blueColor),
+              activeColor: logolightGreen),
           BottomNavyBarItem(
               title: Text('Setting'),
               icon: Icon(Icons.settings),
               textAlign: TextAlign.center,
-              activeColor: blueColor),
+              activeColor: logolightGreen),
         ],
       ),
     );

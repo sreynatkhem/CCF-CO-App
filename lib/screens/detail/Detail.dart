@@ -258,7 +258,7 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
                                     onPressed: () {
                                       authrize(context);
                                     },
-                                    color: blueColor,
+                                    color: logolightGreen,
                                     text: 'Authrize'),
                                 Padding(padding: EdgeInsets.only(right: 5)),
                                 Button(

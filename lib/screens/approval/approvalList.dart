@@ -144,7 +144,7 @@ class _ApprovalListsState extends State<ApprovalLists>
         leading: _isSearching ? const BackButton() : null,
         title: _isSearching ? _buildSearchField() : _buildTitle(context),
         actions: _buildActions(),
-        backgroundColor: blueColor,
+        backgroundColor: logolightGreen,
       ),
       body: RefreshIndicator(
         onRefresh: () => _refreshApproval(context),
