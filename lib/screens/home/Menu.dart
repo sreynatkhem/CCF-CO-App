@@ -48,7 +48,6 @@ class _MenuState extends State<Menu> {
                   imageNetwork: list,
                   text: 'List Loan Approve',
                 ),
-
                 MenuCard(
                   onTap: () => Navigator.push(
                     context,
@@ -65,24 +64,6 @@ class _MenuState extends State<Menu> {
                   imageNetwork: loanRegistration,
                   text: 'Loan Registration',
                 ),
-                // MenuCard(
-                //   onTap: () => null,
-                //   color: primaryBlue,
-                //   imageNetwork: returns,
-                //   text: 'Return',
-                // ),
-                // MenuCard(
-                //   onTap: () => null,
-                //   color: const Color(0xFFE4DB755),
-                //   imageNetwork: aprroved,
-                //   text: 'Approval',
-                // ),
-                // MenuCard(
-                //   onTap: () => null,
-                //   color: lightBlue,
-                //   imageNetwork: aprroved,
-                //   text: 'Approval',
-                // ),
               ],
             ),
           ),
