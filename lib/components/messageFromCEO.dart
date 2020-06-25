@@ -25,8 +25,7 @@ class CardMessage extends StatelessWidget {
                     )),
               ),
               Container(
-                width: 330,
-                height: 160,
+                width: 350,
                 child: Card(
                   color: Colors.white,
                   elevation: 5,
