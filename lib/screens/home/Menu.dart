@@ -31,7 +31,7 @@ class _MenuState extends State<Menu> {
       child: Column(
         children: <Widget>[
           Expanded(
-            flex: 3,
+            flex: 4,
             child: GridView.count(
               primary: false,
               padding: const EdgeInsets.only(left: 45.0, right: 45.0, top: 20),

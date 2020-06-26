@@ -1,30 +1,19 @@
 import 'dart:async';
-import 'package:chokchey_finance/screens/home/Home.dart';
+import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:flutter/material.dart';
-import 'package:chokchey_finance/screens/login/Login.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'package:chokchey_finance/screens/home/Home.dart';
+import 'package:chokchey_finance/screens/login/Login.dart';
 
 Future<void> main() async {
   Stetho.initialize();
   runApp(MyHomePage());
 }
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: Login(),
-//     );
-//   }
-// }
-
 class MyHomePage extends StatefulWidget {
-  // MyHomePage({Key key, this.title}) : super(key: key);
-  // final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -38,12 +27,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     isLogin();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   Future<void> isLogin() async {
@@ -61,9 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: _isLogin ? Home() : Login(),
+    return ChangeNotifierProvider(
+      create: (cxt) => ApprovelistProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: _isLogin ? Home() : Login(),
+      ),
     );
   }
 }

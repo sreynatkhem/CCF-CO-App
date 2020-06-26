@@ -74,7 +74,6 @@ class _LoginState extends State<Login> {
               dataSnapshot.value.forEach(([key, value]) async => {
                     if (key['user_id'] == valueid && valuePassword == '1234')
                       {
-                        print('user_id: ${key['user_id']}'),
                         setState(() {
                           _isLogin = false;
                         }),

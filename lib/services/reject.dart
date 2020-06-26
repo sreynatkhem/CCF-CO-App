@@ -25,9 +25,7 @@ Future<List<Approval>> rejectFunction(
         },
         body: bodyRow);
     final parsed = jsonDecode(response.body);
-    print("parsed: $parsed");
   } catch (error) {
     client.close();
-    print('error: $error');
   }
 }

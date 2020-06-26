@@ -17,7 +17,7 @@ Future<List<Approval>> registerApproval(
 
   final bodyRow =
       "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"80\",\n    \"loanApprovalApplicationNo\": \"$loanApprovalApplicationNo\",\n    \"authorizationOpinionContents\": \"Please re-check on loan fund purpose \"\n    }\n}";
-
+  print("bodyRow $bodyRow");
   try {
     final response = await client.post(baseUrl + 'LRA0004',
         headers: {
@@ -28,6 +28,6 @@ Future<List<Approval>> registerApproval(
     print("parsed: $parsed");
   } catch (error) {
     client.close();
-    print('error: $error');
+    print("error: $error");
   }
 }

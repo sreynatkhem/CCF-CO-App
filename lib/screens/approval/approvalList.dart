@@ -1,11 +1,13 @@
 import 'dart:io';
-import 'package:chokchey_finance/components/cardListApproval.dart';
-import 'package:chokchey_finance/modals/index.dart';
+// import 'package:chokchey_finance/providers/approveList.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
+import 'package:chokchey_finance/widget/approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+// import '../../services/approvalList.dart';
 
 class ApprovalLists extends StatefulWidget {
   @override
@@ -19,19 +21,43 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   TextEditingController _searchQuery;
   bool _isSearching = false;
-  String searchQuery = "Search query";
+  var _isLoading = false;
 
-  // borderRadius
+  String searchQuery = "Search query";
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    // if (_isInit) {
+    //   Provider.of<ApprovelistProvider>(context)
+    //       .fetchApprovals(http.Client())
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //     print("gg $_isLoading");
+    //   });
+    // }
+    // _isInit = false;
+
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
     super.initState();
     _searchQuery = new TextEditingController();
-    // futureAlbum = fetchAlbum();
   }
 
+  @override
+  bool updateShouldNotify(_ApprovalListsState oldWidget) {}
+  // color != oldWidget.color;
+
   void _startSearch() {
-    print("open search box");
     ModalRoute.of(context)
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
 
@@ -49,7 +75,6 @@ class _ApprovalListsState extends State<ApprovalLists>
   }
 
   void _clearSearchQuery() {
-    print("close search box");
     setState(() {
       _searchQuery.clear();
       updateSearchQuery("Search query");
@@ -59,7 +84,6 @@ class _ApprovalListsState extends State<ApprovalLists>
   Widget _buildTitle(BuildContext context) {
     var horizontalTitleAlignment =
         Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
-
     return new InkWell(
       onTap: () => scaffoldKey.currentState.openDrawer(),
       child: new Padding(
@@ -100,7 +124,6 @@ class _ApprovalListsState extends State<ApprovalLists>
     setState(() {
       searchQuery = newQuery;
     });
-    print("search query " + newQuery);
   }
 
   List<Widget> _buildActions() {
@@ -128,12 +151,10 @@ class _ApprovalListsState extends State<ApprovalLists>
   }
 
   var isLoading = false;
-  onApprove(value) {
-    return print('object');
-  }
 
   _refreshApproval(context) async {
-    await fetchApprovals(http.Client());
+    await Provider.of<ApprovelistProvider>(context)
+        .fetchApprovals(http.Client());
   }
 
   @override
@@ -148,15 +169,7 @@ class _ApprovalListsState extends State<ApprovalLists>
       ),
       body: RefreshIndicator(
         onRefresh: () => _refreshApproval(context),
-        child: FutureBuilder<List<Approval>>(
-          future: fetchApprovals(http.Client()),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            return snapshot.hasData
-                ? ApprovalListCard(approvalList: snapshot.data)
-                : Center(child: CircularProgressIndicator());
-          },
-        ),
+        child: Approval_widget(),
       ),
     );
   }

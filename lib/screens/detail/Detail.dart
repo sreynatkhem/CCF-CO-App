@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:chokchey_finance/components/button.dart';
-import 'package:chokchey_finance/components/buttonPlus.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:chokchey_finance/services/reject.dart';
 import 'package:chokchey_finance/services/returnFuc.dart';
@@ -13,6 +12,7 @@ import 'package:chokchey_finance/services/registerApproval.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Detail extends StatefulWidget {
   final loanApprovalApplicationNo;
@@ -66,7 +66,6 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   }
 
   void _startSearch() {
-    print("open search box");
     ModalRoute.of(context)
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
 
@@ -84,7 +83,6 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   }
 
   void _clearSearchQuery() {
-    print("close search box");
     setState(() {
       _searchQuery.clear();
       updateSearchQuery("Search query");
@@ -135,7 +133,6 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     setState(() {
       searchQuery = newQuery;
     });
-    print("search query " + newQuery);
   }
 
   List<Widget> _buildActions() {
@@ -163,9 +160,6 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   }
 
   var _isLoading = false;
-  onApprove(value) {
-    return print('object');
-  }
 
   int _angle = 90;
   bool _isRotated = true;
@@ -188,43 +182,36 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     });
   }
 
-  authrize(context) {
+  authrize(context) async {
     setState(() {
       _isLoading = true;
     });
-    registerApproval(http.Client(), loanApprovalApplicationNo, 20).then(
-      (_) => setState(() {
-        _isLoading = false;
-        Navigator.pop(context);
-        fetchApprovals(http.Client());
-      }),
-    );
+    await Provider.of<ApprovelistProvider>(context, listen: false)
+        .fetchApprovals(http.Client());
+
+    await registerApproval(http.Client(), loanApprovalApplicationNo, 20);
+    await Navigator.pop(context);
   }
 
   returnFuc(context) async {
     setState(() {
       _isLoading = true;
     });
-    returnFunction(http.Client(), loanApprovalApplicationNo, 80).then(
-      (_) => setState(() {
-        _isLoading = false;
-        Navigator.pop(context);
-        fetchApprovals(http.Client());
-      }),
-    );
+    await Provider.of<ApprovelistProvider>(context, listen: false)
+        .fetchApprovals(http.Client());
+    await returnFunction(http.Client(), loanApprovalApplicationNo, 80)
+        .then((_) => {});
+    Navigator.pop(context);
   }
 
   reject(context) async {
     setState(() {
       _isLoading = true;
     });
-    rejectFunction(http.Client(), loanApprovalApplicationNo, 90).then(
-      (_) => setState(() {
-        _isLoading = false;
-        Navigator.pop(context);
-        fetchApprovals(http.Client());
-      }),
-    );
+    await Provider.of<ApprovelistProvider>(context, listen: false)
+        .fetchApprovals(http.Client());
+    rejectFunction(http.Client(), loanApprovalApplicationNo, 90);
+    await Navigator.pop(context);
   }
 
   _refreshDetail(context) async {
@@ -234,147 +221,75 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return new Header(
-        headerTexts: 'Detail',
-        bodys: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : RefreshIndicator(
-                onRefresh: () => _refreshDetail(context),
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 0,
-                        child: Container(
-                            padding: EdgeInsets.only(top: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Button(
-                                    widtdButton: _widtdButton,
-                                    heightButton: _heightButton,
-                                    borderRadius: _borderRadius,
-                                    onPressed: () {
-                                      authrize(context);
-                                    },
-                                    color: logolightGreen,
-                                    text: 'Authrize'),
-                                Padding(padding: EdgeInsets.only(right: 5)),
-                                Button(
-                                    widtdButton: _widtdButton,
-                                    heightButton: _heightButton,
-                                    borderRadius: _borderRadius,
-                                    onPressed: () {
-                                      returnFuc(context);
-                                    },
-                                    color: Colors.green,
-                                    text: 'Return'),
-                                Padding(padding: EdgeInsets.only(right: 5)),
-                                Button(
-                                    widtdButton: _widtdButton,
-                                    heightButton: _heightButton,
-                                    borderRadius: _borderRadius,
-                                    onPressed: () {
-                                      reject(context);
-                                    },
-                                    color: Colors.red,
-                                    text: 'Reject'),
-                                Padding(padding: EdgeInsets.only(right: 5)),
-                              ],
-                            )),
+      headerTexts: 'Detail',
+      bodys: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+              onRefresh: () => _refreshDetail(context),
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: FutureBuilder<List<DetailApproval>>(
+                        future: fetchDetail(
+                            http.Client(), loanApprovalApplicationNo),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) print(snapshot.error);
+                          return snapshot.hasData
+                              ? DetailApprovalListCard(
+                                  approvalListDetail: snapshot.data)
+                              : Center(child: CircularProgressIndicator());
+                        },
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: FutureBuilder<List<DetailApproval>>(
-                          future: fetchDetail(
-                              http.Client(), loanApprovalApplicationNo),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) print(snapshot.error);
-                            return snapshot.hasData
-                                ? DetailApprovalListCard(
-                                    approvalListDetail: snapshot.data)
-                                : Center(child: CircularProgressIndicator());
-                          },
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Container(
+                      height: 70,
+                      padding: EdgeInsets.only(top: 5),
+                      margin: EdgeInsets.all(0),
+                      child: Container(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Button(
+                              widtdButton: _widtdButton,
+                              heightButton: _heightButton,
+                              borderRadius: _borderRadius,
+                              onPressed: () {
+                                reject(context);
+                              },
+                              color: Colors.red,
+                              text: 'Reject'),
+                          Padding(padding: EdgeInsets.only(right: 5)),
+                          Button(
+                              widtdButton: _widtdButton,
+                              heightButton: _heightButton,
+                              borderRadius: _borderRadius,
+                              onPressed: () {
+                                returnFuc(context);
+                              },
+                              color: Colors.green,
+                              text: 'Return'),
+                          Padding(padding: EdgeInsets.only(right: 5)),
+                          Button(
+                              widtdButton: _widtdButton,
+                              heightButton: _heightButton,
+                              borderRadius: _borderRadius,
+                              onPressed: () {
+                                authrize(context);
+                              },
+                              color: logolightGreen,
+                              text: 'Authrize'),
+                        ],
+                      )),
+                    )
+                  ],
                 ),
               ),
-        floatingActionButtons: new Stack(children: <Widget>[
-          ButtonPlus(
-            bottom: 200.0,
-            right: 24.0,
-            animation3: _animation3,
-            color: new Color(0xFF9E9E9E),
-            text: 'Co-Borrower / Gu',
-            onTap: () {
-              if (_angle == 45.0) {
-                print("GG1");
-              }
-            },
-          ),
-          ButtonPlus(
-            bottom: 144.0,
-            right: 24.0,
-            animation3: _animation3,
-            color: new Color(0xFF00BFA5),
-            text: 'Collateral Info',
-            onTap: () {
-              if (_angle == 45.0) {
-                print("Collateral Info");
-              }
-            },
-          ),
-          ButtonPlus(
-            bottom: 88.0,
-            right: 24.0,
-            animation3: _animation3,
-            color: new Color(0xFFE57373),
-            text: 'Application Information',
-            onTap: () {
-              if (_angle == 45.0) {
-                print("Application Information");
-              }
-            },
-          ),
-          new Positioned(
-            bottom: 16.0,
-            right: 16.0,
-            child: new Material(
-                color: new Color(0xFFE57373),
-                type: MaterialType.circle,
-                elevation: 6.0,
-                // child: Container(
-                //     width: 56.0,
-                //     height: 56.00,
-                //     child: RaisedButton(
-                //       onPressed: null,
-                //     )),
-                child: new GestureDetector(
-                  child: new Container(
-                      width: 56.0,
-                      height: 56.00,
-                      child: new InkWell(
-                        borderRadius: BorderRadius.circular(100),
-                        splashColor: Colors.red,
-                        onTap: _rotate,
-                        child: new Center(
-                            child: new RotationTransition(
-                          turns: new AlwaysStoppedAnimation(_angle / 360),
-                          child: new Icon(
-                            Icons.add,
-                            color: new Color(0xFFFFFFFF),
-                          ),
-                        )),
-                        // splashColor: Colors.red, // inkwell color
-                        // child: SizedBox(
-                        //     width: 56, height: 56, child: Icon(Icons.menu)),
-                        // onTap: () {},
-                      )),
-                )),
-          ),
-        ]));
+            ),
+    );
   }
 }

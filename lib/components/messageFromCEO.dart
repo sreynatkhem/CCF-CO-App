@@ -10,9 +10,8 @@ class CardMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 10),
       child: Expanded(
-          flex: 1,
+          flex: 2,
           child: Column(
             children: <Widget>[
               Container(

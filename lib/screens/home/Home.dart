@@ -136,7 +136,7 @@ class _HomeState extends State<Home> {
       drawers: new Drawer(
         child: _drawerList(context),
       ),
-      headerTexts: 'Chok Chey',
+      headerTexts: 'Loan',
       actionsNotification: <Widget>[
         // Using Stack to show Notification Badge
         new Stack(

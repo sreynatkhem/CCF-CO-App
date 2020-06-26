@@ -11,8 +11,6 @@ class ApprovalListCard extends StatelessWidget {
   ApprovalListCard({Key key, this.approvalList}) : super(key: key);
 
   onClickCard(value, context) {
-    print("value: ${value.loanApprovalApplicationNo}");
-
     Navigator.push(
         context,
         MaterialPageRoute(
