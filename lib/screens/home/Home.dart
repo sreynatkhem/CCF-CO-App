@@ -3,9 +3,6 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:adobe_xd/specific_rect_clip.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -50,7 +47,6 @@ class _HomeState extends State<Home> {
 
   getStoreUser() async {
     String user_id = await storage.read(key: 'user_id');
-
     String user_name = await storage.read(key: 'user_name');
     setState(() {
       userName = user_name ?? '';
@@ -64,12 +60,6 @@ class _HomeState extends State<Home> {
         context,
         MaterialPageRoute(builder: (context) => Login()),
         ModalRoute.withName("/login"));
-
-    // Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute<Null>(
-    // builder: (BuildContext context) {
-    //   return new Detail(value.loanApprovalApplicationNo);
-    // },
-    // fullscreenDialog: true));
   }
 
   _drawerList(context) {

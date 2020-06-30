@@ -1,18 +1,11 @@
-import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
-import 'package:chokchey_finance/services/login.dart';
-import 'package:chokchey_finance/services/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:adobe_xd/page_link.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
 
 class Login extends StatefulWidget {
   final ImageProvider chokchey;
@@ -36,15 +29,10 @@ class _LoginState extends State<Login> {
   final focus = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
     getStore();
+    super.didChangeDependencies();
   }
 
   Future<void> getStore() async {
