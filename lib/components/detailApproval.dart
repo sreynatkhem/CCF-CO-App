@@ -1,7 +1,6 @@
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
 
 class DetailApprovalListCard extends StatelessWidget {
   final List<DetailApproval> approvalListDetail;
@@ -29,7 +28,7 @@ class DetailApprovalListCard extends StatelessWidget {
 
       case '20':
         {
-          return Text('Approve');
+          return Text('Approved');
         }
         break;
 

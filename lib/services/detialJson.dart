@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:chokchey_finance/services/manageService.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../modals/index.dart';
 
@@ -18,11 +16,5 @@ Future<List<DetailApproval>> fetchDetail(
     return list
         .map<DetailApproval>((json) => DetailApproval.fromJson(json))
         .toList();
-    // return compute(parseApprovals, response.body);
   } catch (error) {}
 }
-
-// A function that converts a response body into a List<Approval>.
-// List<DetailApproval> parseApprovals(String responseBody) {
-//   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-// }
