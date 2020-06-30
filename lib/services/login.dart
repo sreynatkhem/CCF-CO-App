@@ -9,12 +9,9 @@ import '../modals/index.dart';
 Future<List<LoginModals>> fetchLogins(http.Client client) async {
   try {
     final response = await client.get(fireBaseUrl);
-    // print(' response.body ${response.body}');
     // Use the compute function to run parseLogins in a separate isolate.
     return compute(parseLogins, response.body);
-  } catch (error) {
-    print('error:, $error');
-  }
+  } catch (error) {}
 }
 
 // A function that converts a response body into a List<Login>.

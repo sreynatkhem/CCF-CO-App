@@ -74,7 +74,6 @@ class _LoginState extends State<Login> {
               dataSnapshot.value.forEach(([key, value]) async => {
                     if (key['user_id'] == valueid && valuePassword == '1234')
                       {
-                        print('user_id: ${key['user_id']}'),
                         setState(() {
                           _isLogin = false;
                         }),
@@ -145,6 +144,11 @@ class _LoginState extends State<Login> {
                     autofocus: true,
                     controller: id,
                     maxLength: 6,
+                    onChanged: (text) {
+                      if (text.length == 6) {
+                        FocusScope.of(context).requestFocus(focus);
+                      }
+                    },
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
                     onFieldSubmitted: (v) {

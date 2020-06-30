@@ -19,9 +19,7 @@ Future<List<DetailApproval>> fetchDetail(
         .map<DetailApproval>((json) => DetailApproval.fromJson(json))
         .toList();
     // return compute(parseApprovals, response.body);
-  } catch (error) {
-    print('error: $error');
-  }
+  } catch (error) {}
 }
 
 // A function that converts a response body into a List<Approval>.

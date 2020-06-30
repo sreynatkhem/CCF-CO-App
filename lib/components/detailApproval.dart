@@ -16,12 +16,10 @@ class DetailApprovalListCard extends StatelessWidget {
   DetailApprovalListCard({Key key, this.approvalListDetail}) : super(key: key);
 
   onClickCard(value, context) {
-    print('value: $value');
     // Navigator.push(context, MaterialPageRoute(builder: (context) => Detail(value.)));
   }
 
   statusApproval(value) {
-    print("value: $value");
     switch (value) {
       case '10':
         {
@@ -115,7 +113,6 @@ class DetailApprovalListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: approvalListDetail.length,
-        padding: const EdgeInsets.only(top: 20.0),
         itemBuilder: (context, index) {
           var dateTime = approvalListDetail[index].applicationDate;
           var status =

@@ -21,6 +21,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: drawers,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           headerTexts,
