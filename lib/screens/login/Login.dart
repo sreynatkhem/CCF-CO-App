@@ -144,6 +144,11 @@ class _LoginState extends State<Login> {
                     autofocus: true,
                     controller: id,
                     maxLength: 6,
+                    onChanged: (text) {
+                      if (text.length == 6) {
+                        FocusScope.of(context).requestFocus(focus);
+                      }
+                    },
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
                     onFieldSubmitted: (v) {

@@ -1,5 +1,5 @@
+import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
-import 'package:chokchey_finance/screens/home/Listdrawer.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +58,20 @@ class _HomeState extends State<Home> {
     });
   }
 
+  onLogOut() async {
+    await storage.write(key: 'valueid', value: '');
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+        ModalRoute.withName("/login"));
+
+    // Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute<Null>(
+    // builder: (BuildContext context) {
+    //   return new Detail(value.loanApprovalApplicationNo);
+    // },
+    // fullscreenDialog: true));
+  }
+
   _drawerList(context) {
     final String id = '0401';
     return Drawer(
@@ -107,18 +121,10 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
                 child: Column(
                   children: <Widget>[
-                    CustomListTile(Icons.settings, 'Settings', () => {}),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    CustomListTile(
-                        Icons.lock,
-                        'Log Out',
-                        () => {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Login()),
-                                  ModalRoute.withName("/login"))
-                            }),
+                    // CustomListTile(
+                    //     Icons.view_list, 'List Loan Approve', () => {}),
+                    // Padding(padding: EdgeInsets.only(top: 10)),
+                    CustomListTile(Icons.lock, 'Log Out', () => {onLogOut()}),
                     Padding(padding: EdgeInsets.only(top: 10)),
                   ],
                 ),
