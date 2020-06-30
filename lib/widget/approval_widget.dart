@@ -8,8 +8,7 @@ import 'package:http/http.dart' as http;
 class Approval_widget extends StatelessWidget {
   @override
   getApprovalList(context) {
-    final getApprovalList =
-        Provider.of<ApprovelistProvider>(context, listen: false);
+    final getApprovalList = Provider.of<ApprovelistProvider>(context);
     return getApprovalList.fetchApprovals(http.Client());
   }
 

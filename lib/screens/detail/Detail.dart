@@ -186,18 +186,18 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<ApprovelistProvider>(context, listen: false)
+    Provider.of<ApprovelistProvider>(context, listen: false)
         .fetchApprovals(http.Client());
 
-    await registerApproval(http.Client(), loanApprovalApplicationNo, 20);
-    await Navigator.pop(context);
+    registerApproval(http.Client(), loanApprovalApplicationNo, 20);
+    Navigator.pop(context);
   }
 
   returnFuc(context) async {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<ApprovelistProvider>(context, listen: false)
+    await Provider.of<ApprovelistProvider>(context)
         .fetchApprovals(http.Client());
     await returnFunction(http.Client(), loanApprovalApplicationNo, 80)
         .then((_) => {});
@@ -208,7 +208,7 @@ class _DetailState extends State<Detail> with SingleTickerProviderStateMixin {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<ApprovelistProvider>(context, listen: false)
+    await Provider.of<ApprovelistProvider>(context)
         .fetchApprovals(http.Client());
     rejectFunction(http.Client(), loanApprovalApplicationNo, 90);
     await Navigator.pop(context);

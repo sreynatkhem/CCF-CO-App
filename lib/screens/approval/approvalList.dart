@@ -21,29 +21,29 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   TextEditingController _searchQuery;
   bool _isSearching = false;
-  var _isLoading = false;
 
   String searchQuery = "Search query";
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    // if (_isInit) {
-    //   Provider.of<ApprovelistProvider>(context)
-    //       .fetchApprovals(http.Client())
-    //       .then((_) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //     print("gg $_isLoading");
-    //   });
-    // }
-    // _isInit = false;
-
+    setState(() {
+      _isLoading = true;
+    });
+    if (_isInit) {
+      Provider.of<ApprovelistProvider>(context)
+          .fetchApprovals(http.Client())
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    setState(() {
+      _isLoading = false;
+    });
+    _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -159,17 +159,26 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      key: scaffoldKey,
-      appBar: new AppBar(
-        leading: _isSearching ? const BackButton() : null,
-        title: _isSearching ? _buildSearchField() : _buildTitle(context),
-        actions: _buildActions(),
-        backgroundColor: logolightGreen,
-      ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshApproval(context),
-        child: Approval_widget(),
+    return ChangeNotifierProvider(
+      create: (cxt) => ApprovelistProvider(),
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: new AppBar(
+          leading: _isSearching ? const BackButton() : null,
+          title: _isSearching ? _buildSearchField() : _buildTitle(context),
+          actions: _buildActions(),
+          backgroundColor: logolightGreen,
+        ),
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : RefreshIndicator(
+                onRefresh: () async =>
+                    await Provider.of<ApprovelistProvider>(context)
+                        .fetchApprovals(http.Client()),
+                child: Approval_widget(),
+              ),
       ),
     );
   }

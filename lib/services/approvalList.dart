@@ -15,7 +15,6 @@ class ApprovelistProvider with ChangeNotifier {
 
     final bodyRow =
         "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"${user_id}\"\n    }\n}\n";
-
     try {
       final response = await client.post(baseUrl + 'LRA0002',
           headers: {
