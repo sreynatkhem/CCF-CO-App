@@ -2,7 +2,6 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
 
 class CustomerRegister extends StatefulWidget {
   @override
@@ -90,7 +89,7 @@ class _CustomerRegister extends State {
               alignment: Alignment.center,
               child: Container(
                 width: 300,
-                // height: 92,
+                height: 90,
                 padding: EdgeInsets.only(top: 50, left: 10),
                 child: new RaisedButton(
                   onPressed: () {},

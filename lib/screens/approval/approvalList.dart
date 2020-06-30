@@ -1,5 +1,4 @@
 import 'dart:io';
-// import 'package:chokchey_finance/providers/approveList.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -7,7 +6,6 @@ import 'package:chokchey_finance/widget/approval_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-// import '../../services/approvalList.dart';
 
 class ApprovalLists extends StatefulWidget {
   @override
@@ -52,10 +50,6 @@ class _ApprovalListsState extends State<ApprovalLists>
     super.initState();
     _searchQuery = new TextEditingController();
   }
-
-  @override
-  bool updateShouldNotify(_ApprovalListsState oldWidget) {}
-  // color != oldWidget.color;
 
   void _startSearch() {
     ModalRoute.of(context)
