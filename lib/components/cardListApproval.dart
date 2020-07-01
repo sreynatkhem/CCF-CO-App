@@ -1,9 +1,7 @@
 import 'package:chokchey_finance/modals/index.dart';
-import 'package:chokchey_finance/screens/detail/Detail.dart';
-import 'package:chokchey_finance/services/detialJson.dart';
+import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class ApprovalListCard extends StatelessWidget {
   final List<Approval> approvalList;
@@ -11,9 +9,15 @@ class ApprovalListCard extends StatelessWidget {
   ApprovalListCard({Key key, this.approvalList}) : super(key: key);
 
   onClickCard(value, context) {
+    // Navigator.of(context).push(new MaterialPageRoute<Null>(
+    //     builder: (BuildContext context) {
+    //       return new Detail(value.loanApprovalApplicationNo);
+    //     },
+    //     fullscreenDialog: true));
+    final loanApprovalApplicationNo = value.loanApprovalApplicationNo;
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
-          return new Detail(value.loanApprovalApplicationNo);
+          return new TabBarMenu(loanApprovalApplicationNo);
         },
         fullscreenDialog: true));
   }

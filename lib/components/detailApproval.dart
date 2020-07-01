@@ -142,10 +142,10 @@ class DetailApprovalListCard extends StatelessWidget {
                                 image: imageStatus != null
                                     ? imageStatus
                                     : _imagesFindApproval,
-                                width: 75,
-                                height: 70,
+                                width: 45,
+                                height: 45,
                               ),
-                              Padding(padding: EdgeInsets.only(right: 5)),
+                              Padding(padding: EdgeInsets.only(right: 15)),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,

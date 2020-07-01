@@ -3,6 +3,7 @@ import 'package:chokchey_finance/components/cardListApproval.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
+import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';

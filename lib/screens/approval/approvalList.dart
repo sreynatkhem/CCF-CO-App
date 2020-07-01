@@ -163,16 +163,20 @@ class _ApprovalListsState extends State<ApprovalLists>
           actions: _buildActions(),
           backgroundColor: logolightGreen,
         ),
-        body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : RefreshIndicator(
-                onRefresh: () async =>
-                    await Provider.of<ApprovelistProvider>(context)
-                        .fetchApprovals(http.Client()),
-                child: Approval_widget(),
-              ),
+        body:
+            // Center(
+            //   child: Text('helo'),
+            // )
+            _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () async =>
+                        await Provider.of<ApprovelistProvider>(context)
+                            .fetchApprovals(http.Client()),
+                    child: Approval_widget(),
+                  ),
       ),
     );
   }
