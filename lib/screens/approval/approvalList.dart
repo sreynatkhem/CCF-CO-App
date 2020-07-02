@@ -4,10 +4,11 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:chokchey_finance/widget/approval_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class ApprovalLists extends StatefulWidget {
+  static const routeName = '/ApprovalLists';
   @override
   _ApprovalListsState createState() => new _ApprovalListsState();
 }
@@ -19,37 +20,37 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   TextEditingController _searchQuery;
   bool _isSearching = false;
+  bool _isLoading = false;
+  bool _isInit = false;
 
   String searchQuery = "Search query";
-  var _isInit = true;
-  var _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    setState(() {
-      _isLoading = true;
-    });
-    if (_isInit) {
-      Provider.of<ApprovelistProvider>(context)
-          .fetchApprovals(http.Client())
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    setState(() {
-      _isLoading = false;
-    });
-    _isInit = false;
-    super.didChangeDependencies();
-  }
 
   @override
   void initState() {
     super.initState();
     _searchQuery = new TextEditingController();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   if (_isInit) {
+  //     Provider.of<ApprovelistProvider>(context)
+  //         .fetchApprovals(http.Client())
+  //         .then((_) {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     });
+  //   }
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  //   _isInit = false;
+  //   super.didChangeDependencies();
+  // }
 
   void _startSearch() {
     ModalRoute.of(context)
@@ -144,18 +145,9 @@ class _ApprovalListsState extends State<ApprovalLists>
     ];
   }
 
-  var isLoading = false;
-
-  _refreshApproval(context) async {
-    await Provider.of<ApprovelistProvider>(context)
-        .fetchApprovals(http.Client());
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (cxt) => ApprovelistProvider(),
-      child: Scaffold(
+    return Scaffold(
         key: scaffoldKey,
         appBar: new AppBar(
           leading: _isSearching ? const BackButton() : null,
@@ -163,21 +155,18 @@ class _ApprovalListsState extends State<ApprovalLists>
           actions: _buildActions(),
           backgroundColor: logolightGreen,
         ),
-        body:
-            // Center(
-            //   child: Text('helo'),
-            // )
-            _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : RefreshIndicator(
-                    onRefresh: () async =>
-                        await Provider.of<ApprovelistProvider>(context)
-                            .fetchApprovals(http.Client()),
-                    child: Approval_widget(),
-                  ),
-      ),
-    );
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Approval_widget()
+
+        // RefreshIndicator(
+        //     onRefresh: () async =>
+        //         await Provider.of<ApprovelistProvider>(context)
+        //             .fetchApprovals(http.Client()),
+        //     child: Approval_widget(),
+        //   ),
+        );
   }
 }

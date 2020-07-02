@@ -9,7 +9,12 @@ import '../modals/index.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApprovelistProvider with ChangeNotifier {
+  bool _isFetching = false;
+  final data = [];
   Future<List<Approval>> fetchApprovals(http.Client client) async {
+    print('fetchApprovals: :::::');
+    _isFetching = true;
+    notifyListeners();
     final storage = new FlutterSecureStorage();
     String user_id = await storage.read(key: 'user_id');
 
@@ -23,10 +28,15 @@ class ApprovelistProvider with ChangeNotifier {
           body: bodyRow);
       final parsed = jsonDecode(response.body);
       final list = parsed['body']['approvalList'];
+      data.add(list);
+      print('OKAY: ::::: $list');
+      _isFetching = false;
       notifyListeners();
       return list.map<Approval>((json) => Approval.fromJson(json)).toList();
     } catch (error) {
       client.close();
     }
   }
+
+  bool get isFetching => _isFetching;
 }

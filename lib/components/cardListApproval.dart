@@ -9,11 +9,6 @@ class ApprovalListCard extends StatelessWidget {
   ApprovalListCard({Key key, this.approvalList}) : super(key: key);
 
   onClickCard(value, context) {
-    // Navigator.of(context).push(new MaterialPageRoute<Null>(
-    //     builder: (BuildContext context) {
-    //       return new Detail(value.loanApprovalApplicationNo);
-    //     },
-    //     fullscreenDialog: true));
     final loanApprovalApplicationNo = value.loanApprovalApplicationNo;
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
@@ -24,7 +19,9 @@ class ApprovalListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (approvalList.length <= 0) {
+    if (approvalList == null ||
+        approvalList.length == 0 ||
+        approvalList.length <= 0) {
       return Center(
         child: Text(
           'No approval list',
