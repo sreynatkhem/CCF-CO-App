@@ -15,16 +15,23 @@ import 'comment.dart';
 import 'approve.dart';
 
 class TabBarMenu extends StatefulWidget {
-  TabBarMenu(this.loanApprovalApplicationNo);
+  TabBarMenu(
+    this.loanApprovalApplicationNo,
+  );
   final loanApprovalApplicationNo;
 
   @override
-  _TabBarMenuState createState() => _TabBarMenuState(loanApprovalApplicationNo);
+  _TabBarMenuState createState() => _TabBarMenuState(
+        loanApprovalApplicationNo,
+      );
 }
 
 class _TabBarMenuState extends State<TabBarMenu> {
   final loanApprovalApplicationNo;
-  _TabBarMenuState(this.loanApprovalApplicationNo);
+
+  _TabBarMenuState(
+    this.loanApprovalApplicationNo,
+  );
 
   var _isInit = true;
   var _isLoading = false;
@@ -40,8 +47,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
     });
     var comments = controller.text;
     registerApproval(http.Client(), loanApprovalApplicationNo, 20, comments);
-    Provider.of<ApprovelistProvider>(context, listen: false)
-        .fetchApprovals(http.Client());
+    Provider.of<ApprovelistProvider>(context, listen: false).fetchApprovals();
     Navigator.pop(context);
   }
 
@@ -51,8 +57,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<ApprovelistProvider>(context)
-        .fetchApprovals(http.Client());
+    await Provider.of<ApprovelistProvider>(context).fetchApprovals();
     await returnFunction(http.Client(), loanApprovalApplicationNo, 80, comments)
         .then((_) => {});
     Navigator.pop(context);
@@ -60,8 +65,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
 
   reject(context) async {
     var comments = controller.text;
-    await Provider.of<ApprovelistProvider>(context)
-        .fetchApprovals(http.Client());
+    await Provider.of<ApprovelistProvider>(context).fetchApprovals();
     rejectFunction(http.Client(), loanApprovalApplicationNo, 90, comments);
     await Navigator.pop(context);
   }
@@ -70,7 +74,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
 
   @override
   Widget build(BuildContext context) {
-    var future = fetchListDetail(http.Client(), loanApprovalApplicationNo);
+    var future = fetchListDetail(loanApprovalApplicationNo);
     var futureListApprove =
         fetchDetail(http.Client(), loanApprovalApplicationNo);
 
@@ -121,7 +125,10 @@ class _TabBarMenuState extends State<TabBarMenu> {
                     child: Container(
                       child: TabBarView(children: [
                         Detail(loanApprovalApplicationNo, future),
-                        Approve(loanApprovalApplicationNo, futureListApprove),
+                        Approve(
+                          loanApprovalApplicationNo,
+                          futureListApprove,
+                        ),
                         Comments(controller)
                       ]),
                     ),

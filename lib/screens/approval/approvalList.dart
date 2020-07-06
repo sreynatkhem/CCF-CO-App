@@ -1,11 +1,8 @@
 import 'dart:io';
-import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:chokchey_finance/widget/approval_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class ApprovalLists extends StatefulWidget {
   static const routeName = '/ApprovalLists';
@@ -159,14 +156,6 @@ class _ApprovalListsState extends State<ApprovalLists>
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Approval_widget()
-
-        // RefreshIndicator(
-        //     onRefresh: () async =>
-        //         await Provider.of<ApprovelistProvider>(context)
-        //             .fetchApprovals(http.Client()),
-        //     child: Approval_widget(),
-        //   ),
-        );
+            : Approval_widget());
   }
 }

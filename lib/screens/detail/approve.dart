@@ -10,16 +10,24 @@ class Approve extends StatefulWidget {
   final loanApprovalApplicationNo;
   final futureListApprove;
 
-  Approve(this.loanApprovalApplicationNo, this.futureListApprove);
+  Approve(
+    this.loanApprovalApplicationNo,
+    this.futureListApprove,
+  );
   @override
-  _ApproveState createState() =>
-      new _ApproveState(loanApprovalApplicationNo, futureListApprove);
+  _ApproveState createState() => new _ApproveState(
+        loanApprovalApplicationNo,
+        futureListApprove,
+      );
 }
 
 class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
   final futureListApprove;
 
-  _ApproveState(this.loanApprovalApplicationNo, this.futureListApprove);
+  _ApproveState(
+    this.loanApprovalApplicationNo,
+    this.futureListApprove,
+  );
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
@@ -193,7 +201,8 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
                     if (snapshot.hasError) print(snapshot.error);
                     return snapshot.hasData
                         ? DetailApprovalListCard(
-                            approvalListDetail: snapshot.data)
+                            approvalListDetail: snapshot.data,
+                          )
                         : Center(child: CircularProgressIndicator());
                   },
                 ),

@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class ApprovalListCard extends StatelessWidget {
   final List<Approval> approvalList;
+
   final images = const AssetImage('assets/images/request.png');
   ApprovalListCard({Key key, this.approvalList}) : super(key: key);
 

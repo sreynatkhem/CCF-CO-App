@@ -1,5 +1,6 @@
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/services/manageService.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -14,15 +15,13 @@ Future<List<Approval>> registerApproval(http.Client client,
 
   final bodyRow =
       "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"20\",\n    \"loanApprovalApplicationNo\": \"$loanApprovalApplicationNo\",\n    \"authorizationOpinionContents\": \"$comments\"\n    }\n}";
-  print("bodyRow $bodyRow");
   try {
-    final response = await client.post(baseUrl + 'LRA0004',
+    final response = await post().post(baseUrl + 'LRA0004',
         headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
         body: bodyRow);
     final parsed = jsonDecode(response.body);
-    print("parsed: $parsed");
   } catch (error) {
     client.close();
   }

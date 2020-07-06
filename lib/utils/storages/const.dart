@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/io_client.dart' as ioclient;
 
 final String fontFamily = 'Segoe UI';
 
@@ -48,3 +50,11 @@ final normalTitleblack = TextStyle(
   fontSize: fontSizeXs,
   color: Colors.black,
 );
+
+post() {
+  var httpClient = HttpClient();
+  httpClient.badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+  var _ioClient = ioclient.IOClient(httpClient);
+  return _ioClient;
+}

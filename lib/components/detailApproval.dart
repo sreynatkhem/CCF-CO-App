@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 class DetailApprovalListCard extends StatelessWidget {
   final List<DetailApproval> approvalListDetail;
-
   final images = const AssetImage('assets/images/request.png');
   final _imagesList = const AssetImage('assets/images/list.png');
   final _imagesFindApproval =
@@ -159,7 +158,8 @@ class DetailApprovalListCard extends StatelessWidget {
                                   Text(
                                       '${approvalListDetail[index].authorizerEmployeeNo} / ${approvalListDetail[index].authorizationBranchCode}'),
                                   Padding(padding: EdgeInsets.only(bottom: 2)),
-                                  Text('${dateTime}')
+                                  Text('${dateTime}'),
+                                  Padding(padding: EdgeInsets.only(bottom: 2)),
                                 ],
                               ),
                             ],

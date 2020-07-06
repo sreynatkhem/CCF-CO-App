@@ -7,6 +7,7 @@ class DetailApproval {
   final String acceptanceDate;
   final String evaluateStatusCode;
   final String authorizationDate;
+  final String authorizationOpinionContents;
 
   DetailApproval({
     this.authorizerEmpName,
@@ -17,6 +18,7 @@ class DetailApproval {
     this.acceptanceDate,
     this.evaluateStatusCode,
     this.authorizationDate,
+    this.authorizationOpinionContents,
   });
 
   factory DetailApproval.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,8 @@ class DetailApproval {
       acceptanceDate: json['acceptanceDate'] as String,
       evaluateStatusCode: json['evaluateStatusCode'] as String,
       authorizationDate: json['authorizationDate'] as String,
+      authorizationOpinionContents:
+          json['authorizationOpinionContents'] as String,
     );
   }
 }
