@@ -8,6 +8,7 @@ class Approval {
   final String branchName;
   final String authorizationRequestEmpName;
   final String loanApprovalApplicationNo;
+  final String authorizationOpinionContents;
 
   Approval({
     this.standardCodeDomainName2,
@@ -19,6 +20,7 @@ class Approval {
     this.branchName,
     this.authorizationRequestEmpName,
     this.loanApprovalApplicationNo,
+    this.authorizationOpinionContents,
   });
 
   factory Approval.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,8 @@ class Approval {
       authorizationRequestEmpName:
           json['authorizationRequestEmpName'] as String,
       loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String,
+      authorizationOpinionContents:
+          json['authorizationOpinionContents'] as String,
     );
   }
 }

@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   Stetho.initialize();
@@ -48,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: _isLogin ? Home() : Login(),
+        routes: {ApprovalLists.routeName: (cxt) => ApprovalLists()},
       ),
     );
   }

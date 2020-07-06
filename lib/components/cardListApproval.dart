@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -5,15 +7,11 @@ import 'package:flutter/material.dart';
 
 class ApprovalListCard extends StatelessWidget {
   final List<Approval> approvalList;
+
   final images = const AssetImage('assets/images/request.png');
   ApprovalListCard({Key key, this.approvalList}) : super(key: key);
 
   onClickCard(value, context) {
-    // Navigator.of(context).push(new MaterialPageRoute<Null>(
-    //     builder: (BuildContext context) {
-    //       return new Detail(value.loanApprovalApplicationNo);
-    //     },
-    //     fullscreenDialog: true));
     final loanApprovalApplicationNo = value.loanApprovalApplicationNo;
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
@@ -24,7 +22,9 @@ class ApprovalListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (approvalList.length <= 0) {
+    if (approvalList == null ||
+        approvalList.length == 0 ||
+        approvalList.length <= 0) {
       return Center(
         child: Text(
           'No approval list',

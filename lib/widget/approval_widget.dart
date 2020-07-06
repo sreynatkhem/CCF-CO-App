@@ -3,23 +3,29 @@ import 'package:chokchey_finance/modals/approvalList.dart';
 import 'package:chokchey_finance/services/approvalList.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
-class Approval_widget extends StatelessWidget {
+class Approval_widget extends StatefulWidget {
   @override
-  getApprovalList(context) {
-    final getApprovalList = Provider.of<ApprovelistProvider>(context);
-    return getApprovalList.fetchApprovals(http.Client());
-  }
+  _Approval_widgetState createState() => _Approval_widgetState();
+}
+
+class _Approval_widgetState extends State<Approval_widget> {
+  _Approval_widgetState();
+
+  var futureApprovalList;
+  var _isLoading;
 
   Widget build(BuildContext context) {
+    final appState = Provider.of<ApprovelistProvider>(context);
+    _isLoading = appState.isFetching;
+    futureApprovalList =
+        Provider.of<ApprovelistProvider>(context).fetchApprovals();
     return FutureBuilder<List<Approval>>(
-      future: getApprovalList(context),
+      future: futureApprovalList,
       builder: (context, snapshot) {
-        if (snapshot.hasError) print(snapshot.error);
-        return snapshot.hasData
-            ? ApprovalListCard(approvalList: snapshot.data)
-            : Center(child: CircularProgressIndicator());
+        return _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ApprovalListCard(approvalList: snapshot.data);
       },
     );
   }

@@ -1,20 +1,34 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:chokchey_finance/components/detailApproval.dart';
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/services/detialJson.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Approve extends StatefulWidget {
   final loanApprovalApplicationNo;
-  Approve(this.loanApprovalApplicationNo);
+  final futureListApprove;
+
+  Approve(
+    this.loanApprovalApplicationNo,
+    this.futureListApprove,
+  );
   @override
-  _ApproveState createState() => new _ApproveState(loanApprovalApplicationNo);
+  _ApproveState createState() => new _ApproveState(
+        loanApprovalApplicationNo,
+        futureListApprove,
+      );
 }
 
 class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
-  _ApproveState(this.loanApprovalApplicationNo);
+  final futureListApprove;
+
+  _ApproveState(
+    this.loanApprovalApplicationNo,
+    this.futureListApprove,
+  );
+
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
@@ -47,7 +61,6 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
     _controller.reverse();
     super.initState();
     _searchQuery = new TextEditingController();
-    // futureAlbum = fetchAlbum();
   }
 
   void _startSearch() {
@@ -174,34 +187,30 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : RefreshIndicator(
-              onRefresh: () => _refreshDetail(context),
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: FutureBuilder<List<DetailApproval>>(
-                        future: fetchDetail(
-                            http.Client(), loanApprovalApplicationNo),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) print(snapshot.error);
-                          return snapshot.hasData
-                              ? DetailApprovalListCard(
-                                  approvalListDetail: snapshot.data)
-                              : Center(child: CircularProgressIndicator());
-                        },
-                      ),
-                    ),
-                  ],
+      body: RefreshIndicator(
+        onRefresh: () => _refreshDetail(context),
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: FutureBuilder<List<DetailApproval>>(
+                  future: futureListApprove,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) print(snapshot.error);
+                    return snapshot.hasData
+                        ? DetailApprovalListCard(
+                            approvalListDetail: snapshot.data,
+                          )
+                        : Center(child: CircularProgressIndicator());
+                  },
                 ),
               ),
-            ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
