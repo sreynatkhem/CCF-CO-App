@@ -1,6 +1,7 @@
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DetailApprovalListCard extends StatelessWidget {
   final List<DetailApproval> approvalListDetail;
@@ -107,12 +108,21 @@ class DetailApprovalListCard extends StatelessWidget {
     }
   }
 
+  getDateTimeApprove(time) {
+    DateTime dateTimeApproved = DateTime.parse(time);
+    String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
+    return Text(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: approvalListDetail.length,
         itemBuilder: (context, index) {
-          var dateTime = approvalListDetail[index].applicationDate;
+          DateTime dateTimeParseCreated =
+              DateTime.parse(approvalListDetail[index].applicationDate);
+          String dateTimeCreated =
+              DateFormat("yyyy-MM-dd").format(dateTimeParseCreated);
           var status =
               statusApproval(approvalListDetail[index].evaluateStatusCode);
           var imageStatus = approvalListDetail[index].evaluateStatusCode != null
@@ -158,7 +168,7 @@ class DetailApprovalListCard extends StatelessWidget {
                                   Text(
                                       '${approvalListDetail[index].authorizerEmployeeNo} / ${approvalListDetail[index].authorizationBranchCode}'),
                                   Padding(padding: EdgeInsets.only(bottom: 2)),
-                                  Text('${dateTime}'),
+                                  Text('$dateTimeCreated'),
                                   Padding(padding: EdgeInsets.only(bottom: 2)),
                                 ],
                               ),
@@ -169,12 +179,10 @@ class DetailApprovalListCard extends StatelessWidget {
                             children: <Widget>[
                               status,
                               Padding(padding: EdgeInsets.only(bottom: 2)),
-                              Text(
-                                  approvalListDetail[index].authorizationDate ==
-                                          ''
-                                      ? ''
-                                      : approvalListDetail[index]
-                                          .authorizationDate),
+                              if (approvalListDetail[index].authorizationDate !=
+                                  '')
+                                getDateTimeApprove(approvalListDetail[index]
+                                    .authorizationDate),
                               Text(''),
                               Padding(padding: EdgeInsets.only(right: 100))
                             ],

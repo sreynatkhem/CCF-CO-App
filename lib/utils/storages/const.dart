@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/io_client.dart' as ioclient;
+import 'package:http/io_client.dart';
 
 final String fontFamily = 'Segoe UI';
 
@@ -55,6 +55,6 @@ post() {
   var httpClient = HttpClient();
   httpClient.badCertificateCallback =
       ((X509Certificate cert, String host, int port) => true);
-  var _ioClient = ioclient.IOClient(httpClient);
+  var _ioClient = IOClient(httpClient);
   return _ioClient;
 }
