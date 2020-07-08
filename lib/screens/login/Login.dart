@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
         .once()
         .then((dataSnapshot) => {
               dataSnapshot.value.forEach(([key, value]) async => {
-                    if (key['user_id'] == valueid && valuePassword == '1234')
+                    if (key['user_id'] == valueid)
                       {
                         setState(() {
                           _isLogin = false;
@@ -128,10 +128,20 @@ class _LoginState extends State<Login> {
               Container(
                 margin: EdgeInsets.only(top: 20),
                 padding: EdgeInsets.only(left: 20, right: 20),
-                child: TextFormField(
+                child: TextField(
                     autofocus: true,
                     controller: id,
                     maxLength: 6,
+                    onSubmitted: (s) async {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
+                      await onClickLogin(context);
+                    },
                     onChanged: (text) {
                       if (text.length == 6) {
                         FocusScope.of(context).requestFocus(focus);
@@ -139,9 +149,9 @@ class _LoginState extends State<Login> {
                     },
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(focus);
-                    },
+                    // onFieldSubmitted: (v) {
+                    //   FocusScope.of(context).requestFocus(focus);
+                    // },
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly
                     ],
@@ -154,6 +164,7 @@ class _LoginState extends State<Login> {
                 margin: EdgeInsets.only(top: 20),
                 padding: EdgeInsets.only(left: 20, right: 15),
                 child: TextField(
+                    enabled: false,
                     controller: password,
                     focusNode: focus,
                     obscureText: true,

@@ -1,27 +1,31 @@
 import 'dart:convert';
-
 import 'package:chokchey_finance/modals/listApproval.dart';
 import 'package:chokchey_finance/services/manageService.dart';
+import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import '../dummy/list_detail.js' as list_detail;
 import '../dummy/header_detail.js' as header_detail;
 
 class ListDetail extends StatefulWidget {
+  final loanApprovalApplicationNo;
+
   final List<ListApproval> approvalListDetail;
-  ListDetail({Key key, this.approvalListDetail}) : super(key: key);
+  ListDetail({Key key, this.approvalListDetail, this.loanApprovalApplicationNo})
+      : super(key: key);
   @override
-  _ListDetailState createState() => _ListDetailState(this.approvalListDetail);
+  _ListDetailState createState() =>
+      _ListDetailState(this.approvalListDetail, this.loanApprovalApplicationNo);
 }
 
 class _ListDetailState extends State<ListDetail> {
+  final loanApprovalApplicationNo;
   final List<ListApproval> approvalListDetail;
 
-  _ListDetailState(this.approvalListDetail);
+  _ListDetailState(this.approvalListDetail, this.loanApprovalApplicationNo);
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     getValue();
     super.didChangeDependencies();
   }
@@ -35,7 +39,7 @@ class _ListDetailState extends State<ListDetail> {
     });
     try {
       final bodyRowbodyRowDetail =
-          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"loanApprovalApplicationNo\": \"0120202002050238\"\n    }\n}\n";
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"loanApprovalApplicationNo\": \"$loanApprovalApplicationNo\"\n    }\n}\n";
       final response =
           await post().post(baseUrl + 'LRA0003', body: bodyRowbodyRowDetail);
       final parsed = jsonDecode(response.body);
@@ -50,7 +54,6 @@ class _ListDetailState extends State<ListDetail> {
       });
       print('error: $error');
     }
-    // return data.add(list);
   }
 
   @override
@@ -66,29 +69,35 @@ class _ListDetailState extends State<ListDetail> {
                     child: Row(
                       children: <Widget>[
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
                             for (var i in header_detail.header_detail)
                               Container(
-                                width: 240,
+                                // width: 240,
                                 child: Text(
                                   i.toString() + ':',
                                   overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
-                                  style: TextStyle(height: 2, fontSize: 15),
+                                  style: TextStyle(
+                                      height: 2,
+                                      fontSize: 15,
+                                      color: logolightGreen),
                                 ),
                               ),
                           ],
                         ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             for (var i in list_detail.list_detail)
                               Container(
-                                width: 150,
+                                // width: 170,
                                 child: Text(
                                   data[0][i.toString() ?? ''].toString(),
                                   overflow: TextOverflow.fade,
@@ -97,7 +106,8 @@ class _ListDetailState extends State<ListDetail> {
                                   style: TextStyle(
                                       height: 2,
                                       fontSize: 15,
-                                      fontWeight: FontWeight.w700),
+                                      fontWeight: FontWeight.w700,
+                                      color: logolightGreen),
                                 ),
                               ),
                           ],

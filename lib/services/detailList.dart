@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 Future<List<ListApproval>> fetchListDetail(loanApprovalApplicationNo) async {
   final bodyRowbodyRowDetail =
       "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"loanApprovalApplicationNo\": \"$loanApprovalApplicationNo\"\n    }\n}\n";
-  print("loanApprovalApplicationNo: $loanApprovalApplicationNo");
   try {
     final response =
         await post().post(baseUrl + 'LRA0003', body: bodyRowbodyRowDetail);

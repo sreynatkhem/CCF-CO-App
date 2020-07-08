@@ -26,7 +26,9 @@ class _DetailState extends State<Detail> {
           builder: (context, snapshot) {
             if (snapshot.hasError) print(snapshot.error);
             return snapshot.hasData
-                ? ListDetail(approvalListDetail: snapshot.data)
+                ? ListDetail(
+                    approvalListDetail: snapshot.data,
+                    loanApprovalApplicationNo: loanApprovalApplicationNo)
                 : Center(child: CircularProgressIndicator());
           },
         ),
