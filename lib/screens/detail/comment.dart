@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 
 class Comments extends StatefulWidget {
@@ -22,12 +23,13 @@ class _CommentsState extends State<Comments> {
         controller: controller,
         decoration: InputDecoration(
           hintText: "Enter your comments here ",
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            borderSide: BorderSide(width: 1, color: logolightGreen),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(
-              color: Colors.amber,
-              style: BorderStyle.solid,
-            ),
+            borderSide: BorderSide(width: 1, color: logolightGreen),
           ),
         ),
       ),

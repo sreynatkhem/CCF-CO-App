@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
-import 'package:chokchey_finance/services/approvalList.dart';
+import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> isLogin() async {
     String ids = await storage.read(key: 'valueid');
-    if (ids != null) {
+    if (ids != null || ids == '') {
       setState(() {
         _isLogin = true;
       });

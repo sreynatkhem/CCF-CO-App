@@ -2,6 +2,7 @@
 
 import 'package:chokchey_finance/modals/index.dart';
 import 'package:chokchey_finance/screens/detail/index.dart';
+import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class ApprovalListCard extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 5.0),
               child: Card(
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.white70, width: 1),
+                    side: BorderSide(color: logolightGreen, width: 1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: InkWell(
@@ -79,7 +80,7 @@ class ApprovalListCard extends StatelessWidget {
                               ],
                             ),
                             Container(
-                                padding: EdgeInsets.only(left: 0),
+                                padding: EdgeInsets.only(left: 40),
                                 child: Icon(Icons.keyboard_arrow_right)),
                           ]))),
             );

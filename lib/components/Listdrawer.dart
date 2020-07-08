@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -13,7 +14,7 @@ class CustomListTile extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
       child: Container(
         decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey.shade400))),
+            border: Border(bottom: BorderSide(color: logolightGreen))),
         child: InkWell(
             splashColor: Colors.orangeAccent,
             onTap: onTap,
