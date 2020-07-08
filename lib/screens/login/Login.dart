@@ -156,9 +156,13 @@ class _LoginState extends State<Login> {
                       WhitelistingTextInputFormatter.digitsOnly
                     ],
                     decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: logolightGreen),
+                        ),
                         labelText: 'User ID',
                         hintText: id.text,
-                        labelStyle: TextStyle(fontSize: 15))),
+                        labelStyle: TextStyle(
+                            fontSize: 15, color: const Color(0xff0ABAB5)))),
               ),
               Container(
                 margin: EdgeInsets.only(top: 20),
@@ -180,9 +184,13 @@ class _LoginState extends State<Login> {
                     },
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      hintText: password.text,
-                    )),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: logolightGreen),
+                        ),
+                        labelText: 'Password',
+                        hintText: password.text,
+                        labelStyle: TextStyle(
+                            fontSize: 15, color: const Color(0xff0ABAB5)))),
               ),
               Container(
                 width: 320,
@@ -202,7 +210,6 @@ class _LoginState extends State<Login> {
                         });
                     await onClickLogin(context);
                   },
-                  // onPressed: () => {onClickLogin(context)},
                   child: Text(
                     "Log In",
                   ),
@@ -226,6 +233,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
-const String _svg_vrqt87 =
-    '<svg viewBox="46.0 463.0 283.0 35.0" ><path transform="translate(46.0, 463.0)" d="M 10 0 L 273 0 C 278.5228576660156 0 283 4.477152347564697 283 10 L 283 25 C 283 30.52284812927246 278.5228576660156 35 273 35 L 10 35 C 4.477152347564697 35 0 30.52284812927246 0 25 L 0 10 C 0 4.477152347564697 4.477152347564697 0 10 0 Z" fill="#0abab5" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>';

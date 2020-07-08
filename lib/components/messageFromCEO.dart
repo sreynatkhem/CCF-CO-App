@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +16,6 @@ class CardMessage extends StatelessWidget {
       padding: EdgeInsets.all(0),
       margin: EdgeInsets.all(0),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(left: 20, bottom: 5),
@@ -33,6 +32,10 @@ class CardMessage extends StatelessWidget {
               margin: EdgeInsets.only(right: bottomPadding),
               child: Card(
                 color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: logolightGreen, width: 1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 elevation: 2,
                 child: Container(
                   padding: EdgeInsets.all(10),

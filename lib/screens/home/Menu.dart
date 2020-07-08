@@ -1,4 +1,3 @@
-import 'package:chokchey_finance/components/approved.dart';
 import 'package:chokchey_finance/components/cardListApproval.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';

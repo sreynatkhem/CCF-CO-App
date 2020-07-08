@@ -1,16 +1,16 @@
 import 'package:chokchey_finance/components/button.dart';
-import 'package:chokchey_finance/services/approvalList.dart';
-import 'package:chokchey_finance/services/detailList.dart';
-import 'package:chokchey_finance/services/detialJson.dart';
-import 'package:chokchey_finance/services/registerApproval.dart';
-import 'package:chokchey_finance/services/reject.dart';
-import 'package:chokchey_finance/services/returnFuc.dart';
+import 'package:chokchey_finance/providers/approvalList.dart';
+import 'package:chokchey_finance/providers/detailList.dart';
+import 'package:chokchey_finance/providers/detialJson.dart';
+import 'package:chokchey_finance/providers/registerApproval.dart';
+import 'package:chokchey_finance/providers/reject.dart';
+import 'package:chokchey_finance/providers/returnFuc.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/screens/detail/cardDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'Detail.dart';
 import 'comment.dart';
 import 'approve.dart';
 
@@ -33,9 +33,21 @@ class _TabBarMenuState extends State<TabBarMenu> {
     this.loanApprovalApplicationNo,
   );
 
-  var _isInit = true;
+  var _isInit = false;
   var _isLoading = false;
   var response = [];
+  var list;
+
+  @override
+  void didChangeDependencies() {
+    setState(() {
+      _isInit = true;
+    });
+    if (_isInit) {
+      list = fetchListDetail('0120202002050239');
+    }
+    super.didChangeDependencies();
+  }
 
   double _widtdButton = 100.0;
   double _heightButton = 33.0;
@@ -74,7 +86,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
 
   @override
   Widget build(BuildContext context) {
-    var future = fetchListDetail(loanApprovalApplicationNo);
+    // var future = fetchListDetail(loanApprovalApplicationNo);
     var futureListApprove =
         fetchDetail(http.Client(), loanApprovalApplicationNo);
 
@@ -96,7 +108,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                   Container(
                     color: logolightGreen,
                     constraints: BoxConstraints.expand(height: 50),
-                    child: TabBar(tabs: [
+                    child: TabBar(indicatorColor: Colors.white, tabs: [
                       Tab(
                         text: "Detail",
                         icon: Icon(
@@ -124,7 +136,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
                   Expanded(
                     child: Container(
                       child: TabBarView(children: [
-                        Detail(loanApprovalApplicationNo, future),
+                        CardDetailWidget(list),
+                        // Detail(loanApprovalApplicationNo, future),
                         Approve(
                           loanApprovalApplicationNo,
                           futureListApprove,

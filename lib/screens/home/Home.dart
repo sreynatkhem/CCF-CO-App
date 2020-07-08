@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
   }
 
   onLogOut() async {
-    await storage.write(key: 'valueid', value: '');
+    await storage.delete(key: 'valueid');
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Login()),
@@ -63,7 +63,6 @@ class _HomeState extends State<Home> {
   }
 
   _drawerList(context) {
-    final String id = '0401';
     return Drawer(
       child: Container(
         color: logolightGreen,
@@ -111,9 +110,6 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
                 child: Column(
                   children: <Widget>[
-                    // CustomListTile(
-                    //     Icons.view_list, 'List Loan Approve', () => {}),
-                    // Padding(padding: EdgeInsets.only(top: 10)),
                     CustomListTile(Icons.lock, 'Log Out', () => {onLogOut()}),
                     Padding(padding: EdgeInsets.only(top: 10)),
                   ],

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 
+import 'colors.dart';
+
 final String fontFamily = 'Segoe UI';
 
 const fontSizeLg = 20.0;
@@ -49,6 +51,18 @@ final normalTitleblack = TextStyle(
   fontFamily: fontFamily,
   fontSize: fontSizeXs,
   color: Colors.black,
+);
+
+final mainTitleBlue = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: fontSizeXs,
+    color: logolightGreen,
+    fontWeight: fontWeight800);
+
+final titleBlue = TextStyle(
+  fontFamily: fontFamily,
+  fontSize: fontSizeXs,
+  color: logolightGreen,
 );
 
 post() {
