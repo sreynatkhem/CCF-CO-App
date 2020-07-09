@@ -44,7 +44,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
       _isInit = true;
     });
     if (_isInit) {
-      list = fetchListDetail('0120202002050239');
+      list = fetchListDetail(loanApprovalApplicationNo);
     }
     super.didChangeDependencies();
   }
