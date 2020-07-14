@@ -38,7 +38,7 @@ class ApprovalListCard extends StatelessWidget {
           padding: const EdgeInsets.only(top: 20.0),
           itemBuilder: (context, index) {
             return Container(
-              height: 110,
+              height: 100,
               margin: EdgeInsets.only(bottom: 5.0),
               child: Card(
                   shape: RoundedRectangleBorder(
@@ -70,13 +70,18 @@ class ApprovalListCard extends StatelessWidget {
                                 Padding(padding: EdgeInsets.only(bottom: 2)),
                                 Text(
                                   'Application No: ${approvalList[index].loanApprovalApplicationNo}',
+                                  style: TextStyle(fontSize: 12),
                                 ),
                                 Padding(padding: EdgeInsets.only(bottom: 2)),
                                 Text(
-                                    '${approvalList[index].authorizationRequestEmpNo}-${approvalList[index].authorizationRequestEmpName}[${approvalList[index].branchName}]'),
+                                  '${approvalList[index].authorizationRequestEmpNo}-${approvalList[index].authorizationRequestEmpName}[${approvalList[index].branchName}]',
+                                  style: TextStyle(fontSize: 12),
+                                ),
                                 Padding(padding: EdgeInsets.only(bottom: 2)),
                                 Text(
-                                    '${approvalList[index].authorizationRequestDate} ${approvalList[index].authorizationRequestTime}')
+                                  '${approvalList[index].authorizationRequestDate} ${approvalList[index].authorizationRequestTime}',
+                                  style: TextStyle(fontSize: 12),
+                                )
                               ],
                             ),
                             Container(
