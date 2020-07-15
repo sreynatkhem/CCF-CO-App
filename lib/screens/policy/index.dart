@@ -33,7 +33,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
       setState(() {
         isLoading = false;
       });
-      Navigator.push(
+      await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => PolicyWidget(file.path, title)),
       );
