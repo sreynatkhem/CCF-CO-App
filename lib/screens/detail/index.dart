@@ -80,14 +80,28 @@ class _TabBarMenuState extends State<TabBarMenu> {
     await Provider.of<ApprovelistProvider>(context).fetchApprovals();
     await returnFunction(http.Client(), loanApprovalApplicationNo, 80, comments)
         .then((_) => {});
-    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ApprovalLists(
+            isRefresh: true,
+          ),
+        ),
+        ModalRoute.withName('/'));
   }
 
   reject(context) async {
     var comments = controller.text;
     await Provider.of<ApprovelistProvider>(context).fetchApprovals();
     rejectFunction(http.Client(), loanApprovalApplicationNo, 90, comments);
-    await Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ApprovalLists(
+            isRefresh: true,
+          ),
+        ),
+        ModalRoute.withName('/'));
   }
 
   TextEditingController controller = new TextEditingController();

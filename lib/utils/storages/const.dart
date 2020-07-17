@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
+import 'package:intl/intl.dart';
 
 import 'colors.dart';
 
@@ -71,4 +72,10 @@ post() {
       ((X509Certificate cert, String host, int port) => true);
   var _ioClient = IOClient(httpClient);
   return _ioClient;
+}
+
+getDateTimeYMD(time) {
+  DateTime dateTimeApproved = DateTime.parse(time);
+  String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
+  return dateTime;
 }
