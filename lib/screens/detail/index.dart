@@ -5,6 +5,7 @@ import 'package:chokchey_finance/providers/detialJson.dart';
 import 'package:chokchey_finance/providers/registerApproval.dart';
 import 'package:chokchey_finance/providers/reject.dart';
 import 'package:chokchey_finance/providers/returnFuc.dart';
+import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/screens/detail/cardDetail.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,14 @@ class _TabBarMenuState extends State<TabBarMenu> {
     var comments = controller.text;
     registerApproval(http.Client(), loanApprovalApplicationNo, 20, comments);
     Provider.of<ApprovelistProvider>(context, listen: false).fetchApprovals();
-    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ApprovalLists(
+            isRefresh: true,
+          ),
+        ),
+        ModalRoute.withName('/'));
   }
 
   returnFuc(context) async {
@@ -72,14 +80,28 @@ class _TabBarMenuState extends State<TabBarMenu> {
     await Provider.of<ApprovelistProvider>(context).fetchApprovals();
     await returnFunction(http.Client(), loanApprovalApplicationNo, 80, comments)
         .then((_) => {});
-    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ApprovalLists(
+            isRefresh: true,
+          ),
+        ),
+        ModalRoute.withName('/'));
   }
 
   reject(context) async {
     var comments = controller.text;
     await Provider.of<ApprovelistProvider>(context).fetchApprovals();
     rejectFunction(http.Client(), loanApprovalApplicationNo, 90, comments);
-    await Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => ApprovalLists(
+            isRefresh: true,
+          ),
+        ),
+        ModalRoute.withName('/'));
   }
 
   TextEditingController controller = new TextEditingController();

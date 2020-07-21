@@ -1,21 +1,29 @@
 import 'dart:io';
+import 'package:chokchey_finance/providers/approvalList.dart';
+import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:chokchey_finance/widget/approval_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ApprovalLists extends StatefulWidget {
   static const routeName = '/ApprovalLists';
+  var isRefresh = false;
+  ApprovalLists({this.isRefresh});
   @override
-  _ApprovalListsState createState() => new _ApprovalListsState();
+  _ApprovalListsState createState() => new _ApprovalListsState(this.isRefresh);
 }
 
 class _ApprovalListsState extends State<ApprovalLists>
     with SingleTickerProviderStateMixin {
+  _ApprovalListsState(this.isRefresh);
+
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
   TextEditingController _searchQuery;
+  var isRefresh = false;
   bool _isSearching = false;
   bool _isLoading = false;
   bool _isInit = false;
@@ -28,26 +36,11 @@ class _ApprovalListsState extends State<ApprovalLists>
     _searchQuery = new TextEditingController();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   if (_isInit) {
-  //     Provider.of<ApprovelistProvider>(context)
-  //         .fetchApprovals(http.Client())
-  //         .then((_) {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     });
-  //   }
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  //   _isInit = false;
-  //   super.didChangeDependencies();
-  // }
+  @override
+  void didChangeDependencies() {
+    // onLoading();
+    super.didChangeDependencies();
+  }
 
   void _startSearch() {
     ModalRoute.of(context)
@@ -142,8 +135,19 @@ class _ApprovalListsState extends State<ApprovalLists>
     ];
   }
 
+  void onLoading() async {
+    await new Future.delayed(new Duration(seconds: 3), () {
+      setState(() {
+        isRefresh = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isRefresh == true) {
+      onLoading();
+    }
     return Scaffold(
         key: scaffoldKey,
         appBar: new AppBar(
@@ -152,7 +156,7 @@ class _ApprovalListsState extends State<ApprovalLists>
           actions: _buildActions(),
           backgroundColor: logolightGreen,
         ),
-        body: _isLoading
+        body: isRefresh == true
             ? Center(
                 child: CircularProgressIndicator(),
               )
