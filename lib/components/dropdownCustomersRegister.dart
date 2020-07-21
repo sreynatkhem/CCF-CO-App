@@ -11,6 +11,8 @@ class DropDownCustomerRegister extends StatelessWidget {
   var items;
   var icons;
   var styleTexts;
+  var iconsClose;
+  var onPressed;
 
   DropDownCustomerRegister(
       {this.readOnlys,
@@ -20,28 +22,34 @@ class DropDownCustomerRegister extends StatelessWidget {
       this.items,
       this.title,
       this.styleTexts,
+      this.iconsClose,
+      this.onPressed,
       this.icons});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 15),
+      margin: EdgeInsets.only(left: 5),
       child: Column(
         children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Icon(
-                icons,
-                color: Colors.grey,
-              ),
-              FlatButton(
-                  onPressed: () {
-                    SelectDialog.showModal<String>(context,
-                        label: texts, items: items, onChange: onChanged);
-                  },
-                  child: Container(
-                      padding: EdgeInsets.only(left: 17.5),
-                      child: Text(
+              Row(
+                children: <Widget>[
+                  Icon(
+                    icons,
+                    color: Colors.grey,
+                  ),
+                  FlatButton(
+                      onPressed: () {
+                        readOnlys
+                            ? SelectDialog.showModal<String>(context,
+                                label: texts, items: items, onChange: onChanged)
+                            : null;
+                      },
+                      child: Container(
+                          child: Text(
                         texts ?? title,
                         style: selectedValue != null
                             ? styleTexts
@@ -51,11 +59,17 @@ class DropDownCustomerRegister extends StatelessWidget {
                                 color: Colors.grey,
                                 fontWeight: fontWeight500),
                       ))),
+                ],
+              ),
+              IconButton(
+                icon: iconsClose ?? Icon(Icons.close),
+                color: Colors.grey,
+                onPressed: onPressed,
+              ),
             ],
           ),
           Container(
-            width: 323,
-            margin: EdgeInsets.only(left: 40),
+            margin: EdgeInsets.only(left: 30, right: 5),
             decoration: const BoxDecoration(
               border: Border(
                 bottom: BorderSide(width: 1.0, color: Colors.grey),
