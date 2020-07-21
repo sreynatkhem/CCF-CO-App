@@ -6,6 +6,7 @@ import 'package:chokchey_finance/components/textInput.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,10 +26,11 @@ class _CustomerRegister extends State {
   var valuePhone2;
   var valueDateOfRegister;
   var valueOccupationOfCustomer;
-  var valueNationIdentification;
   var valueNextVisitDate;
   var valueProspective;
   var valueGurantorCustomer;
+  String valueNationIdentification;
+  String valueSelectedNativeID;
   String selectedValueProvince;
   String selectedValueDistrict;
   String selectedValueCommune;
@@ -51,6 +53,8 @@ class _CustomerRegister extends State {
       GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> prospective = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> gurantorCustomer =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> nationIdentificationValue =
       GlobalKey<FormBuilderState>();
 
   final TextEditingController controllerFullNameKhmer = TextEditingController();
@@ -79,10 +83,9 @@ class _CustomerRegister extends State {
   final TextEditingController controllerU4 = TextEditingController();
   final TextEditingController controllerU5 = TextEditingController();
 
-  var provinceOnlys = true;
-  var districtreadOnlys = true;
-  var communereadOnlys = true;
-  var villagereadOnlys = true;
+  var districtreadOnlys = false;
+  var communereadOnlys = false;
+  var villagereadOnlys = false;
 
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
@@ -109,10 +112,9 @@ class _CustomerRegister extends State {
           _currentPosition.latitude, _currentPosition.longitude);
 
       Placemark place = p[0];
-
       setState(() {
         _currentAddress =
-            "${place.locality}, ${place.postalCode}, ${place.country}";
+            "${place.subLocality}, ${place.locality}, ${place.postalCode} ${place.country}";
       });
     } catch (e) {
       print(e);
@@ -130,7 +132,7 @@ class _CustomerRegister extends State {
       valueDateOfRegister,
       _currentAddress,
       valueOccupationOfCustomer,
-      valueNationIdentification,
+      valueSelectedNativeID,
       valueNextVisitDate,
       valueProspective,
       valueGurantorCustomer,
@@ -141,7 +143,13 @@ class _CustomerRegister extends State {
     });
   }
 
-  final ValueChanged _onChanged = (val) => print(val);
+  final khmerNameFocus = FocusNode();
+  final englishNameFocus = FocusNode();
+  final datehofBrithFocus = FocusNode();
+  final phoneKeyFocus = FocusNode();
+  final phoneKey2Focus = FocusNode();
+  final datehofRegisterFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Header(
@@ -153,7 +161,12 @@ class _CustomerRegister extends State {
               icons: Icons.person,
               keys: khmerName,
               childs: FormBuilderTextField(
-                // attribute: ,
+                attribute: 'name',
+                focusNode: khmerNameFocus,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(englishNameFocus);
+                },
                 decoration: const InputDecoration(
                   labelText: 'Full Name Khmer',
                 ),
@@ -175,7 +188,12 @@ class _CustomerRegister extends State {
               icons: Icons.person,
               keys: englishName,
               childs: FormBuilderTextField(
-                // attribute: ,
+                attribute: 'name',
+                focusNode: englishNameFocus,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(datehofBrithFocus);
+                },
                 decoration: const InputDecoration(
                   labelText: 'Full Name English',
                 ),
@@ -197,6 +215,11 @@ class _CustomerRegister extends State {
               icons: Icons.date_range,
               keys: datehofBrith,
               childs: FormBuilderDateTimePicker(
+                focusNode: datehofBrithFocus,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(englishNameFocus);
+                },
                 inputType: InputType.date,
                 onChanged: (v) {
                   setState(() {
@@ -222,6 +245,7 @@ class _CustomerRegister extends State {
                 onChanged: (value) {
                   setState(() {
                     gender = value;
+                    FocusScope.of(context).requestFocus(phoneKeyFocus);
                   });
                 },
                 onSaved: (v) {
@@ -241,15 +265,20 @@ class _CustomerRegister extends State {
               icons: Icons.phone,
               keys: phoneKey,
               childs: FormBuilderPhoneField(
+                focusNode: phoneKeyFocus,
+                textInputAction: TextInputAction.next,
+                onSaved: (v) {
+                  print('onSaved: $v');
+                },
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(phoneKey2Focus),
                 attribute: 'phone_number',
                 initialValue: '0',
                 defaultSelectedCountryIsoCode: 'KH',
                 cursorColor: Colors.black,
-                // style: TextStyle(color: Colors.black, fontSize: 18),
+                maxLength: 10,
+                maxLengthEnforced: true,
                 decoration: const InputDecoration(
-                  // border: Border(
-                  //   bottom: BorderSide(width: 1.0, color: Colors.grey),
-                  // ),
                   labelText: 'Phone Number 1',
                 ),
                 onChanged: (v) {
@@ -271,7 +300,13 @@ class _CustomerRegister extends State {
               keys: phoneKey2,
               childs: FormBuilderPhoneField(
                 attribute: 'phone_number',
+                focusNode: phoneKey2Focus,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(datehofRegisterFocus),
                 initialValue: '0',
+                maxLength: 10,
+                maxLengthEnforced: true,
                 defaultSelectedCountryIsoCode: 'KH',
                 cursorColor: Colors.black,
                 decoration: const InputDecoration(
@@ -289,7 +324,12 @@ class _CustomerRegister extends State {
               icons: Icons.timeline,
               keys: datehofRegister,
               childs: FormBuilderDateTimePicker(
-                // attribute: 'date',
+                attribute: 'date',
+                focusNode: datehofRegisterFocus,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (v) {
+                  FocusScope.of(context).requestFocus(datehofBrithFocus);
+                },
                 inputType: InputType.date,
                 onChanged: (v) {
                   valueDateOfRegister = v ?? DateTime.now();
@@ -309,7 +349,7 @@ class _CustomerRegister extends State {
                     children: <Widget>[
                       if (_currentPosition != null)
                         Container(
-                            padding: EdgeInsets.only(left: 52, top: 10),
+                            padding: EdgeInsets.only(left: 35, top: 10),
                             child: Text(_currentAddress ?? '',
                                 style: TextStyle(
                                     fontFamily: fontFamily,
@@ -328,7 +368,7 @@ class _CustomerRegister extends State {
                         Row(
                           children: <Widget>[
                             FlatButton(
-                              padding: EdgeInsets.only(left: 27),
+                              padding: EdgeInsets.only(left: 10),
                               child: Text(
                                 "Get location",
                                 style: TextStyle(
@@ -350,7 +390,7 @@ class _CustomerRegister extends State {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 68, right: 18),
+              margin: EdgeInsets.only(left: 35, right: 5),
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(width: 1.0, color: Colors.grey),
@@ -371,24 +411,61 @@ class _CustomerRegister extends State {
                   return text == null ? null : text;
                 },
                 keyboardType: TextInputType.number,
+                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
               ),
             ),
             GroupFromBuilder(
-              icons: Icons.payment,
+              icons: Icons.check,
               keys: nationIdentification,
-              childs: FormBuilderTextField(
-                decoration: const InputDecoration(
-                  labelText: 'Nation Identification',
+              childs: FormBuilderDropdown(
+                decoration: InputDecoration(
+                  labelText: "Nation ID, Famliy book, Passport",
                 ),
-                onChanged: (v) {
-                  valueNationIdentification = v;
+                validators: [
+                  FormBuilderValidators.required(),
+                ],
+                hint: Text(
+                  'Nation ID, Famliy book, Passport',
+                ),
+                onChanged: (value) {
+                  print('value: $value');
+                  setState(() {
+                    valueSelectedNativeID = value;
+                  });
                 },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                keyboardType: TextInputType.number,
+                items: [
+                  'Nation Identification',
+                  'Famliy book',
+                  'Passport',
+                ]
+                    .map((valueORARD) => DropdownMenuItem(
+                        value: valueORARD,
+                        onTap: () => setState(() {
+                              valueNationIdentification = valueORARD;
+                            }),
+                        child: Text(
+                          "$valueORARD",
+                        )))
+                    .toList(),
               ),
             ),
+            if (valueSelectedNativeID != null)
+              GroupFromBuilder(
+                icons: Icons.payment,
+                keys: nationIdentificationValue,
+                childs: FormBuilderTextField(
+                  decoration: const InputDecoration(
+                      labelText: 'Nation ID, Famliy book, Passport'),
+                  onChanged: (v) {
+                    valueNationIdentification = v;
+                  },
+                  valueTransformer: (text) {
+                    return text == null ? null : text;
+                  },
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                ),
+              ),
             GroupFromBuilder(
               icons: Icons.date_range,
               keys: nextVisitDate,
@@ -463,12 +540,24 @@ class _CustomerRegister extends State {
               onChanged: (value) {
                 setState(() {
                   selectedValueProvince = value ?? '';
-                  districtreadOnlys = false;
+                  districtreadOnlys = true;
                 });
               },
               texts: selectedValueProvince,
               title: 'Province code',
-              readOnlys: false,
+              readOnlys: true,
+              iconsClose: Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  selectedValueProvince = '';
+                  selectedValueDistrict = '';
+                  selectedValueCommune = '';
+                  selectedValueVillage = '';
+                  districtreadOnlys = false;
+                  communereadOnlys = false;
+                  villagereadOnlys = false;
+                });
+              },
               styleTexts: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: fontSizeXs,
@@ -483,12 +572,21 @@ class _CustomerRegister extends State {
               onChanged: (value) {
                 setState(() {
                   selectedValueDistrict = value ?? '';
-                  communereadOnlys = false;
+                  communereadOnlys = true;
                 });
               },
               texts: selectedValueDistrict,
               title: 'District code',
-              readOnlys: districtreadOnlys ?? true,
+              iconsClose: Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  selectedValueDistrict = '';
+                  selectedValueCommune = '';
+                  selectedValueVillage = '';
+                  villagereadOnlys = false;
+                });
+              },
+              readOnlys: districtreadOnlys,
               styleTexts: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: fontSizeXs,
@@ -503,6 +601,14 @@ class _CustomerRegister extends State {
               onChanged: (value) {
                 setState(() {
                   selectedValueCommune = value ?? '';
+                  villagereadOnlys = true;
+                });
+              },
+              iconsClose: Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  selectedValueCommune = '';
+                  selectedValueVillage = '';
                   villagereadOnlys = false;
                 });
               },
@@ -513,7 +619,7 @@ class _CustomerRegister extends State {
                   color: Colors.black,
                   fontWeight: fontWeight500),
               texts: selectedValueCommune,
-              readOnlys: communereadOnlys ?? true,
+              readOnlys: communereadOnlys,
             ),
             Padding(padding: EdgeInsets.only(top: 10)),
             DropDownCustomerRegister(
@@ -525,6 +631,12 @@ class _CustomerRegister extends State {
                   selectedValueVillage = value ?? '';
                 });
               },
+              iconsClose: Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  selectedValueVillage = '';
+                });
+              },
               styleTexts: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: fontSizeXs,
@@ -532,7 +644,7 @@ class _CustomerRegister extends State {
                   fontWeight: fontWeight500),
               texts: selectedValueVillage,
               title: 'Village code',
-              readOnlys: villagereadOnlys ?? true,
+              readOnlys: villagereadOnlys,
             ),
 
             // TextInput(

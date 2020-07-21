@@ -4,6 +4,7 @@ import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
+import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,10 @@ class _MenuState extends State<Menu> {
                   text2: 'Registeration',
                 ),
                 MenuCard(
-                  onTap: () => null,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoanRegister()),
+                  ),
                   color: logolightGreen,
                   imageNetwork: loanRegistration,
                   text: 'Loan Registration',
