@@ -1,11 +1,9 @@
-import 'package:chokchey_finance/components/cardListApproval.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
-import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
+import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
@@ -14,15 +12,11 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  final paddingCard = const EdgeInsets.all(8);
-  final aprroval = const AssetImage('assets/images/list_approval.png');
-  final aprroved = const AssetImage('assets/images/approved.png');
-  final rejected = const AssetImage('assets/images/rejected.png');
-  final returns = const AssetImage('assets/images/return.png');
   final register = const AssetImage('assets/images/register.png');
   final loanRegistration =
       const AssetImage('assets/images/loanRegistration.png');
   final list = const AssetImage('assets/images/findApproval.png');
+  final policy = const AssetImage('assets/images/policy.png');
 
   double widths = 45.0;
   @override
@@ -63,6 +57,15 @@ class _MenuState extends State<Menu> {
                   color: logolightGreen,
                   imageNetwork: loanRegistration,
                   text: 'Loan Registration',
+                ),
+                MenuCard(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PolicyScreen()),
+                  ),
+                  color: logolightGreen,
+                  imageNetwork: policy,
+                  text: 'Policy',
                 ),
               ],
             ),

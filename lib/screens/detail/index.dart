@@ -116,7 +116,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail'),
+        title: Text('Loan Information'),
         backgroundColor: logolightGreen,
       ),
       body: Column(
