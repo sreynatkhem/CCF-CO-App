@@ -41,8 +41,22 @@ class _LoanRegister extends State {
   }
 
   Future<void> loadAssets() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      // Permission.location,
+      Permission.storage,
+      Permission.camera,
+    ].request();
+
     List<Asset> resultList = List<Asset>();
     String error = 'No Error Dectected';
+    if (await Permission.camera.request().isDenied ||
+        await Permission.camera.request().isPermanentlyDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        // Permission.location,
+        Permission.storage,
+        Permission.camera,
+      ].request();
+    }
     if (await Permission.camera.request().isGranted) {
       try {
         resultList = await MultiImagePicker.pickImages(
@@ -52,10 +66,10 @@ class _LoanRegister extends State {
           cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
           materialOptions: MaterialOptions(
             actionBarColor: "#abcdef",
-            actionBarTitle: "Example App",
+            actionBarTitle: "Add Image",
             allViewTitle: "All Photos",
             useDetailsView: false,
-            selectCircleStrokeColor: "#000000",
+            selectCircleStrokeColor: "#FFFFFF",
           ),
         );
       } on Exception catch (e) {
@@ -72,11 +86,6 @@ class _LoanRegister extends State {
         _error = error;
       });
     }
-    Map<Permission, PermissionStatus> statuses = await [
-      // Permission.location,
-      Permission.storage,
-      Permission.camera,
-    ].request();
   }
 
 //   requestPromission() async {
@@ -175,416 +184,439 @@ class _LoanRegister extends State {
     var percentage =
         'https://uxwing.com/wp-content/themes/uxwing/download/03-text-editing/percentage.png';
     return Header(
-      headerTexts: 'Loans Register',
-      bodys: SingleChildScrollView(
-        child: new Column(
-          children: <Widget>[
-            GroupFromBuilder(
-              icons: Icons.attach_money,
-              keys: loanAmount,
-              childs: FormBuilderTextField(
-                attribute: 'number',
-                autofocus: true,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Loan amount',
-                ),
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(numberOfTermFocus);
-                },
-                onChanged: (v) {
-                  setState(() {
-                    valueAmount = v;
-                  });
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                validators: [
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.numeric(errorText: 'Number only')
-                ],
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.branding_watermark,
-              keys: numberOfTerm,
-              childs: FormBuilderTextField(
-                attribute: 'number',
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(interestRateFocus);
-                },
-                focusNode: numberOfTermFocus,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Number of term',
-                ),
-                onChanged: (v) {
-                  setState(() {
-                    valueNumberofTerm = v;
-                  });
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              ),
-            ),
-            GroupFromBuilder(
-              keys: interestRate,
-              imageIcon: percentage,
-              childs: FormBuilderTextField(
-                attribute: 'number',
-                focusNode: interestRateFocus,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(maintenanceFeeFocus);
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Interest rate',
-                ),
-                onChanged: (v) {
-                  setState(() {
-                    valueInterest = v;
-                  });
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.attach_money,
-              keys: maintenanceFee,
-              childs: FormBuilderTextField(
-                attribute: 'number',
-                focusNode: maintenanceFeeFocus,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(adminFeeFocus);
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Maintenance fee',
-                ),
-                onChanged: (v) {
-                  setState(() {
-                    valueMaintenanceFee = v;
-                  });
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.attach_money,
-              keys: adminFee,
-              childs: FormBuilderTextField(
-                attribute: 'number',
-                focusNode: adminFeeFocus,
-                textInputAction: TextInputAction.next,
-                // onFieldSubmitted: (v) {
-                //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
-                // },
-                decoration: const InputDecoration(
-                  labelText: 'Admin fee',
-                ),
-                onChanged: (v) {
-                  setState(() {
-                    valueAdminFee = v;
-                    valueRepaymentMethod = v;
-                  });
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                keyboardType: TextInputType.number,
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.check,
-              keys: repaymentMethod,
-              childs: FormBuilderDropdown(
-                decoration: InputDecoration(
-                  labelText: "Repayment method",
-                ),
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                hint: Text(
-                  'Repayment method',
-                ),
-                // onChanged: (value) {
-                //   setState(() {
-                //     FocusScope.of(context).requestFocus(FocusNode());
-                //     valueRepaymentMethod = value;
-                //   });
-                // },
-                onChanged: (value) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  setState(() => valueRepaymentMethod = value);
-                },
-                items: [
-                  'Declining',
-                  'Annuity',
-                  'Semi-balloon',
-                  'Balloon',
-                  'Negotiate',
-                ]
-                    .map((valueGurantorCustomer) => DropdownMenuItem(
-                        value: valueGurantorCustomer,
-                        child: Text(
-                          "$valueGurantorCustomer",
-                        )))
-                    .toList(),
-              ),
-            ),
-
-            GroupFromBuilder(
-              icons: Icons.date_range,
-              keys: openData,
-              childs: FormBuilderDateTimePicker(
-                attribute: 'date',
-                focusNode: openDataFocus,
-                textInputAction: TextInputAction.next,
-                inputType: InputType.date,
-                onChanged: (v) {
-                  valueOpenDate = v ?? DateTime.now();
-                },
-                validators: [FormBuilderValidators.required()],
-                format: DateFormat("yyyy-MM-dd"),
-                decoration: InputDecoration(labelText: "Open date"),
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.date_range,
-              keys: datehMaturityDate,
-              childs: FormBuilderDateTimePicker(
-                attribute: 'date',
-                focusNode: datehMaturityDateFocus,
-                textInputAction: TextInputAction.next,
-                inputType: InputType.date,
-                onChanged: (v) {
-                  valueMaturityDate = v ?? DateTime.now();
-                },
-                validators: [FormBuilderValidators.required()],
-                format: DateFormat("yyyy-MM-dd"),
-                decoration: InputDecoration(labelText: "Maturity date"),
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.date_range,
-              keys: firstRepaymentDate,
-              childs: FormBuilderDateTimePicker(
-                attribute: 'date',
-                focusNode: firstRepaymentDateFocus,
-                textInputAction: TextInputAction.next,
-                inputType: InputType.date,
-                onChanged: (v) {
-                  valueFirstRepaymentDate = v ?? DateTime.now();
-                  FocusScope.of(context)
-                      .requestFocus(generateGracePeriodNumberFocus);
-                },
-                validators: [FormBuilderValidators.required()],
-                format: DateFormat("yyyy-MM-dd"),
-                decoration: InputDecoration(labelText: "First repayment date"),
-              ),
-            ),
-
-            GroupFromBuilder(
-              icons: Icons.confirmation_number,
-              keys: generateGracePeriodNumber,
-              childs: FormBuilderTextField(
-                attribute: 'number',
-                focusNode: generateGracePeriodNumberFocus,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(loanPurposeFocus);
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Generate grace period number',
-                ),
-                onChanged: (v) {
-                  valueGenerateGracePeriodNumber = v;
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                keyboardType: TextInputType.number,
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.attach_money,
-              keys: loanPurpose,
-              childs: FormBuilderTextField(
-                attribute: 'name',
-                focusNode: loanPurposeFocus,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (v) {
-                  FocusScope.of(context).requestFocus(referByWhoFocus);
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Loan purpose',
-                ),
-                onChanged: (v) {
-                  valueLoanPurpose = v;
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-                keyboardType: TextInputType.text,
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.face,
-              keys: referByWho,
-              childs: FormBuilderTextField(
-                attribute: 'name',
-                focusNode: referByWhoFocus,
-                textInputAction: TextInputAction.next,
-                // onFieldSubmitted: (v) {
-                //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
-                // },
-                decoration: const InputDecoration(
-                  labelText: 'Refer by who',
-                ),
-                onChanged: (v) {
-                  valueReferByWho = v;
-                },
-                valueTransformer: (text) {
-                  return text == null ? null : text;
-                },
-              ),
-            ),
-            GroupFromBuilder(
-              icons: Icons.check,
-              keys: oRARD,
-              childs: FormBuilderDropdown(
-                decoration: InputDecoration(
-                  labelText:
-                      "O=Open,R=Request, A=Approved,R=Return,D=Disapprove",
-                ),
-                validators: [
-                  FormBuilderValidators.required(),
-                ],
-                hint: Text(
-                  'O,R,A,R,D',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    valueORARD = value;
-                  });
-                },
-                items: [
-                  'Open',
-                  'Request',
-                  'Approved',
-                  'Return',
-                  'Disapprove',
-                ]
-                    .map((valueORARD) => DropdownMenuItem(
-                        value: valueORARD,
-                        child: Text(
-                          "$valueORARD",
-                        )))
-                    .toList(),
-              ),
-            ),
-            if (images.length != 0)
-              Container(
-                width: 375,
-                height: 135,
-                padding: EdgeInsets.only(top: 5),
-                color: Colors.red,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  children: List.generate(images.length, (index) {
-                    Asset asset = images[index];
-                    return AssetThumb(
-                      asset: asset,
-                      width: 300,
-                      height: 200,
-                    );
-                  }),
-                ),
-              ),
-            ImagePickers(
-              onPressed: () => loadAssets(),
-            ),
-            // TextInput(
-            //   icons: const Icon(Icons.label_important),
-            //   textInput: "U1",
-            //   controllers: controllerU1,
-            // ),
-            // TextInput(
-            //   icons: const Icon(Icons.label_important),
-            //   textInput: "U2",
-            //   controllers: controllerU2,
-            // ),
-            // TextInput(
-            //   icons: const Icon(Icons.label_important),
-            //   textInput: "U3",
-            //   controllers: controllerU3,
-            // ),
-            // TextInput(
-            //   icons: const Icon(Icons.label_important),
-            //   textInput: "U4",
-            //   controllers: controllerU4,
-            // ),
-            // TextInput(
-            //   icons: const Icon(Icons.label_important),
-            //   textInput: "U5",
-            //   controllers: controllerU5,
-            // ),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                width: 300,
-                height: 90,
-                padding: EdgeInsets.only(top: 40, left: 10, bottom: 10),
-                child: new RaisedButton(
-                  onPressed: () {
-                    onSubmit();
-                  },
-                  color: logolightGreen,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: logolightGreen, width: 1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+        headerTexts: 'Loans Register',
+        bodys: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: Column(
+              children: <Widget>[
+                GroupFromBuilder(
+                  icons: Icons.attach_money,
+                  keys: loanAmount,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    autofocus: true,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'Loan amount',
+                      border: InputBorder.none,
+                    ),
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(numberOfTermFocus);
+                    },
+                    onChanged: (v) {
+                      setState(() {
+                        valueAmount = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    validators: [
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(errorText: 'Number only')
+                    ],
+                    keyboardType: TextInputType.number,
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+                GroupFromBuilder(
+                  icons: Icons.branding_watermark,
+                  keys: numberOfTerm,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(interestRateFocus);
+                    },
+                    focusNode: numberOfTermFocus,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'Number of term',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      setState(() {
+                        valueNumberofTerm = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
+                  keys: interestRate,
+                  imageIcon: percentage,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    focusNode: interestRateFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(maintenanceFeeFocus);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Interest rate',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      setState(() {
+                        valueInterest = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.attach_money,
+                  keys: maintenanceFee,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    focusNode: maintenanceFeeFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(adminFeeFocus);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Maintenance fee',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      setState(() {
+                        valueMaintenanceFee = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.attach_money,
+                  keys: adminFee,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    focusNode: adminFeeFocus,
+                    textInputAction: TextInputAction.next,
+                    // onFieldSubmitted: (v) {
+                    //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
+                    // },
+                    decoration: const InputDecoration(
+                      labelText: 'Admin fee',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      setState(() {
+                        valueAdminFee = v;
+                        valueRepaymentMethod = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.check,
+                  keys: repaymentMethod,
+                  childs: FormBuilderDropdown(
+                    attribute: 'name',
+                    decoration: InputDecoration(
+                      labelText: "Repayment method",
+                      border: InputBorder.none,
+                    ),
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    hint: Text(
+                      'Repayment method',
+                    ),
+                    // onChanged: (value) {
+                    //   setState(() {
+                    //     FocusScope.of(context).requestFocus(FocusNode());
+                    //     valueRepaymentMethod = value;
+                    //   });
+                    // },
+                    onChanged: (value) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      setState(() => valueRepaymentMethod = value);
+                    },
+                    items: [
+                      'Declining',
+                      'Annuity',
+                      'Semi-balloon',
+                      'Balloon',
+                      'Negotiate',
+                    ]
+                        .map((valueGurantorCustomer) => DropdownMenuItem(
+                            value: valueGurantorCustomer,
+                            child: Text(
+                              "$valueGurantorCustomer",
+                            )))
+                        .toList(),
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.date_range,
+                  keys: openData,
+                  childs: FormBuilderDateTimePicker(
+                    attribute: 'date',
+                    focusNode: openDataFocus,
+                    textInputAction: TextInputAction.next,
+                    inputType: InputType.date,
+                    onChanged: (v) {
+                      valueOpenDate = v ?? DateTime.now();
+                    },
+                    validators: [FormBuilderValidators.required()],
+                    format: DateFormat("yyyy-MM-dd"),
+                    decoration: InputDecoration(
+                      labelText: "Open date",
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.date_range,
+                  keys: datehMaturityDate,
+                  childs: FormBuilderDateTimePicker(
+                    attribute: 'date',
+                    focusNode: datehMaturityDateFocus,
+                    textInputAction: TextInputAction.next,
+                    inputType: InputType.date,
+                    onChanged: (v) {
+                      valueMaturityDate = v ?? DateTime.now();
+                    },
+                    validators: [FormBuilderValidators.required()],
+                    format: DateFormat("yyyy-MM-dd"),
+                    decoration: InputDecoration(
+                      labelText: "Maturity date",
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.date_range,
+                  keys: firstRepaymentDate,
+                  childs: FormBuilderDateTimePicker(
+                    attribute: 'date',
+                    focusNode: firstRepaymentDateFocus,
+                    textInputAction: TextInputAction.next,
+                    inputType: InputType.date,
+                    onChanged: (v) {
+                      valueFirstRepaymentDate = v ?? DateTime.now();
+                      FocusScope.of(context)
+                          .requestFocus(generateGracePeriodNumberFocus);
+                    },
+                    validators: [FormBuilderValidators.required()],
+                    format: DateFormat("yyyy-MM-dd"),
+                    decoration: InputDecoration(
+                      labelText: "First repayment date",
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.confirmation_number,
+                  keys: generateGracePeriodNumber,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    focusNode: generateGracePeriodNumberFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(loanPurposeFocus);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Generate grace period number',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      valueGenerateGracePeriodNumber = v;
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    keyboardType: TextInputType.number,
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.attach_money,
+                  keys: loanPurpose,
+                  childs: FormBuilderTextField(
+                    attribute: 'name',
+                    focusNode: loanPurposeFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(referByWhoFocus);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Loan purpose',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      valueLoanPurpose = v;
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.face,
+                  keys: referByWho,
+                  childs: FormBuilderTextField(
+                    attribute: 'name',
+                    focusNode: referByWhoFocus,
+                    textInputAction: TextInputAction.next,
+                    // onFieldSubmitted: (v) {
+                    //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
+                    // },
+                    decoration: const InputDecoration(
+                      labelText: 'Refer by who',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      valueReferByWho = v;
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.check,
+                  keys: oRARD,
+                  childs: FormBuilderDropdown(
+                    attribute: 'name',
+                    decoration: InputDecoration(
+                      labelText:
+                          "O=Open,R=Request, A=Approved,R=Return,D=Disapprove",
+                      border: InputBorder.none,
+                    ),
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    hint: Text(
+                      'O,R,A,R,D',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        valueORARD = value;
+                      });
+                    },
+                    items: [
+                      'Open',
+                      'Request',
+                      'Approved',
+                      'Return',
+                      'Disapprove',
+                    ]
+                        .map((valueORARD) => DropdownMenuItem(
+                            value: valueORARD,
+                            child: Text(
+                              "$valueORARD",
+                            )))
+                        .toList(),
+                  ),
+                ),
+                if (images.length != 0)
+                  Container(
+                    width: 375,
+                    height: images.length >= 4 ? 300 : 135,
+                    padding: EdgeInsets.only(top: 10),
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      children: List.generate(images.length, (index) {
+                        Asset asset = images[index];
+                        return Stack(children: <Widget>[
+                          AssetThumb(
+                            asset: asset,
+                            width: 300,
+                            height: images.length >= 6 ? 500 : 200,
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    images.removeAt(index);
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              ))
+                        ]);
+                      }),
+                    ),
+                  ),
+                ImagePickers(
+                  onPressed: () => loadAssets(),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: 300,
+                    height: 90,
+                    padding: EdgeInsets.only(top: 40, left: 10, bottom: 10),
+                    child: new RaisedButton(
+                      onPressed: () {
+                        onSubmit();
+                      },
+                      color: logolightGreen,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: logolightGreen, width: 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
