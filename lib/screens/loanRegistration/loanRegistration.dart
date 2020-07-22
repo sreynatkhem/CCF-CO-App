@@ -1,13 +1,15 @@
-import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
+import 'dart:io';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/imagePicker.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class LoanRegister extends StatefulWidget {
   @override
@@ -15,6 +17,93 @@ class LoanRegister extends StatefulWidget {
 }
 
 class _LoanRegister extends State {
+  //IMAGE PICKER
+  PermissionStatus _status;
+  final ImagePicker _picker = ImagePicker();
+  File _image;
+  var _pickImageError;
+
+  List<Asset> images = List<Asset>();
+  String _error = 'No Error Dectected';
+
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        Asset asset = images[index];
+        return AssetThumb(
+          asset: asset,
+          width: 300,
+          height: 300,
+        );
+      }),
+    );
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+    if (await Permission.camera.request().isGranted) {
+      try {
+        resultList = await MultiImagePicker.pickImages(
+          maxImages: 300,
+          enableCamera: true,
+          selectedAssets: images,
+          cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+          materialOptions: MaterialOptions(
+            actionBarColor: "#abcdef",
+            actionBarTitle: "Example App",
+            allViewTitle: "All Photos",
+            useDetailsView: false,
+            selectCircleStrokeColor: "#000000",
+          ),
+        );
+      } on Exception catch (e) {
+        error = e.toString();
+      }
+
+      // If the widget was removed from the tree while the asynchronous platform
+      // message was in flight, we want to discard the reply rather than calling
+      // setState to update our non-existent appearance.
+      if (!mounted) return;
+      print('images: ${images} ');
+      setState(() {
+        images = resultList;
+        _error = error;
+      });
+    }
+    Map<Permission, PermissionStatus> statuses = await [
+      // Permission.location,
+      Permission.storage,
+      Permission.camera,
+    ].request();
+  }
+
+//   requestPromission() async {
+//     if (await Permission.camera.request().isGranted) {
+//       // Either the permission was already granted before or the user just granted it.
+//       try {
+//         final pickedFile = await _picker.getImage(source: ImageSource.camera);
+//         setState(() {
+//           _image = File(pickedFile.path);
+//         });
+//       } catch (e) {
+//         setState(() {
+//           _pickImageError = e;
+//         });
+//       }
+//       print('isGranted *****');
+//     }
+
+// // You can request multiple permissions at once.
+//     Map<Permission, PermissionStatus> statuses = await [
+//       // Permission.location,
+//       Permission.storage,
+//       Permission.camera,
+//     ].request();
+//   }
+
+  //TEXT INPUT
   var valueAmount;
   var valueNumberofTerm;
   var valueInterest;
@@ -94,6 +183,7 @@ class _LoanRegister extends State {
               icons: Icons.attach_money,
               keys: loanAmount,
               childs: FormBuilderTextField(
+                attribute: 'number',
                 autofocus: true,
                 inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                 textInputAction: TextInputAction.next,
@@ -122,6 +212,7 @@ class _LoanRegister extends State {
               icons: Icons.branding_watermark,
               keys: numberOfTerm,
               childs: FormBuilderTextField(
+                attribute: 'number',
                 onFieldSubmitted: (v) {
                   FocusScope.of(context).requestFocus(interestRateFocus);
                 },
@@ -149,6 +240,7 @@ class _LoanRegister extends State {
               keys: interestRate,
               imageIcon: percentage,
               childs: FormBuilderTextField(
+                attribute: 'number',
                 focusNode: interestRateFocus,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
@@ -176,6 +268,7 @@ class _LoanRegister extends State {
               icons: Icons.attach_money,
               keys: maintenanceFee,
               childs: FormBuilderTextField(
+                attribute: 'number',
                 focusNode: maintenanceFeeFocus,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
@@ -203,6 +296,7 @@ class _LoanRegister extends State {
               icons: Icons.attach_money,
               keys: adminFee,
               childs: FormBuilderTextField(
+                attribute: 'number',
                 focusNode: adminFeeFocus,
                 textInputAction: TextInputAction.next,
                 // onFieldSubmitted: (v) {
@@ -321,6 +415,7 @@ class _LoanRegister extends State {
               icons: Icons.confirmation_number,
               keys: generateGracePeriodNumber,
               childs: FormBuilderTextField(
+                attribute: 'number',
                 focusNode: generateGracePeriodNumberFocus,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
@@ -346,6 +441,7 @@ class _LoanRegister extends State {
               icons: Icons.attach_money,
               keys: loanPurpose,
               childs: FormBuilderTextField(
+                attribute: 'name',
                 focusNode: loanPurposeFocus,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
@@ -367,6 +463,7 @@ class _LoanRegister extends State {
               icons: Icons.face,
               keys: referByWho,
               childs: FormBuilderTextField(
+                attribute: 'name',
                 focusNode: referByWhoFocus,
                 textInputAction: TextInputAction.next,
                 // onFieldSubmitted: (v) {
@@ -417,7 +514,27 @@ class _LoanRegister extends State {
                     .toList(),
               ),
             ),
-
+            if (images.length != 0)
+              Container(
+                width: 375,
+                height: 135,
+                padding: EdgeInsets.only(top: 5),
+                color: Colors.red,
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  children: List.generate(images.length, (index) {
+                    Asset asset = images[index];
+                    return AssetThumb(
+                      asset: asset,
+                      width: 300,
+                      height: 200,
+                    );
+                  }),
+                ),
+              ),
+            ImagePickers(
+              onPressed: () => loadAssets(),
+            ),
             // TextInput(
             //   icons: const Icon(Icons.label_important),
             //   textInput: "U1",

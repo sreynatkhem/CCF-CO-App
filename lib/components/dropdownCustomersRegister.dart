@@ -7,6 +7,8 @@ class DropDownCustomerRegister extends StatelessWidget {
   String texts;
   bool readOnlys;
   String title;
+  bool autofocus;
+
   var onChanged;
   var items;
   var icons;
@@ -24,6 +26,7 @@ class DropDownCustomerRegister extends StatelessWidget {
       this.styleTexts,
       this.iconsClose,
       this.onPressed,
+      this.autofocus,
       this.icons});
 
   @override
@@ -45,7 +48,10 @@ class DropDownCustomerRegister extends StatelessWidget {
                       onPressed: () {
                         readOnlys
                             ? SelectDialog.showModal<String>(context,
-                                label: texts, items: items, onChange: onChanged)
+                                label: texts,
+                                items: items,
+                                onChange: onChanged,
+                                autofocus: autofocus)
                             : null;
                       },
                       child: Container(
