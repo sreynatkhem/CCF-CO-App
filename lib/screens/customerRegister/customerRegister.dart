@@ -115,6 +115,7 @@ class _CustomerRegister extends State {
       setState(() {
         _currentAddress =
             "${place.subLocality}, ${place.locality}, ${place.postalCode} ${place.country}";
+        FocusScope.of(context).requestFocus(occupationOfCustomerFocus);
       });
     } catch (e) {
       print(e);
@@ -149,6 +150,10 @@ class _CustomerRegister extends State {
   final phoneKeyFocus = FocusNode();
   final phoneKey2Focus = FocusNode();
   final datehofRegisterFocus = FocusNode();
+  final occupationOfCustomerFocus = FocusNode();
+  final nationIdentificationValueFocus = FocusNode();
+  final nextVisitDateFocus = FocusNode();
+  var selectedValueProvincefocus = false;
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +220,7 @@ class _CustomerRegister extends State {
               icons: Icons.date_range,
               keys: datehofBrith,
               childs: FormBuilderDateTimePicker(
+                attribute: 'date',
                 focusNode: datehofBrithFocus,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (v) {
@@ -401,6 +407,9 @@ class _CustomerRegister extends State {
               icons: Icons.work,
               keys: occupationOfCustomer,
               childs: FormBuilderTextField(
+                attribute: 'name',
+                focusNode: occupationOfCustomerFocus,
+                textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
                   labelText: 'Occupation of customer',
                 ),
@@ -418,6 +427,7 @@ class _CustomerRegister extends State {
               icons: Icons.check,
               keys: nationIdentification,
               childs: FormBuilderDropdown(
+                attribute: 'name',
                 decoration: InputDecoration(
                   labelText: "Nation ID, Famliy book, Passport",
                 ),
@@ -428,9 +438,10 @@ class _CustomerRegister extends State {
                   'Nation ID, Famliy book, Passport',
                 ),
                 onChanged: (value) {
-                  print('value: $value');
                   setState(() {
                     valueSelectedNativeID = value;
+                    FocusScope.of(context)
+                        .requestFocus(nationIdentificationValueFocus);
                   });
                 },
                 items: [
@@ -442,6 +453,8 @@ class _CustomerRegister extends State {
                         value: valueORARD,
                         onTap: () => setState(() {
                               valueNationIdentification = valueORARD;
+                              FocusScope.of(context)
+                                  .requestFocus(nationIdentificationValueFocus);
                             }),
                         child: Text(
                           "$valueORARD",
@@ -454,11 +467,19 @@ class _CustomerRegister extends State {
                 icons: Icons.payment,
                 keys: nationIdentificationValue,
                 childs: FormBuilderTextField(
+                  focusNode: nationIdentificationValueFocus,
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(nextVisitDateFocus),
+                  maxLength: 9,
                   decoration: const InputDecoration(
                       labelText: 'Nation ID, Famliy book, Passport'),
                   onChanged: (v) {
                     valueNationIdentification = v;
+                    // FocusScope.of(context).requestFocus(nextVisitDateFocus);
                   },
+                  // onTap: () =>
+                  //     FocusScope.of(context).requestFocus(nextVisitDateFocus),
                   valueTransformer: (text) {
                     return text == null ? null : text;
                   },
@@ -471,6 +492,10 @@ class _CustomerRegister extends State {
               keys: nextVisitDate,
               childs: FormBuilderDateTimePicker(
                 inputType: InputType.date,
+                focusNode: nextVisitDateFocus,
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () =>
+                    FocusScope.of(context).requestFocus(datehofRegisterFocus),
                 onChanged: (v) {
                   valueNextVisitDate = v;
                 },
@@ -526,6 +551,8 @@ class _CustomerRegister extends State {
                 ]
                     .map((valueGurantorCustomer) => DropdownMenuItem(
                         value: valueGurantorCustomer,
+                        onTap: () =>
+                            print('${selectedValueProvincefocus = true}'),
                         child: Text(
                           "$valueGurantorCustomer",
                         )))
@@ -535,6 +562,7 @@ class _CustomerRegister extends State {
             Padding(padding: EdgeInsets.only(top: 10)),
             DropDownCustomerRegister(
               icons: Icons.location_on,
+              autofocus: true,
               items: List.generate(50, (index) => "Item $index"),
               selectedValue: selectedValueProvince,
               onChanged: (value) {
