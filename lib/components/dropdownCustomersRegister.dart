@@ -31,57 +31,68 @@ class DropDownCustomerRegister extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 5),
+    return Card(
+      // margin: EdgeInsets.only(left: 10),
+      // decoration: const BoxDecoration(
+      //   border: Border(
+      //     bottom: BorderSide(width: 1.0, color: Colors.grey),
+      //   ),
+      // ),
       child: Column(
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(
-                    icons,
-                    color: Colors.grey,
-                  ),
-                  FlatButton(
-                      onPressed: () {
-                        readOnlys
-                            ? SelectDialog.showModal<String>(context,
-                                label: texts,
-                                items: items,
-                                onChange: onChanged,
-                                autofocus: autofocus)
-                            : null;
-                      },
-                      child: Container(
-                          child: Text(
-                        texts ?? title,
-                        style: selectedValue != null
-                            ? styleTexts
-                            : TextStyle(
-                                fontFamily: fontFamily,
-                                fontSize: fontSizeXs,
-                                color: Colors.grey,
-                                fontWeight: fontWeight500),
-                      ))),
-                ],
-              ),
-              IconButton(
-                icon: iconsClose ?? Icon(Icons.close),
+              Icon(
+                icons,
                 color: Colors.grey,
-                onPressed: onPressed,
+              ),
+              Container(
+                // padding: EdgeInsets.only(left: 10),
+                child: FlatButton(
+                    onPressed: () {
+                      readOnlys
+                          ? SelectDialog.showModal<String>(context,
+                              label: texts,
+                              items: items,
+                              onChange: onChanged,
+                              autofocus: autofocus)
+                          : null;
+                    },
+                    child: Container(
+                        child: Text(
+                      texts ?? title,
+                      style: selectedValue != null
+                          ? styleTexts
+                          : TextStyle(
+                              fontFamily: fontFamily,
+                              fontSize: fontSizeXs,
+                              color: Colors.grey,
+                              fontWeight: fontWeight500),
+                    ))),
+              ),
+              Container(
+                // margin: EdgeInsets.only(right: 25),
+                // padding: EdgeInsets.only(right: 13),
+                child: IconButton(
+                  icon: iconsClose ?? Icon(Icons.close),
+                  color: Colors.grey,
+                  onPressed: onPressed,
+                ),
               ),
             ],
           ),
-          Container(
-            margin: EdgeInsets.only(left: 30, right: 5),
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.0, color: Colors.grey),
-              ),
-            ),
-          )
+          // Center(
+          //   child: Container(
+          //     // width: 300,
+          //     margin: EdgeInsets.only(left: 48, right: 25),
+          //     decoration: const BoxDecoration(
+          //       border: Border(
+          //         bottom: BorderSide(width: 1.0, color: Colors.grey),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
