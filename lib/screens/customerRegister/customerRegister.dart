@@ -667,7 +667,7 @@ class _CustomerRegister extends State {
                             ),
                             FlatButton(
                               child: Container(
-                                // width: 250,
+                                width: 240,
                                 child: Text(
                                   _currentAddress ?? "Get location",
                                   // textAlign: TextAlign.center,
