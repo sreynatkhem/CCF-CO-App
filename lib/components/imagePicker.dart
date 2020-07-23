@@ -4,8 +4,11 @@ import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 
 class ImagePickers extends StatelessWidget {
-  var onPressed;
-  ImagePickers({this.onPressed});
+  Function onPressed;
+  IconData icon;
+  String heroTag;
+
+  ImagePickers({this.onPressed, this.icon, this.heroTag});
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +18,12 @@ class ImagePickers extends StatelessWidget {
         children: <Widget>[
           Padding(padding: EdgeInsets.only(top: 10)),
           FloatingActionButton(
+            heroTag: heroTag,
             onPressed: onPressed,
             backgroundColor: logolightGreen,
             tooltip: 'Pick Image',
             child: Icon(
-              Icons.add_a_photo,
+              icon,
             ),
           ),
         ],

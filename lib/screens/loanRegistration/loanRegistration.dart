@@ -3,11 +3,12 @@ import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -18,13 +19,14 @@ class LoanRegister extends StatefulWidget {
 
 class _LoanRegister extends State {
   //IMAGE PICKER
-  PermissionStatus _status;
-  final ImagePicker _picker = ImagePicker();
-  File _image;
-  var _pickImageError;
-
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    print('NULL: ::::: ${fileName}');
+    super.didChangeDependencies();
+  }
 
   Widget buildGridView() {
     return GridView.count(
@@ -88,29 +90,29 @@ class _LoanRegister extends State {
     }
   }
 
-//   requestPromission() async {
-//     if (await Permission.camera.request().isGranted) {
-//       // Either the permission was already granted before or the user just granted it.
-//       try {
-//         final pickedFile = await _picker.getImage(source: ImageSource.camera);
-//         setState(() {
-//           _image = File(pickedFile.path);
-//         });
-//       } catch (e) {
-//         setState(() {
-//           _pickImageError = e;
-//         });
-//       }
-//       print('isGranted *****');
-//     }
-
-// // You can request multiple permissions at once.
-//     Map<Permission, PermissionStatus> statuses = await [
-//       // Permission.location,
-//       Permission.storage,
-//       Permission.camera,
-//     ].request();
-//   }
+  List<File> fileName;
+  loadAssetsFile() async {
+    if (await Permission.storage.request().isDenied) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+    }
+    if (await Permission.storage.request().isGranted) {
+      try {
+        List<File> files = await FilePicker.getMultiFile(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'pdf', 'doc'],
+        );
+        setState(() {
+          fileName = files;
+        });
+        print('fileName *******************: $fileName');
+        print('length *******************: ${fileName.length}');
+      } catch (error) {
+        print('error *******************: ');
+      }
+    }
+  }
 
   //TEXT INPUT
   var valueAmount;
@@ -148,6 +150,7 @@ class _LoanRegister extends State {
   final GlobalKey<FormBuilderState> loanPurpose = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> oRARD = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> referByWho = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> customerID = GlobalKey<FormBuilderState>();
 
   onSubmit() {
     print({
@@ -177,6 +180,7 @@ class _LoanRegister extends State {
   var openDataFocus = FocusNode();
   var datehMaturityDateFocus = FocusNode();
   var firstRepaymentDateFocus = FocusNode();
+  var loanAmountFocus = FocusNode();
 
   final ValueChanged _onChanged = (val) => print(val);
   @override
@@ -191,6 +195,38 @@ class _LoanRegister extends State {
             child: Column(
               children: <Widget>[
                 GroupFromBuilder(
+                  icons: Icons.face,
+                  keys: customerID,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'Customer ID',
+                      border: InputBorder.none,
+                    ),
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(loanAmountFocus);
+                    },
+                    onChanged: (v) {
+                      setState(() {
+                        valueAmount = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    validators: [
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(errorText: 'Number only')
+                    ],
+                    readOnly: true,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                GroupFromBuilder(
                   icons: Icons.attach_money,
                   keys: loanAmount,
                   childs: FormBuilderTextField(
@@ -204,6 +240,7 @@ class _LoanRegister extends State {
                       labelText: 'Loan amount',
                       border: InputBorder.none,
                     ),
+                    focusNode: loanAmountFocus,
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(numberOfTermFocus);
                     },
@@ -558,8 +595,11 @@ class _LoanRegister extends State {
                 ),
                 if (images.length != 0)
                   Container(
+                      padding: EdgeInsets.only(top: 10), child: Text('Image')),
+                if (images.length != 0)
+                  Container(
                     width: 375,
-                    height: images.length >= 4 ? 300 : 135,
+                    height: images.length >= 4 ? 270 : 135,
                     padding: EdgeInsets.only(top: 10),
                     child: GridView.count(
                       crossAxisCount: 3,
@@ -589,8 +629,59 @@ class _LoanRegister extends State {
                       }),
                     ),
                   ),
-                ImagePickers(
-                  onPressed: () => loadAssets(),
+                if (fileName != null)
+                  Container(
+                      padding: EdgeInsets.only(top: 10), child: Text('PDF')),
+                if (fileName != null)
+                  Container(
+                    width: 375,
+                    height: 135,
+                    padding: EdgeInsets.only(top: 10),
+                    child: GridView.count(
+                      crossAxisCount: 3,
+                      children: List.generate(
+                          fileName != null ? fileName.length : [], (index) {
+                        File asset = fileName[index];
+                        return Stack(children: <Widget>[
+                          Text('PDF'),
+                          PDF.file(
+                            asset,
+                            height: 300,
+                            width: 200,
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    fileName.removeAt(index);
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              ))
+                        ]);
+                      }),
+                    ),
+                  ),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ImagePickers(
+                          heroTag: 'loadImage',
+                          onPressed: () => loadAssets(),
+                          icon: Icons.add_a_photo),
+                      Padding(padding: EdgeInsets.all(10)),
+                      ImagePickers(
+                          heroTag: 'loadPDF',
+                          onPressed: () => loadAssetsFile(),
+                          icon: Icons.add_box),
+                    ],
+                  ),
                 ),
                 Align(
                   alignment: Alignment.center,
