@@ -16,10 +16,9 @@ class GroupFromBuilder extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            // if (imageIcon != null) Padding(padding: EdgeInsets.only(left: 0)),
             if (imageIcon != null)
               Container(
-                // padding: EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 5),
                 child: Image.network(
                   imageIcon,
                   width: 18,
@@ -28,7 +27,7 @@ class GroupFromBuilder extends StatelessWidget {
               ),
             if (imageIcon == null)
               Container(
-                // padding: EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 5),
                 child: Icon(
                   icons,
                   color: Colors.grey,
@@ -40,7 +39,6 @@ class GroupFromBuilder extends StatelessWidget {
                   'date': DateTime.now(),
                   'accept_terms': false,
                 },
-                // autovalidate: true,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -51,53 +49,9 @@ class GroupFromBuilder extends StatelessWidget {
                       ),
                     ])),
             Text('')
-            // Padding(padding: EdgeInsets.only(right: 15)),
           ],
         ),
       )),
     );
-    // return Container(
-    //   alignment: Alignment.center,
-    //   child: Center(
-    //     child: Column(children: <Widget>[
-    //       Row(
-    //         children: <Widget>[
-    //           Padding(padding: EdgeInsets.only(left: 5)),
-    //           if (imageIcon != null) Padding(padding: EdgeInsets.only(left: 5)),
-    //           if (imageIcon != null)
-    //             Container(
-    //               child: Image.network(
-    //                 imageIcon,
-    //                 width: 18,
-    //                 color: Colors.grey,
-    //               ),
-    //             ),
-    //           if (imageIcon == null)
-    //             Icon(
-    //               icons,
-    //               color: Colors.grey,
-    //             ),
-    //           Padding(padding: EdgeInsets.only(left: 5)),
-    //           FormBuilder(
-    //               key: keys,
-    //               initialValue: {
-    //                 'date': DateTime.now(),
-    //                 'accept_terms': false,
-    //               },
-    //               // autovalidate: true,
-    //               child: Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.center,
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   children: <Widget>[
-    //                     Container(
-    //                       // width: 375,
-    //                       child: childs,
-    //                     ),
-    //                   ]))
-    //         ],
-    //       ),
-    //     ]),
-    //   ),
-    // );
   }
 }
