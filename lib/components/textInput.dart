@@ -1,14 +1,14 @@
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
-class TextInput extends StatelessWidget {
+class TextInputs extends StatelessWidget {
   final icons;
   final controllers;
   final textInput;
   final keyboardTypes;
   final requireds;
 
-  TextInput(
+  TextInputs(
       {this.controllers,
       this.icons,
       this.textInput,

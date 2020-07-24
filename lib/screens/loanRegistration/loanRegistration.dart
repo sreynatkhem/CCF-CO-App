@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
+import 'package:chokchey_finance/components/textInput.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:select_dialog/select_dialog.dart';
 
 class LoanRegister extends StatefulWidget {
   @override
@@ -22,10 +27,8 @@ class _LoanRegister extends State {
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    print('NULL: ::::: ${fileName}');
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
   }
 
   Widget buildGridView() {
@@ -128,6 +131,7 @@ class _LoanRegister extends State {
   var valueLoanPurpose;
   var valueORARD;
   var valueReferByWho;
+  var selectedValueCustmerName;
 
   final GlobalKey<FormBuilderState> maintenanceFee =
       GlobalKey<FormBuilderState>();
@@ -151,6 +155,10 @@ class _LoanRegister extends State {
   final GlobalKey<FormBuilderState> oRARD = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> referByWho = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> customerID = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> customerName =
+      GlobalKey<FormBuilderState>();
+  final TextEditingController selectedCustomerID =
+      TextEditingController(text: '');
 
   onSubmit() {
     print({
@@ -182,7 +190,20 @@ class _LoanRegister extends State {
   var firstRepaymentDateFocus = FocusNode();
   var loanAmountFocus = FocusNode();
 
+  final TextEditingController customerNameControllers = TextEditingController();
+
   final ValueChanged _onChanged = (val) => print(val);
+
+  var data = [
+    {'name': "Mr.Sea", 'id': '001'},
+    {'name': "Mr.SOk", 'id': '002'},
+    {'name': "Mr.JOK", 'id': '003'}
+  ];
+  getList() {
+    var mappedCustomerName = data.map((fruit) => '${fruit['name']}').toList();
+    return mappedCustomerName;
+  }
+
   @override
   Widget build(BuildContext context) {
     var percentage =
@@ -194,11 +215,47 @@ class _LoanRegister extends State {
             padding: EdgeInsets.only(left: 10, right: 10),
             child: Column(
               children: <Widget>[
+                DropDownCustomerRegister(
+                  icons: Icons.face,
+                  items: getList(),
+                  readOnlys: true,
+                  selectedValue: selectedValueCustmerName,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValueCustmerName = value ?? '';
+                    });
+                    print('clear');
+                    if (selectedValueCustmerName != null) {
+                      for (var item in data) {
+                        if (selectedValueCustmerName == item['name']) {
+                          setState(() {
+                            selectedCustomerID.text = item['id'];
+                          });
+                        }
+                      }
+                    }
+                  },
+                  iconsClose: Icon(Icons.close),
+                  onPressed: () {
+                    setState(() {
+                      selectedValueCustmerName = 'Customer Name';
+                      selectedCustomerID.text = '';
+                    });
+                  },
+                  styleTexts: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: fontSizeXs,
+                      color: Colors.black,
+                      fontWeight: fontWeight500),
+                  texts: selectedValueCustmerName,
+                  title: 'Customer Name',
+                ),
                 GroupFromBuilder(
                   icons: Icons.face,
                   keys: customerID,
                   childs: FormBuilderTextField(
                     attribute: 'number',
+                    controller: selectedCustomerID,
                     inputFormatters: [
                       WhitelistingTextInputFormatter.digitsOnly
                     ],

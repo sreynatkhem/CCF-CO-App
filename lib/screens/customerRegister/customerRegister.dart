@@ -356,18 +356,6 @@ class _CustomerRegister extends State {
                   ),
                 ),
               ),
-
-              // Center(
-              //   child: Container(
-              //     // width: 300,
-              //     margin: EdgeInsets.only(left: 48, right: 25),
-              //     decoration: const BoxDecoration(
-              //       border: Border(
-              //         bottom: BorderSide(width: 1.0, color: Colors.grey),
-              //       ),
-              //     ),
-              //   ),
-              // ),
               GroupFromBuilder(
                 icons: Icons.work,
                 keys: occupationOfCustomer,
@@ -661,16 +649,19 @@ class _CustomerRegister extends State {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              Icons.navigation,
-                              color: Colors.grey,
+                            Container(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Icon(
+                                Icons.navigation,
+                                color: Colors.grey,
+                              ),
                             ),
                             FlatButton(
                               child: Container(
                                 width: 240,
                                 child: Text(
                                   _currentAddress ?? "Get location",
-                                  // textAlign: TextAlign.center,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontFamily: fontFamily,
                                       fontSize: 17,
