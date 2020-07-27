@@ -1,4 +1,4 @@
-import 'package:chokchey_finance/models/index.dart';
+import 'package:chokchey_finance/models/approvalList.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'dart:async';
