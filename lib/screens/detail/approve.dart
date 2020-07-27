@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:chokchey_finance/components/detailApproval.dart';
-import 'package:chokchey_finance/modals/index.dart';
+import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/providers/detialJson.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';

@@ -66,7 +66,7 @@ final titleBlue = TextStyle(
   color: logolightGreen,
 );
 
-post() {
+api() {
   var httpClient = HttpClient();
   httpClient.badCertificateCallback =
       ((X509Certificate cert, String host, int port) => true);

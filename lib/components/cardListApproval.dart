@@ -1,6 +1,6 @@
 // import 'dart:html';
 
-import 'package:chokchey_finance/modals/index.dart';
+import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';

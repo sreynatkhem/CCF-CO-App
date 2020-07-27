@@ -17,18 +17,28 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:select_dialog/select_dialog.dart';
 
-class LoanRegister extends StatefulWidget {
+class EditLoanRegister extends StatefulWidget {
+  final dynamic list;
+  EditLoanRegister({this.list});
   @override
-  _LoanRegister createState() => _LoanRegister();
+  _EditLoanRegister createState() => _EditLoanRegister(list: list);
 }
 
-class _LoanRegister extends State {
+class _EditLoanRegister extends State {
+  final dynamic list;
+  _EditLoanRegister({this.list});
   //IMAGE PICKER
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    setState(() {
+      selectedValueCustmerName = list.name;
+      selectedCustomerID.text = list.id.toString();
+    });
   }
 
   Widget buildGridView() {
@@ -199,12 +209,29 @@ class _LoanRegister extends State {
     return mappedCustomerName;
   }
 
+  onSaveEdit() {}
+
   @override
   Widget build(BuildContext context) {
     var percentage =
         'https://uxwing.com/wp-content/themes/uxwing/download/03-text-editing/percentage.png';
     return Header(
-        headerTexts: 'Loans Register',
+        headerTexts: 'Edit Loans Register',
+        actionsNotification: <Widget>[
+          // Using Stack to show edit registration
+          new Stack(
+            children: <Widget>[
+              new IconButton(
+                  icon: Icon(
+                    Icons.save,
+                    size: 25,
+                  ),
+                  onPressed: () {
+                    onSaveEdit();
+                  }),
+            ],
+          ),
+        ],
         bodys: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10),

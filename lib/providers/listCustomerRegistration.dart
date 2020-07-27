@@ -1,34 +1,27 @@
-import 'package:chokchey_finance/modals/index.dart';
-import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/models/customers.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import '../modals/index.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 class ListCustomerRegistrationProvider with ChangeNotifier {
   bool _isFetching = false;
   final data = [];
 
-  Future<List<Approval>> fetchApprovals() async {
+  Future<List<Customers>> fetchListCustomerRegistration() async {
     _isFetching = true;
-    final storage = new FlutterSecureStorage();
-    String user_id = await storage.read(key: 'user_id');
-
     try {
-      final response = await post().post(
-        'https://gorest.co.in/public-api/users?_format=json&access-token=RSP6eOpMjAV3dTLKyRQ3EaOMQYYNvUr8xuuQ',
+      _isFetching = false;
+      final response = await api().get(
+        'https://jsonplaceholder.typicode.com/users',
       );
       final parsed = jsonDecode(response.body);
-      final list = parsed['body']['approvalList'];
-      data.add(list);
-      _isFetching = false;
+      data.add(parsed);
       notifyListeners();
-      return list.map<Approval>((json) => Approval.fromJson(json)).toList();
+      return parsed.map<Customers>((json) => Customers.fromJson(json)).toList();
     } catch (error) {
       print('error: $error');
+      _isFetching = false;
     }
   }
 
