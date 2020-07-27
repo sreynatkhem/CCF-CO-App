@@ -9,9 +9,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
-class CustomerRegister extends StatefulWidget {
+class EditCustomerRegister extends StatefulWidget {
   final dynamic list;
-  CustomerRegister({this.list});
+  EditCustomerRegister({this.list});
   @override
   _CustomerRegister createState() => _CustomerRegister(list: list);
 }
@@ -19,6 +19,17 @@ class CustomerRegister extends StatefulWidget {
 class _CustomerRegister extends State {
   final dynamic list;
   _CustomerRegister({this.list});
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    setState(() {
+      controllerFullNameKhmer.text = list.name;
+      controllerFullNameEnglish.text = list.username;
+      controllerPhone1.text = list.phone;
+    });
+  }
 
   var valueKhmerName;
   var valueEnglishName;
@@ -62,6 +73,8 @@ class _CustomerRegister extends State {
   final TextEditingController controllerFullNameKhmer = TextEditingController();
   final TextEditingController controllerFullNameEnglish =
       TextEditingController();
+  final TextEditingController controllerDatehofBrith = TextEditingController();
+
   final TextEditingController controllerPhone1 = TextEditingController();
   final TextEditingController controllerPhone2 = TextEditingController();
 
@@ -157,10 +170,27 @@ class _CustomerRegister extends State {
   final nextVisitDateFocus = FocusNode();
   var selectedValueProvincefocus = false;
 
+  onSaveEdit() {}
+
   @override
   Widget build(BuildContext context) {
     return Header(
-      headerTexts: 'Customers Register',
+      headerTexts: 'Edit Customers Register',
+      actionsNotification: <Widget>[
+        // Using Stack to show edit registration
+        new Stack(
+          children: <Widget>[
+            new IconButton(
+                icon: Icon(
+                  Icons.save,
+                  size: 25,
+                ),
+                onPressed: () {
+                  onSaveEdit();
+                }),
+          ],
+        ),
+      ],
       bodys: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(left: 10, right: 10),
@@ -172,6 +202,7 @@ class _CustomerRegister extends State {
                 childs: FormBuilderTextField(
                   attribute: 'name',
                   focusNode: khmerNameFocus,
+                  controller: controllerFullNameKhmer,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(englishNameFocus);
@@ -197,6 +228,7 @@ class _CustomerRegister extends State {
                 keys: englishName,
                 childs: FormBuilderTextField(
                   attribute: 'name',
+                  controller: controllerFullNameEnglish,
                   focusNode: englishNameFocus,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (v) {
@@ -226,6 +258,7 @@ class _CustomerRegister extends State {
                 childs: FormBuilderDateTimePicker(
                   attribute: 'date',
                   focusNode: datehofBrithFocus,
+                  controller: controllerDatehofBrith,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(englishNameFocus);
@@ -280,6 +313,7 @@ class _CustomerRegister extends State {
                 keys: phoneKey,
                 childs: FormBuilderPhoneField(
                   focusNode: phoneKeyFocus,
+                  controller: controllerPhone1,
                   textInputAction: TextInputAction.next,
                   onSaved: (v) {
                     print('onSaved: $v');
@@ -287,8 +321,6 @@ class _CustomerRegister extends State {
                   onEditingComplete: () =>
                       FocusScope.of(context).requestFocus(phoneKey2Focus),
                   attribute: 'phone_number',
-                  initialValue: '0',
-                  defaultSelectedCountryIsoCode: 'KH',
                   cursorColor: Colors.black,
                   maxLength: 10,
                   maxLengthEnforced: true,

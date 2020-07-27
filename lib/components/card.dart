@@ -5,8 +5,21 @@ class CardState extends StatelessWidget {
   final images;
   final texts;
   final onTaps;
+  final id;
+  final createdAt;
+  final email;
+  final phone;
+  final iconRight;
 
-  CardState({this.images, this.texts, this.onTaps});
+  CardState(
+      {this.images,
+      this.texts,
+      this.onTaps,
+      this.id,
+      this.createdAt,
+      this.email,
+      this.phone,
+      this.iconRight});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,7 +40,16 @@ class CardState extends StatelessWidget {
                   height: 45,
                 ),
                 Padding(padding: EdgeInsets.only(right: 10)),
-                Text(texts),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (texts != null) Text(texts),
+                    if (id != null) Text(id ?? ""),
+                    if (createdAt != null) Text(createdAt ?? ""),
+                    if (email != null) Text(email ?? ""),
+                    if (phone != null) Text(phone ?? ""),
+                  ],
+                ),
               ]))),
     );
   }

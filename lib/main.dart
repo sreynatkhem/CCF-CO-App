@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 Future<void> main() async {
+  Provider.debugCheckInvalidValueType = null;
   Stetho.initialize();
   runApp(MyHomePage());
 }
@@ -44,8 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (cxt) => ApprovelistProvider(),
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        Provider<ApprovelistProvider>(create: (_) => ApprovelistProvider()),
+        Provider<ListCustomerRegistrationProvider>(
+            create: (_) => ListCustomerRegistrationProvider()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: _isLogin ? Home() : Login(),

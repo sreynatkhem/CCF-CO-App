@@ -25,13 +25,16 @@ class CustomListTile extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Icon(icon),
+                        Icon(
+                          icon,
+                          size: 20,
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                         ),
                         Text(
                           text,
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 14),
                         ),
                       ],
                     ),

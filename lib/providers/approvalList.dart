@@ -1,11 +1,10 @@
-import 'package:chokchey_finance/modals/index.dart';
+import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import '../modals/index.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApprovelistProvider with ChangeNotifier {
@@ -19,7 +18,7 @@ class ApprovelistProvider with ChangeNotifier {
     final bodyRow =
         "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"${user_id}\"\n    }\n}\n";
     try {
-      final response = await post().post(
+      final response = await api().post(
         baseUrl + 'LRA0002',
         headers: {
           "Content-Type": "application/json; charset=utf-8",

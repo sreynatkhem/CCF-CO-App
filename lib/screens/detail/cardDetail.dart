@@ -1,5 +1,5 @@
 import 'package:chokchey_finance/components/cardDetial.dart';
-import 'package:chokchey_finance/modals/listApproval.dart';
+import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 

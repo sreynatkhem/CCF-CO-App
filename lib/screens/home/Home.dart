@@ -1,5 +1,7 @@
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
+import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
 import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +64,20 @@ class _HomeState extends State<Home> {
         ModalRoute.withName("/login"));
   }
 
+  onListCustomerRegistration() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ListCustomerRegistration()),
+        ModalRoute.withName(""));
+  }
+
+  onListLoanRegistration() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ListLoanRegistration()),
+        ModalRoute.withName(""));
+  }
+
   _drawerList(context) {
     return Drawer(
       child: Container(
@@ -110,12 +126,16 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
                 child: Column(
                   children: <Widget>[
+                    CustomListTile(Icons.face, 'List Customer Registration',
+                        () => {onListCustomerRegistration()}),
+                    CustomListTile(Icons.payment, 'List Loan Registration',
+                        () => {onListLoanRegistration()}),
                     CustomListTile(Icons.lock, 'Log Out', () => {onLogOut()}),
                     Padding(padding: EdgeInsets.only(top: 10)),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

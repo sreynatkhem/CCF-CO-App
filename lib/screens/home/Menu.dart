@@ -51,7 +51,7 @@ class _MenuState extends State<Menu> {
                   color: logolightGreen,
                   imageNetwork: register,
                   text: 'Customer',
-                  text2: 'Registeration',
+                  text2: 'Registration',
                 ),
                 MenuCard(
                   onTap: () => Navigator.push(
