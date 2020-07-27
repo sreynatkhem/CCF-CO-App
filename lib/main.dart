@@ -10,6 +10,8 @@ import 'package:chokchey_finance/screens/login/Login.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import 'providers/login.dart';
+
 Future<void> main() async {
   Provider.debugCheckInvalidValueType = null;
   Stetho.initialize();
@@ -49,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <SingleChildWidget>[
+        Provider<LoginProvider>(create: (_) => LoginProvider()),
         Provider<ApprovelistProvider>(create: (_) => ApprovelistProvider()),
         Provider<ListCustomerRegistrationProvider>(
             create: (_) => ListCustomerRegistrationProvider()),

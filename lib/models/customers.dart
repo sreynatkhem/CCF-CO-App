@@ -22,9 +22,6 @@ class Customers {
     this.company,
   });
 
-  // factory Customers.fromJson(Map<String, dynamic> json) =>
-  //     _$CustomersFromJson(json);
-  // Map<String, dynamic> toJson() => _$CustomersToJson(this);
   factory Customers.fromJson(Map<String, dynamic> json) {
     return Customers(
       id: json['id'] as num,

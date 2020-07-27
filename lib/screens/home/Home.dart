@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
   }
 
   getStoreUser() async {
-    String user_id = await storage.read(key: 'user_id');
+    String user_id = await storage.read(key: 'valueid');
     String user_name = await storage.read(key: 'user_name');
     setState(() {
       userName = user_name ?? '';

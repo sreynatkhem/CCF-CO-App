@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:chokchey_finance/models/index.dart';
+import 'package:chokchey_finance/models/detialApproval.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:http/http.dart' as http;
