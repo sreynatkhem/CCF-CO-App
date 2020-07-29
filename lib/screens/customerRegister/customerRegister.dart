@@ -262,9 +262,6 @@ class _CustomerRegister extends State {
                       FocusScope.of(context).requestFocus(phoneKeyFocus);
                     });
                   },
-                  onSaved: (v) {
-                    print('value $v');
-                  },
                   validators: [FormBuilderValidators.required()],
                   items: ['Male', 'Female', 'Other']
                       .map((gender) => DropdownMenuItem(
@@ -424,6 +421,7 @@ class _CustomerRegister extends State {
                   icons: Icons.payment,
                   keys: nationIdentificationValue,
                   childs: FormBuilderTextField(
+                    attribute: 'name',
                     focusNode: nationIdentificationValueFocus,
                     textInputAction: TextInputAction.next,
                     onEditingComplete: () =>
@@ -452,6 +450,7 @@ class _CustomerRegister extends State {
                 icons: Icons.date_range,
                 keys: nextVisitDate,
                 childs: FormBuilderDateTimePicker(
+                  attribute: 'date',
                   inputType: InputType.date,
                   focusNode: nextVisitDateFocus,
                   textInputAction: TextInputAction.next,
@@ -471,6 +470,7 @@ class _CustomerRegister extends State {
                 icons: Icons.check,
                 keys: prospective,
                 childs: FormBuilderDropdown(
+                  attribute: 'name',
                   decoration: InputDecoration(
                     labelText: "Prospective",
                     border: InputBorder.none,
@@ -499,6 +499,7 @@ class _CustomerRegister extends State {
                 icons: Icons.check,
                 keys: gurantorCustomer,
                 childs: FormBuilderDropdown(
+                  attribute: 'name',
                   decoration: InputDecoration(
                     labelText: "G=Gurantor, C=Customer",
                     border: InputBorder.none,
@@ -517,8 +518,6 @@ class _CustomerRegister extends State {
                   ]
                       .map((valueGurantorCustomer) => DropdownMenuItem(
                           value: valueGurantorCustomer,
-                          onTap: () =>
-                              print('${selectedValueProvincefocus = true}'),
                           child: Text(
                             "$valueGurantorCustomer",
                           )))

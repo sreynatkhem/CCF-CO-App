@@ -3,7 +3,13 @@ import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable()
 class LoginModels {
   LoginModels(
-      {this.branch, this.level, this.token, this.ucode, this.uid, this.uname});
+      {this.branch,
+      this.level,
+      this.token,
+      this.ucode,
+      this.uid,
+      this.uname,
+      this.roles});
 
   String ucode;
   String uid;
@@ -11,6 +17,7 @@ class LoginModels {
   num level;
   String branch;
   String uname;
+  List<dynamic> roles;
 
   factory LoginModels.fromJson(Map<String, dynamic> json) {
     return LoginModels(
@@ -20,6 +27,7 @@ class LoginModels {
       level: json['level'] as num,
       branch: json['branch'] as String,
       uname: json['uname'] as String,
+      roles: json['roles'] as List<dynamic>,
     );
   }
 }

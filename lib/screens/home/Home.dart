@@ -1,8 +1,16 @@
+import 'dart:convert';
+
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/menuCard.dart';
+import 'package:chokchey_finance/components/messageFromCEO.dart';
+import 'package:chokchey_finance/screens/approval/approvalList.dart';
+import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
-import 'package:chokchey_finance/screens/login/Login.dart';
+import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart';
+import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
+import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -11,11 +19,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'Menu.dart';
 
 class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
   Home({
     Key key,
   }) : super(key: key);
+  @override
+  _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
@@ -26,8 +34,7 @@ class _HomeState extends State<Home> {
   String userId = '';
   String userName = '';
 
-  final profile = const AssetImage('assets/images/profile_create.jpg');
-  final profile2 = const AssetImage('assets/images/profile2.jpg');
+  var profile;
 
   @override
   void initState() {
@@ -44,8 +51,11 @@ class _HomeState extends State<Home> {
   @override
   void didChangeDependencies() {
     getStoreUser();
+    profile = const AssetImage('assets/images/profile_create.jpg');
     super.didChangeDependencies();
   }
+
+  List<Object> userRoles = [];
 
   getStoreUser() async {
     String user_id = await storage.read(key: 'valueid');
@@ -142,8 +152,19 @@ class _HomeState extends State<Home> {
     );
   }
 
+  final register = const AssetImage('assets/images/register.png');
+  final loanRegistration =
+      const AssetImage('assets/images/loanRegistration.png');
+  final list = const AssetImage('assets/images/findApproval.png');
+  final policy = const AssetImage('assets/images/policy.png');
   @override
   Widget build(BuildContext context) {
+    var test = storage.read(key: 'roles');
+    test.then(
+      (value) => setState(() {
+        userRoles = jsonDecode(value);
+      }),
+    );
     return Header(
       drawers: new Drawer(
         child: _drawerList(context),
@@ -195,7 +216,96 @@ class _HomeState extends State<Home> {
           },
           children: <Widget>[
             Container(
-              child: Menu(),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 4,
+                    child: GridView.count(
+                        primary: false,
+                        padding: const EdgeInsets.only(
+                            left: 45.0, right: 45.0, top: 20),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisCount: 2,
+                        children: List.generate(userRoles.length, (index) {
+                          if (userRoles[index].toString() == '100001') {
+                            return MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ApprovalLists()),
+                              ),
+                              color: logolightGreen,
+                              imageNetwork: list,
+                              text: 'List Loan Approve',
+                            );
+                          }
+                          if (userRoles[index].toString() == '100001') {
+                            return Padding(
+                              padding: EdgeInsets.all(10),
+                            );
+                          }
+                          if (userRoles[index].toString() == '100002') {
+                            return MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CustomerRegister()),
+                              ),
+                              color: logolightGreen,
+                              imageNetwork: register,
+                              text: 'Customer',
+                              text2: 'Registration',
+                            );
+                          }
+                          if (userRoles[index].toString() == '100002') {
+                            return Padding(
+                              padding: EdgeInsets.all(10),
+                            );
+                          }
+                          if (userRoles[index].toString() == '100003') {
+                            return MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoanRegister()),
+                              ),
+                              color: logolightGreen,
+                              imageNetwork: loanRegistration,
+                              text: 'Loan Registration',
+                            );
+                          }
+                          if (userRoles[index].toString() == '100003') {
+                            return Padding(
+                              padding: EdgeInsets.all(10),
+                            );
+                          }
+                          if (userRoles[index].toString() == '100004') {
+                            return Container(
+                              width: 10,
+                              height: 20,
+                              child: MenuCard(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PolicyScreen()),
+                                ),
+                                color: logolightGreen,
+                                imageNetwork: policy,
+                                text: 'Policy',
+                              ),
+                            );
+                          }
+                        }) // List View
+                        ),
+                  ),
+                  CardMessage(
+                    title: 'Message from CEO',
+                    textMessage:
+                        'Our reputation for corporate integrity attracts great team members, great customers, and even greater opportunities. It is a key to our long-term success. I am continually impressed by the resourcefulness and entrepreneurial quality displayed by our people and the exceptional value they bring to the company',
+                  )
+                ],
+              ),
             ),
             Container(
               color: Colors.white,

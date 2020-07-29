@@ -197,8 +197,6 @@ class _EditLoanRegister extends State {
 
   final TextEditingController customerNameControllers = TextEditingController();
 
-  final ValueChanged _onChanged = (val) => print(val);
-
   var data = [
     {'name': "Mr.Sea", 'id': '001'},
     {'name': "Mr.SOk", 'id': '002'},

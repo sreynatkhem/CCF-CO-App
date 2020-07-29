@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
-import 'package:chokchey_finance/screens/login/Login.dart';
+import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
