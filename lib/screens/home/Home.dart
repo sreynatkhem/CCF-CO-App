@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
   List<Object> userRoles = [];
 
   getStoreUser() async {
-    String user_id = await storage.read(key: 'valueid');
+    String user_id = await storage.read(key: 'user_id');
     String user_name = await storage.read(key: 'user_name');
     setState(() {
       userName = user_name ?? '';
@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
   }
 
   onLogOut() async {
-    await storage.delete(key: 'valueid');
+    await storage.delete(key: 'user_id');
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Login()),

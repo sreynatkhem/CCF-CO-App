@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> getStore() async {
-    String ids = await storage.read(key: 'valueid');
+    String ids = await storage.read(key: 'user_id');
     String passwords = await storage.read(key: 'password');
     if (mounted) {
       setState(() {
@@ -60,57 +60,81 @@ class _LoginState extends State<Login> {
   var _login;
   var _roles;
 
-  onClickFirst() {
-    // FocusScope.of(context).requestFocus(focusFirstLogin);
-    // setState(() {
-    //   _firstLogIn = true;
-    // });
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => StepTwoLogin()),
-    );
-  }
+  // onClickFirst() {
+  //   // FocusScope.of(context).requestFocus(focusFirstLogin);
+  //   // setState(() {
+  //   //   _firstLogIn = true;
+  //   // });
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //         builder: (context) => StepTwoLogin(
+  //               token: '',
+  //               userId: '',
+  //             )),
+  //   );
+  // }
 
 // Create storage Login
   Future<void> onClickLogin(context) async {
-    final String valueid = id.text;
+    final String user_id = id.text;
     final String valuePassword = password.text;
     setState(() {
       _isLoading = true;
     });
     try {
       await Provider.of<LoginProvider>(context, listen: false)
-          .fetchLogin(valueid, valuePassword)
-          .catchError((onError) => {print('onError : $onError')})
+          .fetchLogin(user_id, valuePassword)
           .then((value) async => {
                 if (value[0].token != null)
                   {
-                    await storage.write(key: "valueid", value: value[0].uid),
-                    await storage.write(key: "password", value: valuePassword),
                     await storage.write(
-                        key: "user_name", value: value[0].uname),
+                        key: "user_ucode", value: value[0].ucode),
                     setState(() {
                       _isLoading = false;
                     }),
-
                     if (value[0].roles != null)
                       {
                         _roles = value[0].roles,
                         await storage.write(
                             key: "roles", value: _roles.toString()),
                       },
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => StepTwoLogin()),
-                    )
-                    // Navigator.pushAndRemoveUntil(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => Home(
-                    //               roles: value[0].roles,
-                    //             )),
-                    //     ModalRoute.withName("/login"))
+                    if (value[0].token != null &&
+                        (value[0].changePassword == null ||
+                            value[0].changePassword == 'N'))
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StepTwoLogin(
+                                  storeUser: value,
+                                  valuePassword: valuePassword)),
+                        )
+                      }
+                    else
+                      {
+                        await storage.write(
+                            key: "user_id", value: value[0].uid),
+                        await storage.write(
+                            key: "password", value: valuePassword),
+                        await storage.write(
+                            key: "user_name", value: value[0].uname),
+                        await storage.write(
+                            key: "user_token", value: value[0].token),
+                        await storage.write(
+                            key: "user_ucode", value: value[0].ucode),
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                            ModalRoute.withName("/login"))
+                      }
                   }
+              })
+          .catchError((e) => {
+                setState(() {
+                  _isLoading = false;
+                }),
+                print('e:::: $e')
               });
     } catch (error) {
       setState(() {
@@ -179,16 +203,8 @@ class _LoginState extends State<Login> {
                 hintTextPassword: password.text,
                 onChangedPassword: (v) {},
                 onFieldSubmittedPassword: (text) async {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      });
                   await onClickLogin(context);
                   setState(() {
-                    // _firstLogIn = true;
                     autofocus = true;
                   });
                 },
@@ -202,18 +218,11 @@ class _LoginState extends State<Login> {
                   textColor: Colors.white,
                   padding: const EdgeInsets.all(8.0),
                   onPressed: () async {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        });
                     await onClickLogin(context);
                   },
-                  child: _firstLogIn
-                      ? Text(
-                          "Log In",
+                  child: _isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
                         )
                       : Text(
                           "Next",
