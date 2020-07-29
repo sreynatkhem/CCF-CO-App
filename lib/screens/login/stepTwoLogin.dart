@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/defaultLogin.dart';
 import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
@@ -12,15 +13,24 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 
 class StepTwoLogin extends StatefulWidget {
+  final storeUser;
+  final valuePassword;
+
   final ImageProvider chokchey;
   StepTwoLogin({
     Key key,
+    this.storeUser,
+    this.valuePassword,
     this.chokchey = const AssetImage('assets/images/chokchey.png'),
   }) : super(key: key);
-  _LoginState createState() => _LoginState();
+  _LoginState createState() =>
+      _LoginState(storeUser: storeUser, valuePassword: valuePassword);
 }
 
 class _LoginState extends State<StepTwoLogin> {
+  final storeUser;
+  final valuePassword;
+  _LoginState({this.storeUser, this.valuePassword});
   final storage = new FlutterSecureStorage();
 
   final TextEditingController id = TextEditingController();
@@ -44,7 +54,7 @@ class _LoginState extends State<StepTwoLogin> {
   }
 
   Future<void> getStore() async {
-    String ids = await storage.read(key: 'valueid');
+    String ids = await storage.read(key: 'user_id');
     String passwords = await storage.read(key: 'password');
     if (mounted) {
       setState(() {
@@ -66,41 +76,38 @@ class _LoginState extends State<StepTwoLogin> {
 
 // Create storage StepTwoLogin
   Future<void> onClickLogin(context) async {
-    final String valueid = id.text;
-    final String valuePassword = password.text;
     setState(() {
       _isLoading = true;
     });
     try {
       await Provider.of<LoginProvider>(context, listen: false)
-          .fetchLogin(valueid, valuePassword)
-          .catchError((onError) => {print('onError : $onError')})
+          .postLoginChangePassword(firstLogin.text)
           .then((value) async => {
-                if (value[0].token != null)
+                print('value::: ${value}'),
+                if (value[0].changePassword == 'Y')
                   {
-                    await storage.write(key: "valueid", value: value[0].uid),
+                    await storage.write(
+                        key: "user_id", value: storeUser[0].uid),
                     await storage.write(key: "password", value: valuePassword),
                     await storage.write(
-                        key: "user_name", value: value[0].uname),
-                    setState(() {
-                      _isLoading = false;
-                    }),
-                    if (value[0].roles != null)
-                      {
-                        _roles = value[0].roles,
-                        await storage.write(
-                            key: "roles", value: _roles.toString()),
-                      },
+                        key: "user_name", value: storeUser[0].uname),
+                    await storage.write(
+                        key: "user_token", value: storeUser[0].token),
+                    await storage.write(
+                        key: "user_ucode", value: storeUser[0].ucode),
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => Home()),
                         ModalRoute.withName("/login"))
                   }
+                else
+                  {
+                    Navigator.pop(context),
+                    print('pop::: pop'),
+                  }
               });
     } catch (error) {
-      setState(() {
-        _isLoading = false;
-      });
+      print('error: $error');
     }
   }
 

@@ -9,6 +9,7 @@ class LoginModels {
       this.ucode,
       this.uid,
       this.uname,
+      this.changePassword,
       this.roles});
 
   String ucode;
@@ -18,6 +19,7 @@ class LoginModels {
   String branch;
   String uname;
   List<dynamic> roles;
+  String changePassword;
 
   factory LoginModels.fromJson(Map<String, dynamic> json) {
     return LoginModels(
@@ -27,6 +29,7 @@ class LoginModels {
       level: json['level'] as num,
       branch: json['branch'] as String,
       uname: json['uname'] as String,
+      changePassword: json['changePassword'] as String,
       roles: json['roles'] as List<dynamic>,
     );
   }
