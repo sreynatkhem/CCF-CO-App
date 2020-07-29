@@ -90,6 +90,8 @@ class _LoginState extends State<Login> {
                   {
                     await storage.write(
                         key: "user_ucode", value: value[0].ucode),
+                    await storage.write(
+                        key: "user_token", value: value[0].token),
                     setState(() {
                       _isLoading = false;
                     }),
@@ -118,9 +120,9 @@ class _LoginState extends State<Login> {
                         await storage.write(
                             key: "password", value: valuePassword),
                         await storage.write(
-                            key: "user_name", value: value[0].uname),
-                        await storage.write(
                             key: "user_token", value: value[0].token),
+                        await storage.write(
+                            key: "user_name", value: value[0].uname),
                         await storage.write(
                             key: "user_ucode", value: value[0].ucode),
                         Navigator.pushAndRemoveUntil(
