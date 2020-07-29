@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 class LoginProvider with ChangeNotifier {
   bool _isFetching = false;
   final data = [];
@@ -30,7 +28,6 @@ class LoginProvider with ChangeNotifier {
           .map<LoginModels>((json) => LoginModels.fromJson(json))
           .toList();
     } catch (error) {
-      print('error: $error');
       _isFetching = false;
     }
   }
