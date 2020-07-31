@@ -1,13 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
-
 import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
-import 'package:chokchey_finance/models/listNationID.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
-import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -19,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:select_dialog/select_dialog.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class CustomerRegister extends StatefulWidget {
   final dynamic list;
@@ -45,11 +41,11 @@ class _CustomerRegister extends State {
   var valueGurantorCustomer;
   var valueNationIdentification;
   var valueSelectedNativeID;
-  String selectedValueProvince;
-  String selectedValueDistrict;
-  String selectedValueCommune;
-  String selectedValueVillage;
-
+  String selectedValueProvince = 'Province code';
+  String selectedValueDistrict = 'District code';
+  String selectedValueCommune = 'Commune code';
+  String selectedValueVillage = 'Village code';
+  bool validateVillage = false;
   var idProvince;
   var idDistrict;
   var idCommune;
@@ -147,7 +143,6 @@ class _CustomerRegister extends State {
       setState(() {
         _currentAddress =
             "${place.subLocality}, ${place.locality}, ${place.postalCode} ${place.country}";
-        FocusScope.of(context).requestFocus(occupationOfCustomerFocus);
       });
     } catch (e) {
       print(e);
@@ -156,31 +151,47 @@ class _CustomerRegister extends State {
 
   var postCustomer;
 
-  onSubmit() async {
-    // valueDateOfRegister,
-    if (khmerName.currentState.saveAndValidate() &&
-        englishName.currentState.saveAndValidate() &&
-        datehofBrith.currentState.saveAndValidate() &&
-        _gender.currentState.saveAndValidate()) {
-      await Provider.of<CustomerRegistrationProvider>(context, listen: false)
-          .postCustomerRegistration(
-              valueKhmerName,
-              valueEnglishName,
-              valueDatehofBrith,
-              gender,
-              valuePhone1,
-              valuePhone2,
-              valueOccupationOfCustomer,
-              ntypes,
-              valueNationIdentification,
-              valueNextVisitDate,
-              valueProspective,
-              valueGurantorCustomer,
-              idProvince,
-              idDistrict,
-              idCommune,
-              idVillage,
-              _currentAddress);
+  onSubmit(context) async {
+    // setState(() {
+    //   _loading = true;
+    // });
+    try {
+      if (khmerName.currentState.saveAndValidate() &&
+          englishName.currentState.saveAndValidate() &&
+          datehofBrith.currentState.saveAndValidate() &&
+          _gender.currentState.saveAndValidate()) {
+        print('idVillage $idVillage');
+        await Provider.of<CustomerRegistrationProvider>(context, listen: false)
+            .postCustomerRegistration(
+                valueKhmerName,
+                valueEnglishName,
+                valueDatehofBrith,
+                gender,
+                valuePhone1,
+                valuePhone2,
+                valueOccupationOfCustomer,
+                ntypes,
+                valueNationIdentification,
+                valueNextVisitDate,
+                valueProspective,
+                valueGurantorCustomer,
+                idProvince,
+                idDistrict,
+                idCommune,
+                idVillage,
+                _currentAddress)
+            .then((value) => {
+                  // setState(() {
+                  //   _loading = false;
+                  // }),
+                  Navigator.pop(context),
+                  print('value submit then')
+                });
+      }
+    } catch (error) {
+      // setState(() {
+      //   _loading = false;
+      // });
     }
   }
 
@@ -344,10 +355,12 @@ class _CustomerRegister extends State {
     } catch (error) {}
   }
 
-  getIDVillage() {
+  getIDVillage() async {
     listVillages.forEach((item) async {
       if (selectedValueVillage == item['vildes']) {
-        setState(() {
+        print('getIDVillage $idVillage');
+
+        await setState(() {
           idVillage = item['vilcode'];
         });
       }
@@ -357,7 +370,7 @@ class _CustomerRegister extends State {
   @override
   Widget build(BuildContext context) {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
-    final double bottomPadding = iphonex ? 16.0 : 0.0;
+    final double bottomPadding = iphonex ? 20.0 : 5.0;
     return Header(
       headerTexts: 'Customers Register',
       bodys: _loading
@@ -429,12 +442,8 @@ class _CustomerRegister extends State {
                       icons: Icons.date_range,
                       keys: datehofBrith,
                       childs: FormBuilderDateTimePicker(
-                        attribute: 'date',
                         focusNode: datehofBrithFocus,
                         textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (v) {
-                          FocusScope.of(context).requestFocus(englishNameFocus);
-                        },
                         inputType: InputType.date,
                         onChanged: (v) {
                           setState(() {
@@ -464,11 +473,10 @@ class _CustomerRegister extends State {
                         onChanged: (value) {
                           setState(() {
                             gender = value;
-                            FocusScope.of(context).requestFocus(phoneKeyFocus);
                           });
                         },
                         validators: [FormBuilderValidators.required()],
-                        items: ['Male', 'Female', 'Other']
+                        items: ['M', 'F', 'O']
                             .map((gender) => DropdownMenuItem(
                                 value: gender,
                                 child: Text(
@@ -483,9 +491,6 @@ class _CustomerRegister extends State {
                       childs: FormBuilderPhoneField(
                         focusNode: phoneKeyFocus,
                         textInputAction: TextInputAction.next,
-                        onSaved: (v) {
-                          print('onSaved: $v');
-                        },
                         onEditingComplete: () =>
                             FocusScope.of(context).requestFocus(phoneKey2Focus),
                         attribute: 'phone_number',
@@ -579,10 +584,6 @@ class _CustomerRegister extends State {
                         valueTransformer: (text) {
                           return text == null ? null : text;
                         },
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly
-                        ],
                       ),
                     ),
                     GroupFromBuilder(
@@ -602,11 +603,9 @@ class _CustomerRegister extends State {
                           ),
                           items: listID
                               .map((e) => DropdownMenuItem(
-                                    value: e['name'],
+                                    value: e['name'].toString(),
                                     onTap: () => {
                                       setState(() {
-                                        // valueNationIdentification =
-                                        //     e['name'].toString();
                                         valueSelectedNativeID = '';
                                         ntypes = e['id'];
                                       })
@@ -634,10 +633,7 @@ class _CustomerRegister extends State {
                             setState(() {
                               valueNationIdentification = v;
                             });
-                            // FocusScope.of(context).requestFocus(nextVisitDateFocus);
                           },
-                          // onTap: () =>
-                          //     FocusScope.of(context).requestFocus(nextVisitDateFocus),
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
@@ -651,12 +647,9 @@ class _CustomerRegister extends State {
                       icons: Icons.date_range,
                       keys: nextVisitDate,
                       childs: FormBuilderDateTimePicker(
-                        attribute: 'date',
                         inputType: InputType.date,
                         focusNode: nextVisitDateFocus,
                         textInputAction: TextInputAction.next,
-                        onEditingComplete: () => FocusScope.of(context)
-                            .requestFocus(datehofRegisterFocus),
                         onChanged: (v) {
                           valueNextVisitDate = v;
                         },
@@ -729,6 +722,12 @@ class _CustomerRegister extends State {
                     DropDownCustomerRegister(
                       icons: Icons.location_on,
                       autofocus: true,
+                      validate: validateVillage
+                          ? RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            )
+                          : null,
                       onInSidePress: () {
                         SelectDialog.showModal<String>(
                           context,
@@ -783,6 +782,12 @@ class _CustomerRegister extends State {
                     DropDownCustomerRegister(
                       icons: Icons.location_on,
                       selectedValue: selectedValueDistrict,
+                      validate: validateVillage
+                          ? RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            )
+                          : null,
                       texts: selectedValueDistrict != ''
                           ? selectedValueDistrict
                           : 'District code',
@@ -831,6 +836,12 @@ class _CustomerRegister extends State {
                     DropDownCustomerRegister(
                       icons: Icons.location_on,
                       selectedValue: selectedValueCommune,
+                      validate: validateVillage
+                          ? RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            )
+                          : null,
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
                         if (communereadOnlys == true) {
@@ -877,6 +888,12 @@ class _CustomerRegister extends State {
                     DropDownCustomerRegister(
                       icons: Icons.location_on,
                       selectedValue: selectedValueVillage,
+                      validate: validateVillage
+                          ? RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            )
+                          : null,
                       onInSidePress: () async {
                         if (villagereadOnlys == true) {
                           await getVillage();
@@ -885,10 +902,19 @@ class _CustomerRegister extends State {
                             label: 'Search',
                             items: List.generate(listVillages.length,
                                 (index) => "${listVillages[index]['vildes']}"),
-                            onChange: (value) {
-                              getIDVillage();
+                            onChange: (value) async {
+                              print("onselelcted: $value");
+                              // await getIDVillage();
                               setState(() {
                                 selectedValueVillage = value ?? '';
+                              });
+                              listVillages.forEach((item) {
+                                if (selectedValueVillage == item['vildes']) {
+                                  setState(() {
+                                    idVillage = item['vilcode'];
+                                  });
+                                  print('getIDVillage $idVillage');
+                                }
                               });
                             },
                           );
@@ -968,27 +994,42 @@ class _CustomerRegister extends State {
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 300,
-                        height: 90,
-                        padding: EdgeInsets.only(top: 40, left: 10, bottom: 10),
-                        child: new RaisedButton(
-                          onPressed: () {
-                            onSubmit();
-                          },
-                          color: logolightGreen,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: logolightGreen, width: 1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ),
-                      ),
+                    AnimatedButton(
+                      text: 'Submit',
+                      color: logolightGreen,
+                      pressEvent: () {
+                        if (selectedValueVillage == 'Village code') {
+                          setState(() {
+                            validateVillage = true;
+                          });
+                        } else {
+                          AwesomeDialog(
+                            context: context,
+                            // animType: AnimType.LEFTSLIDE,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.SUCCES,
+                            title: 'Succes',
+                            desc: 'Thank you',
+                            btnOkOnPress: () async {
+                              if (selectedValueVillage == 'Village code') {
+                                setState(() {
+                                  validateVillage = true;
+                                });
+                              } else {
+                                await onSubmit(context);
+                                setState(() {
+                                  validateVillage = false;
+                                });
+                              }
+                            },
+                            btnCancelText: "Cancel",
+                            btnCancelOnPress: () {},
+                            btnCancelIcon: Icons.close,
+                            btnOkIcon: Icons.check_circle,
+                            btnOkColor: logolightGreen,
+                          )..show();
+                        }
+                      },
                     ),
                     Padding(padding: EdgeInsets.only(bottom: bottomPadding))
                   ],
