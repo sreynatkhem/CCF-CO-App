@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
@@ -55,6 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider<ApprovelistProvider>(create: (_) => ApprovelistProvider()),
         Provider<ListCustomerRegistrationProvider>(
             create: (_) => ListCustomerRegistrationProvider()),
+        Provider<CustomerRegistrationProvider>(
+            create: (_) => CustomerRegistrationProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

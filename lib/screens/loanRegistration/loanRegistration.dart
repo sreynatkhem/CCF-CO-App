@@ -203,6 +203,8 @@ class _LoanRegister extends State {
   Widget build(BuildContext context) {
     var percentage =
         'https://uxwing.com/wp-content/themes/uxwing/download/03-text-editing/percentage.png';
+    final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
+    final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Header(
         headerTexts: 'Loans Register',
         bodys: SingleChildScrollView(
@@ -755,7 +757,8 @@ class _LoanRegister extends State {
                       ),
                     ),
                   ),
-                )
+                ),
+                Padding(padding: EdgeInsets.only(bottom: bottomPadding))
               ],
             ),
           ),
