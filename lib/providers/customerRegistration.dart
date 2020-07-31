@@ -1,4 +1,3 @@
-import 'package:chokchey_finance/models/customers.dart';
 import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/models/listNationID.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -30,12 +29,14 @@ class CustomerRegistrationProvider with ChangeNotifier {
       selectedValueProvince,
       selectedValueDistrict,
       selectedValueCommune,
-      selectedValueVillage,
+      idVillage,
       currentAddress) async {
     _isFetching = true;
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
-    var thisInstant = new DateTime.now();
+    var token = await storage.read(key: 'user_token');
+    print(gender);
+
     try {
       _isFetching = false;
       var body = {
@@ -43,12 +44,12 @@ class CustomerRegistrationProvider with ChangeNotifier {
         'comcode': selectedValueCommune,
         'cstatus': valueGurantorCustomer,
         'discode': selectedValueDistrict,
-        'dob': valueDatehofBrith,
+        'dob': '2020-09-11',
         'gender': gender,
         'goglocation': currentAddress,
         'nameeng': valueEnglishName,
         'namekhr': valueKhmerName,
-        'ndate': valueNextVisitDate,
+        'ndate': '2020-09-11',
         'ntype': ntypes,
         'nid': valueNationIdentification,
         'occupation': valueOccupationOfCustomer,
@@ -56,25 +57,31 @@ class CustomerRegistrationProvider with ChangeNotifier {
         'phone2': valuePhone2,
         'pro': valueProspective,
         'procode': selectedValueProvince,
-        'rdate': thisInstant,
         'ucode': user_ucode,
-        'vilcode': selectedValueVillage,
+        'vilcode': idVillage,
       };
+      print('body: $body');
+      print('selectedValueVillage: $idVillage');
 
-      // print('post customer $body');
-      // print('params::::  ${params}');
+      final boyrow =
+          "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"$valueDatehofBrith\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAddress\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntypes\",\n    \"nid\": \"$valueNationIdentification\",\n    \"ndate\": \"$valueNextVisitDate\",\n    \"pro\": \"$valueProspective\",\n    \"cstatus\": \"$valueGurantorCustomer\"\n}";
+      final response = await api().post(baseURLInternal + 'Customers',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: boyrow);
+      final parsed = jsonDecode(response.body);
+      print('parsed: $parsed');
 
-      // final response =
-      //     await api().post(baseURLInternal + 'Customers', body: body);
-      // final parsed = jsonDecode(response.body);
-      // data.add(parsed);
-      // notifyListeners();
+      data.add(parsed);
+      notifyListeners();
       // return parsed
       //     .map<CustomerRegistration>(
       //         (json) => CustomerRegistration.fromJson(json))
       //     .toList();
     } catch (error) {
-      print('error: $error');
+      print('error eeeee: $error');
       _isFetching = false;
     }
   }

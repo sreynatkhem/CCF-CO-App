@@ -16,11 +16,13 @@ class DropDownCustomerRegister extends StatelessWidget {
   var styleTexts;
   var iconsClose;
   var onPressed;
+  var validate;
 
   DropDownCustomerRegister(
       {this.readOnlys,
       this.onInSidePress,
       this.texts,
+      this.validate,
       this.selectedValue,
       this.onChanged,
       this.items,
@@ -33,6 +35,7 @@ class DropDownCustomerRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: validate,
       child: Column(
         children: <Widget>[
           Row(
