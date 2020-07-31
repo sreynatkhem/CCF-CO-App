@@ -9,6 +9,7 @@ class DropDownCustomerRegister extends StatelessWidget {
   String title;
   bool autofocus;
 
+  Function onInSidePress;
   var onChanged;
   var items;
   var icons;
@@ -18,6 +19,7 @@ class DropDownCustomerRegister extends StatelessWidget {
 
   DropDownCustomerRegister(
       {this.readOnlys,
+      this.onInSidePress,
       this.texts,
       this.selectedValue,
       this.onChanged,
@@ -45,26 +47,18 @@ class DropDownCustomerRegister extends StatelessWidget {
               ),
               Container(
                 child: FlatButton(
-                    onPressed: () {
-                      readOnlys
-                          ? SelectDialog.showModal<String>(context,
-                              label: texts ?? 'Search',
-                              items: items,
-                              onChange: onChanged,
-                              autofocus: autofocus)
-                          : null;
-                    },
+                    onPressed: onInSidePress ??
+                        () {
+                          readOnlys
+                              ? SelectDialog.showModal<String>(context,
+                                  label: texts ?? 'Search',
+                                  items: items,
+                                  onChange: onChanged,
+                                  autofocus: autofocus)
+                              : null;
+                        },
                     child: Container(
-                        child: Text(
-                      texts ?? title,
-                      style: selectedValue != null
-                          ? styleTexts
-                          : TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.grey,
-                              fontWeight: fontWeight500),
-                    ))),
+                        child: Text(texts ?? title, style: styleTexts))),
               ),
               Container(
                 child: IconButton(

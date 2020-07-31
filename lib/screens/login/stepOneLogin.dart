@@ -92,6 +92,7 @@ class _LoginState extends State<Login> {
                         key: "user_ucode", value: value[0].ucode),
                     await storage.write(
                         key: "user_token", value: value[0].token),
+                    await storage.write(key: "branch", value: value[0].branch),
                     setState(() {
                       _isLoading = false;
                     }),
@@ -125,6 +126,8 @@ class _LoginState extends State<Login> {
                             key: "user_name", value: value[0].uname),
                         await storage.write(
                             key: "user_ucode", value: value[0].ucode),
+                        await storage.write(
+                            key: "branch", value: value[0].branch),
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),

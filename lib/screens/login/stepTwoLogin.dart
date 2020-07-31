@@ -95,6 +95,8 @@ class _LoginState extends State<StepTwoLogin> {
                         key: "user_token", value: storeUser[0].token),
                     await storage.write(
                         key: "user_ucode", value: storeUser[0].ucode),
+                    await storage.write(
+                        key: "branch", value: storeUser[0].branch),
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => Home()),
