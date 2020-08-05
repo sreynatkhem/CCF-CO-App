@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/models/customerRegistration.dart';
 import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/models/listNationID.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -12,6 +13,7 @@ class CustomerRegistrationProvider with ChangeNotifier {
   bool _isFetching = false;
   final data = [];
   final storage = new FlutterSecureStorage();
+  var listCustomerByID = [];
 
   Future<List<CustomerRegistration>> postCustomerRegistration(
       valueKhmerName,
@@ -35,8 +37,6 @@ class CustomerRegistrationProvider with ChangeNotifier {
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
-    print(gender);
-
     try {
       _isFetching = false;
       var body = {
@@ -60,11 +60,9 @@ class CustomerRegistrationProvider with ChangeNotifier {
         'ucode': user_ucode,
         'vilcode': idVillage,
       };
-      print('body: $body');
-      print('selectedValueVillage: $idVillage');
-
       final boyrow =
           "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"$valueDatehofBrith\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAddress\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntypes\",\n    \"nid\": \"$valueNationIdentification\",\n    \"ndate\": \"$valueNextVisitDate\",\n    \"pro\": \"$valueProspective\",\n    \"cstatus\": \"$valueGurantorCustomer\"\n}";
+
       final response = await api().post(baseURLInternal + 'Customers',
           headers: {
             "Content-Type": "application/json",
@@ -72,16 +70,9 @@ class CustomerRegistrationProvider with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      print('parsed: $parsed');
-
       data.add(parsed);
       notifyListeners();
-      // return parsed
-      //     .map<CustomerRegistration>(
-      //         (json) => CustomerRegistration.fromJson(json))
-      //     .toList();
     } catch (error) {
-      print('error eeeee: $error');
       _isFetching = false;
     }
   }
@@ -89,13 +80,9 @@ class CustomerRegistrationProvider with ChangeNotifier {
   //request dropdown Nation ID Famliy and Passport
   Future<List<ListNationID>> getDropdownNationIDList() async {
     _isFetching = true;
-    print("getDropdownNationIDList::: ");
-
     try {
       _isFetching = false;
       var token = await storage.read(key: 'user_token');
-      print("token::: $token");
-
       final response = await api().get(
         baseURLInternal + 'valuelists/idtypes',
         headers: {
@@ -104,14 +91,12 @@ class CustomerRegistrationProvider with ChangeNotifier {
         },
       );
       final parsed = jsonDecode(response.body);
-      print("parsed::: $parsed");
       data.add(parsed);
       notifyListeners();
       return parsed
           .map<ListNationID>((json) => ListNationID.fromJson(json))
           .toList();
     } catch (error) {
-      print('error ListNationID : $error');
       _isFetching = false;
     }
   }

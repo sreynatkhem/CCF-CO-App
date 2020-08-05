@@ -152,15 +152,11 @@ class _CustomerRegister extends State {
   var postCustomer;
 
   onSubmit(context) async {
-    // setState(() {
-    //   _loading = true;
-    // });
     try {
       if (khmerName.currentState.saveAndValidate() &&
           englishName.currentState.saveAndValidate() &&
           datehofBrith.currentState.saveAndValidate() &&
           _gender.currentState.saveAndValidate()) {
-        print('idVillage $idVillage');
         await Provider.of<CustomerRegistrationProvider>(context, listen: false)
             .postCustomerRegistration(
                 valueKhmerName,
@@ -180,19 +176,10 @@ class _CustomerRegister extends State {
                 idCommune,
                 idVillage,
                 _currentAddress)
-            .then((value) => {
-                  // setState(() {
-                  //   _loading = false;
-                  // }),
-                  Navigator.pop(context),
-                  print('value submit then')
-                });
+            .then((value) =>
+                {Navigator.pop(context), print('value submit then')});
       }
-    } catch (error) {
-      // setState(() {
-      //   _loading = false;
-      // });
-    }
+    } catch (error) {}
   }
 
   var _isIint = false;
@@ -202,12 +189,15 @@ class _CustomerRegister extends State {
     // TODO: implement didChangeDependencies
     setState(() {
       _isIint = true;
+      _loading = true;
     });
+
     if (_isIint == true) {
       getListNationID();
       getListProvince();
       setState(() {
         _isIint = false;
+        _loading = false;
       });
     }
 
@@ -225,9 +215,7 @@ class _CustomerRegister extends State {
   getListNationID() async {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
-    setState(() {
-      _loading = true;
-    });
+
     try {
       final response = await api().get(
         baseURLInternal + 'valuelists/idtypes',
@@ -251,9 +239,7 @@ class _CustomerRegister extends State {
   getListProvince() async {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
-    setState(() {
-      _loading = true;
-    });
+
     try {
       final response = await api().get(
         baseURLInternal + 'addresses/provinces',
@@ -264,14 +250,7 @@ class _CustomerRegister extends State {
       );
       final parsed = jsonDecode(response.body);
       listProvince.addAll(parsed);
-      setState(() {
-        _loading = false;
-      });
-    } catch (error) {
-      setState(() {
-        _loading = false;
-      });
-    }
+    } catch (error) {}
   }
 
   getDistrict() async {
@@ -389,9 +368,9 @@ class _CustomerRegister extends State {
                         attribute: 'name',
                         focusNode: khmerNameFocus,
                         textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (v) {
-                          FocusScope.of(context).requestFocus(englishNameFocus);
-                        },
+                        // onFieldSubmitted: (v) {
+                        //   FocusScope.of(context).requestFocus(englishNameFocus);
+                        // },
                         decoration: new InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Full Khmer Name'),
@@ -443,11 +422,12 @@ class _CustomerRegister extends State {
                       keys: datehofBrith,
                       childs: FormBuilderDateTimePicker(
                         focusNode: datehofBrithFocus,
+                        attribute: 'date',
                         textInputAction: TextInputAction.next,
                         inputType: InputType.date,
                         onChanged: (v) {
                           setState(() {
-                            valueDatehofBrith = v;
+                            valueDatehofBrith = v ?? '';
                           });
                         },
                         validators: [FormBuilderValidators.required()],

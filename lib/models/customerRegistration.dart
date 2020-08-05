@@ -23,7 +23,6 @@ class CustomerRegistration {
   String vilcode;
   String goglocation;
   String occupation;
-  String ntype;
   String nid;
   String ndate;
   String pro;
@@ -33,6 +32,11 @@ class CustomerRegistration {
   String u3;
   String u4;
   String u5;
+  String ntype;
+  String provinceName;
+  String districtName;
+  String communeName;
+  String villageName;
 
   factory CustomerRegistration.fromJson(Map<String, dynamic> json) =>
       _$CustomerRegistrationFromJson(json);

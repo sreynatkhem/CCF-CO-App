@@ -25,7 +25,6 @@ CustomerRegistration _$CustomerRegistrationFromJson(Map<String, dynamic> json) {
     ..vilcode = json['vilcode'] as String
     ..goglocation = json['goglocation'] as String
     ..occupation = json['occupation'] as String
-    ..ntype = json['ntype'] as String
     ..nid = json['nid'] as String
     ..ndate = json['ndate'] as String
     ..pro = json['pro'] as String
@@ -34,7 +33,12 @@ CustomerRegistration _$CustomerRegistrationFromJson(Map<String, dynamic> json) {
     ..u2 = json['u2'] as String
     ..u3 = json['u3'] as String
     ..u4 = json['u4'] as String
-    ..u5 = json['u5'] as String;
+    ..u5 = json['u5'] as String
+    ..provinceName = json['provinceName'] as String
+    ..districtName = json['districtName'] as String
+    ..communeName = json['communeName'] as String
+    ..villageName = json['villageName'] as String
+    ..ntype = json['ntype'] as String;
 }
 
 Map<String, dynamic> _$CustomerRegistrationToJson(
@@ -65,5 +69,10 @@ Map<String, dynamic> _$CustomerRegistrationToJson(
       'u2': instance.u2,
       'u3': instance.u3,
       'u4': instance.u4,
-      'u5': instance.u5
+      'u5': instance.u5,
+      'provinceName': instance.provinceName,
+      'districtName': instance.districtName,
+      'communeName': instance.communeName,
+      'villageName': instance.villageName,
+      'ntype': instance.ntype,
     };

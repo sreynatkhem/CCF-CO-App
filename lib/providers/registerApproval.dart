@@ -21,6 +21,7 @@ Future<List<Approval>> registerApproval(http.Client client,
         },
         body: bodyRow);
     final parsed = jsonDecode(response.body);
+    print("parsed $parsed");
   } catch (error) {
     client.close();
   }
