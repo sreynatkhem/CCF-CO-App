@@ -28,6 +28,7 @@ class ListDetail extends StatelessWidget {
           ),
           Container(
               padding: EdgeInsets.only(left: 10, top: 5),
+              width: 380,
               child: Text(
                 value.toString(),
                 style: mainTitleBlack,

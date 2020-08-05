@@ -31,7 +31,7 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
   Widget build(BuildContext context) {
     futureListCustomerRegistraiton =
         Provider.of<ListCustomerRegistrationProvider>(context)
-            .fetchListCustomerRegistration();
+            .fetchListCustomerRegistration(1, 0);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("List Loan Registration"),
@@ -55,9 +55,9 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
                         return Column(
                           children: <Widget>[
                             CardState(
-                              texts: '${snapshot.data[index].name}',
-                              id: '${snapshot.data[index].id}',
-                              phone: '${snapshot.data[index].phone}',
+                              texts: '${snapshot.data[index].namekhr}',
+                              id: '${snapshot.data[index].ucode}',
+                              phone: '${snapshot.data[index].phone1}',
                               images: profile,
                               onTaps: () {
                                 onTapsDetail(snapshot.data[index]);

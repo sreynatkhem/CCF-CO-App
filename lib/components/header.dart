@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class Header extends StatelessWidget {
   Header(
       {this.bodys,
+      this.leading,
       this.headerTexts,
       this.drawers,
       this.bottomNavigationBars,
@@ -16,6 +17,7 @@ class Header extends StatelessWidget {
   final bottomNavigationBars;
   final floatingActionButtons;
   final actionsNotification;
+  final leading;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class Header extends StatelessWidget {
         ),
         actions: actionsNotification,
         backgroundColor: logolightGreen,
+        leading: leading,
       ),
       body: bodys,
       bottomNavigationBar: bottomNavigationBars,

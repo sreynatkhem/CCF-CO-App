@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:convert';
+import 'dart:async';
 import 'colors.dart';
 
 final String fontFamily = 'Segoe UI';
@@ -78,4 +79,13 @@ getDateTimeYMD(time) {
   DateTime dateTimeApproved = DateTime.parse(time);
   String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
   return dateTime;
+}
+
+Future<String> readResponse(HttpClientResponse response) {
+  final completer = Completer<String>();
+  final contents = StringBuffer();
+  response.transform(utf8.decoder).listen((data) {
+    contents.write(data);
+  }, onDone: () => completer.complete(contents.toString()));
+  return completer.future;
 }
