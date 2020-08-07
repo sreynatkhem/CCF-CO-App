@@ -12,10 +12,12 @@ import 'editCustomerRegistration.dart';
 import 'listCustomerRegistration.dart';
 
 class CardDetailCustomer extends StatefulWidget {
-  EditCustomerRegister detailsClass;
   final dynamic list;
   var isRefresh;
-  CardDetailCustomer({this.list, this.isRefresh, this.detailsClass});
+  CardDetailCustomer({
+    this.list,
+    this.isRefresh,
+  });
 
   @override
   _CardDetailCustomerState createState() =>
@@ -122,8 +124,8 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                     itemBuilder: (context, index) {
                       return SingleChildScrollView(
                         child: Container(
-                          margin: EdgeInsets.all(5),
-                          padding: EdgeInsets.only(top: 10, bottom: 15),
+                          margin: EdgeInsets.all(10),
+                          // padding: EdgeInsets.only(top: 10, bottom: 15),
                           child: Card(
                               shape: RoundedRectangleBorder(
                                 side:
@@ -259,7 +261,6 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                       );
                     })
                 : Center(child: CircularProgressIndicator());
-            ;
           },
         )
 

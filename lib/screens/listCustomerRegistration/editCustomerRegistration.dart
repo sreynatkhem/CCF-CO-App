@@ -506,7 +506,7 @@ class _CustomerRegister extends State {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
+                margin: EdgeInsets.all(10),
                 child: new Column(
                   children: <Widget>[
                     GroupFromBuilder(
@@ -1142,6 +1142,7 @@ class _CustomerRegister extends State {
                         ),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                     AnimatedButton(
                       text: 'Submit',
                       color: logolightGreen,

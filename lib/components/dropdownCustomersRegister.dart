@@ -61,6 +61,7 @@ class DropDownCustomerRegister extends StatelessWidget {
                               : null;
                         },
                     child: Container(
+                        // padding: EdgeInsets.only(right: ),
                         child: Text(texts ?? title, style: styleTexts))),
               ),
               Container(

@@ -20,12 +20,6 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
   final profile = const AssetImage('assets/images/profile_create.jpg');
 
   onTapsDetail(value) async {
-    // print('value ${value.ccode}');
-    // var ccode = value.ccode;
-    // await Provider.of<ListCustomerRegistrationProvider>(context, listen: false)
-    //     .getCustomerByID(ccode)
-    //     .then((value) => {print('value ${value}')});
-    print("onTapsDetail ${value.ccode}");
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
           return new CardDetailCustomer(
@@ -169,6 +163,8 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
                                   children: <Widget>[
                                     CardState(
                                       texts: '${snapshot.data[index].namekhr}',
+                                      textTwo:
+                                          '${snapshot.data[index].nameeng}',
                                       id: '${snapshot.data[index].ucode}',
                                       phone: '${snapshot.data[index].phone1}',
                                       images: profile,

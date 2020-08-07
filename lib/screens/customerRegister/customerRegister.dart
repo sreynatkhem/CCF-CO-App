@@ -974,6 +974,7 @@ class _CustomerRegister extends State {
                         ),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                     AnimatedButton(
                       text: 'Submit',
                       color: logolightGreen,

@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
 import 'package:chokchey_finance/components/textInput.dart';
+import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:select_dialog/select_dialog.dart';
 
 class EditLoanRegister extends StatefulWidget {
@@ -30,14 +32,17 @@ class _EditLoanRegister extends State {
   //IMAGE PICKER
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
-
+  var detiaLoan;
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+    print("list.loanRequest:::: ${list.loanRequest}");
     setState(() {
-      selectedValueCustmerName = list.name;
-      selectedCustomerID.text = list.id.toString();
+      selectedValueCustmerName = list.customer.namekhr;
+      selectedCustomerID.text = list.lcode;
+      valueRepaymentMethod = list.rmode;
+      valueORARD = list.loanRequest;
     });
   }
 
@@ -137,6 +142,8 @@ class _EditLoanRegister extends State {
   var valueORARD;
   var valueReferByWho;
   var selectedValueCustmerName;
+  var valueDscr;
+  var valueLTV;
 
   final GlobalKey<FormBuilderState> maintenanceFee =
       GlobalKey<FormBuilderState>();
@@ -162,8 +169,37 @@ class _EditLoanRegister extends State {
   final GlobalKey<FormBuilderState> customerID = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> customerName =
       GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> ltvKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> dscrKey = GlobalKey<FormBuilderState>();
+
   final TextEditingController selectedCustomerID =
       TextEditingController(text: '');
+  //
+  final TextEditingController loanController = TextEditingController(text: '');
+  final TextEditingController numberOfTermController =
+      TextEditingController(text: '');
+  final TextEditingController interestRateController =
+      TextEditingController(text: '');
+  final TextEditingController maintenanceFeeController =
+      TextEditingController(text: '');
+  final TextEditingController adminFeeController =
+      TextEditingController(text: '');
+  final TextEditingController repaymentController =
+      TextEditingController(text: '');
+  final TextEditingController openDataController =
+      TextEditingController(text: '');
+  final TextEditingController datehMaturityDateController =
+      TextEditingController(text: '');
+  final TextEditingController firstRepaymentDateController =
+      TextEditingController(text: '');
+  final TextEditingController generateGracePeriodNumberController =
+      TextEditingController(text: '');
+  final TextEditingController loanPurposeController =
+      TextEditingController(text: '');
+  final TextEditingController referByWhoController =
+      TextEditingController(text: '');
+  final TextEditingController dscrController = TextEditingController(text: '');
+  final TextEditingController lTVController = TextEditingController(text: '');
 
   onSubmit() {
     print({
@@ -194,6 +230,8 @@ class _EditLoanRegister extends State {
   var datehMaturityDateFocus = FocusNode();
   var firstRepaymentDateFocus = FocusNode();
   var loanAmountFocus = FocusNode();
+  var lTVFocus = FocusNode();
+  var dscrFocus = FocusNode();
 
   final TextEditingController customerNameControllers = TextEditingController();
 
@@ -308,6 +346,7 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderTextField(
                     attribute: 'number',
                     autofocus: true,
+                    controller: loanController,
                     inputFormatters: [
                       WhitelistingTextInputFormatter.digitsOnly
                     ],
@@ -340,6 +379,7 @@ class _EditLoanRegister extends State {
                   keys: numberOfTerm,
                   childs: FormBuilderTextField(
                     attribute: 'number',
+                    controller: numberOfTermController,
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(interestRateFocus);
                     },
@@ -372,6 +412,7 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderTextField(
                     attribute: 'number',
                     focusNode: interestRateFocus,
+                    controller: interestRateController,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(maintenanceFeeFocus);
@@ -402,6 +443,7 @@ class _EditLoanRegister extends State {
                   keys: maintenanceFee,
                   childs: FormBuilderTextField(
                     attribute: 'number',
+                    controller: maintenanceFeeController,
                     focusNode: maintenanceFeeFocus,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (v) {
@@ -434,6 +476,7 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderTextField(
                     attribute: 'number',
                     focusNode: adminFeeFocus,
+                    controller: adminFeeController,
                     textInputAction: TextInputAction.next,
                     // onFieldSubmitted: (v) {
                     //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
@@ -506,6 +549,7 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderDateTimePicker(
                     attribute: 'date',
                     focusNode: openDataFocus,
+                    controller: openDataController,
                     textInputAction: TextInputAction.next,
                     inputType: InputType.date,
                     onChanged: (v) {
@@ -524,6 +568,7 @@ class _EditLoanRegister extends State {
                   keys: datehMaturityDate,
                   childs: FormBuilderDateTimePicker(
                     attribute: 'date',
+                    controller: datehMaturityDateController,
                     focusNode: datehMaturityDateFocus,
                     textInputAction: TextInputAction.next,
                     inputType: InputType.date,
@@ -544,6 +589,7 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderDateTimePicker(
                     attribute: 'date',
                     focusNode: firstRepaymentDateFocus,
+                    controller: firstRepaymentDateController,
                     textInputAction: TextInputAction.next,
                     inputType: InputType.date,
                     onChanged: (v) {
@@ -564,6 +610,7 @@ class _EditLoanRegister extends State {
                   keys: generateGracePeriodNumber,
                   childs: FormBuilderTextField(
                     attribute: 'number',
+                    controller: generateGracePeriodNumberController,
                     focusNode: generateGracePeriodNumberFocus,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (v) {
@@ -594,6 +641,7 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderTextField(
                     attribute: 'name',
                     focusNode: loanPurposeFocus,
+                    controller: loanPurposeController,
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(referByWhoFocus);
@@ -612,11 +660,76 @@ class _EditLoanRegister extends State {
                   ),
                 ),
                 GroupFromBuilder(
+                  icons: Icons.confirmation_number,
+                  keys: ltvKey,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    controller: lTVController,
+                    focusNode: lTVFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(dscrFocus);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'LTV',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      setState(() {
+                        valueLTV = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    keyboardType: TextInputType.number,
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
+                  icons: Icons.confirmation_number,
+                  keys: dscrKey,
+                  childs: FormBuilderTextField(
+                    attribute: 'number',
+                    controller: dscrController,
+                    focusNode: dscrFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(referByWhoFocus);
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Dscr',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) {
+                      setState(() {
+                        valueDscr = v;
+                      });
+                    },
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    keyboardType: TextInputType.number,
+                    validators: [
+                      FormBuilderValidators.required(),
+                    ],
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                  ),
+                ),
+                GroupFromBuilder(
                   icons: Icons.face,
                   keys: referByWho,
                   childs: FormBuilderTextField(
                     attribute: 'name',
                     focusNode: referByWhoFocus,
+                    controller: referByWhoController,
                     textInputAction: TextInputAction.next,
                     // onFieldSubmitted: (v) {
                     //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
@@ -647,7 +760,7 @@ class _EditLoanRegister extends State {
                       FormBuilderValidators.required(),
                     ],
                     hint: Text(
-                      'O,R,A,R,D',
+                      valueORARD ?? 'O,R,A,R,D',
                     ),
                     onChanged: (value) {
                       setState(() {
