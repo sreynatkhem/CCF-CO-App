@@ -10,6 +10,7 @@ class CardState extends StatelessWidget {
   final email;
   final phone;
   final iconRight;
+  final textTwo;
 
   CardState(
       {this.images,
@@ -19,6 +20,7 @@ class CardState extends StatelessWidget {
       this.createdAt,
       this.email,
       this.phone,
+      this.textTwo,
       this.iconRight});
   @override
   Widget build(BuildContext context) {
@@ -29,28 +31,32 @@ class CardState extends StatelessWidget {
             side: BorderSide(color: logolightGreen, width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: InkWell(
-              onTap: onTaps,
-              splashColor: Colors.blue.withAlpha(30),
-              child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
-                Padding(padding: EdgeInsets.only(top: 60, left: 10)),
-                Image(
-                  image: images,
-                  width: 45,
-                  height: 45,
-                ),
-                Padding(padding: EdgeInsets.only(right: 10)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    if (texts != null) Text(texts),
-                    if (id != null) Text(id ?? ""),
-                    if (createdAt != null) Text(createdAt ?? ""),
-                    if (email != null) Text(email ?? ""),
-                    if (phone != null) Text(phone ?? ""),
-                  ],
-                ),
-              ]))),
+          child: Container(
+            padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+            child: InkWell(
+                onTap: onTaps,
+                splashColor: Colors.blue.withAlpha(30),
+                child: Row(mainAxisSize: MainAxisSize.max, children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 60, left: 10)),
+                  Image(
+                    image: images,
+                    width: 45,
+                    height: 45,
+                  ),
+                  Padding(padding: EdgeInsets.only(right: 10)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      if (texts != null) Text(texts.toString()),
+                      if (textTwo != null) Text(textTwo.toString()),
+                      if (id != null) Text(id.toString() ?? ""),
+                      if (createdAt != null) Text(createdAt.toString() ?? ""),
+                      if (email != null) Text(email.toString() ?? ""),
+                      if (phone != null) Text(phone.toString() ?? ""),
+                    ],
+                  ),
+                ])),
+          )),
     );
   }
 }

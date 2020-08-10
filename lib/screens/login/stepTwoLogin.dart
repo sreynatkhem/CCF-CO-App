@@ -83,7 +83,6 @@ class _LoginState extends State<StepTwoLogin> {
       await Provider.of<LoginProvider>(context, listen: false)
           .postLoginChangePassword(firstLogin.text)
           .then((value) async => {
-                print('value::: ${value}'),
                 if (value[0].changePassword == 'Y')
                   {
                     await storage.write(
@@ -105,7 +104,6 @@ class _LoginState extends State<StepTwoLogin> {
                 else
                   {
                     Navigator.pop(context),
-                    print('pop::: pop'),
                   }
               });
     } catch (error) {

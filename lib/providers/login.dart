@@ -55,7 +55,7 @@ class LoginProvider with ChangeNotifier {
             .map<LoginModels>((json) => LoginModels.fromJson(json))
             .toList();
       } else {
-        print('errorgg:');
+        print('error:');
       }
     } catch (error) {
       _isFetching = false;

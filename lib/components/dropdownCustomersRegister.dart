@@ -17,6 +17,7 @@ class DropDownCustomerRegister extends StatelessWidget {
   var iconsClose;
   var onPressed;
   var validate;
+  bool clear = true;
 
   DropDownCustomerRegister(
       {this.readOnlys,
@@ -28,6 +29,7 @@ class DropDownCustomerRegister extends StatelessWidget {
       this.items,
       this.title,
       this.styleTexts,
+      this.clear,
       this.iconsClose,
       this.onPressed,
       this.autofocus,
@@ -63,13 +65,15 @@ class DropDownCustomerRegister extends StatelessWidget {
                     child: Container(
                         child: Text(texts ?? title, style: styleTexts))),
               ),
-              Container(
-                child: IconButton(
-                  icon: iconsClose ?? Icon(Icons.close),
-                  color: Colors.grey,
-                  onPressed: onPressed,
+              if (clear == true)
+                Container(
+                  child: IconButton(
+                    icon: iconsClose ?? Icon(Icons.close),
+                    color: Colors.grey,
+                    onPressed: onPressed,
+                  ),
                 ),
-              ),
+              if (clear == false) Text('')
             ],
           ),
         ],

@@ -44,10 +44,10 @@ class _CustomerRegister extends State {
           getDateTimeYMD(list.dob ?? DateTime.now().toString());
       valueDatehofBrith = getDateTimeYMD(list.dob ?? DateTime.now().toString());
       gender = list.gender;
-      controllerPhone1.text = list.phone1 != '' ? list.phone1.substring(4) : "";
-      controllerPhone2.text = list.phone2 != '' ? list.phone2.substring(4) : "";
-      valuePhone1 = list.phone1 != '' ? list.phone1.substring(4) : "";
-      valuePhone2 = list.phone2 != '' ? list.phone2.substring(4) : "";
+      valuePhone1 = list.phone1 ?? "";
+      controllerPhone1.text = list.phone1 ?? "";
+      valuePhone2 = list.phone2 ?? "";
+      controllerPhone2.text = list.phone2 ?? "";
       controllerOccupationofCustomer.text = list.occupation;
       valueOccupationOfCustomer = list.occupation;
       valueTextNationBookFamily = list.ntype;
@@ -265,7 +265,6 @@ class _CustomerRegister extends State {
         });
       }
     });
-    print("idProvince $idProvince");
     try {
       final response = await api().get(
         baseURLInternal + 'addresses/districts/' + idProvince,
@@ -340,8 +339,6 @@ class _CustomerRegister extends State {
   getIDVillage() async {
     listVillages.forEach((item) async {
       if (selectedValueVillage == item['vildes']) {
-        print('getIDVillage $idVillage');
-
         await setState(() {
           idVillage = item['vilcode'];
         });
@@ -351,10 +348,6 @@ class _CustomerRegister extends State {
 
   var ccode;
   onSubmit(context) async {
-    print("list.dob ${list.dob}");
-
-    print("valueDatehofBrith ${valueDatehofBrith}");
-
     try {
       print({
         list.ccode,
@@ -416,10 +409,6 @@ class _CustomerRegister extends State {
                         ),
                       ),
                       ModalRoute.withName('/')),
-                  // await Provider.of<ListCustomerRegistrationProvider>(context,
-                  //         listen: false)
-                  //     .getCustomerByID(value[0].ccode)
-                  //     .then((values) => {})
                 });
       }
     } catch (error) {
@@ -438,16 +427,7 @@ class _CustomerRegister extends State {
   final nextVisitDateFocus = FocusNode();
   var selectedValueProvincefocus = false;
 
-  onBack() {
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (BuildContext context) => ApprovalLists(
-    //         isRefresh: true,
-    //       ),
-    //     ),
-    //     ModalRoute.withName('/'));
-  }
+  onBack() {}
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +486,7 @@ class _CustomerRegister extends State {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
+                margin: EdgeInsets.all(10),
                 child: new Column(
                   children: <Widget>[
                     GroupFromBuilder(
@@ -631,66 +611,51 @@ class _CustomerRegister extends State {
                     GroupFromBuilder(
                       icons: Icons.phone,
                       keys: phoneKey,
-                      childs: FormBuilderPhoneField(
+                      childs: FormBuilderTextField(
+                        attribute: 'name',
                         focusNode: phoneKeyFocus,
                         controller: controllerPhone1,
                         textInputAction: TextInputAction.next,
-                        onSaved: (v) {
-                          print('onSaved: $v');
-                        },
-                        onEditingComplete: () =>
-                            FocusScope.of(context).requestFocus(phoneKey2Focus),
-                        attribute: 'phone_number',
-                        cursorColor: Colors.black,
-                        maxLength: 10,
-                        maxLengthEnforced: true,
-                        defaultSelectedCountryIsoCode: 'KH',
                         decoration: const InputDecoration(
                           labelText: 'Phone Number 1',
                           border: InputBorder.none,
                         ),
+                        maxLength: 14,
                         onChanged: (v) {
-                          setState(() {
-                            valuePhone1 = v;
-                          });
+                          valuePhone1 = v;
                         },
-                        priorityListByIsoCode: ['KH'],
-                        validators: [
-                          FormBuilderValidators.numeric(
-                              errorText: 'Invalid phone number'),
-                          FormBuilderValidators.required(
-                              errorText: 'This field reqired')
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly
                         ],
+                        valueTransformer: (text) {
+                          return text == null ? null : text;
+                        },
                       ),
                     ),
                     GroupFromBuilder(
                       icons: Icons.phone,
                       keys: phoneKey2,
-                      childs: FormBuilderPhoneField(
-                        attribute: 'phone_number',
-                        isCupertinoPicker: true,
-                        controller: controllerPhone2,
+                      childs: FormBuilderTextField(
+                        attribute: 'name',
                         focusNode: phoneKey2Focus,
-                        onSaved: (v) {
-                          print('onSaved: $v');
-                        },
+                        controller: controllerPhone2,
                         textInputAction: TextInputAction.next,
-                        onEditingComplete: () => FocusScope.of(context)
-                            .requestFocus(datehofRegisterFocus),
-                        maxLength: 10,
-                        maxLengthEnforced: true,
-                        defaultSelectedCountryIsoCode: 'KH',
-                        cursorColor: Colors.black,
                         decoration: const InputDecoration(
                           labelText: 'Phone Number 2',
                           border: InputBorder.none,
                         ),
+                        maxLength: 14,
                         onChanged: (v) {
-                          setState(() {
-                            valuePhone2 = v;
-                          });
+                          valuePhone2 = v;
                         },
-                        priorityListByIsoCode: ['KH'],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        valueTransformer: (text) {
+                          return text == null ? null : text;
+                        },
                       ),
                     ),
                     GroupFromBuilder(
@@ -881,7 +846,6 @@ class _CustomerRegister extends State {
                           items: List.generate(listProvince.length,
                               (index) => "${listProvince[index]['prodes']}"),
                           onChange: (value) {
-                            print("province ${value}");
                             setState(() {
                               selectedValueProvince = value;
                               selectedValueDistrict = '';
@@ -1045,8 +1009,6 @@ class _CustomerRegister extends State {
                             items: List.generate(listVillages.length,
                                 (index) => "${listVillages[index]['vildes']}"),
                             onChange: (value) async {
-                              print("onselelcted: $value");
-                              // await getIDVillage();
                               setState(() {
                                 selectedValueVillage = value ?? '';
                               });
@@ -1055,7 +1017,6 @@ class _CustomerRegister extends State {
                                   setState(() {
                                     idVillage = item['vilcode'];
                                   });
-                                  print('getIDVillage $idVillage');
                                 }
                               });
                             },
@@ -1142,6 +1103,7 @@ class _CustomerRegister extends State {
                         ),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                     AnimatedButton(
                       text: 'Submit',
                       color: logolightGreen,

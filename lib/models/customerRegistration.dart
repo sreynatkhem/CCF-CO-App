@@ -37,6 +37,10 @@ class CustomerRegistration {
   String districtName;
   String communeName;
   String villageName;
+  String fullAddress;
+  String user;
+  String loan;
+  String branch;
 
   factory CustomerRegistration.fromJson(Map<String, dynamic> json) =>
       _$CustomerRegistrationFromJson(json);

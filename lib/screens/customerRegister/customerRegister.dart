@@ -176,8 +176,7 @@ class _CustomerRegister extends State {
                 idCommune,
                 idVillage,
                 _currentAddress)
-            .then((value) =>
-                {Navigator.pop(context), print('value submit then')});
+            .then((value) => {Navigator.pop(context)});
       }
     } catch (error) {}
   }
@@ -337,8 +336,6 @@ class _CustomerRegister extends State {
   getIDVillage() async {
     listVillages.forEach((item) async {
       if (selectedValueVillage == item['vildes']) {
-        print('getIDVillage $idVillage');
-
         await setState(() {
           idVillage = item['vilcode'];
         });
@@ -523,47 +520,31 @@ class _CustomerRegister extends State {
                         priorityListByIsoCode: ['KH'],
                       ),
                     ),
-                    // GroupFromBuilder(
-                    //   icons: Icons.timeline,
-                    //   keys: datehofRegister,
-                    //   childs: FormBuilderDateTimePicker(
-                    //     attribute: 'date',
-                    //     focusNode: datehofRegisterFocus,
-                    //     textInputAction: TextInputAction.next,
-                    //     onFieldSubmitted: (v) {
-                    //       FocusScope.of(context)
-                    //           .requestFocus(datehofBrithFocus);
-                    //     },
-                    //     inputType: InputType.date,
-                    //     onChanged: (v) {
-                    //       print("Date of Register $v");
-                    //       valueDateOfRegister = v ?? DateTime.now();
-                    //     },
-                    //     validators: [FormBuilderValidators.required()],
-                    //     format: DateFormat("yyyy-MM-dd"),
-                    //     decoration: InputDecoration(
-                    //       labelText: "Date of Register",
-                    //       border: InputBorder.none,
-                    //     ),
-                    //   ),
-                    // ),
                     GroupFromBuilder(
                       icons: Icons.work,
                       keys: occupationOfCustomer,
-                      childs: FormBuilderTextField(
-                        attribute: 'name',
-                        focusNode: occupationOfCustomerFocus,
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Occupation of customer',
+                      childs: FormBuilderDropdown(
+                        attribute: "Name",
+                        decoration: InputDecoration(
+                          labelText: "Occupation of customer",
                           border: InputBorder.none,
                         ),
-                        onChanged: (v) {
-                          valueOccupationOfCustomer = v;
+                        hint: Text(
+                          'Occupation of customer',
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            valueOccupationOfCustomer = value;
+                          });
                         },
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
+                        validators: [FormBuilderValidators.required()],
+                        items: ['Employee', 'Business ownership']
+                            .map((v) => DropdownMenuItem(
+                                value: v,
+                                child: Text(
+                                  "$v",
+                                )))
+                            .toList(),
                       ),
                     ),
                     GroupFromBuilder(
@@ -733,6 +714,7 @@ class _CustomerRegister extends State {
                       },
                       texts: selectedValueProvince,
                       title: 'Province code',
+                      clear: true,
                       readOnlys: true,
                       iconsClose: Icon(Icons.close),
                       onPressed: () {
@@ -772,6 +754,7 @@ class _CustomerRegister extends State {
                           ? selectedValueDistrict
                           : 'District code',
                       title: 'District code',
+                      clear: true,
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
                         if (districtreadOnlys == true) {
@@ -848,6 +831,7 @@ class _CustomerRegister extends State {
                         });
                       },
                       title: 'Commune code',
+                      clear: true,
                       styleTexts: selectedValueCommune != ''
                           ? TextStyle(
                               fontFamily: fontFamily,
@@ -874,6 +858,7 @@ class _CustomerRegister extends State {
                               borderRadius: BorderRadius.circular(10),
                             )
                           : null,
+                      clear: true,
                       onInSidePress: () async {
                         if (villagereadOnlys == true) {
                           await getVillage();
@@ -883,8 +868,6 @@ class _CustomerRegister extends State {
                             items: List.generate(listVillages.length,
                                 (index) => "${listVillages[index]['vildes']}"),
                             onChange: (value) async {
-                              print("onselelcted: $value");
-                              // await getIDVillage();
                               setState(() {
                                 selectedValueVillage = value ?? '';
                               });
@@ -893,7 +876,6 @@ class _CustomerRegister extends State {
                                   setState(() {
                                     idVillage = item['vilcode'];
                                   });
-                                  print('getIDVillage $idVillage');
                                 }
                               });
                             },
@@ -974,6 +956,7 @@ class _CustomerRegister extends State {
                         ),
                       ),
                     ),
+                    Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                     AnimatedButton(
                       text: 'Submit',
                       color: logolightGreen,

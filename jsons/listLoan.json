@@ -1,0 +1,9 @@
+{
+  "totalLoan": 6,
+  "totalPage": 0,
+  "totalApprove": 0,
+  "totalRequest": 0,
+  "totalReturn": 0,
+  "totalDisapprove": 0,
+  "listLoans": "$createLoan"
+}

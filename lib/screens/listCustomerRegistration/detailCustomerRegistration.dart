@@ -12,10 +12,12 @@ import 'editCustomerRegistration.dart';
 import 'listCustomerRegistration.dart';
 
 class CardDetailCustomer extends StatefulWidget {
-  EditCustomerRegister detailsClass;
   final dynamic list;
   var isRefresh;
-  CardDetailCustomer({this.list, this.isRefresh, this.detailsClass});
+  CardDetailCustomer({
+    this.list,
+    this.isRefresh,
+  });
 
   @override
   _CardDetailCustomerState createState() =>
@@ -48,7 +50,6 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
             listen: false)
         .getCustomerByID(ccode)
         .then((value) => {
-              print('onEditdata;;;;; ${value[0]}'),
               Navigator.of(context).push(new MaterialPageRoute<Null>(
                   builder: (BuildContext context) {
                     return new EditCustomerRegister(
@@ -122,8 +123,8 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                     itemBuilder: (context, index) {
                       return SingleChildScrollView(
                         child: Container(
-                          margin: EdgeInsets.all(5),
-                          padding: EdgeInsets.only(top: 10, bottom: 15),
+                          margin: EdgeInsets.all(10),
+                          // padding: EdgeInsets.only(top: 10, bottom: 15),
                           child: Card(
                               shape: RoundedRectangleBorder(
                                 side:
@@ -177,7 +178,7 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Date of Register',
+                                              name: 'Phone Number 2',
                                               value:
                                                   '${snapshot.data[index].phone2}',
                                             ),
@@ -259,7 +260,6 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                       );
                     })
                 : Center(child: CircularProgressIndicator());
-            ;
           },
         )
 
