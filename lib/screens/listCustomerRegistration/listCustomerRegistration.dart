@@ -73,7 +73,6 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
         _scrollController.position.maxScrollExtent - _scrollController.offset <=
             70) {
       _additems();
-      // print('_scrollListener _scrollListener');
     }
   }
 

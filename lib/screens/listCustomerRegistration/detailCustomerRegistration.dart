@@ -50,7 +50,6 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
             listen: false)
         .getCustomerByID(ccode)
         .then((value) => {
-              print('onEditdata;;;;; ${value[0]}'),
               Navigator.of(context).push(new MaterialPageRoute<Null>(
                   builder: (BuildContext context) {
                     return new EditCustomerRegister(
@@ -179,7 +178,7 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Date of Register',
+                                              name: 'Phone Number 2',
                                               value:
                                                   '${snapshot.data[index].phone2}',
                                             ),

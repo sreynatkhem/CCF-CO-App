@@ -19,10 +19,7 @@ class LoanInternal with ChangeNotifier {
   Future<List<ValueListCustomers>> fetchCustomerByUserLogin() async {
     _isFetching = true;
     var user_ucode = await storage.read(key: 'user_ucode');
-    var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
-    print("fetchCustomerByUserLogin:");
-
     try {
       _isFetching = false;
       final response = await api().get(
@@ -66,13 +63,10 @@ class LoanInternal with ChangeNotifier {
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
-    print('postLoanRegistration ');
-
     try {
       _isFetching = false;
       final boyrow =
-          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueAdminFee,\n\t\"afee\": $valueMaintenanceFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"$valueOpenDate\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\",\n\t\"lstatus\": \"$valueORARD\"\n}";
-      print('boyrow: $boyrow');
+          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"$valueOpenDate\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\",\n\t\"lstatus\": \"$valueORARD\"\n}";
       final response = await api().post(baseURLInternal + 'loans',
           headers: {
             "Content-Type": "application/json",
@@ -80,19 +74,16 @@ class LoanInternal with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      print('parsed: $parsed');
-
       data.add(parsed);
       notifyListeners();
     } catch (error) {
       print('error: $error');
-
       _isFetching = false;
     }
   }
 
   //Request list loan
-  Future<List<CreateLoan>> getListLoan(_pageSize, _pageNumber) async {
+  Future<List<ListLoan>> getListLoan(_pageSize, _pageNumber) async {
     _isFetching = true;
     try {
       _isFetching = false;
@@ -112,22 +103,13 @@ class LoanInternal with ChangeNotifier {
         parsed.addAll(jsonDecode(response.body));
         data.addAll(parsed[0]['listLoans']);
         totalLoans = parsed[0]['totalLoan'].toString();
-        print('parsed::: ${parsed[0]['listLoans']}');
-
         notifyListeners();
-        return parsed[0]['listLoans']
-            .map<CreateLoan>((json) => CreateLoan.fromJson(json))
+        return jsonDecode(response.body)
+            .map<ListLoan>((json) => ListLoan.fromJson(json))
             .toList();
       } else {
         print('statusCode::: ${response.statusCode}');
       }
-      // final parsed = jsonDecode(response.body);
-      // print('list loans::: ${parsed[0]['listLoans']}');
-      // data.add(parsed);
-      // notifyListeners();
-      // return parsed
-      //     .map<CreateLoan>((json) => CreateLoan.fromJson(json))
-      //     .toList();
     } catch (error) {
       _isFetching = false;
     }
@@ -152,6 +134,48 @@ class LoanInternal with ChangeNotifier {
       notifyListeners();
       return data.map<CreateLoan>((json) => CreateLoan.fromJson(json)).toList();
     } catch (error) {
+      _isFetching = false;
+    }
+  }
+
+  Future<List<CreateLoan>> eidtLoanRegistration(
+      lcode,
+      idCcode,
+      valueAmount,
+      curcode,
+      pcode,
+      valueNumberofTerm,
+      valueInterest,
+      valueAdminFee,
+      valueMaintenanceFee,
+      valueRepaymentMethod,
+      valueOpenDate,
+      valueMaturityDate,
+      valueFirstRepaymentDate,
+      valueGenerateGracePeriodNumber,
+      valueLoanPurpose,
+      valueLTV,
+      valueDscr,
+      valueReferByWho) async {
+    _isFetching = true;
+    var user_ucode = await storage.read(key: 'user_ucode');
+    var branch = await storage.read(key: 'branch');
+    var token = await storage.read(key: 'user_token');
+    try {
+      _isFetching = false;
+      final boyrow =
+          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"$valueOpenDate\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\",\n\t\"lstatus\": \"O\",\n\t\"lcode\": \"$lcode\"\n}";
+      final response = await api().put(baseURLInternal + 'loans/' + lcode,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: boyrow);
+      final parsed = jsonDecode(response.body);
+      data.add(parsed);
+      notifyListeners();
+    } catch (error) {
+      print('error: $error');
       _isFetching = false;
     }
   }

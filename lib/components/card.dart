@@ -47,12 +47,12 @@ class CardState extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (texts != null) Text(texts),
-                      if (textTwo != null) Text(textTwo),
-                      if (id != null) Text(id ?? ""),
-                      if (createdAt != null) Text(createdAt ?? ""),
-                      if (email != null) Text(email ?? ""),
-                      if (phone != null) Text(phone ?? ""),
+                      if (texts != null) Text(texts.toString()),
+                      if (textTwo != null) Text(textTwo.toString()),
+                      if (id != null) Text(id.toString() ?? ""),
+                      if (createdAt != null) Text(createdAt.toString() ?? ""),
+                      if (email != null) Text(email.toString() ?? ""),
+                      if (phone != null) Text(phone.toString() ?? ""),
                     ],
                   ),
                 ])),

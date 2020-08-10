@@ -13,6 +13,7 @@ import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'editLoanRegistration.dart';
+import 'listLoanRegistration.dart';
 
 class CardDetailLoanRegitration extends StatefulWidget {
   final dynamic list;
@@ -89,11 +90,18 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     detiaLoan = Provider.of<LoanInternal>(
       context,
     ).getLoanByID(locode);
-    super.didChangeDependencies();
     if (isRefresh == true) {
       // onLoading();
     }
     return Header(
+        leading: BackButton(
+          onPressed: () => Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => ListLoanRegistration(),
+              ),
+              ModalRoute.withName('/')),
+        ),
         headerTexts: 'Detail Loan Registration',
         actionsNotification: <Widget>[
           // Using Stack to show edit registration
@@ -138,19 +146,14 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'Customer Khmer Name',
                                                 value:
-                                                    '${snapshot.data[index].customer.namekhr}',
+                                                    '${snapshot.data[index].customer}',
                                               ),
                                               //
-                                              ListDetail(
-                                                name: 'Customer English Name',
-                                                value:
-                                                    '${snapshot.data[index].customer.nameeng}',
-                                              ),
                                               //
                                               ListDetail(
                                                 name: 'Customer ID',
                                                 value:
-                                                    '${snapshot.data[index].customer.ccode}',
+                                                    '${snapshot.data[index].ccode}',
                                               ),
                                               //
                                               ListDetail(
@@ -158,7 +161,18 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                 value:
                                                     '\$ ${snapshot.data[index].lamt}',
                                               ),
-                                              // //
+                                              //
+                                              ListDetail(
+                                                name: 'Currency',
+                                                value:
+                                                    '${snapshot.data[index].currency}',
+                                              ),
+                                              //
+                                              ListDetail(
+                                                name: 'Loan Product',
+                                                value:
+                                                    '${snapshot.data[index].loanProduct}',
+                                              ),
                                               //
                                               ListDetail(
                                                 name: 'Number of term',
@@ -177,11 +191,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                 value:
                                                     '${snapshot.data[index].mfee}',
                                               ),
-                                              //
-                                              // ListDetail(
-                                              //   name: 'Phone Number 2',
-                                              //   value: '',
-                                              // ),
                                               //
                                               ListDetail(
                                                 name: 'Admin fee',

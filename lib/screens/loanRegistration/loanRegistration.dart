@@ -179,9 +179,6 @@ class _LoanRegister extends State {
       TextEditingController(text: '');
 
   onSubmit(context) async {
-    print('valueInterest $valueInterest');
-    print('valueAdminFee $valueAdminFee');
-    print('valueMaintenanceFee $valueMaintenanceFee');
     setState(() {
       _loading = true;
     });
@@ -307,7 +304,6 @@ class _LoanRegister extends State {
       setState(() {
         listCurrencies = list;
       });
-      print('listCurrencies::: $listCurrencies');
     } catch (error) {}
   }
 
@@ -328,7 +324,6 @@ class _LoanRegister extends State {
       setState(() {
         listLoanProducts = list;
       });
-      print('listCurrencies::: $listCurrencies');
     } catch (error) {}
   }
 
@@ -358,6 +353,7 @@ class _LoanRegister extends State {
                                 borderRadius: BorderRadius.circular(10),
                               )
                             : null,
+                        clear: true,
                         onInSidePress: () async {
                           await getCustomer();
                           SelectDialog.showModal<String>(
@@ -494,7 +490,6 @@ class _LoanRegister extends State {
                                           selectedValueCurrencies = '';
                                           curcode = e['curcode'];
                                         }),
-                                        print('curcode $curcode'),
                                       },
                                       child: Text("${e['curname']}"),
                                     ))
@@ -520,7 +515,6 @@ class _LoanRegister extends State {
                                       value: e['pname'].toString(),
                                       onTap: () => {
                                         setState(() {
-                                          selectedValueCurrencies = '';
                                           pcode = e['pcode'];
                                         }),
                                       },
@@ -898,48 +892,6 @@ class _LoanRegister extends State {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.check,
-                        keys: oRARD,
-                        childs: FormBuilderDropdown(
-                          attribute: 'name',
-                          decoration: InputDecoration(
-                            labelText:
-                                "O=Open,R=Request, A=Approved,R=Return,D=Disapprove",
-                            border: InputBorder.none,
-                          ),
-                          validators: [
-                            FormBuilderValidators.required(),
-                          ],
-                          hint: Text(
-                            'O,R,A,R,D',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              valueORARD = value.substring(0, 1);
-                            });
-                            print(
-                                "value.substring(0, 1) ${value.substring(0, 1)}");
-                            //  setState(() {
-                            //     idCcode = value.substring(0, 1);
-                            //     selectedCustomerID.text = value.substring(0, 1);
-                            //   });
-                          },
-                          items: [
-                            'O - Open',
-                            'R - Request',
-                            'A - Approved',
-                            'R - Return',
-                            'D - Disapprove',
-                          ]
-                              .map((valueORARD) => DropdownMenuItem(
-                                  value: valueORARD,
-                                  child: Text(
-                                    "$valueORARD",
-                                  )))
-                              .toList(),
                         ),
                       ),
                       if (images.length != 0)

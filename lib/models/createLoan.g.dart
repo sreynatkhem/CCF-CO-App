@@ -34,19 +34,12 @@ CreateLoan _$CreateLoanFromJson(Map<String, dynamic> json) {
     ..u3 = json['u3'] as String
     ..u4 = json['u4'] as String
     ..u5 = json['u5'] as String
-    ..customer = json['customer'] == null
-        ? null
-        : CustomerRegistration.fromJson(
-            json['customer'] as Map<String, dynamic>)
-    ..loanProduct = json['loanProduct'] == null
-        ? null
-        : LoanProduct.fromJson(json['loanProduct'] as Map<String, dynamic>)
-    ..currency = json['currency'] == null
-        ? null
-        : Currency.fromJson(json['currency'] as Map<String, dynamic>)
-    ..loanRequest = json['loanRequest'] as String
+    ..branch = json['branch'] as String
+    ..customer = json['customer'] as String
     ..user = json['user'] as String
-    ..branch = json['branch'] as String;
+    ..loanProduct = json['loanProduct'] as String
+    ..currency = json['currency'] as String
+    ..loanRequest = json['loanRequest'] as String;
 }
 
 Map<String, dynamic> _$CreateLoanToJson(CreateLoan instance) =>
@@ -77,8 +70,10 @@ Map<String, dynamic> _$CreateLoanToJson(CreateLoan instance) =>
       'u3': instance.u3,
       'u4': instance.u4,
       'u5': instance.u5,
+      'branch': instance.branch,
       'customer': instance.customer,
+      'user': instance.user,
       'loanProduct': instance.loanProduct,
-      'loanRequest': instance.loanRequest,
-      'user': instance.user
+      'currency': instance.currency,
+      'loanRequest': instance.loanRequest
     };

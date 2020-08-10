@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/models/customers.dart';
+import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:chokchey_finance/components/card.dart';
 
@@ -25,7 +30,7 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
           return new CardDetailLoanRegitration(
-            list: value.lcode,
+            list: value['lcode'],
           );
         },
         fullscreenDialog: true));
@@ -54,7 +59,6 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
       });
     } catch (e) {
       itemsSink.addError(e);
-      print("e $e");
       setState(() {
         isLoading = false;
       });
@@ -78,12 +82,40 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
   void didChangeDependencies() {
     futureListLoanRegistraiton =
         Provider.of<LoanInternal>(context).getListLoan(20, 1);
-
+    getListLoan(20, 1);
     if (this.futureListLoanRegistraiton != futureListLoanRegistraiton) {
       this.futureListLoanRegistraiton = futureListLoanRegistraiton;
       Future.microtask(() => futureListLoanRegistraiton.doSomeHttpCall());
     }
     super.didChangeDependencies();
+  }
+
+  var _isFetching = true;
+  var parsed = [];
+
+  getListLoan(_pageSize, _pageNumber) async {
+    final storage = new FlutterSecureStorage();
+    try {
+      var token = await storage.read(key: 'user_token');
+      var user_ucode = await storage.read(key: "user_ucode");
+      var branch = await storage.read(key: "branch");
+      var bodyRow =
+          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+      final response = await api().post(baseURLInternal + 'loans/byuser',
+          headers: headers, body: bodyRow);
+      if (response.statusCode == 200) {
+        var listLoan = jsonDecode(response.body);
+        setState(() {
+          parsed = listLoan[0]['listLoans'];
+        });
+      } else {
+        print('statusCode::: ${response.statusCode}');
+      }
+    } catch (error) {}
   }
 
   @override
@@ -108,39 +140,22 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
                       ModalRoute.withName("/Home")),
                 ),
               ),
-              body: FutureBuilder<List<CreateLoan>>(
-                future: futureListLoanRegistraiton,
-                builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Container(
-                          padding: EdgeInsets.all(10),
-                          child: ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Column(
-                                  children: <Widget>[
-                                    CardState(
-                                      texts:
-                                          '${snapshot.data[index].customer.namekhr}',
-                                      textTwo:
-                                          '${snapshot.data[index].customer.nameeng}',
-                                      id: '\$ ${snapshot.data[index].lamt}',
-                                      phone:
-                                          '${snapshot.data[index].lpourpose}',
-                                      images: profile,
-                                      onTaps: () {
-                                        onTapsDetail(snapshot.data[index]);
-                                      },
-                                    )
-                                  ],
-                                );
-                              }))
-                      : Center(
-                          child: CircularProgressIndicator(),
+              body: Container(
+                  padding: EdgeInsets.all(10),
+                  child: ListView.builder(
+                      itemCount: parsed.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return CardState(
+                          texts: '${parsed[index]['customer']}',
+                          textTwo: '${parsed[index]['lpourpose']}',
+                          id: '\$ ${parsed[index]['lamt']}',
+                          phone: '${parsed[index]['currency']}',
+                          images: profile,
+                          onTaps: () {
+                            onTapsDetail(parsed[index]);
+                          },
                         );
-                },
-              ),
-            ),
+                      }))),
     );
   }
 }

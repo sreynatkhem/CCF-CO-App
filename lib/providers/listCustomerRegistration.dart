@@ -50,36 +50,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
     }
   }
 
-  // Future<List<Customers>> editCustomerRegistration() async {
-  //   _isFetching = true;
-  //   try {
-  //     _isFetching = false;
-  //     var token = await storage.read(key: 'user_token');
-
-  //     var bodyRow =
-  //         "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"100501\",\n    \"bcode\": \"200101\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
-  //     Map<String, String> headers = {
-  //       "Content-Type": "application/json",
-  //       "Authorization": "Bearer $token"
-  //     };
-  //     var uri = baseURLInternal + 'customers/byuser';
-  //     final response = await api().post(uri, headers: headers, body: bodyRow);
-  //     if (response.statusCode == 200) {
-  //       final parsed = jsonDecode(response.body);
-  //       print('object $parsed');
-  //       data.add(parsed);
-  //       notifyListeners();
-  //       return parsed
-  //           .map<Customers>((json) => Customers.fromJson(json))
-  //           .toList();
-  //     } else {
-  //       print('statusCode::: ${response.statusCode}');
-  //     }
-  //   } catch (error) {
-  //     _isFetching = false;
-  //   }
-  // }
-
   Future<List<CustomerRegistration>> editCustomerRegistration(
       ccode,
       acode,
@@ -142,7 +112,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      print("hello world $parsed");
       data.add(parsed);
       notifyListeners();
     } catch (error) {
