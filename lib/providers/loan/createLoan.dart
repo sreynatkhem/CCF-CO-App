@@ -1,5 +1,6 @@
 import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/models/index.dart';
+import 'package:chokchey_finance/models/listLoan.dart';
 import 'package:chokchey_finance/models/valueListCustomers.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -66,7 +67,7 @@ class LoanInternal with ChangeNotifier {
     try {
       _isFetching = false;
       final boyrow =
-          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"$valueOpenDate\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\",\n\t\"lstatus\": \"$valueORARD\"\n}";
+          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"$valueOpenDate\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
       final response = await api().post(baseURLInternal + 'loans',
           headers: {
             "Content-Type": "application/json",
@@ -74,6 +75,7 @@ class LoanInternal with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
+      print("parsed ${parsed}");
       data.add(parsed);
       notifyListeners();
     } catch (error) {
@@ -129,11 +131,14 @@ class LoanInternal with ChangeNotifier {
         },
       );
       final parsed = jsonDecode(response.body);
+      print("parsed $parsed");
       dynamic data = [];
       data.add(parsed);
       notifyListeners();
       return data.map<CreateLoan>((json) => CreateLoan.fromJson(json)).toList();
     } catch (error) {
+      print("error $error");
+
       _isFetching = false;
     }
   }

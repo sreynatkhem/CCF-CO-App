@@ -7,6 +7,7 @@ import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
 import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart';
 import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
@@ -74,6 +75,13 @@ class _HomeState extends State<Home> {
         ModalRoute.withName("/login"));
   }
 
+  onListLoanApproval() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ListLoanApproval()),
+        ModalRoute.withName(""));
+  }
+
   onListCustomerRegistration() async {
     Navigator.pushAndRemoveUntil(
         context,
@@ -136,6 +144,8 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
                 child: Column(
                   children: <Widget>[
+                    CustomListTile(Icons.monetization_on, 'List Loan Approval',
+                        () => {onListLoanApproval()}),
                     CustomListTile(Icons.face, 'List Customer Registration',
                         () => {onListCustomerRegistration()}),
                     CustomListTile(Icons.payment, 'List Loan Registration',

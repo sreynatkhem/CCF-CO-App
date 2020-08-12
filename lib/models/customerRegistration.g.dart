@@ -38,7 +38,13 @@ CustomerRegistration _$CustomerRegistrationFromJson(Map<String, dynamic> json) {
     ..provinceName = json['provinceName'] as String
     ..districtName = json['districtName'] as String
     ..communeName = json['communeName'] as String
-    ..villageName = json['villageName'] as String;
+    ..villageName = json['villageName'] as String
+    ..fullAddress = json['fullAddress'] as String
+    ..user = json['user'] as String
+    ..loan = json['loan'] as String
+    ..branch = json['branch'] == null
+        ? null
+        : Branch.fromJson(json['branch'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CustomerRegistrationToJson(
@@ -78,5 +84,5 @@ Map<String, dynamic> _$CustomerRegistrationToJson(
       'fullAddress': instance.fullAddress,
       'user': instance.user,
       'loan': instance.loan,
-      'branch': instance.branch,
+      'branch': instance.branch
     };

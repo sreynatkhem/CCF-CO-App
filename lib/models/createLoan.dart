@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'loanRequest.dart';
+
 part 'createLoan.g.dart';
 
 @JsonSerializable()
@@ -37,7 +39,7 @@ class CreateLoan {
   String user;
   String loanProduct;
   String currency;
-  String loanRequest;
+  LoanRequest loanRequest;
 
   factory CreateLoan.fromJson(Map<String, dynamic> json) =>
       _$CreateLoanFromJson(json);

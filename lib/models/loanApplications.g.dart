@@ -1,51 +1,52 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'createLoan.dart';
+part of 'loanApplications.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CreateLoan _$CreateLoanFromJson(Map<String, dynamic> json) {
-  return CreateLoan()
+LoanApplications _$LoanApplicationsFromJson(Map<String, dynamic> json) {
+  return LoanApplications()
+    ..appcode = json['appcode'] as String
+    ..rcode = json['rcode'] as String
     ..lcode = json['lcode'] as String
     ..ucode = json['ucode'] as String
     ..bcode = json['bcode'] as String
     ..ccode = json['ccode'] as String
     ..curcode = json['curcode'] as String
     ..pcode = json['pcode'] as String
-    ..lamt = (json['lamt'] as num)?.toDouble()
-    ..ints = (json['ints'] as num)?.toDouble()
-    ..intrate = (json['intrate'] as num)?.toDouble()
-    ..mfee = (json['mfee'] as num)?.toDouble()
-    ..afee = (json['afee'] as num)?.toDouble()
+    ..lamt = json['lamt'] as num
+    ..ints = json['ints'] as num
+    ..intrate = json['intrate'] as num
+    ..mfee = json['mfee'] as num
+    ..afee = json['afee'] as num
     ..rmode = json['rmode'] as String
     ..odate = json['odate'] as String
     ..mdate = json['mdate'] as String
     ..firdate = json['firdate'] as String
     ..graperiod = json['graperiod'] as num
     ..lpourpose = json['lpourpose'] as String
-    ..ltv = (json['ltv'] as num)?.toDouble()
-    ..dscr = (json['dscr'] as num)?.toDouble()
     ..refby = json['refby'] as String
+    ..cmt = json['cmt'] as String
     ..lstatus = json['lstatus'] as String
+    ..adate = json['adate'] as String
     ..u1 = json['u1'] as String
     ..u2 = json['u2'] as String
     ..u3 = json['u3'] as String
     ..u4 = json['u4'] as String
     ..u5 = json['u5'] as String
-    ..branch = json['branch'] as String
-    ..customer = json['customer'] as String
-    ..user = json['user'] as String
-    ..loanProduct = json['loanProduct'] as String
-    ..currency = json['currency'] as String
-    ..loanRequest = json['loanRequest'] == null
+    ..user = json['user'] == null
         ? null
-        : LoanRequest.fromJson(json['loanRequest'] as Map<String, dynamic>);
+        : User.fromJson(json['user'] as Map<String, dynamic>)
+    ..userName = json['userName'] as String
+    ..branchName = json['branchName'] as String;
 }
 
-Map<String, dynamic> _$CreateLoanToJson(CreateLoan instance) =>
+Map<String, dynamic> _$LoanApplicationsToJson(LoanApplications instance) =>
     <String, dynamic>{
+      'appcode': instance.appcode,
+      'rcode': instance.rcode,
       'lcode': instance.lcode,
       'ucode': instance.ucode,
       'bcode': instance.bcode,
@@ -63,19 +64,16 @@ Map<String, dynamic> _$CreateLoanToJson(CreateLoan instance) =>
       'firdate': instance.firdate,
       'graperiod': instance.graperiod,
       'lpourpose': instance.lpourpose,
-      'ltv': instance.ltv,
-      'dscr': instance.dscr,
       'refby': instance.refby,
+      'cmt': instance.cmt,
       'lstatus': instance.lstatus,
+      'adate': instance.adate,
       'u1': instance.u1,
       'u2': instance.u2,
       'u3': instance.u3,
       'u4': instance.u4,
       'u5': instance.u5,
-      'branch': instance.branch,
-      'customer': instance.customer,
       'user': instance.user,
-      'loanProduct': instance.loanProduct,
-      'currency': instance.currency,
-      'loanRequest': instance.loanRequest
+      'userName': instance.userName,
+      'branchName': instance.branchName
     };
