@@ -1,0 +1,11 @@
+{
+  "rcode": "500007",
+  "ucode": "100509",
+  "bcode": "200101",
+  "lcode": "400011",
+  "rdate": "2020-08-11T00:00:00",
+  "rstatus": "R",
+  "user": "100509 - Mr.Ra",
+  "loan": "$loan",
+  "loanApplications": "$loanApplications"
+}

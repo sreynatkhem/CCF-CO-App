@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:chokchey_finance/models/requestLoanApproval.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
+import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider<CustomerRegistrationProvider>(
             create: (_) => CustomerRegistrationProvider()),
         Provider<LoanInternal>(create: (_) => LoanInternal()),
+        Provider<LoanApproval>(create: (_) => LoanApproval()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

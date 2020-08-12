@@ -204,26 +204,26 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                     '${snapshot.data[index].rmode}',
                                               ),
                                               //
-                                              ListDetail(
-                                                name: 'Open date',
-                                                value: getDateTimeYMD(snapshot
-                                                        .data[index].odate ??
-                                                    DateTime.now().toString()),
-                                              ),
+                                              // ListDetail(
+                                              //   name: 'Open date',
+                                              //   value: getDateTimeYMD(snapshot
+                                              //           .data[index].odate ??
+                                              //       DateTime.now().toString()),
+                                              // ),
                                               //
-                                              ListDetail(
-                                                name: 'Maturity date',
-                                                value: getDateTimeYMD(snapshot
-                                                        .data[index].mdate ??
-                                                    DateTime.now().toString()),
-                                              ),
+                                              // ListDetail(
+                                              //   name: 'Maturity date',
+                                              //   value: getDateTimeYMD(snapshot
+                                              //           .data[index].mdate ??
+                                              //       DateTime.now().toString()),
+                                              // ),
                                               //
-                                              ListDetail(
-                                                name: 'First repayment date',
-                                                value: getDateTimeYMD(snapshot
-                                                        .data[index].firdate ??
-                                                    DateTime.now().toString()),
-                                              ),
+                                              // ListDetail(
+                                              //   name: 'First repayment date',
+                                              //   value: getDateTimeYMD(snapshot
+                                              //           .data[index].firdate ??
+                                              //       DateTime.now().toString()),
+                                              // ),
                                               //
                                               ListDetail(
                                                 name:

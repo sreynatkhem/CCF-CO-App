@@ -827,6 +827,7 @@ class _LoanRegister extends State {
                             setState(() {
                               valueLTV = v;
                             });
+                            print('ltv: $valueLTV');
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -992,6 +993,25 @@ class _LoanRegister extends State {
                         text: 'Submit',
                         color: logolightGreen,
                         pressEvent: () {
+                          print({
+                            idCcode,
+                            valueAmount,
+                            curcode,
+                            pcode,
+                            valueNumberofTerm,
+                            valueInterest,
+                            valueAdminFee,
+                            valueMaintenanceFee,
+                            valueRepaymentMethod,
+                            valueOpenDate,
+                            valueMaturityDate,
+                            valueFirstRepaymentDate,
+                            valueGenerateGracePeriodNumber,
+                            valueLoanPurpose,
+                            valueLTV,
+                            valueDscr,
+                            valueReferByWho
+                          });
                           if (loanAmount.currentState.saveAndValidate() &&
                               currenciesKey.currentState.saveAndValidate() &&
                               loanProductsKey.currentState.saveAndValidate() &&
@@ -1007,7 +1027,6 @@ class _LoanRegister extends State {
                                   .saveAndValidate() &&
                               generateGracePeriodNumber.currentState
                                   .saveAndValidate() &&
-                              oRARD.currentState.saveAndValidate() &&
                               ltvKey.currentState.saveAndValidate() &&
                               dscrKey.currentState.saveAndValidate()) {
                             if (selectedValueCustomer == false) {

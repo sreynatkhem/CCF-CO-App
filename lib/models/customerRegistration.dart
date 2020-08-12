@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/models/branch.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'customerRegistration.g.dart';
@@ -40,7 +41,7 @@ class CustomerRegistration {
   String fullAddress;
   String user;
   String loan;
-  String branch;
+  Branch branch;
 
   factory CustomerRegistration.fromJson(Map<String, dynamic> json) =>
       _$CustomerRegistrationFromJson(json);
