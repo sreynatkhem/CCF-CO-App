@@ -5,7 +5,6 @@ import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
-import 'package:chokchey_finance/components/textInput.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -17,11 +16,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:select_dialog/select_dialog.dart';
+import 'package:logger/logger.dart';
+import 'addReferentDocument.dart';
 
 class LoanRegister extends StatefulWidget {
   @override
@@ -29,6 +31,9 @@ class LoanRegister extends StatefulWidget {
 }
 
 class _LoanRegister extends State {
+  var logger = Logger(
+    printer: PrettyPrinter(),
+  );
   //IMAGE PICKER
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
@@ -178,10 +183,11 @@ class _LoanRegister extends State {
   final TextEditingController selectedCustomerID =
       TextEditingController(text: '');
 
+  var listLoan;
   onSubmit(context) async {
-    setState(() {
-      _loading = true;
-    });
+    // setState(() {
+    //   _loading = true;
+    // });
     try {
       await Provider.of<LoanInternal>(context, listen: false)
           .postLoanRegistration(
@@ -213,6 +219,20 @@ class _LoanRegister extends State {
         _loading = false;
       });
       print('error $error');
+    }
+  }
+
+  onAddFile(context) async {
+    onSubmit(context);
+    listLoan =
+        await Provider.of<LoanInternal>(context, listen: false).dataRegist;
+    logger.e(' print("onAddFile listLoan:: ${listLoan}");');
+    if (listLoan != null && listLoan.length > 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddReferentDocument(listLoan[0], null)),
+      );
     }
   }
 
@@ -990,28 +1010,9 @@ class _LoanRegister extends State {
                       ),
                       Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                       AnimatedButton(
-                        text: 'Submit',
+                        text: 'Save',
                         color: logolightGreen,
                         pressEvent: () {
-                          print({
-                            idCcode,
-                            valueAmount,
-                            curcode,
-                            pcode,
-                            valueNumberofTerm,
-                            valueInterest,
-                            valueAdminFee,
-                            valueMaintenanceFee,
-                            valueRepaymentMethod,
-                            valueOpenDate,
-                            valueMaturityDate,
-                            valueFirstRepaymentDate,
-                            valueGenerateGracePeriodNumber,
-                            valueLoanPurpose,
-                            valueLTV,
-                            valueDscr,
-                            valueReferByWho
-                          });
                           if (loanAmount.currentState.saveAndValidate() &&
                               currenciesKey.currentState.saveAndValidate() &&
                               loanProductsKey.currentState.saveAndValidate() &&
@@ -1047,14 +1048,25 @@ class _LoanRegister extends State {
                                       validateCustomer = true;
                                     });
                                   } else {
-                                    await onSubmit(context);
+                                    await onAddFile(context);
                                     setState(() {
                                       validateCustomer = false;
                                     });
                                   }
                                 },
                                 btnCancelText: "Cancel",
-                                btnCancelOnPress: () {},
+                                btnCancelOnPress: () async {
+                                  if (selectedValueCustomer == false) {
+                                    setState(() {
+                                      validateCustomer = true;
+                                    });
+                                  } else {
+                                    await onSubmit(context);
+                                    setState(() {
+                                      validateCustomer = false;
+                                    });
+                                  }
+                                },
                                 btnCancelIcon: Icons.close,
                                 btnOkIcon: Icons.check_circle,
                                 btnOkColor: logolightGreen,

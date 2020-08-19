@@ -7,6 +7,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/screens/loanRegistration/addReferentDocument.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -310,6 +312,17 @@ class _EditLoanRegister extends State {
     }
   }
 
+  onAddFile(context) async {
+    // onSubmit(context);
+    if (list.lcode != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddReferentDocument(null, list.lcode)),
+      );
+    }
+  }
+
   final numberOfTermFocus = FocusNode();
   final interestRateFocus = FocusNode();
   final maintenanceFeeFocus = FocusNode();
@@ -432,10 +445,21 @@ class _EditLoanRegister extends State {
                         title: 'Succes',
                         desc: 'Thank you',
                         btnOkOnPress: () async {
-                          await onSubmit(context);
+                          await onAddFile(context);
                         },
                         btnCancelText: "Cancel",
-                        btnCancelOnPress: () {},
+                        btnCancelOnPress: () async {
+                          if (selectedValueCustomer == false) {
+                            setState(() {
+                              validateCustomer = true;
+                            });
+                          } else {
+                            await onSubmit(context);
+                            setState(() {
+                              validateCustomer = false;
+                            });
+                          }
+                        },
                         btnCancelIcon: Icons.close,
                         btnOkIcon: Icons.check_circle,
                         btnOkColor: logolightGreen,
@@ -1011,99 +1035,9 @@ class _EditLoanRegister extends State {
                     },
                   ),
                 ),
-                if (images.length != 0)
-                  Container(
-                      padding: EdgeInsets.only(top: 10), child: Text('Image')),
-                if (images.length != 0)
-                  Container(
-                    width: 375,
-                    height: images.length >= 4 ? 270 : 135,
-                    padding: EdgeInsets.only(top: 10),
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      children: List.generate(images.length, (index) {
-                        Asset asset = images[index];
-                        return Stack(children: <Widget>[
-                          AssetThumb(
-                            asset: asset,
-                            width: 300,
-                            height: images.length >= 6 ? 500 : 200,
-                          ),
-                          Positioned(
-                              top: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    images.removeAt(index);
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              ))
-                        ]);
-                      }),
-                    ),
-                  ),
-                if (fileName != null)
-                  Container(
-                      padding: EdgeInsets.only(top: 10), child: Text('PDF')),
-                if (fileName != null)
-                  Container(
-                    width: 375,
-                    height: 135,
-                    padding: EdgeInsets.only(top: 10),
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      children: List.generate(
-                          fileName != null ? fileName.length : [], (index) {
-                        File asset = fileName[index];
-                        return Stack(children: <Widget>[
-                          Text('PDF'),
-                          PDF.file(
-                            asset,
-                            height: 300,
-                            width: 200,
-                          ),
-                          Positioned(
-                              top: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    fileName.removeAt(index);
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              ))
-                        ]);
-                      }),
-                    ),
-                  ),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ImagePickers(
-                          heroTag: 'loadImage',
-                          onPressed: () => loadAssets(),
-                          icon: Icons.add_a_photo),
-                      Padding(padding: EdgeInsets.all(10)),
-                      ImagePickers(
-                          heroTag: 'loadPDF',
-                          onPressed: () => loadAssetsFile(),
-                          icon: Icons.add_box),
-                    ],
-                  ),
-                ),
                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                 AnimatedButton(
-                  text: 'Submit',
+                  text: 'Save',
                   color: logolightGreen,
                   pressEvent: () {
                     if (loanAmount.currentState.saveAndValidate() &&
@@ -1115,31 +1049,33 @@ class _EditLoanRegister extends State {
                             .saveAndValidate() &&
                         ltvKey.currentState.saveAndValidate() &&
                         dscrKey.currentState.saveAndValidate()) {
-                      if (selectedValueCustomer == false) {
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          // animType: AnimType.LEFTSLIDE,
-                          headerAnimationLoop: false,
-                          dialogType: DialogType.SUCCES,
-                          title: 'Succes',
-                          desc: 'Thank you',
-                          btnOkOnPress: () async {
-                            if (selectedValueCustomer == false) {
-                            } else {
-                              await onSubmit(context);
-                              setState(() {
-                                validateCustomer = false;
-                              });
-                            }
-                          },
-                          btnCancelText: "Cancel",
-                          btnCancelOnPress: () {},
-                          btnCancelIcon: Icons.close,
-                          btnOkIcon: Icons.check_circle,
-                          btnOkColor: logolightGreen,
-                        )..show();
-                      }
+                      AwesomeDialog(
+                        context: context,
+                        // animType: AnimType.LEFTSLIDE,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.SUCCES,
+                        title: 'Succes',
+                        desc: 'Thank you',
+                        btnOkOnPress: () async {
+                          await onAddFile(context);
+                        },
+                        btnCancelText: "Cancel",
+                        btnCancelOnPress: () async {
+                          if (selectedValueCustomer == false) {
+                            setState(() {
+                              validateCustomer = true;
+                            });
+                          } else {
+                            await onSubmit(context);
+                            setState(() {
+                              validateCustomer = false;
+                            });
+                          }
+                        },
+                        btnCancelIcon: Icons.close,
+                        btnOkIcon: Icons.check_circle,
+                        btnOkColor: logolightGreen,
+                      )..show();
                     }
                   },
                 ),
