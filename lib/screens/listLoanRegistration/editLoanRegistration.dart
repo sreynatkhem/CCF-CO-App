@@ -314,9 +314,6 @@ class _EditLoanRegister extends State {
 
   onAddFile(context) async {
     // onSubmit(context);
-    print("jhello");
-
-    logger().e('list::: ${list.lcode}');
     if (list.lcode != null) {
       Navigator.push(
         context,
@@ -448,10 +445,21 @@ class _EditLoanRegister extends State {
                         title: 'Succes',
                         desc: 'Thank you',
                         btnOkOnPress: () async {
-                          await onSubmit(context);
+                          await onAddFile(context);
                         },
                         btnCancelText: "Cancel",
-                        btnCancelOnPress: () {},
+                        btnCancelOnPress: () async {
+                          if (selectedValueCustomer == false) {
+                            setState(() {
+                              validateCustomer = true;
+                            });
+                          } else {
+                            await onSubmit(context);
+                            setState(() {
+                              validateCustomer = false;
+                            });
+                          }
+                        },
                         btnCancelIcon: Icons.close,
                         btnOkIcon: Icons.check_circle,
                         btnOkColor: logolightGreen,

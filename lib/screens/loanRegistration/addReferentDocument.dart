@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/screens/loanRegistration/widgetCardAddReferent.dart';
@@ -12,6 +13,7 @@ import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'dart:io' as Io;
 
 class AddReferentDocument extends StatefulWidget {
   AddReferentDocument(this.listLoan, this.editLoan);
@@ -31,6 +33,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
+    getImageDocument();
     super.didChangeDependencies();
   }
 
@@ -44,6 +47,244 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   var response;
   var validateImage;
+
+  //KYC
+  var imageDocumentedNation;
+  var imageDocumentedFamily;
+  var imageDocumentedResidentBook;
+  var imageDocumentedKYCOther;
+
+  //employee
+  var imageDocumentedEmployeeSalaySlip;
+  var imageDocumentedEmployeeBankStatement;
+  var imageDocumentedEmployeeSalaryVerify;
+  var imageDocumentedEmployeeEmployeeID;
+  var imageDocumentedEmployeeEmployeecontract;
+  var imageDocumentedEmployeeEmployeeOther;
+
+  //Business
+  var imageDocumentedBusinessPhotosService;
+  var imageDocumentedBusinessPermit;
+  var imageDocumentedBusinessIncomeStatement;
+  var imageDocumentedBusinessPaten;
+  var imageDocumentedBusinessSalePurchase;
+  var imageDocumentedBusinessRental;
+  var imageDocumentedBusinessLocation;
+  var imageDocumentedBusinessOther;
+
+  //Collateral
+  var imageDocumentedCollateralCertificate;
+  var imageDocumentedCollateralPicture;
+
+  convertBase64ToImage(img64) {
+    final decodedBytes = base64Decode(img64);
+    var file = Io.File("decodedBezkoder.png");
+    return file.writeAsBytesSync(decodedBytes);
+  }
+
+  Future getImageDocument() async {
+    var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
+    var url = baseURLInternal + 'loanDocuments/byloan/' + loanCode;
+
+    final storage = new FlutterSecureStorage();
+
+    var token = await storage.read(key: 'user_token');
+    try {
+      final response = await api().get(url, headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      });
+      final parsed = jsonDecode(response.body);
+      //  imageDocumented
+      for (var item in parsed) {
+        switch (item['type']) {
+          case '101':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedNation = _bytes;
+            });
+            break;
+          case '102':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedFamily = _bytes;
+            });
+            break;
+          //
+          case '103':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedResidentBook = _bytes;
+            });
+            break;
+          case '104':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedKYCOther = _bytes;
+            });
+            break;
+          //
+          case '103':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedResidentBook = _bytes;
+            });
+            break;
+          case '104':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedKYCOther = _bytes;
+            });
+            break;
+          //
+          case '211':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeSalaySlip = _bytes;
+            });
+            break;
+          case '212':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeBankStatement = _bytes;
+            });
+            break;
+          //
+          case '213':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeSalaryVerify = _bytes;
+            });
+            break;
+          case '214':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeEmployeeID = _bytes;
+            });
+            break;
+          //
+          case '215':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeEmployeecontract = _bytes;
+            });
+            break;
+          case '216':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeEmployeeOther = _bytes;
+            });
+            break;
+          //
+          case '215':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeEmployeecontract = _bytes;
+            });
+            break;
+          case '216':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedEmployeeEmployeeOther = _bytes;
+            });
+            break;
+          //Business
+          case '221':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessPhotosService = _bytes;
+            });
+            break;
+          case '222':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessPermit = _bytes;
+            });
+            break;
+          //
+          case '223':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessIncomeStatement = _bytes;
+            });
+            break;
+          case '224':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessPaten = _bytes;
+            });
+            break;
+          //
+          case '225':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessSalePurchase = _bytes;
+            });
+            break;
+          case '226':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessRental = _bytes;
+            });
+            break;
+          //
+          case '227':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessLocation = _bytes;
+            });
+            break;
+          case '228':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessOther = _bytes;
+            });
+            break;
+          //
+          case '301':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedCollateralCertificate = _bytes;
+            });
+            break;
+          case '302':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedCollateralPicture = _bytes;
+            });
+            break;
+
+          default:
+        }
+      }
+    } catch (e) {
+      logger.w('error: $e');
+    }
+  }
 
   Future onSubmite() async {
     var url = baseURLInternal + 'loanDocuments';
@@ -302,15 +543,14 @@ class _GridHeaderState extends State<AddReferentDocument> {
       var response = await request.send();
       final respStr = await response.stream.bytesToString();
       var json = jsonDecode(respStr);
-
-      // logger.i('json::: ${json}');
+      print("Result: ${response.statusCode}");
       setState(() {
         validateImage = json[0];
       });
 
       // listen for response
       response.stream.transform(utf8.decoder).listen((value) {
-        // logger.i('message::::: ${value}');
+        logger.i('message::::: ${value}');
       });
     } catch (e) {
       logger.i('e::::: ${e}');
@@ -730,6 +970,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 WidgetCardAddRef(
+                    imageDocumented: imageDocumentedNation != null
+                        ? imageDocumentedNation
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '101'
                             ? Colors.red
@@ -741,10 +984,14 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageNation = null;
+                        imageDocumentedNation = null;
                       });
                     },
                     image: _imageNation),
                 WidgetCardAddRef(
+                    imageDocumented: imageDocumentedFamily != null
+                        ? imageDocumentedFamily
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '102'
                             ? Colors.red
@@ -756,6 +1003,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageFamily = null;
+                        imageDocumentedFamily = null;
                       });
                     },
                     image: _imageFamily),
@@ -768,6 +1016,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Resident Book',
+                    imageDocumented: imageDocumentedResidentBook != null
+                        ? imageDocumentedResidentBook
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '103'
                             ? Colors.red
@@ -778,11 +1029,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageResident = null;
+                        imageDocumentedResidentBook = null;
                       });
                     },
                     image: _imageResident),
                 WidgetCardAddRef(
                     text: 'Other',
+                    imageDocumented: imageDocumentedKYCOther != null
+                        ? imageDocumentedKYCOther
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '104'
                             ? Colors.red
@@ -793,6 +1048,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageOther = null;
+                        imageDocumentedKYCOther = null;
                       });
                     },
                     image: _imageOther),
@@ -818,6 +1074,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Salary Slip last 3 months',
+                    imageDocumented: imageDocumentedEmployeeSalaySlip != null
+                        ? imageDocumentedEmployeeSalaySlip
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '211'
                             ? Colors.red
@@ -828,11 +1087,16 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageSalarySlip = null;
+                        imageDocumentedEmployeeBankStatement = null;
                       });
                     },
                     image: _imageSalarySlip),
                 WidgetCardAddRef(
                     text: 'Bank statement last 3 months',
+                    imageDocumented:
+                        imageDocumentedEmployeeBankStatement != null
+                            ? imageDocumentedEmployeeBankStatement
+                            : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '212'
                             ? Colors.red
@@ -843,6 +1107,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageBankStatement = null;
+                        imageDocumentedEmployeeBankStatement = null;
                       });
                     },
                     image: _imageBankStatement),
@@ -855,6 +1120,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Salary verify letter',
+                    imageDocumented: imageDocumentedEmployeeSalaryVerify != null
+                        ? imageDocumentedEmployeeSalaryVerify
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '213'
                             ? Colors.red
@@ -865,11 +1133,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageSalaryVerify = null;
+                        imageDocumentedEmployeeSalaryVerify = null;
                       });
                     },
                     image: _imageSalaryVerify),
                 WidgetCardAddRef(
                     text: 'Employee ID (validity)',
+                    imageDocumented: imageDocumentedEmployeeEmployeeID != null
+                        ? imageDocumentedEmployeeEmployeeID
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '215'
                             ? Colors.red
@@ -880,6 +1152,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageEmployeeID = null;
+                        imageDocumentedEmployeeEmployeeID = null;
                       });
                     },
                     image: _imageEmployeeID),
@@ -892,6 +1165,10 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Employee contrat (validity)',
+                    imageDocumented:
+                        imageDocumentedEmployeeEmployeecontract != null
+                            ? imageDocumentedEmployeeEmployeecontract
+                            : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '214'
                             ? Colors.red
@@ -902,11 +1179,16 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageEmployeeContrat = null;
+                        imageDocumentedEmployeeEmployeecontract = null;
                       });
                     },
                     image: _imageEmployeeContrat),
                 WidgetCardAddRef(
                     text: 'Other',
+                    imageDocumented:
+                        imageDocumentedEmployeeEmployeeOther != null
+                            ? imageDocumentedEmployeeEmployeeOther
+                            : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '216'
                             ? Colors.red
@@ -917,6 +1199,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageEmployeeOther = null;
+                        imageDocumentedEmployeeEmployeeOther = null;
                       });
                     },
                     image: _imageEmployeeOther),
@@ -942,6 +1225,10 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Photo of service location',
+                    imageDocumented:
+                        imageDocumentedBusinessPhotosService != null
+                            ? imageDocumentedBusinessPhotosService
+                            : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '221'
                             ? Colors.red
@@ -952,11 +1239,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imagePhotoOfService = null;
+                        imageDocumentedBusinessPhotosService = null;
                       });
                     },
                     image: _imagePhotoOfService),
                 WidgetCardAddRef(
                     text: 'Business permit(validity)',
+                    imageDocumented: imageDocumentedBusinessPermit != null
+                        ? imageDocumentedBusinessPermit
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '222'
                             ? Colors.red
@@ -967,6 +1258,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageBusinessPermit = null;
+                        imageDocumentedBusinessPermit = null;
                       });
                     },
                     image: _imageBusinessPermit),
@@ -979,6 +1271,10 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Income statement/Bank statement last 3 months',
+                    imageDocumented:
+                        imageDocumentedBusinessIncomeStatement != null
+                            ? imageDocumentedBusinessIncomeStatement
+                            : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '224'
                             ? Colors.red
@@ -989,11 +1285,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageIncomeStatementBank = null;
+                        imageDocumentedBusinessIncomeStatement = null;
                       });
                     },
                     image: _imageIncomeStatementBank),
                 WidgetCardAddRef(
                     text: 'Patent (validity)',
+                    imageDocumented: imageDocumentedBusinessPaten != null
+                        ? imageDocumentedBusinessPaten
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '225'
                             ? Colors.red
@@ -1004,6 +1304,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imagePatent = null;
+                        imageDocumentedBusinessPaten = null;
                       });
                     },
                     image: _imagePatent),
@@ -1016,6 +1317,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Sale-purchase receipt/ service receipt',
+                    imageDocumented: imageDocumentedBusinessSalePurchase != null
+                        ? imageDocumentedBusinessSalePurchase
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '227'
                             ? Colors.red
@@ -1026,11 +1330,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageSaleAndPurchase = null;
+                        imageDocumentedBusinessSalePurchase = null;
                       });
                     },
                     image: _imageSaleAndPurchase),
                 WidgetCardAddRef(
                     text: 'Rental contract (validity)',
+                    imageDocumented: imageDocumentedBusinessRental != null
+                        ? imageDocumentedBusinessRental
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '226'
                             ? Colors.red
@@ -1041,6 +1349,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageRentalContract = null;
+                        imageDocumentedBusinessRental = null;
                       });
                     },
                     image: _imageRentalContract),
@@ -1053,6 +1362,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Business Location Title Deed',
+                    imageDocumented: imageDocumentedBusinessLocation != null
+                        ? imageDocumentedBusinessLocation
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '223'
                             ? Colors.red
@@ -1063,11 +1375,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageRentalContract = null;
+                        imageDocumentedBusinessLocation = null;
                       });
                     },
                     image: _imageRentalContract),
                 WidgetCardAddRef(
                     text: 'Other',
+                    imageDocumented: imageDocumentedBusinessOther != null
+                        ? imageDocumentedBusinessOther
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '228'
                             ? Colors.red
@@ -1078,6 +1394,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageBusinessOther = null;
+                        imageDocumentedBusinessOther = null;
                       });
                     },
                     image: _imageBusinessOther),
@@ -1103,6 +1420,10 @@ class _GridHeaderState extends State<AddReferentDocument> {
               children: <Widget>[
                 WidgetCardAddRef(
                     text: 'Collateral certificate',
+                    imageDocumented:
+                        imageDocumentedCollateralCertificate != null
+                            ? imageDocumentedCollateralCertificate
+                            : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '301'
                             ? Colors.red
@@ -1113,11 +1434,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageCollateralCertificate = null;
+                        imageDocumentedCollateralCertificate = null;
                       });
                     },
                     image: _imageCollateralCertificate),
                 WidgetCardAddRef(
                     text: 'Collateral picture',
+                    imageDocumented: imageDocumentedCollateralPicture != null
+                        ? imageDocumentedCollateralPicture
+                        : null,
                     validateImage:
                         validateImage != null && validateImage['key'] == '302'
                             ? Colors.red
@@ -1128,6 +1453,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onClearImage: () {
                       setState(() {
                         _imageCollateralPicture = null;
+                        imageDocumentedCollateralPicture = null;
                       });
                     },
                     image: _imageCollateralPicture),

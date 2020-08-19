@@ -1,5 +1,4 @@
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class WidgetCardAddRef extends StatelessWidget {
@@ -9,12 +8,14 @@ class WidgetCardAddRef extends StatelessWidget {
   var onClearImage;
   var imageText;
   var validateImage;
+  var imageDocumented;
 
   WidgetCardAddRef(
       {this.validateImage,
       this.text,
       this.onTaps,
       this.image,
+      this.imageDocumented,
       this.onClearImage,
       this.imageText});
   @override
@@ -41,9 +42,12 @@ class WidgetCardAddRef extends StatelessWidget {
             ),
           ],
         ),
-        child: image != null
+        child: image != null || imageDocumented != null
             ? Stack(children: <Widget>[
-                Container(height: 100, child: Image.file(image)),
+                imageDocumented != null
+                    ? Container(
+                        height: 100, child: Image.memory(imageDocumented))
+                    : Container(height: 100, child: Image.file(image)),
                 Positioned(
                     top: 0,
                     right: 0,

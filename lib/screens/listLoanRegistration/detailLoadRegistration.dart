@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:chokchey_finance/components/ListDatial.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:pdf_flutter/pdf_flutter.dart';
@@ -74,14 +78,36 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
   }
 
   var detiaLoan;
-
+  var _imageDocument;
   @override
   void didChangeDependencies() {
     var locode = list;
     detiaLoan = Provider.of<LoanInternal>(
       context,
     ).getLoanByID(locode);
+    getImageDocument();
     super.didChangeDependencies();
+  }
+
+  Future getImageDocument() async {
+    var url = baseURLInternal + 'loanDocuments/byloan/' + list;
+
+    final storage = new FlutterSecureStorage();
+
+    var token = await storage.read(key: 'user_token');
+    // Map<String, String> headers = {
+    //   "Content-Type": "application/json",
+    //   "Authorization": "Bearer " + token
+    // }; // ignore this headers if there is no authentication
+    final response = await api().get(url, headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    });
+    final parsed = jsonDecode(response.body);
+    setState(() {
+      _imageDocument = parsed;
+    });
+    logger().w('parsed: ${parsed} ');
   }
 
   @override
@@ -204,27 +230,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                     '${snapshot.data[index].rmode}',
                                               ),
                                               //
-                                              // ListDetail(
-                                              //   name: 'Open date',
-                                              //   value: getDateTimeYMD(snapshot
-                                              //           .data[index].odate ??
-                                              //       DateTime.now().toString()),
-                                              // ),
-                                              //
-                                              // ListDetail(
-                                              //   name: 'Maturity date',
-                                              //   value: getDateTimeYMD(snapshot
-                                              //           .data[index].mdate ??
-                                              //       DateTime.now().toString()),
-                                              // ),
-                                              //
-                                              // ListDetail(
-                                              //   name: 'First repayment date',
-                                              //   value: getDateTimeYMD(snapshot
-                                              //           .data[index].firdate ??
-                                              //       DateTime.now().toString()),
-                                              // ),
-                                              //
                                               ListDetail(
                                                 name:
                                                     'Generate grace period number',
@@ -262,103 +267,64 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                     '${snapshot.data[index].lstatus}',
                                               ),
                                               //
-                                              if ([].length != 0)
+                                              if (_imageDocument != null)
                                                 Container(
-                                                    padding: EdgeInsets.only(
-                                                        top: 10),
-                                                    child: Text('Image')),
-                                              if ([].length != 0)
-                                                Container(
-                                                  width: 375,
-                                                  height: [].length >= 4
-                                                      ? 270
-                                                      : 135,
-                                                  padding:
-                                                      EdgeInsets.only(top: 10),
+                                                  width: 300,
+                                                  height: 600,
+                                                  padding: EdgeInsets.only(
+                                                      top: 10, left: 20),
                                                   child: GridView.count(
-                                                    crossAxisCount: 3,
+                                                    crossAxisCount: 1,
                                                     children: List.generate(
-                                                        [].length, (index) {
-                                                      Asset asset =
-                                                          images[index];
+                                                        _imageDocument != null
+                                                            ? _imageDocument
+                                                                .length
+                                                            : [], (index) {
+                                                      // File asset =
+                                                      //     _imageDocument[index];
+                                                      var uri =
+                                                          _imageDocument[index]
+                                                              ['filepath'];
+                                                      Uint8List _bytes =
+                                                          base64.decode(uri
+                                                              .split(',')
+                                                              .last);
                                                       return Stack(children: <
                                                           Widget>[
-                                                        AssetThumb(
-                                                          asset: asset,
-                                                          width: 300,
-                                                          height: [].length >= 6
-                                                              ? 500
-                                                              : 200,
-                                                        ),
-                                                        Positioned(
-                                                            top: 0,
-                                                            right: 0,
-                                                            child:
-                                                                GestureDetector(
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  images
-                                                                      .removeAt(
-                                                                          index);
-                                                                });
-                                                              },
-                                                              child: Icon(
-                                                                Icons.delete,
-                                                                color:
-                                                                    Colors.red,
-                                                              ),
+                                                        Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom: 10),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  _imageDocument[
+                                                                          index]
+                                                                      [
+                                                                      'description'],
+                                                                  style:
+                                                                      mainTitleBlack,
+                                                                ),
+                                                                Padding(
+                                                                    padding: EdgeInsets.only(
+                                                                        bottom:
+                                                                            10)),
+                                                                Image.memory(
+                                                                  _bytes,
+                                                                  height: 230,
+                                                                  width: 300,
+                                                                ),
+                                                              ],
                                                             ))
+                                                        // PDF.file(
+                                                        //   asset,
+                                                        //   height: 300,
+                                                        //   width: 200,
+                                                        // ),
                                                       ]);
-                                                    }),
-                                                  ),
-                                                ),
-                                              if (fileName != null)
-                                                Container(
-                                                    padding: EdgeInsets.only(
-                                                        top: 10),
-                                                    child: Text('PDF')),
-                                              if (fileName != null)
-                                                Container(
-                                                  width: 375,
-                                                  height: 135,
-                                                  padding:
-                                                      EdgeInsets.only(top: 10),
-                                                  child: GridView.count(
-                                                    crossAxisCount: 3,
-                                                    children: List.generate(
-                                                        fileName != null
-                                                            ? fileName.length
-                                                            : [], (index) {
-                                                      File asset =
-                                                          fileName[index];
-                                                      return Stack(
-                                                          children: <Widget>[
-                                                            Text('PDF'),
-                                                            PDF.file(
-                                                              asset,
-                                                              height: 300,
-                                                              width: 200,
-                                                            ),
-                                                            Positioned(
-                                                                top: 0,
-                                                                right: 0,
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {
-                                                                    setState(
-                                                                        () {
-                                                                      fileName.removeAt(
-                                                                          index);
-                                                                    });
-                                                                  },
-                                                                  child: Icon(
-                                                                    Icons
-                                                                        .delete,
-                                                                    color: Colors
-                                                                        .red,
-                                                                  ),
-                                                                ))
-                                                          ]);
                                                     }),
                                                   ),
                                                 ),
