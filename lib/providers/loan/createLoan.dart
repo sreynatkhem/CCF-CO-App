@@ -16,6 +16,7 @@ class LoanInternal with ChangeNotifier {
   final storage = new FlutterSecureStorage();
   var listCustomerByID = [];
   var totalLoans = '';
+  var dataRegistration = [];
 
   Future<List<ValueListCustomers>> fetchCustomerByUserLogin() async {
     _isFetching = true;
@@ -26,7 +27,7 @@ class LoanInternal with ChangeNotifier {
       final response = await api().get(
         baseURLInternal + 'valuelists/customers/' + user_ucode,
         headers: {
-          "Content-Type": "application/json",
+          "contentType": "application/json",
           "Authorization": "Bearer " + token
         },
       );
@@ -75,8 +76,7 @@ class LoanInternal with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      print("parsed ${parsed}");
-      data.add(parsed);
+      dataRegistration.add(parsed);
       notifyListeners();
     } catch (error) {
       print('error: $error');
@@ -131,7 +131,6 @@ class LoanInternal with ChangeNotifier {
         },
       );
       final parsed = jsonDecode(response.body);
-      print("parsed $parsed");
       dynamic data = [];
       data.add(parsed);
       notifyListeners();
@@ -186,4 +185,5 @@ class LoanInternal with ChangeNotifier {
   }
 
   bool get isFetching => _isFetching;
+  dynamic get dataRegist => dataRegistration;
 }

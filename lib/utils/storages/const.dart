@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'colors.dart';
@@ -88,4 +89,11 @@ Future<String> readResponse(HttpClientResponse response) {
     contents.write(data);
   }, onDone: () => completer.complete(contents.toString()));
   return completer.future;
+}
+
+logger() {
+  var loggers = Logger(
+    printer: PrettyPrinter(),
+  );
+  return loggers;
 }

@@ -7,8 +7,17 @@ class ImagePickers extends StatelessWidget {
   Function onPressed;
   IconData icon;
   String heroTag;
+  var sizeIcons;
+  var widths;
+  var heights;
 
-  ImagePickers({this.onPressed, this.icon, this.heroTag});
+  ImagePickers(
+      {this.onPressed,
+      this.icon,
+      this.heroTag,
+      this.sizeIcons,
+      this.heights,
+      this.widths});
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +26,18 @@ class ImagePickers extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(padding: EdgeInsets.only(top: 10)),
-          FloatingActionButton(
-            heroTag: heroTag,
-            onPressed: onPressed,
-            backgroundColor: logolightGreen,
-            tooltip: 'Pick Image',
-            child: Icon(
-              icon,
+          Container(
+            width: widths,
+            height: heights,
+            child: FloatingActionButton(
+              heroTag: heroTag,
+              onPressed: onPressed,
+              backgroundColor: logolightGreen,
+              tooltip: 'Pick Image',
+              child: Icon(
+                icon,
+                size: sizeIcons,
+              ),
             ),
           ),
         ],
