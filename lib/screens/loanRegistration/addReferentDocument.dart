@@ -29,7 +29,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
   _GridHeaderState(this.listLoan, this.editLoan);
   dynamic listLoan;
   String editLoan = '';
-
+  var _isLoading = false;
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -286,7 +286,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
   }
 
-  Future onSubmite() async {
+  Future onSubmite(context) async {
     var url = baseURLInternal + 'loanDocuments';
     var uri = Uri.parse(url);
     var request = new http.MultipartRequest("POST", uri);
@@ -537,23 +537,34 @@ class _GridHeaderState extends State<AddReferentDocument> {
     request.fields['lcode'] = loanCode;
     request.fields['bcode'] = branch;
     request.fields['ucode'] = user_ucode;
-
+    setState(() {
+      _isLoading = true;
+    });
     try {
       // send
       var response = await request.send();
       final respStr = await response.stream.bytesToString();
       var json = jsonDecode(respStr);
-      print("Result: ${response.statusCode}");
+
       setState(() {
         validateImage = json[0];
       });
 
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        setState(() {
+          _isLoading = false;
+        });
+      }
       // listen for response
       response.stream.transform(utf8.decoder).listen((value) {
         logger.i('message::::: ${value}');
       });
     } catch (e) {
       logger.i('e::::: ${e}');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -571,30 +582,34 @@ class _GridHeaderState extends State<AddReferentDocument> {
                   size: 25,
                 ),
                 onPressed: () {
-                  onSubmite();
+                  onSubmite(context);
                 }),
           ],
         ),
       ],
-      bodys: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(20),
-          child: Card(
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: logolightGreen, width: 1),
-              borderRadius: BorderRadius.circular(10),
+      bodys: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.all(20),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: logolightGreen, width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      gridKYC(),
+                      gridEmployee(),
+                      gridBS(),
+                      gridCollateralDocument()
+                    ],
+                  ),
+                ),
+              ),
             ),
-            child: Column(
-              children: <Widget>[
-                gridKYC(),
-                gridEmployee(),
-                gridBS(),
-                gridCollateralDocument()
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -354,7 +355,7 @@ class _LoanRegister extends State {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Header(
-        headerTexts: 'Loans Register',
+        headerTexts: 'loan_registration',
         bodys: _loading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -378,7 +379,9 @@ class _LoanRegister extends State {
                           await getCustomer();
                           SelectDialog.showModal<String>(
                             context,
-                            label: 'Search',
+                            label: AppLocalizations.of(context)
+                                    .translate('Search') ??
+                                'Search',
                             items: List.generate(
                                 listCustomers.length,
                                 (index) =>
@@ -414,8 +417,8 @@ class _LoanRegister extends State {
                                 fontWeight: fontWeight500),
                         texts: selectedValueCustmerName != ''
                             ? selectedValueCustmerName
-                            : "Customer",
-                        title: 'Customer',
+                            : "customer",
+                        title: 'customer',
                       ),
                       GroupFromBuilder(
                         icons: Icons.face,
@@ -427,8 +430,10 @@ class _LoanRegister extends State {
                             WhitelistingTextInputFormatter.digitsOnly
                           ],
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Customer ID',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('customer_id') ??
+                                "Customer ID",
                             border: InputBorder.none,
                           ),
                           onFieldSubmitted: (v) {
@@ -446,7 +451,9 @@ class _LoanRegister extends State {
                           validators: [
                             FormBuilderValidators.required(),
                             FormBuilderValidators.numeric(
-                                errorText: 'Number only')
+                                errorText: AppLocalizations.of(context)
+                                        .translate('number_only') ??
+                                    'Number only')
                           ],
                           readOnly: true,
                           keyboardType: TextInputType.number,
@@ -462,8 +469,10 @@ class _LoanRegister extends State {
                             WhitelistingTextInputFormatter.digitsOnly
                           ],
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Loan amount',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('loan_amount') ??
+                                "Loan amount",
                             border: InputBorder.none,
                           ),
                           focusNode: loanAmountFocus,
@@ -482,7 +491,9 @@ class _LoanRegister extends State {
                           validators: [
                             FormBuilderValidators.required(),
                             FormBuilderValidators.numeric(
-                                errorText: 'Number only')
+                                errorText: AppLocalizations.of(context)
+                                        .translate('number_only') ??
+                                    'Number only')
                           ],
                           keyboardType: TextInputType.number,
                         ),
@@ -493,14 +504,18 @@ class _LoanRegister extends State {
                         childs: FormBuilderDropdown(
                             attribute: 'name',
                             decoration: InputDecoration(
-                              labelText: "Currencies",
+                              labelText: AppLocalizations.of(context)
+                                      .translate('currencies') ??
+                                  "Currencies",
                               border: InputBorder.none,
                             ),
                             validators: [
                               FormBuilderValidators.required(),
                             ],
                             hint: Text(
-                              'Currencies',
+                              AppLocalizations.of(context)
+                                      .translate('currencies') ??
+                                  'Currencies',
                             ),
                             items: listCurrencies
                                 .map((e) => DropdownMenuItem(
@@ -521,14 +536,18 @@ class _LoanRegister extends State {
                         childs: FormBuilderDropdown(
                             attribute: 'name',
                             decoration: InputDecoration(
-                              labelText: "Loan Products",
+                              labelText: AppLocalizations.of(context)
+                                      .translate('loan_products') ??
+                                  "Loan Products",
                               border: InputBorder.none,
                             ),
                             validators: [
                               FormBuilderValidators.required(),
                             ],
                             hint: Text(
-                              'Loan Products',
+                              AppLocalizations.of(context)
+                                      .translate('loan_products') ??
+                                  'Loan Products',
                             ),
                             items: listLoanProducts
                                 .map((e) => DropdownMenuItem(
@@ -553,8 +572,10 @@ class _LoanRegister extends State {
                           },
                           focusNode: numberOfTermFocus,
                           textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Number of term',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('number_of_term') ??
+                                'Number of term',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -585,8 +606,10 @@ class _LoanRegister extends State {
                             FocusScope.of(context)
                                 .requestFocus(maintenanceFeeFocus);
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Interest rate',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('interest_rate') ??
+                                'Interest rate',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -617,8 +640,10 @@ class _LoanRegister extends State {
                           onFieldSubmitted: (v) {
                             FocusScope.of(context).requestFocus(adminFeeFocus);
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Maintenance fee',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('maintenance_fee') ??
+                                'Maintenance fee',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -649,8 +674,10 @@ class _LoanRegister extends State {
                           // onFieldSubmitted: (v) {
                           //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
                           // },
-                          decoration: const InputDecoration(
-                            labelText: 'Admin fee',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('admin_fee') ??
+                                'Admin fee',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -678,21 +705,19 @@ class _LoanRegister extends State {
                         childs: FormBuilderDropdown(
                           attribute: 'name',
                           decoration: InputDecoration(
-                            labelText: "Repayment method",
+                            labelText: AppLocalizations.of(context)
+                                    .translate('repayment_method') ??
+                                "Repayment method",
                             border: InputBorder.none,
                           ),
                           validators: [
                             FormBuilderValidators.required(),
                           ],
                           hint: Text(
-                            'Repayment method',
+                            AppLocalizations.of(context)
+                                    .translate('repayment_method') ??
+                                'Repayment method',
                           ),
-                          // onChanged: (value) {
-                          //   setState(() {
-                          //     FocusScope.of(context).requestFocus(FocusNode());
-                          //     valueRepaymentMethod = value;
-                          //   });
-                          // },
                           onChanged: (value) {
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() => valueRepaymentMethod = value);
@@ -716,26 +741,6 @@ class _LoanRegister extends State {
                       ),
                       GroupFromBuilder(
                         icons: Icons.date_range,
-                        keys: openData,
-                        childs: FormBuilderDateTimePicker(
-                          focusNode: openDataFocus,
-                          textInputAction: TextInputAction.next,
-                          inputType: InputType.date,
-                          onChanged: (v) {
-                            setState(() {
-                              valueOpenDate = v ?? DateTime.now();
-                            });
-                          },
-                          validators: [FormBuilderValidators.required()],
-                          format: DateFormat("yyyy-MM-dd"),
-                          decoration: InputDecoration(
-                            labelText: "Open date",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.date_range,
                         keys: datehMaturityDate,
                         childs: FormBuilderDateTimePicker(
                           focusNode: datehMaturityDateFocus,
@@ -749,7 +754,9 @@ class _LoanRegister extends State {
                           validators: [FormBuilderValidators.required()],
                           format: DateFormat("yyyy-MM-dd"),
                           decoration: InputDecoration(
-                            labelText: "Maturity date",
+                            labelText: AppLocalizations.of(context)
+                                    .translate('maturity_date') ??
+                                "Maturity date",
                             border: InputBorder.none,
                           ),
                         ),
@@ -771,7 +778,9 @@ class _LoanRegister extends State {
                           validators: [FormBuilderValidators.required()],
                           format: DateFormat("yyyy-MM-dd"),
                           decoration: InputDecoration(
-                            labelText: "First repayment date",
+                            labelText: AppLocalizations.of(context)
+                                    .translate('first_repayment_date') ??
+                                "First repayment date",
                             border: InputBorder.none,
                           ),
                         ),
@@ -787,8 +796,10 @@ class _LoanRegister extends State {
                             FocusScope.of(context)
                                 .requestFocus(loanPurposeFocus);
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Generate grace period number',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context).translate(
+                                    'generate_grace_period_number') ??
+                                'Generate grace period number',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -816,8 +827,10 @@ class _LoanRegister extends State {
                           onFieldSubmitted: (v) {
                             FocusScope.of(context).requestFocus(lTVFocus);
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Loan purpose',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('loan_purpose') ??
+                                'Loan purpose',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -847,7 +860,6 @@ class _LoanRegister extends State {
                             setState(() {
                               valueLTV = v;
                             });
-                            print('ltv: $valueLTV');
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -872,7 +884,7 @@ class _LoanRegister extends State {
                             FocusScope.of(context)
                                 .requestFocus(referByWhoFocus);
                           },
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Dscr',
                             border: InputBorder.none,
                           ),
@@ -903,8 +915,10 @@ class _LoanRegister extends State {
                           // onFieldSubmitted: (v) {
                           //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
                           // },
-                          decoration: const InputDecoration(
-                            labelText: 'Refer by who',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('refer_by_who') ??
+                                'Refer by who',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -915,102 +929,10 @@ class _LoanRegister extends State {
                           },
                         ),
                       ),
-                      if (images.length != 0)
-                        Container(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text('Image')),
-                      if (images.length != 0)
-                        Container(
-                          width: 375,
-                          height: images.length >= 4 ? 270 : 135,
-                          padding: EdgeInsets.only(top: 10),
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            children: List.generate(images.length, (index) {
-                              Asset asset = images[index];
-                              return Stack(children: <Widget>[
-                                AssetThumb(
-                                  asset: asset,
-                                  width: 300,
-                                  height: images.length >= 6 ? 500 : 200,
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          images.removeAt(index);
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                    ))
-                              ]);
-                            }),
-                          ),
-                        ),
-                      if (fileName != null)
-                        Container(
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text('PDF')),
-                      if (fileName != null)
-                        Container(
-                          width: 375,
-                          height: 135,
-                          padding: EdgeInsets.only(top: 10),
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            children: List.generate(
-                                fileName != null ? fileName.length : [],
-                                (index) {
-                              File asset = fileName[index];
-                              return Stack(children: <Widget>[
-                                Text('PDF'),
-                                PDF.file(
-                                  asset,
-                                  height: 300,
-                                  width: 200,
-                                ),
-                                Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          fileName.removeAt(index);
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                    ))
-                              ]);
-                            }),
-                          ),
-                        ),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            ImagePickers(
-                                heroTag: 'loadImage',
-                                onPressed: () => loadAssets(),
-                                icon: Icons.add_a_photo),
-                            Padding(padding: EdgeInsets.all(10)),
-                            ImagePickers(
-                                heroTag: 'loadPDF',
-                                onPressed: () => loadAssetsFile(),
-                                icon: Icons.add_box),
-                          ],
-                        ),
-                      ),
                       Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                       AnimatedButton(
-                        text: 'Save',
+                        text: AppLocalizations.of(context).translate('save') ??
+                            'Save',
                         color: logolightGreen,
                         pressEvent: () {
                           if (loanAmount.currentState.saveAndValidate() &&
@@ -1036,41 +958,50 @@ class _LoanRegister extends State {
                               });
                             } else {
                               AwesomeDialog(
-                                context: context,
-                                // animType: AnimType.LEFTSLIDE,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.SUCCES,
-                                title: 'Succes',
-                                desc: 'Thank you',
-                                btnOkOnPress: () async {
-                                  if (selectedValueCustomer == false) {
-                                    setState(() {
-                                      validateCustomer = true;
-                                    });
-                                  } else {
-                                    await onAddFile(context);
-                                    setState(() {
-                                      validateCustomer = false;
-                                    });
-                                  }
-                                },
-                                btnCancelText: "Cancel",
-                                btnCancelOnPress: () async {
-                                  if (selectedValueCustomer == false) {
-                                    setState(() {
-                                      validateCustomer = true;
-                                    });
-                                  } else {
-                                    await onSubmit(context);
-                                    setState(() {
-                                      validateCustomer = false;
-                                    });
-                                  }
-                                },
-                                btnCancelIcon: Icons.close,
-                                btnOkIcon: Icons.check_circle,
-                                btnOkColor: logolightGreen,
-                              )..show();
+                                  context: context,
+                                  // animType: AnimType.LEFTSLIDE,
+                                  headerAnimationLoop: false,
+                                  dialogType: DialogType.SUCCES,
+                                  title: AppLocalizations.of(context)
+                                          .translate('succes') ??
+                                      'Success',
+                                  desc: AppLocalizations.of(context)
+                                          .translate('thank_you') ??
+                                      'Would you like to add document referent?',
+                                  btnOkOnPress: () async {
+                                    if (selectedValueCustomer == false) {
+                                      setState(() {
+                                        validateCustomer = true;
+                                      });
+                                    } else {
+                                      await onAddFile(context);
+                                      setState(() {
+                                        validateCustomer = false;
+                                      });
+                                    }
+                                  },
+                                  btnCancelText: AppLocalizations.of(context)
+                                          .translate('cancel') ??
+                                      "Cancel",
+                                  btnCancelOnPress: () async {
+                                    if (selectedValueCustomer == false) {
+                                      setState(() {
+                                        validateCustomer = true;
+                                      });
+                                    } else {
+                                      await onSubmit(context);
+                                      setState(() {
+                                        validateCustomer = false;
+                                      });
+                                    }
+                                  },
+                                  btnCancelIcon: Icons.close,
+                                  btnOkIcon: Icons.check_circle,
+                                  btnOkColor: logolightGreen,
+                                  btnOkText: AppLocalizations.of(context)
+                                          .translate('okay') ??
+                                      'Okay')
+                                ..show();
                             }
                           }
                         },

@@ -128,7 +128,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
               ),
               ModalRoute.withName('/')),
         ),
-        headerTexts: 'Detail Loan Registration',
+        headerTexts: 'detail_loan_registration',
         actionsNotification: <Widget>[
           // Using Stack to show edit registration
           new Stack(
@@ -170,75 +170,75 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               ListDetail(
-                                                name: 'Customer Khmer Name',
+                                                name: 'customer_khmer_name',
                                                 value:
                                                     '${snapshot.data[index].customer}',
                                               ),
                                               //
                                               //
                                               ListDetail(
-                                                name: 'Customer ID',
+                                                name: 'customer_id',
                                                 value:
                                                     '${snapshot.data[index].ccode}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Loan amount',
+                                                name: 'loan_amount',
                                                 value:
                                                     '\$ ${snapshot.data[index].lamt}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Currency',
+                                                name: 'currencies',
                                                 value:
                                                     '${snapshot.data[index].currency}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Loan Product',
+                                                name: 'loan_product',
                                                 value:
                                                     '${snapshot.data[index].loanProduct}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Number of term',
+                                                name: 'number_of_term',
                                                 value:
                                                     '${snapshot.data[index].ints}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Interest rate',
+                                                name: 'interest_rate',
                                                 value:
                                                     '${snapshot.data[index].intrate}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Maintenance fee',
+                                                name: 'maintenance_fee',
                                                 value:
                                                     '${snapshot.data[index].mfee}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Admin fee',
+                                                name: 'admin_fee',
                                                 value:
                                                     '${snapshot.data[index].afee}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Repayment method',
+                                                name: 'repayment_method',
                                                 value:
                                                     '${snapshot.data[index].rmode}',
                                               ),
                                               //
                                               ListDetail(
                                                 name:
-                                                    'Generate grace period number',
+                                                    'generate_grace_period_number',
                                                 value:
                                                     '${snapshot.data[index].graperiod}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Loan purpose',
+                                                name: 'loan_purpose',
                                                 value:
                                                     '${snapshot.data[index].lpourpose}',
                                               ),
@@ -256,13 +256,13 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Refer by who',
+                                                name: 'refer_by_who',
                                                 value:
                                                     '${snapshot.data[index].refby}',
                                               ),
                                               //
                                               ListDetail(
-                                                name: 'Status',
+                                                name: 'status',
                                                 value:
                                                     '${snapshot.data[index].lstatus}',
                                               ),
@@ -319,11 +319,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                                 ),
                                                               ],
                                                             ))
-                                                        // PDF.file(
-                                                        //   asset,
-                                                        //   height: 300,
-                                                        //   width: 200,
-                                                        // ),
                                                       ]);
                                                     }),
                                                   ),

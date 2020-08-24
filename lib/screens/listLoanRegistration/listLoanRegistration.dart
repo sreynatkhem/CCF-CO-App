@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/models/customers.dart';
 import 'package:chokchey_finance/models/index.dart';
@@ -130,7 +131,9 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
             )
           : new Scaffold(
               appBar: new AppBar(
-                title: new Text("List Loan Registration"),
+                title: new Text(AppLocalizations.of(context)
+                        .translate('list_loan_registration') ??
+                    "List Loan Registration"),
                 backgroundColor: logolightGreen,
                 leading: new IconButton(
                   icon: new Icon(Icons.arrow_back),

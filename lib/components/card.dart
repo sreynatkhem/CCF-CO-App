@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -47,8 +48,12 @@ class CardState extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (texts != null) Text(texts.toString()),
-                      if (textTwo != null) Text(textTwo.toString()),
+                      if (texts != null)
+                        Text(AppLocalizations.of(context).translate(texts) ??
+                            texts.toString()),
+                      if (textTwo != null)
+                        Text(AppLocalizations.of(context).translate(textTwo) ??
+                            textTwo.toString()),
                       if (id != null) Text(id.toString() ?? ""),
                       if (createdAt != null) Text(createdAt.toString() ?? ""),
                       if (email != null) Text(email.toString() ?? ""),

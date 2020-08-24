@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,8 @@ class ListDetail extends StatelessWidget {
               Container(
                   padding: EdgeInsets.only(left: 10, top: 10),
                   child: Text(
-                    '${name.toString()}:',
+                    AppLocalizations.of(context).translate(name.toString()) ??
+                        '${name.toString()}:',
                   )),
             ],
           ),

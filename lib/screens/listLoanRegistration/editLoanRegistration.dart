@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/imagePicker.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/loanRegistration/addReferentDocument.dart';
@@ -417,7 +418,9 @@ class _EditLoanRegister extends State {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Header(
-        headerTexts: 'Edit Loans Register',
+        headerTexts:
+            AppLocalizations.of(context).translate('edit_loans_register') ??
+                'Edit Loans Register',
         actionsNotification: <Widget>[
           // Using Stack to show edit registration
           new Stack(
@@ -438,32 +441,41 @@ class _EditLoanRegister extends State {
                         ltvKey.currentState.saveAndValidate() &&
                         dscrKey.currentState.saveAndValidate()) {
                       AwesomeDialog(
-                        context: context,
-                        // animType: AnimType.LEFTSLIDE,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.SUCCES,
-                        title: 'Succes',
-                        desc: 'Thank you',
-                        btnOkOnPress: () async {
-                          await onAddFile(context);
-                        },
-                        btnCancelText: "Cancel",
-                        btnCancelOnPress: () async {
-                          if (selectedValueCustomer == false) {
-                            setState(() {
-                              validateCustomer = true;
-                            });
-                          } else {
-                            await onSubmit(context);
-                            setState(() {
-                              validateCustomer = false;
-                            });
-                          }
-                        },
-                        btnCancelIcon: Icons.close,
-                        btnOkIcon: Icons.check_circle,
-                        btnOkColor: logolightGreen,
-                      )..show();
+                          context: context,
+                          // animType: AnimType.LEFTSLIDE,
+                          headerAnimationLoop: false,
+                          dialogType: DialogType.SUCCES,
+                          title: AppLocalizations.of(context)
+                                  .translate('succes') ??
+                              'Succes',
+                          desc: AppLocalizations.of(context)
+                                  .translate('thank_you') ??
+                              'Thank you',
+                          btnOkOnPress: () async {
+                            await onAddFile(context);
+                          },
+                          btnCancelText: AppLocalizations.of(context)
+                                  .translate('cancel') ??
+                              "Cancel",
+                          btnCancelOnPress: () async {
+                            if (selectedValueCustomer == false) {
+                              setState(() {
+                                validateCustomer = true;
+                              });
+                            } else {
+                              await onSubmit(context);
+                              setState(() {
+                                validateCustomer = false;
+                              });
+                            }
+                          },
+                          btnCancelIcon: Icons.close,
+                          btnOkIcon: Icons.check_circle,
+                          btnOkColor: logolightGreen,
+                          btnOkText:
+                              AppLocalizations.of(context).translate('okay') ??
+                                  'Okay')
+                        ..show();
                     }
                   }),
             ],
@@ -487,7 +499,8 @@ class _EditLoanRegister extends State {
                     await getCustomer();
                     SelectDialog.showModal<String>(
                       context,
-                      label: 'Search',
+                      label: AppLocalizations.of(context).translate('Search') ??
+                          'Search',
                       items: List.generate(
                           listCustomers.length,
                           (index) =>
@@ -518,8 +531,8 @@ class _EditLoanRegister extends State {
                           fontWeight: fontWeight500),
                   texts: selectedValueCustmerName != ''
                       ? selectedValueCustmerName
-                      : "Customer",
-                  title: 'Customer',
+                      : "customer",
+                  title: 'customer',
                 ),
                 GroupFromBuilder(
                   icons: Icons.face,
@@ -531,8 +544,10 @@ class _EditLoanRegister extends State {
                       WhitelistingTextInputFormatter.digitsOnly
                     ],
                     textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      labelText: 'Customer ID',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('customer_id') ??
+                          "Customer ID",
                       border: InputBorder.none,
                     ),
                     onFieldSubmitted: (v) {
@@ -548,7 +563,10 @@ class _EditLoanRegister extends State {
                     },
                     validators: [
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric(errorText: 'Number only')
+                      FormBuilderValidators.numeric(
+                          errorText: AppLocalizations.of(context)
+                                  .translate('number_only') ??
+                              'Number only')
                     ],
                     readOnly: true,
                     keyboardType: TextInputType.number,
@@ -565,8 +583,10 @@ class _EditLoanRegister extends State {
                       WhitelistingTextInputFormatter.digitsOnly
                     ],
                     textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      labelText: 'Loan amount',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('loan_amount') ??
+                          'Loan amount',
                       border: InputBorder.none,
                     ),
                     focusNode: loanAmountFocus,
@@ -583,7 +603,10 @@ class _EditLoanRegister extends State {
                     },
                     validators: [
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric(errorText: 'Number only')
+                      FormBuilderValidators.numeric(
+                          errorText: AppLocalizations.of(context)
+                                  .translate('number_only') ??
+                              'Number only')
                     ],
                     keyboardType: TextInputType.number,
                   ),
@@ -594,13 +617,19 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderDropdown(
                       attribute: 'name',
                       decoration: InputDecoration(
-                        labelText: "Currencies",
+                        labelText: AppLocalizations.of(context)
+                                .translate('currencies') ??
+                            "Currencies",
                         border: InputBorder.none,
                       ),
                       validators: [
                         FormBuilderValidators.required(),
                       ],
-                      hint: Text(curcode ?? 'Currencies',
+                      hint: Text(
+                          curcode ??
+                              AppLocalizations.of(context)
+                                  .translate('currencies') ??
+                              'Currencies',
                           style: curcode != ''
                               ? TextStyle(color: Colors.black)
                               : TextStyle(color: Colors.grey)),
@@ -627,13 +656,19 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderDropdown(
                       attribute: 'name',
                       decoration: InputDecoration(
-                        labelText: "Loan Products",
+                        labelText: AppLocalizations.of(context)
+                                .translate('loan_products') ??
+                            "Loan Products",
                         border: InputBorder.none,
                       ),
                       validators: [
                         FormBuilderValidators.required(),
                       ],
-                      hint: Text(pcode ?? 'Loan Products',
+                      hint: Text(
+                          pcode ??
+                              AppLocalizations.of(context)
+                                  .translate('loan_products') ??
+                              'Loan Products',
                           style: pcode != ''
                               ? TextStyle(color: Colors.black)
                               : TextStyle(color: Colors.grey)),
@@ -662,8 +697,10 @@ class _EditLoanRegister extends State {
                     focusNode: numberOfTermFocus,
                     textInputAction: TextInputAction.next,
                     maxLength: 4,
-                    decoration: const InputDecoration(
-                      labelText: 'Number of term',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('number_of_term') ??
+                          'Number of term',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -694,8 +731,10 @@ class _EditLoanRegister extends State {
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(maintenanceFeeFocus);
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Interest rate',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('interest_rate') ??
+                          'Interest rate',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -728,8 +767,10 @@ class _EditLoanRegister extends State {
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(adminFeeFocus);
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Maintenance fee',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('maintenance_fee') ??
+                          'Maintenance fee',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -759,8 +800,10 @@ class _EditLoanRegister extends State {
                     focusNode: adminFeeFocus,
                     controller: adminFeeController,
                     textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      labelText: 'Admin fee',
+                    decoration: InputDecoration(
+                      labelText:
+                          AppLocalizations.of(context).translate('admin_fee') ??
+                              'Admin fee',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -788,7 +831,9 @@ class _EditLoanRegister extends State {
                   childs: FormBuilderDropdown(
                     attribute: 'name',
                     decoration: InputDecoration(
-                      labelText: "Repayment method",
+                      labelText: AppLocalizations.of(context)
+                              .translate('repayment_method') ??
+                          "Repayment method",
                       border: InputBorder.none,
                     ),
                     validators: [
@@ -819,31 +864,6 @@ class _EditLoanRegister extends State {
                 ),
                 GroupFromBuilder(
                   icons: Icons.date_range,
-                  keys: openData,
-                  childs: FormBuilderDateTimePicker(
-                    focusNode: openDataFocus,
-                    controller: openDataController,
-                    textInputAction: TextInputAction.next,
-                    inputType: InputType.date,
-                    onChanged: (v) {
-                      valueOpenDate = v ?? DateTime.now();
-                    },
-                    validators: [FormBuilderValidators.required()],
-                    format: DateFormat("yyyy-MM-dd"),
-                    decoration: InputDecoration(
-                      labelText: list.odate.toString() != ''
-                          ? getDateTimeYMD(
-                              list.odate ?? DateTime.now().toString())
-                          : "Open date",
-                      border: InputBorder.none,
-                      labelStyle: list.odate != null
-                          ? TextStyle(color: Colors.black)
-                          : null,
-                    ),
-                  ),
-                ),
-                GroupFromBuilder(
-                  icons: Icons.date_range,
                   keys: datehMaturityDate,
                   childs: FormBuilderDateTimePicker(
                     controller: datehMaturityDateController,
@@ -859,7 +879,9 @@ class _EditLoanRegister extends State {
                       labelText: list.mdate.toString() != ''
                           ? getDateTimeYMD(
                               list.mdate ?? DateTime.now().toString())
-                          : "Maturity date",
+                          : AppLocalizations.of(context)
+                                  .translate('maturity_date') ??
+                              "Maturity date",
                       border: InputBorder.none,
                       labelStyle: list.mdate != null
                           ? TextStyle(color: Colors.black)
@@ -886,7 +908,9 @@ class _EditLoanRegister extends State {
                       labelText: list.firdate.toString() != ''
                           ? getDateTimeYMD(
                               list.firdate ?? DateTime.now().toString())
-                          : "First repayment date",
+                          : AppLocalizations.of(context)
+                                  .translate('first_repayment_date') ??
+                              "First repayment date",
                       border: InputBorder.none,
                       labelStyle: list.firdate != null
                           ? TextStyle(color: Colors.black)
@@ -905,8 +929,10 @@ class _EditLoanRegister extends State {
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(loanPurposeFocus);
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Generate grace period number',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('generate_grace_period_number') ??
+                          'Generate grace period number',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -935,8 +961,10 @@ class _EditLoanRegister extends State {
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(referByWhoFocus);
                     },
-                    decoration: const InputDecoration(
-                      labelText: 'Loan purpose',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('loan_purpose') ??
+                          'Loan purpose',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -1023,8 +1051,10 @@ class _EditLoanRegister extends State {
                     // onFieldSubmitted: (v) {
                     //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
                     // },
-                    decoration: const InputDecoration(
-                      labelText: 'Refer by who',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('refer_by_who') ??
+                          'Refer by who',
                       border: InputBorder.none,
                     ),
                     onChanged: (v) {
@@ -1037,7 +1067,8 @@ class _EditLoanRegister extends State {
                 ),
                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                 AnimatedButton(
-                  text: 'Save',
+                  text:
+                      AppLocalizations.of(context).translate('save') ?? 'Save',
                   color: logolightGreen,
                   pressEvent: () {
                     if (loanAmount.currentState.saveAndValidate() &&
@@ -1050,32 +1081,41 @@ class _EditLoanRegister extends State {
                         ltvKey.currentState.saveAndValidate() &&
                         dscrKey.currentState.saveAndValidate()) {
                       AwesomeDialog(
-                        context: context,
-                        // animType: AnimType.LEFTSLIDE,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.SUCCES,
-                        title: 'Succes',
-                        desc: 'Thank you',
-                        btnOkOnPress: () async {
-                          await onAddFile(context);
-                        },
-                        btnCancelText: "Cancel",
-                        btnCancelOnPress: () async {
-                          if (selectedValueCustomer == false) {
-                            setState(() {
-                              validateCustomer = true;
-                            });
-                          } else {
-                            await onSubmit(context);
-                            setState(() {
-                              validateCustomer = false;
-                            });
-                          }
-                        },
-                        btnCancelIcon: Icons.close,
-                        btnOkIcon: Icons.check_circle,
-                        btnOkColor: logolightGreen,
-                      )..show();
+                          context: context,
+                          // animType: AnimType.LEFTSLIDE,
+                          headerAnimationLoop: false,
+                          dialogType: DialogType.SUCCES,
+                          title: AppLocalizations.of(context)
+                                  .translate('succes') ??
+                              'Succes',
+                          desc: AppLocalizations.of(context)
+                                  .translate('thank_you') ??
+                              'Thank you',
+                          btnOkOnPress: () async {
+                            await onAddFile(context);
+                          },
+                          btnCancelText: AppLocalizations.of(context)
+                                  .translate('cancel') ??
+                              "Cancel",
+                          btnCancelOnPress: () async {
+                            if (selectedValueCustomer == false) {
+                              setState(() {
+                                validateCustomer = true;
+                              });
+                            } else {
+                              await onSubmit(context);
+                              setState(() {
+                                validateCustomer = false;
+                              });
+                            }
+                          },
+                          btnCancelIcon: Icons.close,
+                          btnOkIcon: Icons.check_circle,
+                          btnOkColor: logolightGreen,
+                          btnOkText:
+                              AppLocalizations.of(context).translate('okay') ??
+                                  'Okay')
+                        ..show();
                     }
                   },
                 ),

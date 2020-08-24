@@ -4,6 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -434,7 +435,7 @@ class _CustomerRegister extends State {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 20.0 : 5.0;
     return Header(
-      headerTexts: 'Edit Customers Register',
+      headerTexts: 'edit_customers_register',
       actionsNotification: <Widget>[
         // Using Stack to show edit registration
         new Stack(
@@ -451,30 +452,39 @@ class _CustomerRegister extends State {
                     });
                   } else {
                     AwesomeDialog(
-                      context: context,
-                      // animType: AnimType.LEFTSLIDE,
-                      headerAnimationLoop: false,
-                      dialogType: DialogType.SUCCES,
-                      title: 'Succes',
-                      desc: 'Thank you',
-                      btnOkOnPress: () async {
-                        if (selectedValueVillage == 'Village code') {
-                          setState(() {
-                            validateVillage = true;
-                          });
-                        } else {
-                          await onSubmit(context);
-                          setState(() {
-                            validateVillage = false;
-                          });
-                        }
-                      },
-                      btnCancelText: "Cancel",
-                      btnCancelOnPress: () {},
-                      btnCancelIcon: Icons.close,
-                      btnOkIcon: Icons.check_circle,
-                      btnOkColor: logolightGreen,
-                    )..show();
+                        context: context,
+                        // animType: AnimType.LEFTSLIDE,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.SUCCES,
+                        title:
+                            AppLocalizations.of(context).translate('succes') ??
+                                'Succes',
+                        desc: AppLocalizations.of(context)
+                                .translate('thank_you') ??
+                            'Thank you',
+                        btnOkOnPress: () async {
+                          if (selectedValueVillage == 'Village code') {
+                            setState(() {
+                              validateVillage = true;
+                            });
+                          } else {
+                            await onSubmit(context);
+                            setState(() {
+                              validateVillage = false;
+                            });
+                          }
+                        },
+                        btnCancelText:
+                            AppLocalizations.of(context).translate('cancel') ??
+                                "Cancel",
+                        btnCancelOnPress: () {},
+                        btnCancelIcon: Icons.close,
+                        btnOkIcon: Icons.check_circle,
+                        btnOkColor: logolightGreen,
+                        btnOkText:
+                            AppLocalizations.of(context).translate('okay') ??
+                                'Okay')
+                      ..show();
                   }
                 }),
           ],
@@ -502,7 +512,9 @@ class _CustomerRegister extends State {
                         },
                         decoration: new InputDecoration(
                             border: InputBorder.none,
-                            labelText: 'Full Khmer Name'),
+                            labelText: AppLocalizations.of(context)
+                                    .translate('full_khmer_name') ??
+                                'Full Khmer Name'),
                         onChanged: (v) {
                           setState(() {
                             valueKhmerName = v;
@@ -529,10 +541,11 @@ class _CustomerRegister extends State {
                           FocusScope.of(context)
                               .requestFocus(datehofBrithFocus);
                         },
-                        decoration: const InputDecoration(
-                          labelText: 'Full English Name',
-                          border: InputBorder.none,
-                        ),
+                        decoration: new InputDecoration(
+                            border: InputBorder.none,
+                            labelText: AppLocalizations.of(context)
+                                    .translate('full_english_name') ??
+                                'Full English Name'),
                         onChanged: (v) {
                           setState(() {
                             valueEnglishName = v;
@@ -569,7 +582,9 @@ class _CustomerRegister extends State {
                           labelText: list.dob.toString() != ''
                               ? getDateTimeYMD(
                                   list.dob ?? DateTime.now().toString())
-                              : "Date of brith",
+                              : AppLocalizations.of(context)
+                                      .translate('date_of_brith') ??
+                                  "Date of brith",
                           labelStyle: TextStyle(color: Colors.black),
                           border: InputBorder.none,
                         ),
@@ -590,7 +605,10 @@ class _CustomerRegister extends State {
                           border: InputBorder.none,
                         ),
                         hint: Text(
-                          gender ?? 'Select Gender',
+                          gender ??
+                              AppLocalizations.of(context)
+                                  .translate('select_gender') ??
+                              'Select Gender',
                           style: TextStyle(color: Colors.black),
                         ),
                         onChanged: (value) {
@@ -616,10 +634,11 @@ class _CustomerRegister extends State {
                         focusNode: phoneKeyFocus,
                         controller: controllerPhone1,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number 1',
-                          border: InputBorder.none,
-                        ),
+                        decoration: new InputDecoration(
+                            border: InputBorder.none,
+                            labelText: AppLocalizations.of(context)
+                                    .translate('phone_number_1') ??
+                                'Phone Number 1'),
                         maxLength: 14,
                         onChanged: (v) {
                           valuePhone1 = v;
@@ -641,10 +660,11 @@ class _CustomerRegister extends State {
                         focusNode: phoneKey2Focus,
                         controller: controllerPhone2,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number 2',
-                          border: InputBorder.none,
-                        ),
+                        decoration: new InputDecoration(
+                            border: InputBorder.none,
+                            labelText: AppLocalizations.of(context)
+                                    .translate('phone_number_2') ??
+                                'Phone Number 2'),
                         maxLength: 14,
                         onChanged: (v) {
                           valuePhone2 = v;
@@ -666,8 +686,10 @@ class _CustomerRegister extends State {
                         focusNode: occupationOfCustomerFocus,
                         controller: controllerOccupationofCustomer,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Occupation of customer',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)
+                                  .translate('occupation_of_customer') ??
+                              "Occupation of customer",
                           border: InputBorder.none,
                         ),
                         onChanged: (v) {
@@ -684,7 +706,9 @@ class _CustomerRegister extends State {
                       childs: FormBuilderDropdown(
                           attribute: 'name',
                           decoration: InputDecoration(
-                            labelText: "Nation ID, Famliy book, Passport",
+                            labelText: AppLocalizations.of(context)
+                                    .translate('nation_id_family_book') ??
+                                "Nation ID, Famliy book, Passport",
                             border: InputBorder.none,
                           ),
                           validators: [
@@ -692,6 +716,8 @@ class _CustomerRegister extends State {
                           ],
                           hint: Text(
                             valueTextNationBookFamily ??
+                                AppLocalizations.of(context)
+                                    .translate('nation_id_family_book') ??
                                 'Nation ID, Famliy book, Passport',
                             style: TextStyle(color: Colors.black),
                           ),
@@ -720,8 +746,10 @@ class _CustomerRegister extends State {
                         onEditingComplete: () => FocusScope.of(context)
                             .requestFocus(nextVisitDateFocus),
                         maxLength: 9,
-                        decoration: const InputDecoration(
-                          labelText: 'Nation ID, Famliy book, Passport',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)
+                                  .translate('nation_id_family_book') ??
+                              "Nation ID, Family book, Passport",
                           border: InputBorder.none,
                         ),
                         onChanged: (v) {
@@ -758,6 +786,8 @@ class _CustomerRegister extends State {
                         decoration: InputDecoration(
                           labelText: getDateTimeYMD(
                                   list.ndate ?? DateTime.now().toString()) ??
+                              AppLocalizations.of(context)
+                                  .translate('next_visit_date') ??
                               "Next visit date",
                           labelStyle: list.ndate != null
                               ? TextStyle(color: Colors.black)
@@ -772,11 +802,16 @@ class _CustomerRegister extends State {
                       childs: FormBuilderDropdown(
                         attribute: 'name',
                         decoration: InputDecoration(
-                          labelText: "Prospective",
+                          labelText: AppLocalizations.of(context)
+                                  .translate('prospective') ??
+                              "Prospective",
                           border: InputBorder.none,
                         ),
                         hint: Text(
-                          valueProspective ?? 'Prospective Y=Yes, N=No',
+                          valueProspective ??
+                              AppLocalizations.of(context)
+                                  .translate('prospective') ??
+                              'Prospective Y=Yes, N=No',
                           style: TextStyle(color: Colors.black),
                         ),
                         style: TextStyle(color: Colors.black),
@@ -803,11 +838,16 @@ class _CustomerRegister extends State {
                       childs: FormBuilderDropdown(
                         attribute: 'name',
                         decoration: InputDecoration(
-                          labelText: "G=Gurantor, C=Customer",
+                          labelText: AppLocalizations.of(context)
+                                  .translate('guarantor_customer') ??
+                              "G=Gurantor, C=Customer",
                           border: InputBorder.none,
                         ),
                         hint: Text(
-                          valueGurantorCustomer ?? 'G=Gurantor, C=Customer',
+                          valueGurantorCustomer ??
+                              AppLocalizations.of(context)
+                                  .translate('guarantor_customer') ??
+                              'G=Gurantor, C=Customer',
                           style: TextStyle(color: Colors.black),
                         ),
                         onChanged: (value) {
@@ -842,7 +882,9 @@ class _CustomerRegister extends State {
                       onInSidePress: () {
                         SelectDialog.showModal<String>(
                           context,
-                          label: 'Search',
+                          label: AppLocalizations.of(context)
+                                  .translate('search') ??
+                              'Search',
                           items: List.generate(listProvince.length,
                               (index) => "${listProvince[index]['prodes']}"),
                           onChange: (value) {
@@ -858,7 +900,7 @@ class _CustomerRegister extends State {
                       },
                       selectedValue: selectedValueProvince,
                       texts: selectedValueProvince,
-                      title: 'Province code',
+                      title: 'province_code',
                       readOnlys: true,
                       iconsClose: Icon(Icons.close),
                       onPressed: () {
@@ -896,15 +938,17 @@ class _CustomerRegister extends State {
                           : null,
                       texts: selectedValueDistrict != ''
                           ? selectedValueDistrict
-                          : 'District code',
-                      title: 'District code',
+                          : 'district_code',
+                      title: 'district_code',
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
                         if (districtreadOnlys == true) {
                           await getDistrict();
                           await SelectDialog.showModal<String>(
                             context,
-                            label: 'Search',
+                            label: AppLocalizations.of(context)
+                                    .translate('search') ??
+                                'Search',
                             items: List.generate(listDistricts.length,
                                 (index) => "${listDistricts[index]['disdes']}"),
                             onChange: (value) {
@@ -954,7 +998,9 @@ class _CustomerRegister extends State {
                           await getCommune();
                           SelectDialog.showModal<String>(
                             context,
-                            label: 'Search',
+                            label: AppLocalizations.of(context)
+                                    .translate('search') ??
+                                'Search',
                             items: List.generate(listComunes.length,
                                 (index) => "${listComunes[index]['comdes']}"),
                             onChange: (value) {
@@ -973,7 +1019,7 @@ class _CustomerRegister extends State {
                           villagereadOnlys = false;
                         });
                       },
-                      title: 'Commune code',
+                      title: 'commune_code',
                       styleTexts: selectedValueCommune != ''
                           ? TextStyle(
                               fontFamily: fontFamily,
@@ -987,7 +1033,7 @@ class _CustomerRegister extends State {
                               fontWeight: fontWeight500),
                       texts: selectedValueCommune != ''
                           ? selectedValueCommune
-                          : "Commune code",
+                          : "commune_code",
                       readOnlys: communereadOnlys,
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -1005,7 +1051,9 @@ class _CustomerRegister extends State {
                           await getVillage();
                           SelectDialog.showModal<String>(
                             context,
-                            label: 'Search',
+                            label: AppLocalizations.of(context)
+                                    .translate('search') ??
+                                'Search',
                             items: List.generate(listVillages.length,
                                 (index) => "${listVillages[index]['vildes']}"),
                             onChange: (value) async {
@@ -1043,8 +1091,8 @@ class _CustomerRegister extends State {
                               fontWeight: fontWeight500),
                       texts: selectedValueVillage != ''
                           ? selectedValueVillage
-                          : "Village code",
-                      title: 'Village code',
+                          : "village_code",
+                      title: 'village_code',
                       readOnlys: villagereadOnlys,
                     ),
                     Card(
@@ -1070,7 +1118,10 @@ class _CustomerRegister extends State {
                                     child: Container(
                                       width: 240,
                                       child: Text(
-                                        _currentAddress ?? "Get location",
+                                        _currentAddress ??
+                                            AppLocalizations.of(context)
+                                                .translate('get_location') ??
+                                            "Get location",
                                         textAlign: TextAlign.center,
                                         style: _currentAddress != ""
                                             ? TextStyle(
@@ -1105,7 +1156,8 @@ class _CustomerRegister extends State {
                     ),
                     Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
                     AnimatedButton(
-                      text: 'Submit',
+                      text: AppLocalizations.of(context).translate('submit') ??
+                          'Submit',
                       color: logolightGreen,
                       pressEvent: () {
                         if (selectedValueVillage == 'Village code') {
@@ -1118,8 +1170,12 @@ class _CustomerRegister extends State {
                             // animType: AnimType.LEFTSLIDE,
                             headerAnimationLoop: false,
                             dialogType: DialogType.SUCCES,
-                            title: 'Succes',
-                            desc: 'Thank you',
+                            title: AppLocalizations.of(context)
+                                    .translate('succes') ??
+                                'Succes',
+                            desc: AppLocalizations.of(context)
+                                    .translate('thank_you') ??
+                                'Thank you',
                             btnOkOnPress: () async {
                               if (selectedValueVillage == 'Village code') {
                                 setState(() {
@@ -1132,7 +1188,9 @@ class _CustomerRegister extends State {
                                 });
                               }
                             },
-                            btnCancelText: "Cancel",
+                            btnCancelText: AppLocalizations.of(context)
+                                    .translate('cancel') ??
+                                "Cancel",
                             btnCancelOnPress: () {},
                             btnCancelIcon: Icons.close,
                             btnOkIcon: Icons.check_circle,

@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:select_dialog/select_dialog.dart';
@@ -56,14 +57,20 @@ class DropDownCustomerRegister extends StatelessWidget {
                         () {
                           readOnlys
                               ? SelectDialog.showModal<String>(context,
-                                  label: texts ?? 'Search',
+                                  label: AppLocalizations.of(context)
+                                          .translate(texts) ??
+                                      'Search',
                                   items: items,
                                   onChange: onChanged,
                                   autofocus: autofocus)
                               : null;
                         },
                     child: Container(
-                        child: Text(texts ?? title, style: styleTexts))),
+                        child: Text(
+                            texts ??
+                                AppLocalizations.of(context).translate(title) ??
+                                '',
+                            style: styleTexts))),
               ),
               if (clear == true)
                 Container(

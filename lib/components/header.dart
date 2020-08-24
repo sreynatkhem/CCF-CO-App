@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class Header extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          headerTexts,
+          AppLocalizations.of(context).translate(headerTexts) ?? headerTexts,
           style: mainTitleStyle,
         ),
         actions: actionsNotification,
