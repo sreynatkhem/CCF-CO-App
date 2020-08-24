@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chokchey_finance/components/ListDatial.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/models/detialApproval.dart';
 import 'package:chokchey_finance/models/requestDetailLoan.dart';
 import 'package:chokchey_finance/models/requestLoanApproval.dart';
@@ -43,25 +44,34 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
     switch (value) {
       case 'R':
         {
-          return Text('Request', style: mainTitleBlack);
+          return Text(
+              AppLocalizations.of(context).translate('request') ?? 'Request',
+              style: mainTitleBlack);
         }
         break;
 
       case 'A':
         {
-          return Text('Approved', style: mainTitleBlack);
+          return Text(
+              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              style: mainTitleBlack);
         }
         break;
 
       case 'D':
         {
-          return Text('Disapprove', style: mainTitleBlack);
+          return Text(
+              AppLocalizations.of(context).translate('disapprove') ??
+                  'Disapprove',
+              style: mainTitleBlack);
         }
         break;
 
       case 'T':
         {
-          return Text('Return', style: mainTitleBlack);
+          return Text(
+              AppLocalizations.of(context).translate('return') ?? 'Return',
+              style: mainTitleBlack);
         }
         break;
       default:
@@ -131,7 +141,6 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
-        print('list::: ${list['loanApplications']}');
         setState(() {
           getListDetail = list['loanApplications'];
         });

@@ -282,7 +282,6 @@ class _EditLoanRegister extends State {
               valueAdminFee,
               valueMaintenanceFee,
               valueRepaymentMethod,
-              valueOpenDate,
               valueMaturityDate,
               valueFirstRepaymentDate,
               valueGenerateGracePeriodNumber,

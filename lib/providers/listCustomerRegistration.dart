@@ -14,9 +14,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   final storage = new FlutterSecureStorage();
   Future<List<Customers>> fetchListCustomerRegistration(
       _pageSize, _pageNumber) async {
-    print(_pageSize);
-    print(_pageNumber);
-
     _isFetching = true;
     try {
       _isFetching = false;

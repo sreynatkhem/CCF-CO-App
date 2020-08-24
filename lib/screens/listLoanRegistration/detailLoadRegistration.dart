@@ -107,7 +107,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     setState(() {
       _imageDocument = parsed;
     });
-    logger().w('parsed: ${parsed} ');
   }
 
   @override

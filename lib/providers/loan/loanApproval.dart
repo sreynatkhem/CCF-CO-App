@@ -59,7 +59,6 @@ class LoanApproval with ChangeNotifier {
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.add(jsonDecode(response.body));
-        // print('statusCode::: ${parsed}');
         notifyListeners();
         return parsed
             .map<RequestDetailLoan>((json) => RequestDetailLoan.fromJson(json))
@@ -87,7 +86,6 @@ class LoanApproval with ChangeNotifier {
           },
           body: bodyRow);
       final parsed = jsonDecode(response.body);
-      print("parsed $parsed");
       notifyListeners();
     } catch (error) {
       print("error $error");
