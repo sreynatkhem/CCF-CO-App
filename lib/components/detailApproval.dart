@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/models/detialApproval.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -19,35 +20,40 @@ class DetailApprovalListCard extends StatelessWidget {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => Detail(value.)));
   }
 
-  statusApproval(value) {
+  statusApproval(value, context) {
     switch (value) {
       case '10':
         {
-          return Text('Request');
+          return Text(
+              AppLocalizations.of(context).translate('request') ?? 'Request');
         }
         break;
 
       case '20':
         {
-          return Text('Approved');
+          return Text(
+              AppLocalizations.of(context).translate('approved') ?? 'Approved');
         }
         break;
 
       case '30':
         {
-          return Text('Final Approve');
+          return Text(AppLocalizations.of(context).translate('final_approve') ??
+              'Final Approve');
         }
         break;
 
       case '80':
         {
-          return Text('Return');
+          return Text(
+              AppLocalizations.of(context).translate('return') ?? 'Return');
         }
         break;
 
       case '90':
         {
-          return Text('Reject');
+          return Text(
+              AppLocalizations.of(context).translate('reject') ?? 'Reject');
         }
         break;
       case '':
@@ -64,7 +70,7 @@ class DetailApprovalListCard extends StatelessWidget {
     }
   }
 
-  statusApprovalImage(value) {
+  statusApprovalImage(value, context) {
     switch (value) {
       case '10':
         {
@@ -124,11 +130,11 @@ class DetailApprovalListCard extends StatelessWidget {
               DateTime.parse(approvalListDetail[index].applicationDate);
           String dateTimeCreated =
               DateFormat("yyyy-MM-dd").format(dateTimeParseCreated);
-          var status =
-              statusApproval(approvalListDetail[index].evaluateStatusCode);
+          var status = statusApproval(
+              approvalListDetail[index].evaluateStatusCode, context);
           var imageStatus = approvalListDetail[index].evaluateStatusCode != null
               ? statusApprovalImage(
-                  approvalListDetail[index].evaluateStatusCode)
+                  approvalListDetail[index].evaluateStatusCode, context)
               : _imagesList;
 
           return Container(

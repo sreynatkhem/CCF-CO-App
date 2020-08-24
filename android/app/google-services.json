@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "805483562052",
-    "firebase_url": "https://cff-application-test.firebaseio.com",
-    "project_id": "cff-application-test",
-    "storage_bucket": "cff-application-test.appspot.com"
+    "project_number": "775185412465",
+    "firebase_url": "https://ccfcoapp.firebaseio.com",
+    "project_id": "ccfcoapp",
+    "storage_bucket": "ccfcoapp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:805483562052:android:ed75b94bbcef00b3c56811",
+        "mobilesdk_app_id": "1:775185412465:android:922d1cb18da0a86b14c6d0",
         "android_client_info": {
-          "package_name": "com.example.chokchey_finance"
+          "package_name": "com.ccf.coapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "805483562052-0vd1ghqmv7p6bc5jprmur70tvmb5q6nf.apps.googleusercontent.com",
+          "client_id": "775185412465-ritqfovs858kbgckm43lf2krjqspa383.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCUq5qnyDXJkJ2egDKAcEprmyGKwfERiow"
+          "current_key": "AIzaSyAj6WY6YckgCGhKwJ7Dq3AuN-_fbpoEC2s"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "805483562052-0vd1ghqmv7p6bc5jprmur70tvmb5q6nf.apps.googleusercontent.com",
+              "client_id": "775185412465-ritqfovs858kbgckm43lf2krjqspa383.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

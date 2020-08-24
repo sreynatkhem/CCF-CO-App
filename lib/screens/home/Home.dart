@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
@@ -15,6 +16,7 @@ import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -39,11 +41,11 @@ class _HomeState extends State<Home> {
 
   var profile;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  // }
 
   @override
   void dispose() {
@@ -56,6 +58,67 @@ class _HomeState extends State<Home> {
     getStoreUser();
     profile = const AssetImage('assets/images/profile_create.jpg');
     super.didChangeDependencies();
+  }
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        // _showItemDialog(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // _navigateToItemDetail(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // _navigateToItemDetail(message);
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      // setState(() {
+      //   _homeScreenText = "Push Messaging token: $token";
+      // });
+      postTokenPushNotification(token);
+      print("_homeScreenText: ${token}");
+    });
+  }
+
+  postTokenPushNotification(tokens) async {
+    var token = await storage.read(key: 'user_token');
+    var user_ucode = await storage.read(key: "user_ucode");
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+    var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+    logger().e('bodyRow ${bodyRow}');
+    try {
+      final response = await api().post(
+          baseURLInternal + 'users/' + user_ucode + '/mtoken',
+          headers: headers,
+          body: bodyRow);
+      // var parse = jsonDecode(response.body);
+      logger().e('url ${baseURLInternal + 'users/' + user_ucode + '/mtoken'}');
+
+      // print('parse:: ${parse}');
+      print('response:: ${response}');
+    } catch (error) {
+      print('error:: ${error}');
+    }
   }
 
   List<Object> userRoles = [];
@@ -173,26 +236,26 @@ class _HomeState extends State<Home> {
                     CustomListTile(
                         Icons.monetization_on,
                         AppLocalizations.of(context)
-                                .translate('list_loan_approval') ??
-                            'List Loan Approval',
+                                .translate('approval_list') ??
+                            'Approval List',
                         () => {onListLoanApproval()}),
                     CustomListTile(
                         Icons.face,
                         AppLocalizations.of(context)
-                                .translate('list_customer_registration') ??
-                            'List Customer Registration',
+                                .translate('loan_register_list') ??
+                            'Loan Register List',
                         () => {onListCustomerRegistration()}),
                     CustomListTile(
                         Icons.payment,
                         AppLocalizations.of(context)
-                                .translate('list_loan_registration') ??
-                            'List Loan Registration',
+                                .translate('customer_list') ??
+                            'Customer List',
                         () => {onListLoanRegistration()}),
                     CustomListTile(
                         Icons.language,
                         AppLocalizations.of(context)
                                 .translate('english_language') ??
-                            'English Language',
+                            'English',
                         () => {englishLanguage()}),
                     CustomListTile(
                         Icons.language, 'ភាសាខ្មែរ', () => {khmerLanguage()}),

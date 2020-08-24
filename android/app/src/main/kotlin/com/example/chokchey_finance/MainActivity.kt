@@ -1,4 +1,4 @@
-package com.example.chokchey_finance
+package com.ccf.coapp
 
 import io.flutter.embedding.android.FlutterActivity
 

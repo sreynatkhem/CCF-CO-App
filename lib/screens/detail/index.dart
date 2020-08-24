@@ -135,7 +135,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
                     constraints: BoxConstraints.expand(height: 50),
                     child: TabBar(indicatorColor: Colors.white, tabs: [
                       Tab(
-                        text: "Detail",
+                        text:
+                            AppLocalizations.of(context).translate('detail') ??
+                                "Detail",
                         icon: Icon(
                           Icons.details,
                           size: 20,
@@ -148,14 +150,18 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             size: 20,
                           ),
                           iconMargin: EdgeInsets.all(0),
-                          text: "Approved"),
+                          text: AppLocalizations.of(context)
+                                  .translate('approved') ??
+                              "Approved"),
                       Tab(
                           icon: Icon(
                             Icons.comment,
                             size: 20,
                           ),
                           iconMargin: EdgeInsets.all(0),
-                          text: "Comments"),
+                          text: AppLocalizations.of(context)
+                                  .translate('comments') ??
+                              "Comments"),
                     ]),
                   ),
                   Expanded(
@@ -196,7 +202,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             reject(context);
                           },
                           color: Colors.red,
-                          text: 'Reject'),
+                          text: AppLocalizations.of(context)
+                                  .translate('reject') ??
+                              'Reject'),
                       Padding(padding: EdgeInsets.only(right: 5)),
                       Button(
                           widtdButton: _widtdButton,
@@ -206,7 +214,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             returnFuc(context);
                           },
                           color: Colors.grey,
-                          text: 'Return'),
+                          text: AppLocalizations.of(context)
+                                  .translate('return') ??
+                              'Return'),
                       Padding(padding: EdgeInsets.only(right: 5)),
                       Button(
                           widtdButton: _widtdButton,
@@ -216,7 +226,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             authrize(context);
                           },
                           color: logolightGreen,
-                          text: 'Authrize'),
+                          text: AppLocalizations.of(context)
+                                  .translate('authrize') ??
+                              'Authrize'),
                     ],
                   )),
                 )),

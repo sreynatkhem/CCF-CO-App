@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:chokchey_finance/components/detailApproval.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/models/detialApproval.dart';
 import 'package:chokchey_finance/providers/detialJson.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -100,7 +101,8 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
             Text(
-              'Approval Lists',
+              AppLocalizations.of(context).translate('approval_lists') ??
+                  'Approval Lists',
               style: mainTitleStyle,
             ),
           ],
@@ -113,8 +115,9 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
     return new TextField(
       controller: _searchQuery,
       autofocus: true,
-      decoration: const InputDecoration(
-        hintText: 'Search...',
+      decoration: InputDecoration(
+        hintText:
+            AppLocalizations.of(context).translate('search') ?? 'Search...',
         border: InputBorder.none,
         hintStyle: const TextStyle(
             color: Colors.white30,

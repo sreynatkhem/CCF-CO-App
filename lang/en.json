@@ -11,7 +11,7 @@
   "list_customer_registration": "List Customer Registration",
   "list_loan_registration": "List Loan Registration",
   "loan_registration": "Loan Registration",
-  "english_language": "English Language",
+  "english_language": "English",
   "log_out": "Log Out",
   "your_id": "Your ID",
   "policy": "Policy",
@@ -76,5 +76,10 @@
   "okay": "okay",
   "succes": "Succes",
   "thank_you": "Thank you",
-  "edit_loans_register": "Edit Loans Register"
+  "edit_loans_register": "Edit Loans Register",
+  "request": "Request",
+  "final_approve": "Final Approve",
+  "approval_list": "Approval List",
+  "loan_register_list": "Loan Register List",
+  "customer_list": "Customer List"
 }
