@@ -350,28 +350,6 @@ class _CustomerRegister extends State {
   var ccode;
   onSubmit(context) async {
     try {
-      print({
-        list.ccode,
-        list.acode,
-        list.rdate,
-        valueKhmerName,
-        valueEnglishName,
-        valueDatehofBrith,
-        gender,
-        valuePhone1,
-        valuePhone2,
-        valueOccupationOfCustomer,
-        ntypes,
-        valueNationIdentification,
-        valueNextVisitDate,
-        valueProspective,
-        valueGurantorCustomer,
-        idProvince,
-        idDistrict,
-        idCommune,
-        idVillage,
-        _currentAddress
-      });
       if (khmerName.currentState.saveAndValidate() &&
           englishName.currentState.saveAndValidate()) {
         var ccdoe = list.ccode;

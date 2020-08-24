@@ -59,6 +59,7 @@
   "comments": "Comments",
   "reject": "Reject",
   "return": "Return",
+  "disapprove": "Disapprove",
   "authrize": "Authrize",
   "customer_khmer_name": "Customer Khmer Name",
   "loan_id": "Loan ID",
@@ -81,5 +82,6 @@
   "final_approve": "Final Approve",
   "approval_list": "Approval List",
   "loan_register_list": "Loan Register List",
-  "customer_list": "Customer List"
+  "customer_list": "Customer List",
+  "open": "Open"
 }

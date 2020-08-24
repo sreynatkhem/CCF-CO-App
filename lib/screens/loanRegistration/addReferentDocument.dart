@@ -649,7 +649,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      print('PickedFile: ${pickedFile.toString()}');
       setState(() {
         _imageNation = File(pickedFile.path); // Exception occurred here
       });
@@ -666,7 +665,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      print('PickedFile: ${pickedFile.toString()}');
       setState(() {
         _imageFamily = File(pickedFile.path); // Exception occurred here
       });

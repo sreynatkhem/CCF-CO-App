@@ -79,8 +79,10 @@
   "thank_you": "សូមអរគុណ",
   "edit_loans_register": "កែសម្រួលការចុះឈ្មោះខ្ចីប្រាក់",
   "request": "សំណើ",
+  "disapprove": "មិនពេញចិត្ត",
   "final_approve": "អនុម័តចុងក្រោយ",
   "approval_list": "បញ្ជីអនុម័ត",
   "loan_register_list": "បញ្ជីចុះឈ្មោះប្រាក់កម្ចី",
-  "customer_list": "បញ្ជីអតិថិជន"
+  "customer_list": "បញ្ជីអតិថិជន",
+  "open": "បើក"
 }

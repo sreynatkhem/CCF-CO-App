@@ -119,6 +119,56 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
     } catch (error) {}
   }
 
+  final _imagesFindApproval =
+      const AssetImage('assets/images/profile_create.jpg');
+  statusApproval(value) {
+    switch (value) {
+      case 'R':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('request') ?? 'Request',
+              style: mainTitleBlack);
+        }
+        break;
+
+      case 'A':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              style: mainTitleBlack);
+        }
+        break;
+
+      case 'D':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('disapprove') ??
+                  'Disapprove',
+              style: mainTitleBlack);
+        }
+        break;
+
+      case 'T':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('return') ?? 'Return',
+              style: mainTitleBlack);
+        }
+        break;
+      case 'O':
+        {
+          return Text(AppLocalizations.of(context).translate('open') ?? 'Open',
+              style: mainTitleBlack);
+        }
+        break;
+      default:
+        {
+          return Text('', style: mainTitleBlack);
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     futureListLoanRegistraiton =
@@ -148,15 +198,92 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
                   child: ListView.builder(
                       itemCount: parsed.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return CardState(
-                          texts: '${parsed[index]['customer']}',
-                          textTwo: '${parsed[index]['lpourpose']}',
-                          id: '\$ ${parsed[index]['lamt']}',
-                          phone: '${parsed[index]['currency']}',
-                          images: profile,
-                          onTaps: () {
-                            onTapsDetail(parsed[index]);
-                          },
+                        var status = statusApproval(parsed[index]['lstatus']);
+                        return Container(
+                          height: 110,
+                          margin: EdgeInsets.only(bottom: 5.0),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                side:
+                                    BorderSide(color: logolightGreen, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: InkWell(
+                                  splashColor: Colors.blue.withAlpha(30),
+                                  onTap: () {
+                                    onTapsDetail(parsed[index]);
+                                  },
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 5)),
+                                            Image(
+                                              image: _imagesFindApproval,
+                                              width: 50,
+                                              height: 50,
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 15)),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Container(
+                                                    child: Text(
+                                                  '${parsed[index]['customer']}',
+                                                  style: mainTitleBlack,
+                                                )),
+                                                Text(
+                                                    '${parsed[index]['lpourpose']}'),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 2)),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 2)),
+                                                Text(
+                                                    '\$ ${parsed[index]['lamt']}'),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 2)),
+                                                Text(
+                                                    '${parsed[index]['currency']}'),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: 2)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 2)),
+                                            status,
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                              top: 5,
+                                            )),
+                                            Text(parsed[index]['lcode']),
+                                            Text(''),
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                              right: 100,
+                                            ))
+                                          ],
+                                        ),
+                                      ]))),
                         );
                       }))),
     );

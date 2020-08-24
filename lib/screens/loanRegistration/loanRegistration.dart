@@ -201,7 +201,6 @@ class _LoanRegister extends State {
               valueAdminFee,
               valueMaintenanceFee,
               valueRepaymentMethod,
-              valueOpenDate,
               valueMaturityDate,
               valueFirstRepaymentDate,
               valueGenerateGracePeriodNumber,
@@ -227,7 +226,6 @@ class _LoanRegister extends State {
     onSubmit(context);
     listLoan =
         await Provider.of<LoanInternal>(context, listen: false).dataRegist;
-    logger.e(' print("onAddFile listLoan:: ${listLoan}");');
     if (listLoan != null && listLoan.length > 0) {
       Navigator.push(
         context,
@@ -721,8 +719,6 @@ class _LoanRegister extends State {
                           onChanged: (value) {
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() => valueRepaymentMethod = value);
-                            print(
-                                'valueRepaymentMethod: $valueRepaymentMethod');
                           },
                           items: [
                             'Declining',
@@ -943,7 +939,6 @@ class _LoanRegister extends State {
                               maintenanceFee.currentState.saveAndValidate() &&
                               adminFee.currentState.saveAndValidate() &&
                               repaymentMethod.currentState.saveAndValidate() &&
-                              openData.currentState.saveAndValidate() &&
                               datehMaturityDate.currentState
                                   .saveAndValidate() &&
                               firstRepaymentDate.currentState

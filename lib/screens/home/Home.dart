@@ -92,7 +92,6 @@ class _HomeState extends State<Home> {
       //   _homeScreenText = "Push Messaging token: $token";
       // });
       postTokenPushNotification(token);
-      print("_homeScreenText: ${token}");
     });
   }
 
@@ -105,17 +104,11 @@ class _HomeState extends State<Home> {
       "Authorization": "Bearer $token"
     };
     var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
-    logger().e('bodyRow ${bodyRow}');
     try {
       final response = await api().post(
           baseURLInternal + 'users/' + user_ucode + '/mtoken',
           headers: headers,
           body: bodyRow);
-      // var parse = jsonDecode(response.body);
-      logger().e('url ${baseURLInternal + 'users/' + user_ucode + '/mtoken'}');
-
-      // print('parse:: ${parse}');
-      print('response:: ${response}');
     } catch (error) {
       print('error:: ${error}');
     }
@@ -172,7 +165,6 @@ class _HomeState extends State<Home> {
   }
 
   englishLanguage() {
-    logger().i('english');
     Locale _temp;
     _temp = Locale('en', 'US');
     MyHomePage.setLocale(context, _temp);

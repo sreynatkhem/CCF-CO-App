@@ -67,8 +67,6 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var lcode = value['lcode'];
     var rdate = value['rdate'];
     var roleList = userRoles;
-    print({rcode, ucode, bcode, lcode, rdate, roleList});
-
     setState(() {
       _isLoading = true;
     });
@@ -94,8 +92,6 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var lcode = value['lcode'];
     var rdate = value['rdate'];
     var roleList = userRoles;
-    print({rcode, ucode, bcode, lcode, rdate, roleList});
-
     setState(() {
       _isLoading = true;
     });
@@ -121,8 +117,6 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var lcode = value['lcode'];
     var rdate = value['rdate'];
     var roleList = userRoles;
-    print({rcode, ucode, bcode, lcode, rdate, roleList});
-
     setState(() {
       _isLoading = true;
     });
