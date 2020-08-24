@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/models/approvalList.dart';
 import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -28,7 +29,8 @@ class ApprovalListCard extends StatelessWidget {
         approvalList.length <= 0) {
       return Center(
         child: Text(
-          'No approval list',
+          AppLocalizations.of(context).translate('no_approval_list') ??
+              'No approval list',
           style: mainTitleBlack,
         ),
       );

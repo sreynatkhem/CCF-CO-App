@@ -4,6 +4,7 @@ import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
@@ -13,10 +14,11 @@ import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart'
 import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import '../../main.dart';
 import 'Menu.dart';
 
 class Home extends StatefulWidget {
@@ -59,12 +61,22 @@ class _HomeState extends State<Home> {
   List<Object> userRoles = [];
 
   getStoreUser() async {
-    String user_id = await storage.read(key: 'user_id');
-    String user_name = await storage.read(key: 'user_name');
-    setState(() {
-      userName = user_name ?? '';
-      userId = user_id ?? '';
-    });
+    var langCode = AppLocalizations.of(context).locale.languageCode;
+    if (langCode == 'en') {
+      String user_id = await storage.read(key: 'user_id');
+      String user_name = await storage.read(key: 'user_name');
+      setState(() {
+        userName = user_name ?? '';
+        userId = user_id ?? '';
+      });
+    } else {
+      String user_id = await storage.read(key: 'user_id');
+      String user_name = await storage.read(key: 'user_name');
+      setState(() {
+        userName = user_name ?? '';
+        userId = user_id ?? '';
+      });
+    }
   }
 
   onLogOut() async {
@@ -94,6 +106,19 @@ class _HomeState extends State<Home> {
         context,
         MaterialPageRoute(builder: (context) => ListLoanRegistration()),
         ModalRoute.withName(""));
+  }
+
+  englishLanguage() {
+    logger().i('english');
+    Locale _temp;
+    _temp = Locale('en', 'US');
+    MyHomePage.setLocale(context, _temp);
+  }
+
+  khmerLanguage() {
+    Locale _temp;
+    _temp = Locale('km', 'KH');
+    MyHomePage.setLocale(context, _temp);
   }
 
   _drawerList(context) {
@@ -127,7 +152,8 @@ class _HomeState extends State<Home> {
                   ),
                   Center(
                     child: Text(
-                      " Your ID: ${userId ?? null} ",
+                      "${AppLocalizations.of(context).translate('your_id')} : ${userId}" ??
+                          'Your ID:  ${userId}',
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
@@ -144,13 +170,37 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
                 child: Column(
                   children: <Widget>[
-                    CustomListTile(Icons.monetization_on, 'List Loan Approval',
+                    CustomListTile(
+                        Icons.monetization_on,
+                        AppLocalizations.of(context)
+                                .translate('list_loan_approval') ??
+                            'List Loan Approval',
                         () => {onListLoanApproval()}),
-                    CustomListTile(Icons.face, 'List Customer Registration',
+                    CustomListTile(
+                        Icons.face,
+                        AppLocalizations.of(context)
+                                .translate('list_customer_registration') ??
+                            'List Customer Registration',
                         () => {onListCustomerRegistration()}),
-                    CustomListTile(Icons.payment, 'List Loan Registration',
+                    CustomListTile(
+                        Icons.payment,
+                        AppLocalizations.of(context)
+                                .translate('list_loan_registration') ??
+                            'List Loan Registration',
                         () => {onListLoanRegistration()}),
-                    CustomListTile(Icons.lock, 'Log Out', () => {onLogOut()}),
+                    CustomListTile(
+                        Icons.language,
+                        AppLocalizations.of(context)
+                                .translate('english_language') ??
+                            'English Language',
+                        () => {englishLanguage()}),
+                    CustomListTile(
+                        Icons.language, 'ភាសាខ្មែរ', () => {khmerLanguage()}),
+                    CustomListTile(
+                        Icons.lock,
+                        AppLocalizations.of(context).translate('log_out') ??
+                            'Log Out',
+                        () => {onLogOut()}),
                     Padding(padding: EdgeInsets.only(top: 10)),
                   ],
                 ),
@@ -169,6 +219,7 @@ class _HomeState extends State<Home> {
   final policy = const AssetImage('assets/images/policy.png');
   @override
   Widget build(BuildContext context) {
+    var langCode = AppLocalizations.of(context).locale.languageCode;
     var test = storage.read(key: 'roles');
     test.then(
       (value) => setState(() {
@@ -179,7 +230,7 @@ class _HomeState extends State<Home> {
       drawers: new Drawer(
         child: _drawerList(context),
       ),
-      headerTexts: 'Loan',
+      headerTexts: AppLocalizations.of(context).translate('loan'),
       actionsNotification: <Widget>[
         // Using Stack to show Notification Badge
         new Stack(
@@ -247,7 +298,8 @@ class _HomeState extends State<Home> {
                               ),
                               color: logolightGreen,
                               imageNetwork: list,
-                              text: 'List Loan Approve',
+                              text: AppLocalizations.of(context)
+                                  .translate('list_loan_approval'),
                             );
                           }
                           if (userRoles[index].toString() == '100001') {
@@ -255,18 +307,39 @@ class _HomeState extends State<Home> {
                               padding: EdgeInsets.all(10),
                             );
                           }
+
                           if (userRoles[index].toString() == '100002') {
-                            return MenuCard(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CustomerRegister()),
-                              ),
-                              color: logolightGreen,
-                              imageNetwork: register,
-                              text: 'Customer',
-                              text2: 'Registration',
-                            );
+                            if (langCode == 'en') {
+                              return MenuCard(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CustomerRegister()),
+                                ),
+                                color: logolightGreen,
+                                imageNetwork: register,
+                                text: AppLocalizations.of(context)
+                                        .translate('customer') ??
+                                    'Customer',
+                                // AppLocalizations.of(context).locale.languageCode == 'en'
+                                text2: AppLocalizations.of(context)
+                                        .translate('registration') ??
+                                    'Registration',
+                              );
+                            } else {
+                              return MenuCard(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CustomerRegister()),
+                                ),
+                                color: logolightGreen,
+                                imageNetwork: register,
+                                text: AppLocalizations.of(context)
+                                        .translate('customer_registration') ??
+                                    'Customer',
+                              );
+                            }
                           }
                           if (userRoles[index].toString() == '100002') {
                             return Padding(
@@ -282,7 +355,9 @@ class _HomeState extends State<Home> {
                               ),
                               color: logolightGreen,
                               imageNetwork: loanRegistration,
-                              text: 'Loan Registration',
+                              text: AppLocalizations.of(context)
+                                      .translate('loan_registration') ??
+                                  'Loan Registration',
                             );
                           }
                           if (userRoles[index].toString() == '100003') {
@@ -302,7 +377,9 @@ class _HomeState extends State<Home> {
                                 ),
                                 color: logolightGreen,
                                 imageNetwork: policy,
-                                text: 'Policy',
+                                text: AppLocalizations.of(context)
+                                        .translate('policy') ??
+                                    'Policy',
                               ),
                             );
                           }
@@ -310,8 +387,11 @@ class _HomeState extends State<Home> {
                         ),
                   ),
                   CardMessage(
-                    title: 'Message from CEO',
-                    textMessage:
+                    title: AppLocalizations.of(context)
+                            .translate('message_from_ceo') ??
+                        'Message from CEO',
+                    textMessage: AppLocalizations.of(context)
+                            .translate('our_reputation_for_corporate') ??
                         'Our reputation for corporate integrity attracts great team members, great customers, and even greater opportunities. It is a key to our long-term success. I am continually impressed by the resourcefulness and entrepreneurial quality displayed by our people and the exceptional value they bring to the company',
                   )
                 ],
@@ -337,22 +417,26 @@ class _HomeState extends State<Home> {
         },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-              title: Text('Home'),
+              title: Text(
+                  AppLocalizations.of(context).translate('home') ?? 'Home'),
               icon: Icon(Icons.home),
               textAlign: TextAlign.center,
               activeColor: logolightGreen),
           BottomNavyBarItem(
-              title: Text('Category'),
+              title: Text(AppLocalizations.of(context).translate('category') ??
+                  'Category'),
               icon: Icon(Icons.apps),
               textAlign: TextAlign.center,
               activeColor: logolightGreen),
           BottomNavyBarItem(
-              title: Text('Search'),
+              title: Text(
+                  AppLocalizations.of(context).translate('search') ?? 'Search'),
               icon: Icon(Icons.search),
               textAlign: TextAlign.center,
               activeColor: logolightGreen),
           BottomNavyBarItem(
-              title: Text('Setting'),
+              title: Text(AppLocalizations.of(context).translate('setting') ??
+                  'Setting'),
               icon: Icon(Icons.settings),
               textAlign: TextAlign.center,
               activeColor: logolightGreen),

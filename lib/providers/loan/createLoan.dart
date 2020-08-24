@@ -137,7 +137,6 @@ class LoanInternal with ChangeNotifier {
       return data.map<CreateLoan>((json) => CreateLoan.fromJson(json)).toList();
     } catch (error) {
       print("error $error");
-
       _isFetching = false;
     }
   }

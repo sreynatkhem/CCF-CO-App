@@ -7,6 +7,7 @@ import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
@@ -14,6 +15,7 @@ import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import 'localizations/appLocalizations.dart';
 import 'providers/login.dart';
 
 Future<void> main() async {
@@ -23,6 +25,12 @@ Future<void> main() async {
 }
 
 class MyHomePage extends StatefulWidget {
+  static void setLocale(BuildContext context, Locale locale) {
+    _MyHomePageState state =
+        context.findAncestorStateOfType<_MyHomePageState>();
+    state.setLocale(locale);
+  }
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -30,6 +38,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final storage = new FlutterSecureStorage();
   bool _isLogin = false;
+  Locale _locale;
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -65,8 +80,33 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider<LoanApproval>(create: (_) => LoanApproval()),
       ],
       child: MaterialApp(
+        locale: _locale,
         debugShowCheckedModeBanner: false,
         home: _isLogin ? Home() : Login(),
+        localizationsDelegates: [
+          // ... app-specific localization delegate[s] here
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'), // English, no country code
+          const Locale('km', 'KH'), // Hebrew, no country code
+        ],
+        // Returns a locale which will be used by the app
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              return supportedLocale;
+            }
+          }
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
         routes: {ApprovalLists.routeName: (cxt) => ApprovalLists()},
       ),
     );

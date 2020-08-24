@@ -1,4 +1,5 @@
 import 'package:chokchey_finance/components/card.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/screens/policy/policy_widget.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,8 @@ class _PolicyScreenState extends State<PolicyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Policy'),
+          title: Text(
+              AppLocalizations.of(context).translate('policy') ?? 'Policy'),
           backgroundColor: logolightGreen,
         ),
         body: isLoading
@@ -66,14 +68,14 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 10)),
                   CardState(
-                    texts: 'HR Policy',
+                    texts: 'hr_policy',
                     images: hrPolicy,
                     onTaps: () {
                       onTapsPolicy('HR Policy');
                     },
                   ),
                   CardState(
-                    texts: 'Credit Policy',
+                    texts: 'credit_policy',
                     images: creditPolicy,
                     onTaps: () {
                       onTapsPolicy('Credit Policy');

@@ -1,6 +1,4 @@
-import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
-import 'package:chokchey_finance/screens/login/defaultLogin.dart';
 import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';

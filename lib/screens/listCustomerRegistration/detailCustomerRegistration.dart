@@ -98,7 +98,7 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
               ),
               ModalRoute.withName('/')),
         ),
-        headerTexts: 'Detail Customer Registration',
+        headerTexts: 'detail_customer_registration',
         actionsNotification: <Widget>[
           // Using Stack to show edit registration
           new Stack(
@@ -141,70 +141,68 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             ListDetail(
-                                              name: 'Full Khmer Name',
+                                              name: 'full_khmer_name',
                                               value:
                                                   '${snapshot.data[index].namekhr}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Full English Name',
+                                              name: 'full_english_name',
                                               value:
                                                   '${snapshot.data[index].nameeng}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'ID',
+                                              name: 'id',
                                               value:
                                                   '${snapshot.data[index].ucode}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Date of brith',
+                                              name: 'date_of_brith',
                                               value: getDateTimeYMD(snapshot
                                                       .data[index].dob ??
                                                   DateTime.now().toString()),
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Gender',
+                                              name: 'gender',
                                               value:
                                                   '${snapshot.data[index].gender}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Phone Number 1',
+                                              name: 'phone_number_1',
                                               value:
                                                   '${snapshot.data[index].phone1}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Phone Number 2',
+                                              name: 'phone_number_2',
                                               value:
                                                   '${snapshot.data[index].phone2}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Occupation of customer',
+                                              name: 'occupation_of_customer',
                                               value:
                                                   '${snapshot.data[index].occupation}',
                                             ),
                                             //
                                             ListDetail(
-                                              name:
-                                                  'Nation ID, Famliy book, Passport',
+                                              name: 'nation_id_family_book',
                                               value:
                                                   '${snapshot.data[index].ntype}',
                                             ),
                                             //
                                             ListDetail(
-                                              name:
-                                                  'Nation ID, Famliy book, Passport',
+                                              name: 'nation_id_family_book',
                                               value:
                                                   '${snapshot.data[index].nid}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Next visit date',
+                                              name: 'next_visit_date',
                                               value: getDateTimeYMD(snapshot
                                                       .data[index].ndate ??
                                                   DateTime.now().toString()),
@@ -212,41 +210,41 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                             //
 
                                             ListDetail(
-                                              name: 'Prospective',
+                                              name: 'prospective',
                                               value:
                                                   '${snapshot.data[index].pro}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'G=Gurantor, C=Customer',
+                                              name: 'guarantor_customer',
                                               value:
                                                   '${snapshot.data[index].cstatus}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Province code',
+                                              name: 'province_code',
                                               value:
                                                   '${snapshot.data[index].provinceName}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'District code',
+                                              name: 'district_code',
                                               value:
                                                   '${snapshot.data[index].districtName}',
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'Commune code',
+                                              name: 'commune_code',
                                               value:
                                                   '${snapshot.data[index].communeName}',
                                             ),
                                             ListDetail(
-                                              name: 'Village code',
+                                              name: 'village_code',
                                               value:
                                                   '${snapshot.data[index].villageName}',
                                             ),
                                             ListDetail(
-                                              name: 'Current Location',
+                                              name: 'current_location',
                                               value:
                                                   '${snapshot.data[index].goglocation}',
                                             ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -78,7 +79,8 @@ class _ApprovalListsState extends State<ApprovalLists>
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
             Text(
-              'Approval Lists',
+              AppLocalizations.of(context).translate('approval_lists') ??
+                  'Approval Lists',
               style: mainTitleStyle,
             ),
           ],

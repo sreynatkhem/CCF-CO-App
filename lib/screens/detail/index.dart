@@ -1,4 +1,5 @@
 import 'package:chokchey_finance/components/button.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:chokchey_finance/providers/detailList.dart';
 import 'package:chokchey_finance/providers/detialJson.dart';
@@ -116,7 +117,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Loan Information'),
+        title: Text(
+            AppLocalizations.of(context).translate('loan_information') ??
+                'Loan Information'),
         backgroundColor: logolightGreen,
       ),
       body: Column(

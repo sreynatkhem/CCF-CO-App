@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/models/customers.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
@@ -138,7 +139,9 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
             )
           : new Scaffold(
               appBar: new AppBar(
-                title: new Text("List Customers Registration"),
+                title: new Text(AppLocalizations.of(context)
+                        .translate('list_customers_registration') ??
+                    "List Customers Registration"),
                 backgroundColor: logolightGreen,
                 leading: new IconButton(
                   icon: new Icon(Icons.arrow_back),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:chokchey_finance/components/button.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/screens/detail/comment.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -145,7 +146,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Loan Information'),
+        title: Text(
+            AppLocalizations.of(context).translate('loan_information') ??
+                'Loan Information'),
         backgroundColor: logolightGreen,
       ),
       body: Column(
@@ -158,10 +161,12 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                 children: <Widget>[
                   Container(
                     color: logolightGreen,
-                    constraints: BoxConstraints.expand(height: 50),
+                    constraints: BoxConstraints.expand(height: 55),
                     child: TabBar(indicatorColor: Colors.white, tabs: [
                       Tab(
-                        text: "Detail",
+                        text:
+                            AppLocalizations.of(context).translate('detail') ??
+                                "Detail",
                         icon: Icon(
                           Icons.details,
                           size: 20,
@@ -174,14 +179,18 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                             size: 20,
                           ),
                           iconMargin: EdgeInsets.all(0),
-                          text: "Approved"),
+                          text: AppLocalizations.of(context)
+                                  .translate('approved') ??
+                              "Approved"),
                       Tab(
                           icon: Icon(
                             Icons.comment,
                             size: 20,
                           ),
                           iconMargin: EdgeInsets.all(0),
-                          text: "Comments"),
+                          text: AppLocalizations.of(context)
+                                  .translate('comments') ??
+                              "Comments"),
                     ]),
                   ),
                   Expanded(
@@ -222,7 +231,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                             reject(list, context);
                           },
                           color: Colors.red,
-                          text: 'Reject'),
+                          text: AppLocalizations.of(context)
+                                  .translate('reject') ??
+                              'Reject'),
                       Padding(padding: EdgeInsets.only(right: 5)),
                       Button(
                           widtdButton: _widtdButton,
@@ -232,7 +243,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                             returnFuc(list, context);
                           },
                           color: Colors.grey,
-                          text: 'Return'),
+                          text: AppLocalizations.of(context)
+                                  .translate('return') ??
+                              'Return'),
                       Padding(padding: EdgeInsets.only(right: 5)),
                       Button(
                           widtdButton: _widtdButton,
@@ -242,7 +255,11 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                             authrize(list, context);
                           },
                           color: logolightGreen,
-                          text: _isLoading ? 'loading' : 'Authrize'),
+                          text: _isLoading
+                              ? 'loading'
+                              : AppLocalizations.of(context)
+                                      .translate('authrize') ??
+                                  'Authrize'),
                     ],
                   )),
                 )),
