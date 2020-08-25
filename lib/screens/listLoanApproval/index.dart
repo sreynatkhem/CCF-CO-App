@@ -223,6 +223,7 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                               itemBuilder: (BuildContext context, int index) {
                                 var status =
                                     statusApproval(parsed[index]['rstatus']);
+                                logger().i(parsed[index]['rcode']);
                                 return Container(
                                   height: 110,
                                   margin: EdgeInsets.only(bottom: 5.0),
@@ -275,7 +276,7 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                                                           style: mainTitleBlack,
                                                         )),
                                                         Text(
-                                                            '${parsed[index]['loan']['ccode']}'),
+                                                            '${parsed[index]['rcode']}'),
                                                         Padding(
                                                             padding:
                                                                 EdgeInsets.only(

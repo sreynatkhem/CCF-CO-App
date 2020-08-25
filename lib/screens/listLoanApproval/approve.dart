@@ -282,6 +282,15 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
                                             Padding(
                                                 padding:
                                                     EdgeInsets.only(bottom: 2)),
+                                            if (getListDetail[index]['cmt'] !=
+                                                '')
+                                              Text(
+                                                '${getListDetail[index]['cmt']}',
+                                                maxLines: 2,
+                                              ),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 2)),
                                           ],
                                         ),
                                       ],

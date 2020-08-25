@@ -74,8 +74,10 @@ class LoanApproval with ChangeNotifier {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
+    var branch = await storage.read(key: 'branch');
+
     var bodyRow =
-        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$bcode\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
+        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
 
     try {
       final response = await api().post(
@@ -98,8 +100,10 @@ class LoanApproval with ChangeNotifier {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
+    var branch = await storage.read(key: 'branch');
+
     var bodyRow =
-        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$bcode\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
+        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
 
     try {
       final response = await api().post(
@@ -119,8 +123,10 @@ class LoanApproval with ChangeNotifier {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
+    var branch = await storage.read(key: 'branch');
+
     var bodyRow =
-        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"200101\",\n    \"lcode\": \"400011\",\n    \"rdate\": \"\",\n    \"roleList\": \"[100003,100004,100002,100001]\",\n    \"cmt\": \"okay\"\n\n}";
+        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"rdate\": \"\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
     try {
       final response = await api().post(
           baseURLInternal + 'loanRequests/post/' + rcode + '/Return',

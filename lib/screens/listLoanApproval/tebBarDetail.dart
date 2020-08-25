@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/loan/loanApproval.dart';
@@ -75,7 +76,10 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
         .then((value) => {
               setState(() {
                 _isLoading = false;
-              })
+              }),
+              showInSnackBar(
+                  AppLocalizations.of(context).translate('success') ??
+                      'Success')
             });
     setState(() {
       _isLoading = false;
@@ -100,7 +104,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
         .then((value) => {
               setState(() {
                 _isLoading = false;
-              })
+              }),
+              showInSnackBar(
+                  AppLocalizations.of(context).translate('return') ?? 'Return')
             });
     setState(() {
       _isLoading = false;
@@ -125,7 +131,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
         .then((value) => {
               setState(() {
                 _isLoading = false;
-              })
+              }),
+              showInSnackBar(
+                  AppLocalizations.of(context).translate('reject') ?? 'Reject')
             });
     setState(() {
       _isLoading = false;
@@ -133,12 +141,20 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   }
 
   TextEditingController controller = new TextEditingController();
+  // Display Snackbar
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
+  }
 
   @override
   Widget build(BuildContext context) {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
             AppLocalizations.of(context).translate('loan_information') ??
@@ -222,7 +238,32 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                           heightButton: _heightButton,
                           borderRadius: _borderRadius,
                           onPressed: () {
-                            reject(list, context);
+                            AwesomeDialog(
+                                context: context,
+                                // animType: AnimType.LEFTSLIDE,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.INFO,
+                                title: AppLocalizations.of(context)
+                                        .translate('reject') ??
+                                    'Reject',
+                                desc:
+                                    // AppLocalizations.of(context)
+                                    //         .translate('thank_you') ??
+                                    'Would you like to Reject?',
+                                btnOkOnPress: () async {
+                                  reject(list, context);
+                                },
+                                btnCancelText: AppLocalizations.of(context)
+                                        .translate('cancel') ??
+                                    "Cancel",
+                                btnCancelOnPress: () async {},
+                                btnCancelIcon: Icons.close,
+                                btnOkIcon: Icons.check_circle,
+                                btnOkColor: logolightGreen,
+                                btnOkText: AppLocalizations.of(context)
+                                        .translate('okay') ??
+                                    'Okay')
+                              ..show();
                           },
                           color: Colors.red,
                           text: AppLocalizations.of(context)
@@ -234,7 +275,32 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                           heightButton: _heightButton,
                           borderRadius: _borderRadius,
                           onPressed: () {
-                            returnFuc(list, context);
+                            AwesomeDialog(
+                                context: context,
+                                // animType: AnimType.LEFTSLIDE,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.INFO,
+                                title: AppLocalizations.of(context)
+                                        .translate('return') ??
+                                    'Return',
+                                desc:
+                                    // AppLocalizations.of(context)
+                                    //         .translate('thank_you') ??
+                                    'Would you like to Return?',
+                                btnOkOnPress: () async {
+                                  returnFuc(list, context);
+                                },
+                                btnCancelText: AppLocalizations.of(context)
+                                        .translate('cancel') ??
+                                    "Cancel",
+                                btnCancelOnPress: () async {},
+                                btnCancelIcon: Icons.close,
+                                btnOkIcon: Icons.check_circle,
+                                btnOkColor: logolightGreen,
+                                btnOkText: AppLocalizations.of(context)
+                                        .translate('okay') ??
+                                    'Okay')
+                              ..show();
                           },
                           color: Colors.grey,
                           text: AppLocalizations.of(context)
@@ -246,7 +312,32 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                           heightButton: _heightButton,
                           borderRadius: _borderRadius,
                           onPressed: () {
-                            authrize(list, context);
+                            AwesomeDialog(
+                                context: context,
+                                // animType: AnimType.LEFTSLIDE,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.INFO,
+                                title: AppLocalizations.of(context)
+                                        .translate('authrize') ??
+                                    'Authrize',
+                                desc:
+                                    // AppLocalizations.of(context)
+                                    //         .translate('thank_you') ??
+                                    'Would you like to authrize?',
+                                btnOkOnPress: () async {
+                                  authrize(list, context);
+                                },
+                                btnCancelText: AppLocalizations.of(context)
+                                        .translate('cancel') ??
+                                    "Cancel",
+                                btnCancelOnPress: () async {},
+                                btnCancelIcon: Icons.close,
+                                btnOkIcon: Icons.check_circle,
+                                btnOkColor: logolightGreen,
+                                btnOkText: AppLocalizations.of(context)
+                                        .translate('okay') ??
+                                    'Okay')
+                              ..show();
                           },
                           color: logolightGreen,
                           text: _isLoading

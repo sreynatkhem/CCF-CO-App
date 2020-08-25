@@ -9,6 +9,7 @@ import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:file_picker/file_picker.dart';
@@ -185,52 +186,87 @@ class _LoanRegister extends State {
       TextEditingController(text: '');
 
   var listLoan;
+  var loanCode;
+  var statusEdit;
+
   onSubmit(context) async {
     // setState(() {
     //   _loading = true;
     // });
+    // try {
+    //   await Provider.of<LoanInternal>(context, listen: false)
+    //       .postLoanRegistration(
+    //           idCcode,
+    //           valueAmount,
+    //           curcode,
+    //           pcode,
+    //           valueNumberofTerm,
+    //           valueInterest,
+    //           valueAdminFee,
+    //           valueMaintenanceFee,
+    //           valueRepaymentMethod,
+    //           valueMaturityDate,
+    //           valueFirstRepaymentDate,
+    //           valueGenerateGracePeriodNumber,
+    //           valueLoanPurpose,
+    //           valueLTV,
+    //           valueDscr,
+    //           valueORARD,
+    //           valueReferByWho)
+    //       .then((value) => {
+    //             setState(() {
+    //               _loading = false;
+    //             }),
+    //           });
+    // } catch (error) {
+    //   setState(() {
+    //     _loading = false;
+    //   });
+    //   print('error $error');
+    // }
+    final storage = new FlutterSecureStorage();
+
+    var user_ucode = await storage.read(key: 'user_ucode');
+    var branch = await storage.read(key: 'branch');
+    var token = await storage.read(key: 'user_token');
     try {
-      await Provider.of<LoanInternal>(context, listen: false)
-          .postLoanRegistration(
-              idCcode,
-              valueAmount,
-              curcode,
-              pcode,
-              valueNumberofTerm,
-              valueInterest,
-              valueAdminFee,
-              valueMaintenanceFee,
-              valueRepaymentMethod,
-              valueMaturityDate,
-              valueFirstRepaymentDate,
-              valueGenerateGracePeriodNumber,
-              valueLoanPurpose,
-              valueLTV,
-              valueDscr,
-              valueORARD,
-              valueReferByWho)
-          .then((value) => {
-                setState(() {
-                  _loading = false;
-                }),
-              });
-    } catch (error) {
+      final boyrow =
+          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
+      final response = await api().post(baseURLInternal + 'loans',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: boyrow);
+      final parsed = jsonDecode(response.body);
+      print('parsed: $parsed');
+
       setState(() {
-        _loading = false;
+        loanCode = parsed;
       });
-      print('error $error');
+      if (statusEdit == 'save') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ListLoanApproval()),
+        );
+      }
+      // print('post loan:::: ${parsed}');
+      // dataRegistration.addAll(parsed);
+    } catch (error) {
+      print('error: $error');
+      // _isFetching = false;
     }
   }
 
-  onAddFile(context) async {
-    onSubmit(context);
-    listLoan =
-        await Provider.of<LoanInternal>(context, listen: false).dataRegist;
-    if (listLoan != null && listLoan.length > 0) {
-      Navigator.push(
+  Future onAddFile(context) async {
+    await onSubmit(context);
+    // loanCode
+    logger.e('loanCode: ${loanCode}');
+    if (loanCode != null) {
+      await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => AddReferentDocument(listLoan[0], null)),
+            builder: (context) => AddReferentDocument(loanCode, null)),
       );
     }
   }
@@ -969,6 +1005,9 @@ class _LoanRegister extends State {
                                         validateCustomer = true;
                                       });
                                     } else {
+                                      setState(() {
+                                        statusEdit = 'add';
+                                      });
                                       await onAddFile(context);
                                       setState(() {
                                         validateCustomer = false;
@@ -984,6 +1023,9 @@ class _LoanRegister extends State {
                                         validateCustomer = true;
                                       });
                                     } else {
+                                      setState(() {
+                                        statusEdit = 'save';
+                                      });
                                       await onSubmit(context);
                                       setState(() {
                                         validateCustomer = false;

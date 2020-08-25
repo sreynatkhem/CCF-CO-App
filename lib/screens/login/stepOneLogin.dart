@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/defaultLogin.dart';
 import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
@@ -5,6 +8,7 @@ import 'package:chokchey_finance/screens/login/stepTwoLogin.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:chokchey_finance/providers/login.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +28,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final storage = new FlutterSecureStorage();
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   final TextEditingController id = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -106,6 +112,7 @@ class _LoginState extends State<Login> {
                         (value[0].changePassword == null ||
                             value[0].changePassword == 'N'))
                       {
+                        // user need to change password
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -128,6 +135,14 @@ class _LoginState extends State<Login> {
                             key: "user_ucode", value: value[0].ucode),
                         await storage.write(
                             key: "branch", value: value[0].branch),
+                        _firebaseMessaging.getToken().then((String token) {
+                          assert(token != null);
+                          // setState(() {
+                          //   _homeScreenText = "Push Messaging token: $token";
+                          // });
+                          postTokenPushNotification(token);
+                        }),
+                        // already change password
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),
@@ -145,6 +160,25 @@ class _LoginState extends State<Login> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  postTokenPushNotification(tokens) async {
+    var token = await storage.read(key: 'user_token');
+    var user_ucode = await storage.read(key: "user_ucode");
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+    var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+    try {
+      final response = await api().post(
+          baseURLInternal + 'users/' + user_ucode + '/mtoken',
+          headers: headers,
+          body: bodyRow);
+    } catch (error) {
+      print('error:: ${error}');
     }
   }
 

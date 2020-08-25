@@ -13,6 +13,7 @@ import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
 import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart';
 import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
+import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -86,16 +87,20 @@ class _HomeState extends State<Home> {
         .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
     });
-    _firebaseMessaging.getToken().then((String token) {
-      assert(token != null);
-      // setState(() {
-      //   _homeScreenText = "Push Messaging token: $token";
-      // });
-      postTokenPushNotification(token);
-    });
+    // _firebaseMessaging.getToken().then((String token) {
+    //   assert(token != null);
+
+    //   postTokenPushNotification(token);
+    // });
+    getNotificationLock();
   }
 
-  postTokenPushNotification(tokens) async {
+  var totalMessage;
+  var totalUnread;
+  var totalRead;
+  var listMessages;
+
+  Future getNotificationLock() async {
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
 
@@ -103,16 +108,44 @@ class _HomeState extends State<Home> {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
-    var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+    var bodyRow =
+        "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"$user_ucode\",\n}";
     try {
-      final response = await api().post(
-          baseURLInternal + 'users/' + user_ucode + '/mtoken',
-          headers: headers,
-          body: bodyRow);
+      final response = await api().post(baseURLInternal + 'messages/byuser',
+          headers: headers, body: bodyRow);
+      var parsed = jsonDecode(response.body);
+      for (var item in parsed) {
+        setState(() {
+          totalMessage = item['totalMessage'];
+          totalUnread = item['totalUnread'];
+          totalRead = item['totalRead'];
+          listMessages = item['listMessages'];
+        });
+      }
+      logger().i('parsed:: ${parsed}');
     } catch (error) {
-      print('error:: ${error}');
+      logger().e('error:: ${error}');
     }
   }
+
+  // postTokenPushNotification(tokens) async {
+  //   var token = await storage.read(key: 'user_token');
+  //   var user_ucode = await storage.read(key: "user_ucode");
+
+  //   Map<String, String> headers = {
+  //     "Content-Type": "application/json",
+  //     "Authorization": "Bearer $token"
+  //   };
+  //   var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+  //   try {
+  //     final response = await api().post(
+  //         baseURLInternal + 'users/' + user_ucode + '/mtoken',
+  //         headers: headers,
+  //         body: bodyRow);
+  //   } catch (error) {
+  //     print('error:: ${error}');
+  //   }
+  // }
 
   List<Object> userRoles = [];
 
@@ -234,14 +267,14 @@ class _HomeState extends State<Home> {
                     CustomListTile(
                         Icons.face,
                         AppLocalizations.of(context)
-                                .translate('loan_register_list') ??
-                            'Loan Register List',
+                                .translate('customer_list') ??
+                            'Customer List',
                         () => {onListCustomerRegistration()}),
                     CustomListTile(
                         Icons.payment,
                         AppLocalizations.of(context)
-                                .translate('customer_list') ??
-                            'Customer List',
+                                .translate('loan_register_list') ??
+                            'Loan Register List',
                         () => {onListLoanRegistration()}),
                     CustomListTile(
                         Icons.language,
@@ -295,8 +328,24 @@ class _HomeState extends State<Home> {
                   Icons.notifications,
                   size: 25,
                 ),
-                onPressed: () {}),
-            0 != 0
+                onPressed: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => NotificationScreen()),
+                  // );
+                  // DropdownButton<String>(
+                  //   items: <String>['Foo', 'Bar'].map((String value) {
+                  //     return new DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: new Text(value),
+                  //     );
+                  //   }).toList(),
+                  //   onChanged: (_) {},
+                  // );
+                  logger().i('hello world');
+                }),
+            totalMessage != 0
                 ? new Positioned(
                     right: 11,
                     top: 11,
@@ -311,7 +360,7 @@ class _HomeState extends State<Home> {
                         minHeight: 14,
                       ),
                       child: Text(
-                        '12',
+                        totalMessage.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 8,

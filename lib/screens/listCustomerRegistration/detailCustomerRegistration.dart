@@ -16,21 +16,22 @@ class CardDetailCustomer extends StatefulWidget {
   var isRefresh;
   CardDetailCustomer({
     this.list,
-    this.isRefresh,
   });
 
   @override
-  _CardDetailCustomerState createState() =>
-      _CardDetailCustomerState(list: list, isRefresh: isRefresh);
+  _CardDetailCustomerState createState() => _CardDetailCustomerState(
+        list: list,
+      );
 }
 
 class _CardDetailCustomerState extends State<CardDetailCustomer> {
   final dynamic list;
   var detialCusotmer;
-  var isRefresh = false;
   var onEditData;
 
-  _CardDetailCustomerState({this.list, this.isRefresh});
+  _CardDetailCustomerState({
+    this.list,
+  });
   getDateTimeApprove(time) {
     DateTime dateTimeApproved = DateTime.parse(time);
     String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
@@ -73,11 +74,7 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
   }
 
   void onLoading() async {
-    await new Future.delayed(new Duration(seconds: 1), () {
-      setState(() {
-        isRefresh = false;
-      });
-    });
+    await new Future.delayed(new Duration(seconds: 1), () {});
   }
 
   @override
@@ -86,9 +83,7 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
     detialCusotmer =
         Provider.of<ListCustomerRegistrationProvider>(context, listen: false)
             .getCustomerByID(ccode);
-    if (isRefresh == true) {
-      // onLoading();
-    }
+
     return Header(
         leading: BackButton(
           onPressed: () => Navigator.pushAndRemoveUntil(

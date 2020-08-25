@@ -1,8 +1,10 @@
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:chokchey_finance/providers/login.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,6 +32,8 @@ class _LoginState extends State<StepTwoLogin> {
   final valuePassword;
   _LoginState({this.storeUser, this.valuePassword});
   final storage = new FlutterSecureStorage();
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   final TextEditingController id = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -94,6 +98,14 @@ class _LoginState extends State<StepTwoLogin> {
                         key: "user_ucode", value: storeUser[0].ucode),
                     await storage.write(
                         key: "branch", value: storeUser[0].branch),
+                    // navigator to home screen
+                    _firebaseMessaging.getToken().then((String token) {
+                      assert(token != null);
+                      // setState(() {
+                      //   _homeScreenText = "Push Messaging token: $token";
+                      // });
+                      postTokenPushNotification(token);
+                    }),
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => Home()),
@@ -106,6 +118,25 @@ class _LoginState extends State<StepTwoLogin> {
               });
     } catch (error) {
       print('error: $error');
+    }
+  }
+
+  postTokenPushNotification(tokens) async {
+    var token = await storage.read(key: 'user_token');
+    var user_ucode = await storage.read(key: "user_ucode");
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+    var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+    try {
+      final response = await api().post(
+          baseURLInternal + 'users/' + user_ucode + '/mtoken',
+          headers: headers,
+          body: bodyRow);
+    } catch (error) {
+      print('error:: ${error}');
     }
   }
 

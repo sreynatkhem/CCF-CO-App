@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'editLoanRegistration.dart';
@@ -21,20 +20,20 @@ import 'listLoanRegistration.dart';
 
 class CardDetailLoanRegitration extends StatefulWidget {
   final dynamic list;
-  var isRefresh;
+  final dynamic statusLoan;
 
-  CardDetailLoanRegitration({this.list, this.isRefresh});
+  CardDetailLoanRegitration({this.list, this.statusLoan});
 
   @override
   _CardDetailLoanRegitrationState createState() =>
-      _CardDetailLoanRegitrationState(list: list, isRefresh: isRefresh);
+      _CardDetailLoanRegitrationState(list: list, statusLoan: statusLoan);
 }
 
 class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
   final dynamic list;
-  var isRefresh = false;
+  final dynamic statusLoan;
 
-  _CardDetailLoanRegitrationState({this.list, this.isRefresh});
+  _CardDetailLoanRegitrationState({this.list, this.statusLoan});
   getDateTimeApprove(time) {
     DateTime dateTimeApproved = DateTime.parse(time);
     String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
@@ -69,45 +68,38 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
             });
   }
 
-  void onLoading() async {
-    await new Future.delayed(new Duration(seconds: 1), () {
-      setState(() {
-        isRefresh = false;
-      });
-    });
-  }
-
   var detiaLoan;
-  var _imageDocument;
+  var _imageDocument = [];
   @override
   void didChangeDependencies() {
     var locode = list;
     detiaLoan = Provider.of<LoanInternal>(
       context,
     ).getLoanByID(locode);
-    getImageDocument();
     super.didChangeDependencies();
+    getImageDocument();
   }
 
+  //fetch image referent document loan
   Future getImageDocument() async {
     var url = baseURLInternal + 'loanDocuments/byloan/' + list;
-
     final storage = new FlutterSecureStorage();
-
     var token = await storage.read(key: 'user_token');
-    // Map<String, String> headers = {
-    //   "Content-Type": "application/json",
-    //   "Authorization": "Bearer " + token
-    // }; // ignore this headers if there is no authentication
-    final response = await api().get(url, headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
-    });
-    final parsed = jsonDecode(response.body);
-    setState(() {
-      _imageDocument = parsed;
-    });
+    try {
+      final response = await api().get(url, headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      });
+      final parsed = jsonDecode(response.body);
+      setState(() {
+        _imageDocument = parsed;
+      });
+    } catch (error) {
+      logger().e(error);
+    }
   }
+
+  var onStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -115,9 +107,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     detiaLoan = Provider.of<LoanInternal>(
       context,
     ).getLoanByID(locode);
-    if (isRefresh == true) {
-      // onLoading();
-    }
     return Header(
         leading: BackButton(
           onPressed: () => Navigator.pushAndRemoveUntil(
@@ -138,7 +127,11 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                     size: 25,
                   ),
                   onPressed: () {
-                    onEdit(list);
+                    if (statusLoan != 'R' &&
+                        statusLoan != 'D' &&
+                        statusLoan != 'A') {
+                      onEdit(list);
+                    }
                   }),
             ],
           ),
@@ -266,7 +259,8 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                     '${snapshot.data[index].lstatus}',
                                               ),
                                               //
-                                              if (_imageDocument != null)
+                                              if (_imageDocument != null &&
+                                                  _imageDocument.length > 0)
                                                 Container(
                                                   width: 300,
                                                   height: 600,
@@ -275,10 +269,8 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                   child: GridView.count(
                                                     crossAxisCount: 1,
                                                     children: List.generate(
-                                                        _imageDocument != null
-                                                            ? _imageDocument
-                                                                .length
-                                                            : [], (index) {
+                                                        _imageDocument.length,
+                                                        (index) {
                                                       // File asset =
                                                       //     _imageDocument[index];
                                                       var uri =
@@ -299,23 +291,27 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                                   MainAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                Text(
-                                                                  _imageDocument[
-                                                                          index]
-                                                                      [
-                                                                      'description'],
-                                                                  style:
-                                                                      mainTitleBlack,
-                                                                ),
+                                                                if (_imageDocument !=
+                                                                    null)
+                                                                  Text(
+                                                                    _imageDocument[
+                                                                            index]
+                                                                        [
+                                                                        'description'],
+                                                                    style:
+                                                                        mainTitleBlack,
+                                                                  ),
                                                                 Padding(
                                                                     padding: EdgeInsets.only(
                                                                         bottom:
                                                                             10)),
-                                                                Image.memory(
-                                                                  _bytes,
-                                                                  height: 230,
-                                                                  width: 300,
-                                                                ),
+                                                                if (_imageDocument !=
+                                                                    null)
+                                                                  Image.memory(
+                                                                    _bytes,
+                                                                    height: 230,
+                                                                    width: 300,
+                                                                  ),
                                                               ],
                                                             ))
                                                       ]);

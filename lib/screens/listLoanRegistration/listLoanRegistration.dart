@@ -32,6 +32,7 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
         builder: (BuildContext context) {
           return new CardDetailLoanRegitration(
             list: value['lcode'],
+            statusLoan: value['lstatus'],
           );
         },
         fullscreenDialog: true));

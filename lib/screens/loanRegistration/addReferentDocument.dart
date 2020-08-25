@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
 import 'package:chokchey_finance/screens/loanRegistration/widgetCardAddReferent.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -84,6 +85,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   Future getImageDocument() async {
     var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
+    print('loanCode: ${loanCode}');
+    print('loanCode 2: ${listLoan['lcode']}');
+
+    print('editLoan: ${editLoan}');
+
     var url = baseURLInternal + 'loanDocuments/byloan/' + loanCode;
 
     final storage = new FlutterSecureStorage();
@@ -95,6 +101,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         "Authorization": "Bearer " + token
       });
       final parsed = jsonDecode(response.body);
+      print('object');
       //  imageDocumented
       for (var item in parsed) {
         switch (item['type']) {
@@ -534,6 +541,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // adding params
     var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
+    logger.i('loanCode::::: ${loanCode}');
+
     request.fields['lcode'] = loanCode;
     request.fields['bcode'] = branch;
     request.fields['ucode'] = user_ucode;
@@ -545,16 +554,16 @@ class _GridHeaderState extends State<AddReferentDocument> {
       var response = await request.send();
       final respStr = await response.stream.bytesToString();
       var json = jsonDecode(respStr);
+      logger.i('response.statusCode::::: ${response.statusCode}');
 
       setState(() {
         validateImage = json[0];
       });
-
       if (response.statusCode == 200) {
-        Navigator.pop(context);
-        setState(() {
-          _isLoading = false;
-        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ListLoanApproval()),
+        );
       }
       // listen for response
       response.stream.transform(utf8.decoder).listen((value) {

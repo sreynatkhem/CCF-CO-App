@@ -74,8 +74,8 @@
   "edit_customers_register": "Edit Customers Register",
   "submit": "Submit",
   "detail_loan_registration": "Detail Loan Registration",
-  "okay": "okay",
-  "succes": "Succes",
+  "okay": "Okay",
+  "succes": "Success",
   "thank_you": "Thank you",
   "edit_loans_register": "Edit Loans Register",
   "request": "Request",
@@ -83,5 +83,6 @@
   "approval_list": "Approval List",
   "loan_register_list": "Loan Register List",
   "customer_list": "Customer List",
-  "open": "Open"
+  "open": "Open",
+  "loan_check_list": "Loan check list"
 }

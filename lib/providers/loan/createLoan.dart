@@ -75,7 +75,8 @@ class LoanInternal with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      dataRegistration.add(parsed);
+      print('post loan:::: ${parsed}');
+      dataRegistration.addAll(parsed);
       notifyListeners();
     } catch (error) {
       print('error: $error');
