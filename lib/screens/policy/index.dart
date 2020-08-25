@@ -2,6 +2,7 @@ import 'package:chokchey_finance/components/card.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/screens/policy/policy_widget.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -23,20 +24,26 @@ class _PolicyScreenState extends State<PolicyScreen> {
       isLoading = true;
     });
     try {
-      final url = "http://www.pdf995.com/samples/pdf.pdf";
-      final filename = url.substring(url.lastIndexOf("/") + 1);
-      var request = await HttpClient().getUrl(Uri.parse(url));
-      var response = await request.close();
-      var bytes = await consolidateHttpClientResponseBytes(response);
-      String dir = (await getApplicationDocumentsDirectory()).path;
-      File file = new File('$dir/$filename');
-      await file.writeAsBytes(bytes);
-      setState(() {
-        isLoading = false;
-      });
+      // final url = "http://www.pdf995.com/samples/pdf.pdf";
+      // final filename = url.substring(url.lastIndexOf("/") + 1);
+      // var request = await HttpClient().getUrl(Uri.parse(url));
+      // var response = await request.close();
+      // var bytes = await consolidateHttpClientResponseBytes(response);
+      // String dir = (await getApplicationDocumentsDirectory()).path;
+      // File file = new File('$dir/$filename');
+      // await file.writeAsBytes(bytes);
+      // setState(() {
+      //   isLoading = false;
+      // });
+      // await Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => PolicyWidget(file.path, title)),
+      // );
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => PolicyWidget(file.path, title)),
+        MaterialPageRoute(
+            builder: (context) =>
+                PolicyWidget('assets/pdf/requirementchecklist.pdf', title)),
       );
     } catch (error) {
       setState(() {
@@ -68,19 +75,19 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 10)),
                   CardState(
-                    texts: 'hr_policy',
+                    texts: 'loan_check_list',
                     images: hrPolicy,
                     onTaps: () {
-                      onTapsPolicy('HR Policy');
+                      onTapsPolicy('Requirement Check List');
                     },
                   ),
-                  CardState(
-                    texts: 'credit_policy',
-                    images: creditPolicy,
-                    onTaps: () {
-                      onTapsPolicy('Credit Policy');
-                    },
-                  ),
+                  // CardState(
+                  //   texts: 'credit_policy',
+                  //   images: creditPolicy,
+                  //   onTaps: () {
+                  //     onTapsPolicy('Credit Policy');
+                  //   },
+                  // ),
                 ],
               ));
   }

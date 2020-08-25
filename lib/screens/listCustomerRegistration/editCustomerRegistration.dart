@@ -379,11 +379,10 @@ class _CustomerRegister extends State {
                 idVillage,
                 _currentAddress)
             .then((value) async => {
-                  Navigator.pushAndRemoveUntil(
+                  await Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) => CardDetailCustomer(
-                          isRefresh: true,
                           list: ccdoe,
                         ),
                       ),

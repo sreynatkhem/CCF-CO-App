@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -177,7 +178,14 @@ class _CustomerRegister extends State {
                 idCommune,
                 idVillage,
                 _currentAddress)
-            .then((value) => {Navigator.pop(context)});
+            .then((value) => {
+                  // Navigator.pop(context)
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ListCustomerRegistration()),
+                  )
+                });
       }
     } catch (error) {}
   }

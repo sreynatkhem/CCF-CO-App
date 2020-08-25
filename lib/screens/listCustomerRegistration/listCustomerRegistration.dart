@@ -167,7 +167,7 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
                                       texts: '${snapshot.data[index].namekhr}',
                                       textTwo:
                                           '${snapshot.data[index].nameeng}',
-                                      id: '${snapshot.data[index].ucode}',
+                                      id: '${snapshot.data[index].ccode}',
                                       phone: '${snapshot.data[index].phone1}',
                                       images: profile,
                                       onTaps: () {

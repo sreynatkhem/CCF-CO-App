@@ -267,58 +267,55 @@ class _EditLoanRegister extends State {
       TextEditingController(text: '');
   final TextEditingController dscrController = TextEditingController(text: '');
   final TextEditingController lTVController = TextEditingController(text: '');
+  var loanCode;
 
-  onSubmit(context) async {
+  Future onSubmit(context) async {
+    final storage = new FlutterSecureStorage();
+    var user_ucode = await storage.read(key: 'user_ucode');
+    var branch = await storage.read(key: 'branch');
+    var token = await storage.read(key: 'user_token');
     try {
-      await Provider.of<LoanInternal>(context, listen: false)
-          .eidtLoanRegistration(
-              lcode,
-              idCcode,
-              valueAmount,
-              selectedValueCurrencies,
-              selectedValueLoanProduct,
-              valueNumberofTerm,
-              valueInterest,
-              valueAdminFee,
-              valueMaintenanceFee,
-              valueRepaymentMethod,
-              valueMaturityDate,
-              valueFirstRepaymentDate,
-              valueGenerateGracePeriodNumber,
-              valueLoanPurpose,
-              valueLTV,
-              valueDscr,
-              valueReferByWho)
-          .then((value) => {
-                setState(() {
-                  _loading = false;
-                }),
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          CardDetailLoanRegitration(
-                        isRefresh: true,
-                        list: lcode,
-                      ),
-                    ),
-                    ModalRoute.withName('/')),
-              });
-    } catch (error) {
+      final boyrow =
+          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"lstatus\": \"${list.lstatus}\",\n\t\"lcode\": \"$lcode\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$selectedValueCurrencies\",\n\t\"pcode\": \"$selectedValueLoanProduct\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"${list.odate}\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
+
+      final response = await api().put(baseURLInternal + 'loans/' + list.lcode,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: boyrow);
+      final parsed = jsonDecode(response.body);
+      logger().e('parsed: ${parsed}');
+
       setState(() {
-        _loading = false;
+        loanCode = parsed;
       });
-      print('error $error');
+      if (response.statusCode == 201) {
+        if (statusEdit == 'save') {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => CardDetailLoanRegitration(
+                  list: lcode,
+                ),
+              ),
+              ModalRoute.withName('/'));
+        }
+      }
+    } catch (error) {
+      print('error: $error');
     }
   }
 
-  onAddFile(context) async {
-    // onSubmit(context);
-    if (list.lcode != null) {
-      Navigator.push(
+  Future onAddFile(context) async {
+    await onSubmit(context);
+    logger().e('loanCode: ${loanCode}');
+
+    if (loanCode != null) {
+      await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => AddReferentDocument(null, list.lcode)),
+            builder: (context) => AddReferentDocument(loanCode, null)),
       );
     }
   }
@@ -410,6 +407,7 @@ class _EditLoanRegister extends State {
     } catch (error) {}
   }
 
+  var statusEdit;
   @override
   Widget build(BuildContext context) {
     var percentage =
@@ -418,7 +416,7 @@ class _EditLoanRegister extends State {
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Header(
         headerTexts:
-            AppLocalizations.of(context).translate('edit_loans_register') ??
+            AppLocalizations.of(context).translate('edit_loans_registers') ??
                 'Edit Loans Register',
         actionsNotification: <Widget>[
           // Using Stack to show edit registration
@@ -451,22 +449,19 @@ class _EditLoanRegister extends State {
                                   .translate('thank_you') ??
                               'Thank you',
                           btnOkOnPress: () async {
+                            setState(() {
+                              statusEdit = 'add';
+                            });
                             await onAddFile(context);
                           },
                           btnCancelText: AppLocalizations.of(context)
                                   .translate('cancel') ??
                               "Cancel",
                           btnCancelOnPress: () async {
-                            if (selectedValueCustomer == false) {
-                              setState(() {
-                                validateCustomer = true;
-                              });
-                            } else {
-                              await onSubmit(context);
-                              setState(() {
-                                validateCustomer = false;
-                              });
-                            }
+                            setState(() {
+                              statusEdit = 'save';
+                            });
+                            await onSubmit(context);
                           },
                           btnCancelIcon: Icons.close,
                           btnOkIcon: Icons.check_circle,
@@ -1091,22 +1086,19 @@ class _EditLoanRegister extends State {
                                   .translate('thank_you') ??
                               'Thank you',
                           btnOkOnPress: () async {
+                            setState(() {
+                              statusEdit = 'edit';
+                            });
                             await onAddFile(context);
                           },
                           btnCancelText: AppLocalizations.of(context)
                                   .translate('cancel') ??
                               "Cancel",
                           btnCancelOnPress: () async {
-                            if (selectedValueCustomer == false) {
-                              setState(() {
-                                validateCustomer = true;
-                              });
-                            } else {
-                              await onSubmit(context);
-                              setState(() {
-                                validateCustomer = false;
-                              });
-                            }
+                            setState(() {
+                              statusEdit = 'save';
+                            });
+                            await onSubmit(context);
                           },
                           btnCancelIcon: Icons.close,
                           btnOkIcon: Icons.check_circle,
