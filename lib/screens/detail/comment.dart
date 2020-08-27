@@ -19,7 +19,7 @@ class _CommentsState extends State<Comments> {
       child: TextField(
         keyboardType: TextInputType.multiline,
         maxLines: 8,
-        maxLength: 250,
+        maxLength: 150,
         controller: controller,
         decoration: InputDecoration(
           hintText: "Enter your comments here ",

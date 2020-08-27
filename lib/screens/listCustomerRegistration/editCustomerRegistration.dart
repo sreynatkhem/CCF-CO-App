@@ -1146,13 +1146,13 @@ class _CustomerRegister extends State {
                             context: context,
                             // animType: AnimType.LEFTSLIDE,
                             headerAnimationLoop: false,
-                            dialogType: DialogType.SUCCES,
+                            dialogType: DialogType.INFO,
                             title: AppLocalizations.of(context)
-                                    .translate('succes') ??
-                                'Succes',
+                                    .translate('information') ??
+                                'information',
                             desc: AppLocalizations.of(context)
-                                    .translate('thank_you') ??
-                                'Thank you',
+                                    .translate('are_you_sure_you') ??
+                                'Are you sure you want to register the customer?',
                             btnOkOnPress: () async {
                               if (selectedValueVillage == 'Village code') {
                                 setState(() {
@@ -1165,9 +1165,12 @@ class _CustomerRegister extends State {
                                 });
                               }
                             },
-                            btnCancelText: AppLocalizations.of(context)
-                                    .translate('cancel') ??
-                                "Cancel",
+                            btnOkText:
+                                AppLocalizations.of(context).translate('yes') ??
+                                    "Yes",
+                            btnCancelText:
+                                AppLocalizations.of(context).translate('no') ??
+                                    "No",
                             btnCancelOnPress: () {},
                             btnCancelIcon: Icons.close,
                             btnOkIcon: Icons.check_circle,

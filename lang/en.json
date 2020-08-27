@@ -84,5 +84,13 @@
   "loan_register_list": "Loan Register List",
   "customer_list": "Customer List",
   "open": "Open",
-  "loan_check_list": "Loan check list"
+  "loan_check_list": "Loan check list",
+  "Information": "information",
+  "are_you_sure_you": "Are you sure you want to register the customer?",
+  "do_you_want": "Do you want to upload document and submit request?",
+  "no": "No",
+  "yes": "Yes",
+  "successfully": "Successfully",
+  "notification": "Notification",
+  "failed": "Failed"
 }

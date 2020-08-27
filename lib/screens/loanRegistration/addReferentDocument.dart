@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
@@ -15,6 +17,7 @@ import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'dart:io' as Io;
+import 'package:path_provider/path_provider.dart';
 
 class AddReferentDocument extends StatefulWidget {
   AddReferentDocument(this.listLoan, this.editLoan);
@@ -51,31 +54,67 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   //KYC
   var imageDocumentedNation;
+  var nationID;
+
   var imageDocumentedFamily;
+  var familyID;
+
   var imageDocumentedResidentBook;
+  var residentID;
+
   var imageDocumentedKYCOther;
+  var kYCOtherID;
 
   //employee
   var imageDocumentedEmployeeSalaySlip;
+  var employeeSalaySlipID;
+
   var imageDocumentedEmployeeBankStatement;
+  var employeeBankStatementID;
+
   var imageDocumentedEmployeeSalaryVerify;
+  var employeeSalaryVerifyID;
+
   var imageDocumentedEmployeeEmployeeID;
+  var employeeEmployeeID;
+
   var imageDocumentedEmployeeEmployeecontract;
+  var employeeContractID;
+
   var imageDocumentedEmployeeEmployeeOther;
+  var employeeOtherID;
 
   //Business
   var imageDocumentedBusinessPhotosService;
+  var businessPhotosServiceID;
+
   var imageDocumentedBusinessPermit;
+  var businessPermitID;
+
   var imageDocumentedBusinessIncomeStatement;
+  var businessIncomeStatementID;
+
   var imageDocumentedBusinessPaten;
+  var businessPatenID;
+
   var imageDocumentedBusinessSalePurchase;
+  var businessSalePurchaseID;
+
   var imageDocumentedBusinessRental;
+  var businessRentalID;
+
   var imageDocumentedBusinessLocation;
+  var businessLocationID;
+
   var imageDocumentedBusinessOther;
+  var businessOtherID;
 
   //Collateral
   var imageDocumentedCollateralCertificate;
+  var collateralCertificateID;
+
   var imageDocumentedCollateralPicture;
+  var collateralPictureID;
 
   convertBase64ToImage(img64) {
     final decodedBytes = base64Decode(img64);
@@ -83,17 +122,12 @@ class _GridHeaderState extends State<AddReferentDocument> {
     return file.writeAsBytesSync(decodedBytes);
   }
 
+  var storeListImage;
+
   Future getImageDocument() async {
     var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
-    print('loanCode: ${loanCode}');
-    print('loanCode 2: ${listLoan['lcode']}');
-
-    print('editLoan: ${editLoan}');
-
     var url = baseURLInternal + 'loanDocuments/byloan/' + loanCode;
-
     final storage = new FlutterSecureStorage();
-
     var token = await storage.read(key: 'user_token');
     try {
       final response = await api().get(url, headers: {
@@ -101,6 +135,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
         "Authorization": "Bearer " + token
       });
       final parsed = jsonDecode(response.body);
+      setState(() {
+        storeListImage = parsed;
+      });
       print('object');
       //  imageDocumented
       for (var item in parsed) {
@@ -108,8 +145,16 @@ class _GridHeaderState extends State<AddReferentDocument> {
           case '101':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
+
             setState(() {
               imageDocumentedNation = _bytes;
+              nationID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/101.png');
+            file.writeAsBytesSync(List.from(imageDocumentedNation));
+            setState(() {
+              _imageNation = file;
             });
             break;
           case '102':
@@ -117,6 +162,13 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedFamily = _bytes;
+              familyID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/102.png');
+            file.writeAsBytesSync(List.from(imageDocumentedFamily));
+            setState(() {
+              _imageFamily = file;
             });
             break;
           //
@@ -126,20 +178,12 @@ class _GridHeaderState extends State<AddReferentDocument> {
             setState(() {
               imageDocumentedResidentBook = _bytes;
             });
-            break;
-          case '104':
-            var uri = item['filepath'];
-            Uint8List _bytes = base64.decode(uri.split(',').last);
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/103.png');
+            file.writeAsBytesSync(List.from(imageDocumentedResidentBook));
             setState(() {
-              imageDocumentedKYCOther = _bytes;
-            });
-            break;
-          //
-          case '103':
-            var uri = item['filepath'];
-            Uint8List _bytes = base64.decode(uri.split(',').last);
-            setState(() {
-              imageDocumentedResidentBook = _bytes;
+              _imageResident = file;
+              residentID = item['dcode'];
             });
             break;
           case '104':
@@ -147,6 +191,13 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedKYCOther = _bytes;
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/104.png');
+            file.writeAsBytesSync(List.from(imageDocumentedKYCOther));
+            setState(() {
+              _imageOther = file;
+              kYCOtherID = item['dcode'];
             });
             break;
           //
@@ -156,12 +207,27 @@ class _GridHeaderState extends State<AddReferentDocument> {
             setState(() {
               imageDocumentedEmployeeSalaySlip = _bytes;
             });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/211.png');
+            file.writeAsBytesSync(List.from(imageDocumentedEmployeeSalaySlip));
+            setState(() {
+              _imageSalarySlip = file;
+              employeeSalaySlipID = item['dcode'];
+            });
             break;
           case '212':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedEmployeeBankStatement = _bytes;
+              employeeBankStatementID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/212.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedEmployeeBankStatement));
+            setState(() {
+              _imageBankStatement = file;
             });
             break;
           //
@@ -170,21 +236,44 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedEmployeeSalaryVerify = _bytes;
+              employeeSalaryVerifyID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/213.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedEmployeeSalaryVerify));
+            setState(() {
+              _imageSalaryVerify = file;
             });
             break;
-          case '214':
+          case '215':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedEmployeeEmployeeID = _bytes;
+              employeeEmployeeID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/215.png');
+            file.writeAsBytesSync(List.from(imageDocumentedEmployeeEmployeeID));
+            setState(() {
+              _imageEmployeeID = file;
             });
             break;
           //
-          case '215':
+          case '214':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedEmployeeEmployeecontract = _bytes;
+              employeeContractID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/214.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedEmployeeEmployeecontract));
+            setState(() {
+              _imageEmployeeContrat = file;
             });
             break;
           case '216':
@@ -192,29 +281,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedEmployeeEmployeeOther = _bytes;
+              employeeOtherID = item['dcode'];
             });
-            break;
-          //
-          case '215':
-            var uri = item['filepath'];
-            Uint8List _bytes = base64.decode(uri.split(',').last);
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/216.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedEmployeeEmployeeOther));
             setState(() {
-              imageDocumentedEmployeeEmployeecontract = _bytes;
+              _imageEmployeeOther = file;
             });
             break;
-          case '216':
-            var uri = item['filepath'];
-            Uint8List _bytes = base64.decode(uri.split(',').last);
-            setState(() {
-              imageDocumentedEmployeeEmployeeOther = _bytes;
-            });
-            break;
+
           //Business
           case '221':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedBusinessPhotosService = _bytes;
+              businessPhotosServiceID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/221.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedBusinessPhotosService));
+            setState(() {
+              _imagePhotoOfService = file;
             });
             break;
           case '222':
@@ -222,36 +313,43 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedBusinessPermit = _bytes;
+              businessPermitID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/222.png');
+            file.writeAsBytesSync(List.from(imageDocumentedBusinessPermit));
+            setState(() {
+              _imageBusinessPermit = file;
             });
             break;
           //
-          case '223':
-            var uri = item['filepath'];
-            Uint8List _bytes = base64.decode(uri.split(',').last);
-            setState(() {
-              imageDocumentedBusinessIncomeStatement = _bytes;
-            });
-            break;
           case '224':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
-              imageDocumentedBusinessPaten = _bytes;
+              imageDocumentedBusinessIncomeStatement = _bytes;
+              businessIncomeStatementID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/224.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedBusinessIncomeStatement));
+            setState(() {
+              _imageIncomeStatementBank = file;
             });
             break;
-          //
           case '225':
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
-              imageDocumentedBusinessSalePurchase = _bytes;
+              imageDocumentedBusinessPaten = _bytes;
+              businessPatenID = item['dcode'];
             });
-            break;
-          case '226':
-            var uri = item['filepath'];
-            Uint8List _bytes = base64.decode(uri.split(',').last);
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/225.png');
+            file.writeAsBytesSync(List.from(imageDocumentedBusinessPaten));
             setState(() {
-              imageDocumentedBusinessRental = _bytes;
+              _imagePatent = file;
             });
             break;
           //
@@ -259,7 +357,44 @@ class _GridHeaderState extends State<AddReferentDocument> {
             var uri = item['filepath'];
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
+              imageDocumentedBusinessSalePurchase = _bytes;
+              businessSalePurchaseID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/227.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedBusinessSalePurchase));
+            setState(() {
+              _imageSaleAndPurchase = file;
+            });
+            break;
+          case '226':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
+              imageDocumentedBusinessRental = _bytes;
+              businessRentalID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/226.png');
+            file.writeAsBytesSync(List.from(imageDocumentedBusinessRental));
+            setState(() {
+              _imageRentalContract = file;
+            });
+            break;
+          //
+          case '223':
+            var uri = item['filepath'];
+            Uint8List _bytes = base64.decode(uri.split(',').last);
+            setState(() {
               imageDocumentedBusinessLocation = _bytes;
+              businessLocationID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/223.png');
+            file.writeAsBytesSync(List.from(imageDocumentedBusinessLocation));
+            setState(() {
+              _imageBusinessLocationtitle = file;
             });
             break;
           case '228':
@@ -267,6 +402,13 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedBusinessOther = _bytes;
+              businessOtherID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/228.png');
+            file.writeAsBytesSync(List.from(imageDocumentedBusinessOther));
+            setState(() {
+              _imageBusinessOther = file;
             });
             break;
           //
@@ -275,6 +417,14 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedCollateralCertificate = _bytes;
+              collateralCertificateID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/301.png');
+            file.writeAsBytesSync(
+                List.from(imageDocumentedCollateralCertificate));
+            setState(() {
+              _imageCollateralCertificate = file;
             });
             break;
           case '302':
@@ -282,6 +432,13 @@ class _GridHeaderState extends State<AddReferentDocument> {
             Uint8List _bytes = base64.decode(uri.split(',').last);
             setState(() {
               imageDocumentedCollateralPicture = _bytes;
+              collateralPictureID = item['dcode'];
+            });
+            final directory = await getApplicationDocumentsDirectory();
+            var file = Io.File('${directory.path}/302.png');
+            file.writeAsBytesSync(List.from(imageDocumentedCollateralPicture));
+            setState(() {
+              _imageCollateralPicture = file;
             });
             break;
 
@@ -479,15 +636,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // _imageBusinessLocationtitleDedd
-    if (_imageBusinessLocationtitleDedd != null &&
-        _imageBusinessLocationtitleDedd.path != null &&
-        _imageBusinessLocationtitleDedd.path.isNotEmpty) {
+    if (_imageBusinessLocationtitle != null &&
+        _imageBusinessLocationtitle.path != null &&
+        _imageBusinessLocationtitle.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageBusinessLocationtitleDedd.openRead()));
-      var length = await _imageBusinessLocationtitleDedd.length();
+          DelegatingStream.typed(_imageBusinessLocationtitle.openRead()));
+      var length = await _imageBusinessLocationtitle.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[223]', stream, length,
-          filename: basename(_imageBusinessLocationtitleDedd.path)));
+          filename: basename(_imageBusinessLocationtitle.path)));
     }
     // Business
     if (_imageSaleAndPurchase != null &&
@@ -577,6 +734,53 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
   }
 
+  showDailog(context, value, imageClear1, imageClear2) {
+    return AwesomeDialog(
+        context: context,
+        // animType: AnimType.LEFTSLIDE,
+        headerAnimationLoop: false,
+        dialogType: DialogType.SUCCES,
+        title: AppLocalizations.of(context).translate('information') ??
+            'Information',
+        desc: AppLocalizations.of(context).translate('do_you_want') ??
+            'Do you want to upload document and submit request?',
+        btnOkOnPress: () async {
+          if (value != null && value != '')
+            onDelete(value, imageClear1, imageClear2);
+        },
+        btnCancelText: AppLocalizations.of(context).translate('no') ?? "No",
+        btnCancelOnPress: () async {},
+        btnCancelIcon: Icons.close,
+        btnOkIcon: Icons.check_circle,
+        btnOkColor: logolightGreen,
+        btnOkText: AppLocalizations.of(context).translate('yes') ?? 'Yes')
+      ..show();
+  }
+
+  final storage = new FlutterSecureStorage();
+
+  Future onDelete(value, imageClear1, imageClear2) async {
+    var token = await storage.read(key: 'user_token');
+    try {
+      final response = await api().post(
+        baseURLInternal + 'loandocuments/' + value + '/delete',
+        headers: {
+          "contentType": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      );
+      setState(() {
+        imageClear1 = null;
+        imageClear2 = null;
+      });
+      // final list = jsonDecode(response.body);
+      // logger.e('delete image: ${list}');
+      // logger.e('delete status: ${response.statusCode}');
+    } catch (error) {
+      logger.e('error delete image: ${error}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Header(
@@ -610,10 +814,10 @@ class _GridHeaderState extends State<AddReferentDocument> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      gridKYC(),
-                      gridEmployee(),
-                      gridBS(),
-                      gridCollateralDocument()
+                      gridKYC(context),
+                      gridEmployee(context),
+                      gridBS(context),
+                      gridCollateralDocument(context)
                     ],
                   ),
                 ),
@@ -639,7 +843,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   File _imagePhotoOfService;
   File _imageBusinessPermit;
-  File _imageBusinessLocationtitleDedd;
+  File _imageBusinessLocationtitle;
   File _imageIncomeStatementBank;
   File _imagePatent;
   File _imageRentalContract;
@@ -820,7 +1024,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     if (pickedFile != null) {
       setState(() {
-        _imageBusinessLocationtitleDedd =
+        _imageBusinessLocationtitle =
             File(pickedFile.path); // Exception occurred here
       });
     } else {
@@ -977,7 +1181,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     return null;
   }
 
-  Widget gridKYC() {
+  Widget gridKYC(context) {
     return Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -1004,10 +1208,12 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getImage();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageNation = null;
-                        imageDocumentedNation = null;
-                      });
+                      // setState(() {
+                      //   _imageNation = null;
+                      //   imageDocumentedNation = null;
+                      // });
+                      showDailog(context, nationID, _imageNation,
+                          imageDocumentedNation);
                     },
                     image: _imageNation),
                 WidgetCardAddRef(
@@ -1023,10 +1229,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getFamily();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageFamily = null;
-                        imageDocumentedFamily = null;
-                      });
+                      showDailog(context, familyID, _imageFamily,
+                          imageDocumentedFamily);
                     },
                     image: _imageFamily),
               ],
@@ -1049,10 +1253,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getResident();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageResident = null;
-                        imageDocumentedResidentBook = null;
-                      });
+                      showDailog(context, residentID, _imageResident,
+                          imageDocumentedResidentBook);
                     },
                     image: _imageResident),
                 WidgetCardAddRef(
@@ -1072,6 +1274,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                         _imageOther = null;
                         imageDocumentedKYCOther = null;
                       });
+                      showDailog(context, kYCOtherID, _imageOther,
+                          imageDocumentedKYCOther);
                     },
                     image: _imageOther),
               ],
@@ -1080,7 +1284,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         ));
   }
 
-  Widget gridEmployee() {
+  Widget gridEmployee(context) {
     return Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -1107,10 +1311,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getSalarySlip();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageSalarySlip = null;
-                        imageDocumentedEmployeeBankStatement = null;
-                      });
+                      showDailog(context, employeeSalaySlipID, _imageSalarySlip,
+                          imageDocumentedEmployeeBankStatement);
                     },
                     image: _imageSalarySlip),
                 WidgetCardAddRef(
@@ -1127,10 +1329,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBankStatement();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageBankStatement = null;
-                        imageDocumentedEmployeeBankStatement = null;
-                      });
+                      showDailog(
+                          context,
+                          employeeBankStatementID,
+                          _imageBankStatement,
+                          imageDocumentedEmployeeBankStatement);
                     },
                     image: _imageBankStatement),
               ],
@@ -1153,10 +1356,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getSalaryVerify();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageSalaryVerify = null;
-                        imageDocumentedEmployeeSalaryVerify = null;
-                      });
+                      showDailog(
+                          context,
+                          employeeSalaryVerifyID,
+                          _imageSalaryVerify,
+                          imageDocumentedEmployeeSalaryVerify);
                     },
                     image: _imageSalaryVerify),
                 WidgetCardAddRef(
@@ -1165,17 +1369,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
                         ? imageDocumentedEmployeeEmployeeID
                         : null,
                     validateImage:
-                        validateImage != null && validateImage['key'] == '215'
+                        validateImage != null && validateImage['key'] == '214'
                             ? Colors.red
                             : null,
                     onTaps: () {
                       getEmployeeID();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageEmployeeID = null;
-                        imageDocumentedEmployeeEmployeeID = null;
-                      });
+                      showDailog(context, employeeEmployeeID, _imageEmployeeID,
+                          imageDocumentedEmployeeEmployeeID);
                     },
                     image: _imageEmployeeID),
               ],
@@ -1192,17 +1394,18 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             ? imageDocumentedEmployeeEmployeecontract
                             : null,
                     validateImage:
-                        validateImage != null && validateImage['key'] == '214'
+                        validateImage != null && validateImage['key'] == '215'
                             ? Colors.red
                             : null,
                     onTaps: () {
                       getEmployeeContrat();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageEmployeeContrat = null;
-                        imageDocumentedEmployeeEmployeecontract = null;
-                      });
+                      showDailog(
+                          context,
+                          employeeContractID,
+                          _imageEmployeeContrat,
+                          imageDocumentedEmployeeEmployeecontract);
                     },
                     image: _imageEmployeeContrat),
                 WidgetCardAddRef(
@@ -1219,10 +1422,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getEmployeeOther();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageEmployeeOther = null;
-                        imageDocumentedEmployeeEmployeeOther = null;
-                      });
+                      showDailog(context, employeeOtherID, _imageEmployeeOther,
+                          imageDocumentedEmployeeEmployeeOther);
                     },
                     image: _imageEmployeeOther),
               ],
@@ -1231,7 +1432,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         ));
   }
 
-  Widget gridBS() {
+  Widget gridBS(context) {
     return Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -1259,10 +1460,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getPhotoOfService();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imagePhotoOfService = null;
-                        imageDocumentedBusinessPhotosService = null;
-                      });
+                      showDailog(
+                          context,
+                          businessPhotosServiceID,
+                          _imagePhotoOfService,
+                          imageDocumentedBusinessPhotosService);
                     },
                     image: _imagePhotoOfService),
                 WidgetCardAddRef(
@@ -1278,10 +1480,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBusinessPermit();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageBusinessPermit = null;
-                        imageDocumentedBusinessPermit = null;
-                      });
+                      showDailog(context, businessPermitID,
+                          _imageBusinessPermit, imageDocumentedBusinessPermit);
                     },
                     image: _imageBusinessPermit),
               ],
@@ -1305,10 +1505,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getIncomeStatementAndBank();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageIncomeStatementBank = null;
-                        imageDocumentedBusinessIncomeStatement = null;
-                      });
+                      showDailog(
+                          context,
+                          businessIncomeStatementID,
+                          _imageIncomeStatementBank,
+                          imageDocumentedBusinessIncomeStatement);
                     },
                     image: _imageIncomeStatementBank),
                 WidgetCardAddRef(
@@ -1324,10 +1525,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBusinessPatent();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imagePatent = null;
-                        imageDocumentedBusinessPaten = null;
-                      });
+                      showDailog(context, businessPatenID, _imagePatent,
+                          imageDocumentedBusinessPaten);
                     },
                     image: _imagePatent),
               ],
@@ -1350,10 +1549,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBusinessSaleAndPurchase();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageSaleAndPurchase = null;
-                        imageDocumentedBusinessSalePurchase = null;
-                      });
+                      showDailog(
+                          context,
+                          businessSalePurchaseID,
+                          _imageSaleAndPurchase,
+                          imageDocumentedBusinessSalePurchase);
                     },
                     image: _imageSaleAndPurchase),
                 WidgetCardAddRef(
@@ -1369,10 +1569,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBusinessRentalContract();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageRentalContract = null;
-                        imageDocumentedBusinessRental = null;
-                      });
+                      showDailog(context, businessRentalID,
+                          _imageRentalContract, imageDocumentedBusinessRental);
                     },
                     image: _imageRentalContract),
               ],
@@ -1395,12 +1593,13 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBusinessLocationTitle();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageRentalContract = null;
-                        imageDocumentedBusinessLocation = null;
-                      });
+                      showDailog(
+                          context,
+                          businessLocationID,
+                          _imageBusinessLocationtitle,
+                          imageDocumentedBusinessLocation);
                     },
-                    image: _imageRentalContract),
+                    image: _imageBusinessLocationtitle),
                 WidgetCardAddRef(
                     text: 'Other',
                     imageDocumented: imageDocumentedBusinessOther != null
@@ -1414,10 +1613,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getBusinessOther();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageBusinessOther = null;
-                        imageDocumentedBusinessOther = null;
-                      });
+                      showDailog(context, businessOtherID, _imageBusinessOther,
+                          imageDocumentedBusinessOther);
                     },
                     image: _imageBusinessOther),
               ],
@@ -1426,7 +1623,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         ));
   }
 
-  Widget gridCollateralDocument() {
+  Widget gridCollateralDocument(context) {
     return Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -1454,10 +1651,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getCollateralCertificate();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageCollateralCertificate = null;
-                        imageDocumentedCollateralCertificate = null;
-                      });
+                      showDailog(
+                          context,
+                          collateralCertificateID,
+                          _imageCollateralCertificate,
+                          imageDocumentedCollateralCertificate);
                     },
                     image: _imageCollateralCertificate),
                 WidgetCardAddRef(
@@ -1473,10 +1671,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getCollateralPicture();
                     },
                     onClearImage: () {
-                      setState(() {
-                        _imageCollateralPicture = null;
-                        imageDocumentedCollateralPicture = null;
-                      });
+                      showDailog(
+                          context,
+                          collateralPictureID,
+                          _imageCollateralPicture,
+                          imageDocumentedCollateralPicture);
                     },
                     image: _imageCollateralPicture),
               ],

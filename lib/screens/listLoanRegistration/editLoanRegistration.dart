@@ -285,7 +285,6 @@ class _EditLoanRegister extends State {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      logger().e('parsed: ${parsed}');
 
       setState(() {
         loanCode = parsed;
@@ -309,8 +308,6 @@ class _EditLoanRegister extends State {
 
   Future onAddFile(context) async {
     await onSubmit(context);
-    logger().e('loanCode: ${loanCode}');
-
     if (loanCode != null) {
       await Navigator.push(
         context,
@@ -443,20 +440,20 @@ class _EditLoanRegister extends State {
                           headerAnimationLoop: false,
                           dialogType: DialogType.SUCCES,
                           title: AppLocalizations.of(context)
-                                  .translate('succes') ??
-                              'Succes',
+                                  .translate('information') ??
+                              'Information',
                           desc: AppLocalizations.of(context)
-                                  .translate('thank_you') ??
-                              'Thank you',
+                                  .translate('do_you_want') ??
+                              'Do you want to upload document and submit request?',
                           btnOkOnPress: () async {
                             setState(() {
                               statusEdit = 'add';
                             });
                             await onAddFile(context);
                           },
-                          btnCancelText: AppLocalizations.of(context)
-                                  .translate('cancel') ??
-                              "Cancel",
+                          btnCancelText:
+                              AppLocalizations.of(context).translate('no') ??
+                                  "No",
                           btnCancelOnPress: () async {
                             setState(() {
                               statusEdit = 'save';
@@ -467,8 +464,8 @@ class _EditLoanRegister extends State {
                           btnOkIcon: Icons.check_circle,
                           btnOkColor: logolightGreen,
                           btnOkText:
-                              AppLocalizations.of(context).translate('okay') ??
-                                  'Okay')
+                              AppLocalizations.of(context).translate('yes') ??
+                                  'Yes')
                         ..show();
                     }
                   }),
@@ -1080,20 +1077,20 @@ class _EditLoanRegister extends State {
                           headerAnimationLoop: false,
                           dialogType: DialogType.SUCCES,
                           title: AppLocalizations.of(context)
-                                  .translate('succes') ??
-                              'Succes',
+                                  .translate('information') ??
+                              'Information',
                           desc: AppLocalizations.of(context)
-                                  .translate('thank_you') ??
-                              'Thank you',
+                                  .translate('do_you_want') ??
+                              'Do you want to upload document and submit request?',
                           btnOkOnPress: () async {
                             setState(() {
                               statusEdit = 'edit';
                             });
                             await onAddFile(context);
                           },
-                          btnCancelText: AppLocalizations.of(context)
-                                  .translate('cancel') ??
-                              "Cancel",
+                          btnCancelText:
+                              AppLocalizations.of(context).translate('no') ??
+                                  "No",
                           btnCancelOnPress: () async {
                             setState(() {
                               statusEdit = 'save';
@@ -1104,8 +1101,8 @@ class _EditLoanRegister extends State {
                           btnOkIcon: Icons.check_circle,
                           btnOkColor: logolightGreen,
                           btnOkText:
-                              AppLocalizations.of(context).translate('okay') ??
-                                  'Okay')
+                              AppLocalizations.of(context).translate('yes') ??
+                                  'Yes')
                         ..show();
                     }
                   },

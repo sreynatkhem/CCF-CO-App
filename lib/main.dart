@@ -4,6 +4,7 @@ import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/loanApproval.dart';
+import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
             create: (_) => CustomerRegistrationProvider()),
         Provider<LoanInternal>(create: (_) => LoanInternal()),
         Provider<LoanApproval>(create: (_) => LoanApproval()),
+        Provider<NotificationProvider>(create: (_) => NotificationProvider()),
       ],
       child: MaterialApp(
         locale: _locale,

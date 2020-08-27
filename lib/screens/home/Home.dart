@@ -6,6 +6,7 @@ import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
@@ -21,6 +22,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import '../../main.dart';
 import 'Menu.dart';
 
@@ -53,6 +55,8 @@ class _HomeState extends State<Home> {
     _pageController.dispose();
     super.dispose();
   }
+
+  var futureNotification;
 
   @override
   void didChangeDependencies() {
@@ -99,33 +103,46 @@ class _HomeState extends State<Home> {
   var totalUnread;
   var totalRead;
   var listMessages;
+  getNotificationLock() async {
+    await Provider.of<NotificationProvider>(context, listen: false)
+        .getNotification(20, 1)
+        .then((value) => {
+              for (var item in value)
+                {
+                  setState(() {
+                    totalMessage = item['totalMessage'];
+                    totalUnread = item['totalUnread'];
+                    totalRead = item['totalRead'];
+                    listMessages = item['listMessages'];
+                  })
+                },
+            })
+        .catchError((onError) {});
+    // var token = await storage.read(key: 'user_token');
+    // var user_ucode = await storage.read(key: "user_ucode");
 
-  Future getNotificationLock() async {
-    var token = await storage.read(key: 'user_token');
-    var user_ucode = await storage.read(key: "user_ucode");
-
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer $token"
-    };
-    var bodyRow =
-        "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"$user_ucode\",\n}";
-    try {
-      final response = await api().post(baseURLInternal + 'messages/byuser',
-          headers: headers, body: bodyRow);
-      var parsed = jsonDecode(response.body);
-      for (var item in parsed) {
-        setState(() {
-          totalMessage = item['totalMessage'];
-          totalUnread = item['totalUnread'];
-          totalRead = item['totalRead'];
-          listMessages = item['listMessages'];
-        });
-      }
-      logger().i('parsed:: ${parsed}');
-    } catch (error) {
-      logger().e('error:: ${error}');
-    }
+    // Map<String, String> headers = {
+    //   "Content-Type": "application/json",
+    //   "Authorization": "Bearer $token"
+    // };
+    // var bodyRow =
+    //     "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"$user_ucode\",\n}";
+    // try {
+    //   final response = await api().post(baseURLInternal + 'messages/byuser',
+    //       headers: headers, body: bodyRow);
+    //   var parsed = jsonDecode(response.body);
+    //   for (var item in parsed) {
+    //     setState(() {
+    //       totalMessage = item['totalMessage'];
+    //       totalUnread = item['totalUnread'];
+    //       totalRead = item['totalRead'];
+    //       listMessages = item['listMessages'];
+    //     });
+    //   }
+    //   logger().i('parsed:: ${parsed}');
+    // } catch (error) {
+    //   logger().e('error:: ${error}');
+    // }
   }
 
   // postTokenPushNotification(tokens) async {
@@ -305,6 +322,7 @@ class _HomeState extends State<Home> {
       const AssetImage('assets/images/loanRegistration.png');
   final list = const AssetImage('assets/images/findApproval.png');
   final policy = const AssetImage('assets/images/policy.png');
+
   @override
   Widget build(BuildContext context) {
     var langCode = AppLocalizations.of(context).locale.languageCode;
@@ -314,6 +332,7 @@ class _HomeState extends State<Home> {
         userRoles = jsonDecode(value);
       }),
     );
+
     return Header(
       drawers: new Drawer(
         child: _drawerList(context),
@@ -329,23 +348,13 @@ class _HomeState extends State<Home> {
                   size: 25,
                 ),
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => NotificationScreen()),
-                  // );
-                  // DropdownButton<String>(
-                  //   items: <String>['Foo', 'Bar'].map((String value) {
-                  //     return new DropdownMenuItem<String>(
-                  //       value: value,
-                  //       child: new Text(value),
-                  //     );
-                  //   }).toList(),
-                  //   onChanged: (_) {},
-                  // );
-                  logger().i('hello world');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationScreen()),
+                  );
                 }),
-            totalMessage != 0
+            totalUnread != 0
                 ? new Positioned(
                     right: 11,
                     top: 11,
@@ -360,7 +369,7 @@ class _HomeState extends State<Home> {
                         minHeight: 14,
                       ),
                       child: Text(
-                        totalMessage.toString(),
+                        totalUnread.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 8,
@@ -486,6 +495,9 @@ class _HomeState extends State<Home> {
                                     'Policy',
                               ),
                             );
+                          }
+                          if (userRoles[index].toString() == '100005') {
+                            return Text('');
                           }
                         }) // List View
                         ),

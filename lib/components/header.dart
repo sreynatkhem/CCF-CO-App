@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class Header extends StatelessWidget {
   Header(
       {this.bodys,
+      this.keys,
       this.leading,
       this.headerTexts,
       this.drawers,
@@ -19,10 +20,11 @@ class Header extends StatelessWidget {
   final floatingActionButtons;
   final actionsNotification;
   final leading;
-
+  final keys;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: keys,
       drawer: drawers,
       backgroundColor: Colors.white,
       appBar: AppBar(

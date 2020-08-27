@@ -69,13 +69,16 @@ class LoanApproval with ChangeNotifier {
     } catch (error) {}
   }
 
+  var successfully = false;
+  var successfullyReturn = false;
+  var successfullyReject = false;
   //approval
   Future approval(rcode, ucode, bcode, lcode, rdate, roleList, cmt) async {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
     var branch = await storage.read(key: 'branch');
-
+    successfully = false;
     var bodyRow =
         "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
 
@@ -88,9 +91,14 @@ class LoanApproval with ChangeNotifier {
           },
           body: bodyRow);
       final parsed = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        successfully = true;
+      } else {
+        successfully = false;
+      }
       notifyListeners();
     } catch (error) {
-      print("error $error");
+      successfully = false;
     }
   }
 
@@ -114,7 +122,14 @@ class LoanApproval with ChangeNotifier {
           },
           body: bodyRow);
       final parsed = jsonDecode(response.body);
-    } catch (error) {}
+      if (response.statusCode == 200) {
+        successfullyReject = true;
+      } else {
+        successfullyReject = false;
+      }
+    } catch (error) {
+      successfullyReject = false;
+    }
   }
 
   //return
@@ -136,6 +151,17 @@ class LoanApproval with ChangeNotifier {
           },
           body: bodyRow);
       final parsed = jsonDecode(response.body);
-    } catch (error) {}
+      if (response.statusCode == 200) {
+        successfullyReturn = true;
+      } else {
+        successfullyReturn = false;
+      }
+    } catch (error) {
+      successfullyReturn = false;
+    }
   }
+
+  bool get isFetchingSuccessfully => successfully;
+  bool get isFetchingSuccessfullyReturn => successfullyReturn;
+  bool get isFetchingSuccessfullyReject => successfullyReject;
 }

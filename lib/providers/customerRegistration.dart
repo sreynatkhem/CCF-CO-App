@@ -14,7 +14,7 @@ class CustomerRegistrationProvider with ChangeNotifier {
   final data = [];
   final storage = new FlutterSecureStorage();
   var listCustomerByID = [];
-
+  bool isOkay = false;
   Future<List<CustomerRegistration>> postCustomerRegistration(
       valueKhmerName,
       valueEnglishName,
@@ -37,32 +37,19 @@ class CustomerRegistrationProvider with ChangeNotifier {
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
+    var ndate = valueNextVisitDate != null ? valueNextVisitDate : '';
+    var prospective = valueProspective != null ? valueProspective : '';
+    var gurantorCustomer =
+        valueGurantorCustomer != null ? valueGurantorCustomer : '';
+    var nationIdentification =
+        valueNationIdentification != null ? valueNationIdentification : '';
+    var currentAdd = currentAddress != null ? currentAddress : '';
+    var ntype = ntypes != null ? ntypes : '';
+    isOkay = false;
     try {
       _isFetching = false;
-      var body = {
-        'bcode': branch,
-        'comcode': selectedValueCommune,
-        'cstatus': valueGurantorCustomer,
-        'discode': selectedValueDistrict,
-        'dob': '2020-09-11',
-        'gender': gender,
-        'goglocation': currentAddress,
-        'nameeng': valueEnglishName,
-        'namekhr': valueKhmerName,
-        'ndate': '2020-09-11',
-        'ntype': ntypes,
-        'nid': valueNationIdentification,
-        'occupation': valueOccupationOfCustomer,
-        'phone1': valuePhone1,
-        'phone2': valuePhone2,
-        'pro': valueProspective,
-        'procode': selectedValueProvince,
-        'ucode': user_ucode,
-        'vilcode': idVillage,
-      };
       final boyrow =
-          "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"$valueDatehofBrith\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAddress\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntypes\",\n    \"nid\": \"$valueNationIdentification\",\n    \"ndate\": \"$valueNextVisitDate\",\n    \"pro\": \"$valueProspective\",\n    \"cstatus\": \"$valueGurantorCustomer\"\n}";
-
+          "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"$valueDatehofBrith\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAdd\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntype\",\n    \"nid\": \"$nationIdentification\",\n    \"ndate\": \"$ndate\",\n    \"pro\": \"$prospective\",\n    \"cstatus\": \"$gurantorCustomer\"\n}";
       final response = await api().post(baseURLInternal + 'Customers',
           headers: {
             "Content-Type": "application/json",
@@ -70,9 +57,13 @@ class CustomerRegistrationProvider with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
+      if (response.statusCode == 201) {
+        isOkay = true;
+      }
       data.add(parsed);
       notifyListeners();
     } catch (error) {
+      isOkay = false;
       _isFetching = false;
     }
   }
@@ -102,4 +93,5 @@ class CustomerRegistrationProvider with ChangeNotifier {
   }
 
   bool get isFetching => _isFetching;
+  bool get isFetchingOkay => isOkay;
 }

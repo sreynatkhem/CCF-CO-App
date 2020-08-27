@@ -158,6 +158,7 @@ class _CustomerRegister extends State {
       if (khmerName.currentState.saveAndValidate() &&
           englishName.currentState.saveAndValidate() &&
           datehofBrith.currentState.saveAndValidate() &&
+          occupationOfCustomer.currentState.saveAndValidate() &&
           _gender.currentState.saveAndValidate()) {
         await Provider.of<CustomerRegistrationProvider>(context, listen: false)
             .postCustomerRegistration(
@@ -177,15 +178,17 @@ class _CustomerRegister extends State {
                 idDistrict,
                 idCommune,
                 idVillage,
-                _currentAddress)
-            .then((value) => {
-                  // Navigator.pop(context)
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ListCustomerRegistration()),
-                  )
-                });
+                _currentAddress);
+        var nextNavigator = await Provider.of<CustomerRegistrationProvider>(
+                context,
+                listen: false)
+            .isFetchingOkay;
+        if (nextNavigator == true) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ListCustomerRegistration()),
+          );
+        }
       }
     } catch (error) {}
   }
@@ -1018,13 +1021,13 @@ class _CustomerRegister extends State {
                               context: context,
                               // animType: AnimType.LEFTSLIDE,
                               headerAnimationLoop: false,
-                              dialogType: DialogType.SUCCES,
+                              dialogType: DialogType.INFO,
                               title: AppLocalizations.of(context)
-                                      .translate('succes') ??
-                                  'Succes',
+                                      .translate('information') ??
+                                  'Information',
                               desc: AppLocalizations.of(context)
-                                      .translate('thank_you') ??
-                                  'Thank you',
+                                      .translate('are_you_sure_you') ??
+                                  'Are you sure you want to register the customer?',
                               btnOkOnPress: () async {
                                 if (selectedValueVillage == 'Village code') {
                                   setState(() {
@@ -1038,15 +1041,15 @@ class _CustomerRegister extends State {
                                 }
                               },
                               btnCancelText: AppLocalizations.of(context)
-                                      .translate('cancel') ??
-                                  "cancel",
+                                      .translate('no') ??
+                                  "No",
                               btnCancelOnPress: () {},
                               btnCancelIcon: Icons.close,
                               btnOkIcon: Icons.check_circle,
                               btnOkColor: logolightGreen,
                               btnOkText: AppLocalizations.of(context)
-                                      .translate('okay') ??
-                                  'Okay')
+                                      .translate('yes') ??
+                                  'Yes')
                             ..show();
                         }
                       },

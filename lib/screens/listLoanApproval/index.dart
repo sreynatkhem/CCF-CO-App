@@ -142,7 +142,10 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
       futureLoanApproval =
           Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
       getListLoan(20, 1);
-
+      setState(() {
+        _isInit = false;
+        isLoading = false;
+      });
       if (this.futureLoanApproval != futureLoanApproval) {
         this.futureLoanApproval = futureLoanApproval;
         Future.microtask(() => futureLoanApproval.doSomeHttpCall());
@@ -200,9 +203,9 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
             )
           : new Scaffold(
               appBar: new AppBar(
-                title: new Text(AppLocalizations.of(context)
-                        .translate('list_loan_approval') ??
-                    "List Loan Approval"),
+                title: new Text(
+                    AppLocalizations.of(context).translate('approval_list') ??
+                        "Approval List"),
                 backgroundColor: logolightGreen,
                 leading: new IconButton(
                   icon: new Icon(Icons.arrow_back),
@@ -212,134 +215,147 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                       ModalRoute.withName("/Home")),
                 ),
               ),
-              body: FutureBuilder<List<RequestLoanApproval>>(
-                  future: futureLoanApproval,
-                  builder: (context, snapshot) {
-                    if (isLoading == false) {
-                      return Container(
-                          padding: EdgeInsets.all(10),
-                          child: ListView.builder(
-                              itemCount: parsed.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                var status =
-                                    statusApproval(parsed[index]['rstatus']);
-                                logger().i(parsed[index]['rcode']);
-                                return Container(
-                                  height: 110,
-                                  margin: EdgeInsets.only(bottom: 5.0),
-                                  child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: logolightGreen, width: 1),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: InkWell(
-                                          splashColor:
-                                              Colors.blue.withAlpha(30),
-                                          onTap: () {
-                                            var value = parsed[index];
-                                            onTapsDetail(value, context);
-                                          },
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Row(
+              body: isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : FutureBuilder<List<RequestLoanApproval>>(
+                      future: futureLoanApproval,
+                      builder: (context, snapshot) {
+                        if (isLoading == false) {
+                          return Container(
+                              padding: EdgeInsets.all(10),
+                              child: ListView.builder(
+                                  itemCount: parsed.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    var status = statusApproval(
+                                        parsed[index]['rstatus']);
+                                    return Container(
+                                      height: 110,
+                                      margin: EdgeInsets.only(bottom: 5.0),
+                                      child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: logolightGreen,
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: InkWell(
+                                              splashColor:
+                                                  Colors.blue.withAlpha(30),
+                                              onTap: () {
+                                                var value = parsed[index];
+                                                onTapsDetail(value, context);
+                                              },
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: <Widget>[
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 5)),
-                                                    Image(
-                                                      image:
-                                                          _imagesFindApproval,
-                                                      width: 50,
-                                                      height: 50,
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 5)),
+                                                        Image(
+                                                          image:
+                                                              _imagesFindApproval,
+                                                          width: 50,
+                                                          height: 50,
+                                                        ),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 15)),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                child: Text(
+                                                              parsed[index]
+                                                                      ['loan']
+                                                                  ['customer'],
+                                                              style:
+                                                                  mainTitleBlack,
+                                                            )),
+                                                            Text(
+                                                                '${parsed[index]['rcode']}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Text(
+                                                                '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Text(
+                                                                '${parsed[index]['loan']['currency']} ${parsed[index]['loan']['lamt']}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 15)),
                                                     Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
                                                       children: <Widget>[
-                                                        Container(
-                                                            child: Text(
-                                                          parsed[index]['loan']
-                                                              ['customer'],
-                                                          style: mainTitleBlack,
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom: 2)),
+                                                        status,
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                          top: 5,
                                                         )),
-                                                        Text(
-                                                            '${parsed[index]['rcode']}'),
+                                                        if (parsed[index]
+                                                                ['rdate'] !=
+                                                            '')
+                                                          Text(getDateTimeYMD(
+                                                              parsed[index]
+                                                                  ['rdate'])),
+                                                        Text(''),
                                                         Padding(
                                                             padding:
                                                                 EdgeInsets.only(
-                                                                    bottom: 2)),
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    bottom: 2)),
-                                                        Text(
-                                                            '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    bottom: 2)),
-                                                        Text(
-                                                            '${parsed[index]['loan']['currency']} ${parsed[index]['loan']['lamt']}'),
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    bottom: 2)),
+                                                          right: 100,
+                                                        ))
                                                       ],
                                                     ),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    status,
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                      top: 5,
-                                                    )),
-                                                    if (parsed[index]
-                                                            ['rdate'] !=
-                                                        '')
-                                                      Text(getDateTimeYMD(
-                                                          parsed[index]
-                                                              ['rdate'])),
-                                                    Text(''),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                      right: 100,
-                                                    ))
-                                                  ],
-                                                ),
-                                              ]))),
-                                );
-                              }));
-                    } else {
-                      return Center(
-                        child: Container(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  })),
+                                                  ]))),
+                                    );
+                                  }));
+                        } else {
+                          return Center(
+                            child: Container(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                      })),
     );
   }
 }
