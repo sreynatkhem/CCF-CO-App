@@ -86,7 +86,33 @@ flutter:
     - assets/images/.
     - lang/en.json
     - lang/km.json
-    - assets/pdf/requirementchecklist.pdf
+    - assets/pdf/
+    - assets/images/list.png
+
+    - assets/images/101.png
+    - assets/images/102.png
+    - assets/images/103.png
+    - assets/images/104.png
+
+    - assets/images/211.png
+    - assets/images/212.png
+    - assets/images/213.png
+    - assets/images/214.png
+    - assets/images/215.png
+    - assets/images/216.png
+
+    - assets/images/221.png
+    - assets/images/222.png
+    - assets/images/223.png
+    - assets/images/224.png
+    - assets/images/225.png
+    - assets/images/226.png
+    - assets/images/227.png
+    - assets/images/228.png
+
+    - assets/images/301.png
+    - assets/images/302.png
+
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

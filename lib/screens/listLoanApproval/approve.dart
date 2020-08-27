@@ -16,10 +16,10 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ApprovalListCard extends StatefulWidget {
-  final dynamic list;
+  final dynamic lists;
 
   ApprovalListCard(
-    this.list,
+    this.lists,
   );
 
   @override
@@ -126,9 +126,14 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
     } catch (error) {}
   }
 
+  var list;
   var getListDetail = [];
+  var _isloading = false;
   getDetail() async {
     final storage = new FlutterSecureStorage();
+    setState(() {
+      _isloading = true;
+    });
     try {
       var token = await storage.read(key: 'user_token');
       Map<String, String> headers = {
@@ -136,193 +141,251 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
         "Authorization": "Bearer $token"
       };
       final response = await api().get(
-        baseURLInternal + 'loanRequests/Applications/' + widget.list['rcode'],
+        baseURLInternal + 'loanRequests/Applications/' + widget.lists['rcode'],
         headers: headers,
       );
       if (response.statusCode == 200) {
-        var list = jsonDecode(response.body);
+        var listData = jsonDecode(response.body);
         setState(() {
-          getListDetail = list['loanApplications'];
+          getListDetail = listData['loanApplications'];
+          list = listData;
+          _isloading = false;
         });
       } else {
         print('statusCode::: ${response.statusCode}');
+        setState(() {
+          _isloading = false;
+        });
       }
-    } catch (error) {}
+    } catch (error) {
+      setState(() {
+        _isloading = false;
+      });
+    }
   }
 
   var futureLoanApprovalDetail;
   @override
   Widget build(BuildContext context) {
-    var status = statusApproval(widget.list['rstatus']);
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: 100,
-            margin: EdgeInsets.all(10),
-            child: Card(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: logolightGreen, width: 1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: InkWell(
-                    splashColor: Colors.blue.withAlpha(30),
-                    onTap: () {},
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.only(left: 5)),
-                              Image(
-                                image: _imagesFindApproval,
-                                width: 50,
-                                height: 50,
-                              ),
-                              Padding(padding: EdgeInsets.only(right: 15)),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                      child: Text(
-                                    '${widget.list['user']}',
-                                    style: mainTitleBlack,
-                                  )),
-                                  Text('${widget.list['lcode']}'),
-                                  Padding(padding: EdgeInsets.only(bottom: 2)),
-                                  Text('${widget.list['rcode']}'),
-                                  Padding(padding: EdgeInsets.only(bottom: 2)),
-                                  Text(
-                                      '${getDateTimeYMD(widget.list['rdate'])}'),
-                                  Padding(padding: EdgeInsets.only(bottom: 2)),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(padding: EdgeInsets.only(bottom: 2)),
-                              status,
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                top: 5,
-                              )),
-                              if (widget.list['rdate'] != '')
-                                Text(getDateTimeYMD(widget.list['rdate'])),
-                              Text(''),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                right: 100,
-                              ))
-                            ],
-                          ),
-                        ]))),
-          ),
-          Expanded(
-              flex: 3,
-              child: ListView.builder(
-                  itemCount: getListDetail.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 100,
-                      margin: EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                        bottom: 10,
+    var status = _isloading ? Text('') : statusApproval(list['rstatus']);
+    return _isloading
+        ? Center(
+            child: Container(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Container(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 80,
+                  margin: EdgeInsets.all(10),
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: logolightGreen, width: 1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Card(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: logolightGreen, width: 1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: InkWell(
-                              splashColor: Colors.blue.withAlpha(30),
-                              onTap: () {},
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                      child: InkWell(
+                          splashColor: Colors.blue.withAlpha(30),
+                          onTap: () {},
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Row(
                                   children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 5)),
-                                        Image(
-                                          image: _imagesList,
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 15)),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(
-                                                child: Text(
-                                              '${getListDetail[index]['userName']}',
-                                              style: mainTitleBlack,
-                                            )),
-                                            Text(
-                                                '${getListDetail[index]['branchName']}'),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 2)),
-                                            Text(
-                                                '${widget.list['loan']['currency']} ${getListDetail[index]['lamt']}'),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 2)),
-                                            Text(
-                                                '${getDateTimeYMD(getListDetail[index]['adate'])}'),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 2)),
-                                            if (getListDetail[index]['cmt'] !=
-                                                '')
-                                              Text(
-                                                '${getListDetail[index]['cmt']}',
-                                                maxLines: 2,
-                                              ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 2)),
-                                          ],
-                                        ),
-                                      ],
+                                    Padding(padding: EdgeInsets.only(left: 5)),
+                                    Image(
+                                      image: _imagesFindApproval,
+                                      width: 50,
+                                      height: 50,
                                     ),
+                                    Padding(
+                                        padding: EdgeInsets.only(right: 15)),
                                     Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
+                                        Container(
+                                            child: Text(
+                                          '${list['user']}',
+                                          style: mainTitleBlack,
+                                        )),
+                                        Text(
+                                            '${getDateTimeYMD(list['rdate'])}'),
                                         Padding(
                                             padding:
                                                 EdgeInsets.only(bottom: 2)),
-                                        statusApproval(
-                                            getListDetail[index]['lstatus']),
-                                        Padding(
-                                            padding: EdgeInsets.only(
-                                          top: 5,
-                                        )),
-                                        if (widget.list['rdate'] != '')
-                                          Text(getDateTimeYMD(
-                                              widget.list['rdate'])),
-                                        Text(''),
-                                        Padding(
-                                            padding: EdgeInsets.only(
-                                          right: 100,
-                                        ))
                                       ],
                                     ),
-                                  ]))),
-                    );
-                  })),
-        ],
-      ),
-    );
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                        padding: EdgeInsets.only(bottom: 2)),
+                                    status,
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                      top: 5,
+                                    )),
+                                    if (list['rdate'] != '')
+                                      Text(getDateTimeYMD(list['rdate'])),
+                                    Text(''),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                      right: 100,
+                                    ))
+                                  ],
+                                ),
+                              ]))),
+                ),
+                Expanded(
+                    flex: 3,
+                    child: _isloading
+                        ? Center(
+                            child: Container(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: getListDetail.length,
+                            itemBuilder: (context, index) {
+                              return _isloading
+                                  ? Center(
+                                      child: Container(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 80,
+                                      margin: EdgeInsets.only(
+                                        left: 10,
+                                        right: 10,
+                                        bottom: 10,
+                                      ),
+                                      child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: logolightGreen,
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: InkWell(
+                                              splashColor:
+                                                  Colors.blue.withAlpha(30),
+                                              onTap: () {},
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 5)),
+                                                        Image(
+                                                          image: _imagesList,
+                                                          width: 50,
+                                                          height: 50,
+                                                        ),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right: 15)),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Container(
+                                                                child: Text(
+                                                              '${getListDetail[index]['userName']}',
+                                                              style:
+                                                                  mainTitleBlack,
+                                                            )),
+                                                            // Text(
+                                                            //     '${getListDetail[index]['branchName']}'),
+                                                            // Padding(
+                                                            //     padding: EdgeInsets
+                                                            //         .only(
+                                                            //             bottom:
+                                                            //                 2)),
+                                                            // Text(
+                                                            //     '${list['loan']['currency']} ${getListDetail[index]['lamt']}'),
+                                                            // Padding(
+                                                            //     padding: EdgeInsets
+                                                            //         .only(
+                                                            //             bottom:
+                                                            //                 2)),
+                                                            // Text(
+                                                            //     '${getDateTimeYMD(getListDetail[index]['adate'])}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            if (getListDetail[
+                                                                        index]
+                                                                    ['cmt'] !=
+                                                                '')
+                                                              Container(
+                                                                width: 210,
+                                                                child: Text(
+                                                                  '${getListDetail[index]['cmt']}',
+                                                                  maxLines: 2,
+                                                                ),
+                                                              ),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom: 2)),
+                                                        statusApproval(
+                                                            getListDetail[index]
+                                                                ['lstatus']),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                          top: 5,
+                                                        )),
+                                                        if (list['rdate'] != '')
+                                                          Text(getDateTimeYMD(
+                                                              list['rdate'])),
+                                                        Text(''),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                          right: 100,
+                                                        ))
+                                                      ],
+                                                    ),
+                                                  ]))),
+                                    );
+                            })),
+              ],
+            ),
+          );
   }
 }

@@ -994,11 +994,11 @@ class _LoanRegister extends State {
                                   headerAnimationLoop: false,
                                   dialogType: DialogType.SUCCES,
                                   title: AppLocalizations.of(context)
-                                          .translate('succes') ??
-                                      'Success',
+                                          .translate('information') ??
+                                      'Information',
                                   desc: AppLocalizations.of(context)
-                                          .translate('thank_you') ??
-                                      'Would you like to add document referent?',
+                                          .translate('do_you_want') ??
+                                      'Do you want to upload document and submit request?',
                                   btnOkOnPress: () async {
                                     if (selectedValueCustomer == false) {
                                       setState(() {
@@ -1015,8 +1015,8 @@ class _LoanRegister extends State {
                                     }
                                   },
                                   btnCancelText: AppLocalizations.of(context)
-                                          .translate('cancel') ??
-                                      "Cancel",
+                                          .translate('no') ??
+                                      "No",
                                   btnCancelOnPress: () async {
                                     if (selectedValueCustomer == false) {
                                       setState(() {
@@ -1036,8 +1036,8 @@ class _LoanRegister extends State {
                                   btnOkIcon: Icons.check_circle,
                                   btnOkColor: logolightGreen,
                                   btnOkText: AppLocalizations.of(context)
-                                          .translate('okay') ??
-                                      'Okay')
+                                          .translate('yes') ??
+                                      'Yes')
                                 ..show();
                             }
                           }

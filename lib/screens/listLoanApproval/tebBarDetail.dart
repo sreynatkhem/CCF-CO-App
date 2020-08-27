@@ -5,6 +5,7 @@ import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/screens/detail/comment.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -57,16 +58,20 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   double _heightButton = 33.0;
   double _borderRadius = 12.0;
   var userRoles;
+  var isFetchingSuccessfully;
+  var isFetchingSuccessfullReturn;
+  var isFetchingSuccessfullReject;
 
   authrize(value, context) async {
     var branch = await storage.read(key: 'branch');
-
+    var user_ucode = await storage.read(key: 'user_ucode');
     var comments = controller.text;
+
     var rcode = value['rcode'];
-    var ucode = value['ucode'];
+    var ucode = user_ucode;
     var bcode = branch;
     var lcode = value['lcode'];
-    var rdate = value['rdate'];
+    var rdate = '';
     var roleList = userRoles;
     setState(() {
       _isLoading = true;
@@ -77,10 +82,20 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
               setState(() {
                 _isLoading = false;
               }),
-              showInSnackBar(
-                  AppLocalizations.of(context).translate('success') ??
-                      'Success')
             });
+    isFetchingSuccessfully =
+        await Provider.of<LoanApproval>(context, listen: false)
+            .isFetchingSuccessfully;
+    if (isFetchingSuccessfully == true) {
+      showInSnackBar(
+          AppLocalizations.of(context).translate('successfully') ??
+              'Successfully',
+          logolightGreen);
+    } else {
+      showInSnackBar(
+          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          Colors.redAccent);
+    }
     setState(() {
       _isLoading = false;
     });
@@ -88,65 +103,81 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   returnFuc(value, context) async {
     var branch = await storage.read(key: 'branch');
-
+    var user_ucode = await storage.read(key: 'user_ucode');
     var comments = controller.text;
     var rcode = value['rcode'];
-    var ucode = value['ucode'];
+    var ucode = user_ucode;
     var bcode = branch;
     var lcode = value['lcode'];
-    var rdate = value['rdate'];
+    var rdate = '';
     var roleList = userRoles;
     setState(() {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
-        .returnFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments)
-        .then((value) => {
-              setState(() {
-                _isLoading = false;
-              }),
-              showInSnackBar(
-                  AppLocalizations.of(context).translate('return') ?? 'Return')
-            });
+        .returnFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments);
     setState(() {
       _isLoading = false;
     });
+    isFetchingSuccessfullReturn =
+        await Provider.of<LoanApproval>(context, listen: false)
+            .isFetchingSuccessfullyReturn;
+    if (isFetchingSuccessfullReturn == true) {
+      showInSnackBar(
+          AppLocalizations.of(context).translate('successfully') ??
+              'Successfully',
+          logolightGreen);
+    } else {
+      showInSnackBar(
+          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          Colors.redAccent);
+    }
   }
 
   reject(value, context) async {
     var branch = await storage.read(key: 'branch');
+    var user_ucode = await storage.read(key: 'user_ucode');
 
     var comments = controller.text;
     var rcode = value['rcode'];
-    var ucode = value['ucode'];
+    var ucode = user_ucode;
     var bcode = branch;
     var lcode = value['lcode'];
-    var rdate = value['rdate'];
+    var rdate = '';
     var roleList = userRoles;
     setState(() {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
-        .rejectFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments)
-        .then((value) => {
-              setState(() {
-                _isLoading = false;
-              }),
-              showInSnackBar(
-                  AppLocalizations.of(context).translate('reject') ?? 'Reject')
-            });
+        .rejectFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments);
+
     setState(() {
       _isLoading = false;
     });
+    isFetchingSuccessfullReject =
+        await Provider.of<LoanApproval>(context, listen: false)
+            .isFetchingSuccessfullyReject;
+    if (isFetchingSuccessfullReject == true) {
+      showInSnackBar(
+          AppLocalizations.of(context).translate('successfully') ??
+              'Successfully',
+          logolightGreen);
+    } else {
+      showInSnackBar(
+          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          Colors.redAccent);
+    }
   }
 
   TextEditingController controller = new TextEditingController();
   // Display Snackbar
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+  void showInSnackBar(String value, colorsBackground) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: colorsBackground,
+    ));
   }
 
   @override

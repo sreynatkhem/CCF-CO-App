@@ -139,9 +139,9 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
             )
           : new Scaffold(
               appBar: new AppBar(
-                title: new Text(AppLocalizations.of(context)
-                        .translate('list_customers_registration') ??
-                    "List Customers Registration"),
+                title: new Text(
+                    AppLocalizations.of(context).translate('customer_list') ??
+                        "Customer List"),
                 backgroundColor: logolightGreen,
                 leading: new IconButton(
                   icon: new Icon(Icons.arrow_back),
