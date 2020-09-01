@@ -92,5 +92,8 @@
   "yes": "Yes",
   "successfully": "Successfully",
   "notification": "Notification",
-  "failed": "Failed"
+  "failed": "Failed",
+  "no_list_customers": "No list customers",
+  "no_list_loans": "No list loans",
+  "approval_history": "Approval History"
 }

@@ -154,32 +154,37 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
               body: FutureBuilder<List<Customers>>(
                 future: futureListCustomerRegistraiton,
                 builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Container(
-                          padding: EdgeInsets.all(10),
-                          child: ListView.builder(
-                              controller: _scrollController,
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Column(
-                                  children: <Widget>[
-                                    CardState(
-                                      texts: '${snapshot.data[index].namekhr}',
-                                      textTwo:
-                                          '${snapshot.data[index].nameeng}',
-                                      id: '${snapshot.data[index].ccode}',
-                                      phone: '${snapshot.data[index].phone1}',
-                                      images: profile,
-                                      onTaps: () {
-                                        onTapsDetail(snapshot.data[index]);
-                                      },
-                                    )
-                                  ],
-                                );
-                              }))
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        );
+                  if (snapshot.hasData) {
+                    return Container(
+                        padding: EdgeInsets.all(10),
+                        child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: <Widget>[
+                                  CardState(
+                                    texts: '${snapshot.data[index].namekhr}',
+                                    textTwo: '${snapshot.data[index].nameeng}',
+                                    id: '${snapshot.data[index].ccode}',
+                                    phone: '${snapshot.data[index].phone1}',
+                                    images: profile,
+                                    onTaps: () {
+                                      onTapsDetail(snapshot.data[index]);
+                                    },
+                                  )
+                                ],
+                              );
+                            }));
+                  } else {
+                    return Center(
+                      child: Container(
+                        child: Text(AppLocalizations.of(context)
+                                .translate('no_list_customers') ??
+                            'No list customers'),
+                      ),
+                    );
+                  }
                 },
               ),
             ),

@@ -93,5 +93,8 @@
   "yes": "បាទ/ចាស",
   "successfully": "ដោយជោគជ័យ",
   "notification": "ការជូនដំណឹង",
-  "failed": "បានបរាជ័យ"
+  "failed": "បានបរាជ័យ",
+  "no_list_customers": "មិនមានបញ្ជីអតិថិជនទេ",
+  "no_list_loans": "មិនមានបញ្ជីកម្ចីទេ",
+  "approval_history": "ប្រវត្តិអនុម័ត"
 }
