@@ -774,8 +774,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
         imageClear2 = null;
       });
       // final list = jsonDecode(response.body);
-      // logger.e('delete image: ${list}');
-      // logger.e('delete status: ${response.statusCode}');
+      logger.e('delete imageClear1: ${imageClear1}');
+      logger.e('delete imageClear1: ${imageClear1}');
     } catch (error) {
       logger.e('error delete image: ${error}');
     }
@@ -1369,7 +1369,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                         ? imageDocumentedEmployeeEmployeeID
                         : null,
                     validateImage:
-                        validateImage != null && validateImage['key'] == '214'
+                        validateImage != null && validateImage['key'] == '215'
                             ? Colors.red
                             : null,
                     onTaps: () {
@@ -1394,7 +1394,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             ? imageDocumentedEmployeeEmployeecontract
                             : null,
                     validateImage:
-                        validateImage != null && validateImage['key'] == '215'
+                        validateImage != null && validateImage['key'] == '214'
                             ? Colors.red
                             : null,
                     onTaps: () {

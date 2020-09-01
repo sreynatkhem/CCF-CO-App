@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
@@ -8,6 +7,7 @@ import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
+import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
@@ -24,7 +24,6 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
-import 'Menu.dart';
 
 class Home extends StatefulWidget {
   Home({
@@ -118,51 +117,7 @@ class _HomeState extends State<Home> {
                 },
             })
         .catchError((onError) {});
-    // var token = await storage.read(key: 'user_token');
-    // var user_ucode = await storage.read(key: "user_ucode");
-
-    // Map<String, String> headers = {
-    //   "Content-Type": "application/json",
-    //   "Authorization": "Bearer $token"
-    // };
-    // var bodyRow =
-    //     "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"$user_ucode\",\n}";
-    // try {
-    //   final response = await api().post(baseURLInternal + 'messages/byuser',
-    //       headers: headers, body: bodyRow);
-    //   var parsed = jsonDecode(response.body);
-    //   for (var item in parsed) {
-    //     setState(() {
-    //       totalMessage = item['totalMessage'];
-    //       totalUnread = item['totalUnread'];
-    //       totalRead = item['totalRead'];
-    //       listMessages = item['listMessages'];
-    //     });
-    //   }
-    //   logger().i('parsed:: ${parsed}');
-    // } catch (error) {
-    //   logger().e('error:: ${error}');
-    // }
   }
-
-  // postTokenPushNotification(tokens) async {
-  //   var token = await storage.read(key: 'user_token');
-  //   var user_ucode = await storage.read(key: "user_ucode");
-
-  //   Map<String, String> headers = {
-  //     "Content-Type": "application/json",
-  //     "Authorization": "Bearer $token"
-  //   };
-  //   var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
-  //   try {
-  //     final response = await api().post(
-  //         baseURLInternal + 'users/' + user_ucode + '/mtoken',
-  //         headers: headers,
-  //         body: bodyRow);
-  //   } catch (error) {
-  //     print('error:: ${error}');
-  //   }
-  // }
 
   List<Object> userRoles = [];
 
@@ -211,6 +166,13 @@ class _HomeState extends State<Home> {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => ListLoanRegistration()),
+        ModalRoute.withName(""));
+  }
+
+  onListApprovalHistory() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ApprovalHistory()),
         ModalRoute.withName(""));
   }
 
@@ -293,6 +255,12 @@ class _HomeState extends State<Home> {
                                 .translate('loan_register_list') ??
                             'Loan Register List',
                         () => {onListLoanRegistration()}),
+                    CustomListTile(
+                        Icons.payment,
+                        AppLocalizations.of(context)
+                                .translate('approval_history') ??
+                            'Approval History',
+                        () => {onListApprovalHistory()}),
                     CustomListTile(
                         Icons.language,
                         AppLocalizations.of(context)
