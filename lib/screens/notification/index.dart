@@ -52,7 +52,6 @@ class _NotificationState extends State<NotificationScreen> {
       setState(() {
         _isLoading = false;
       });
-      logger().e('read: ${parsed}');
       setState(() {
         totalMessage = parsed[0]['totalMessage'];
         totalUnread = parsed[0]['totalUnread'];

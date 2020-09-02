@@ -99,6 +99,8 @@ class _LoginState extends State<Login> {
                     await storage.write(
                         key: "user_token", value: value[0].token),
                     await storage.write(key: "branch", value: value[0].branch),
+                    await storage.write(
+                        key: "level", value: value[0].level.toString()),
                     setState(() {
                       _isLoading = false;
                     }),
@@ -135,6 +137,8 @@ class _LoginState extends State<Login> {
                             key: "user_ucode", value: value[0].ucode),
                         await storage.write(
                             key: "branch", value: value[0].branch),
+                        await storage.write(
+                            key: "level", value: value[0].level.toString()),
                         _firebaseMessaging.getToken().then((String token) {
                           assert(token != null);
                           // setState(() {
@@ -154,7 +158,6 @@ class _LoginState extends State<Login> {
                 setState(() {
                   _isLoading = false;
                 }),
-                print('e:::: $e')
               });
     } catch (error) {
       setState(() {
@@ -177,9 +180,7 @@ class _LoginState extends State<Login> {
           baseURLInternal + 'users/' + user_ucode + '/mtoken',
           headers: headers,
           body: bodyRow);
-    } catch (error) {
-      print('error:: ${error}');
-    }
+    } catch (error) {}
   }
 
   @override

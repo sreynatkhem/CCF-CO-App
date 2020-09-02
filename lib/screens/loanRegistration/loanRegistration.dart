@@ -4,10 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
-import 'package:chokchey_finance/components/imagePicker.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/loan/createLoan.dart';
-import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -19,10 +16,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:select_dialog/select_dialog.dart';
 import 'package:logger/logger.dart';
 import 'addReferentDocument.dart';
@@ -222,7 +217,6 @@ class _LoanRegister extends State {
     //   setState(() {
     //     _loading = false;
     //   });
-    //   print('error $error');
     // }
     final storage = new FlutterSecureStorage();
 
@@ -239,8 +233,6 @@ class _LoanRegister extends State {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      print('parsed: $parsed');
-
       setState(() {
         loanCode = parsed;
       });
@@ -250,12 +242,7 @@ class _LoanRegister extends State {
           MaterialPageRoute(builder: (context) => ListLoanApproval()),
         );
       }
-      // print('post loan:::: ${parsed}');
-      // dataRegistration.addAll(parsed);
-    } catch (error) {
-      print('error: $error');
-      // _isFetching = false;
-    }
+    } catch (error) {}
   }
 
   Future onAddFile(context) async {
@@ -286,8 +273,6 @@ class _LoanRegister extends State {
   var loanAmountFocus = FocusNode();
 
   final TextEditingController customerNameControllers = TextEditingController();
-
-  final ValueChanged _onChanged = (val) => print(val);
 
   var data = [
     {'name': "Mr.Sea", 'id': '001'},

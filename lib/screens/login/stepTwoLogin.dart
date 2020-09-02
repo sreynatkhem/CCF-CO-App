@@ -98,6 +98,8 @@ class _LoginState extends State<StepTwoLogin> {
                         key: "user_ucode", value: storeUser[0].ucode),
                     await storage.write(
                         key: "branch", value: storeUser[0].branch),
+                    await storage.write(
+                        key: "level", value: value[0].level.toString()),
                     // navigator to home screen
                     _firebaseMessaging.getToken().then((String token) {
                       assert(token != null);

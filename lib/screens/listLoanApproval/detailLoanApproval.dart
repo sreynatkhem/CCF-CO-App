@@ -104,7 +104,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     final directory = await getApplicationDocumentsDirectory();
     var file = Io.File('${directory.path}/list.png');
     file.writeAsBytesSync(List.from(value));
-    logger().i('file:: ${file}');
     return Container(
         child: PhotoView(
       imageProvider: AssetImage(file.path),

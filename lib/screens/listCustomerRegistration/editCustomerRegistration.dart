@@ -838,8 +838,6 @@ class _CustomerRegister extends State {
                         ]
                             .map((valueGurantorCustomer) => DropdownMenuItem(
                                 value: valueGurantorCustomer,
-                                onTap: () => print(
-                                    '${selectedValueProvincefocus = true}'),
                                 child: Text(
                                   "$valueGurantorCustomer",
                                 )))
