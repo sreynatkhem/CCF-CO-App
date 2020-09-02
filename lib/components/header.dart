@@ -10,6 +10,7 @@ class Header extends StatelessWidget {
       this.leading,
       this.headerTexts,
       this.drawers,
+      this.endDrawer,
       this.bottomNavigationBars,
       this.floatingActionButtons,
       this.actionsNotification});
@@ -21,6 +22,7 @@ class Header extends StatelessWidget {
   final actionsNotification;
   final leading;
   final keys;
+  final endDrawer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +41,7 @@ class Header extends StatelessWidget {
       body: bodys,
       bottomNavigationBar: bottomNavigationBars,
       floatingActionButton: floatingActionButtons,
+      endDrawer: endDrawer,
     );
   }
 }

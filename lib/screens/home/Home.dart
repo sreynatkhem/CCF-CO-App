@@ -256,7 +256,7 @@ class _HomeState extends State<Home> {
                             'Loan Register List',
                         () => {onListLoanRegistration()}),
                     CustomListTile(
-                        Icons.payment,
+                        Icons.check_box,
                         AppLocalizations.of(context)
                                 .translate('approval_history') ??
                             'Approval History',
@@ -465,6 +465,9 @@ class _HomeState extends State<Home> {
                             );
                           }
                           if (userRoles[index].toString() == '100005') {
+                            return Text('');
+                          }
+                          if (userRoles[index].toString() == '100006') {
                             return Text('');
                           }
                         }) // List View

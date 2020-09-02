@@ -138,7 +138,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         storeListImage = parsed;
       });
-      print('object');
       //  imageDocumented
       for (var item in parsed) {
         switch (item['type']) {
@@ -698,8 +697,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // adding params
     var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
-    logger.i('loanCode::::: ${loanCode}');
-
     request.fields['lcode'] = loanCode;
     request.fields['bcode'] = branch;
     request.fields['ucode'] = user_ucode;
@@ -711,8 +708,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
       var response = await request.send();
       final respStr = await response.stream.bytesToString();
       var json = jsonDecode(respStr);
-      logger.i('response.statusCode::::: ${response.statusCode}');
-
       setState(() {
         validateImage = json[0];
       });
@@ -727,7 +722,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
         logger.i('message::::: ${value}');
       });
     } catch (e) {
-      logger.i('e::::: ${e}');
       setState(() {
         _isLoading = false;
       });
@@ -774,8 +768,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
         imageClear2 = null;
       });
       // final list = jsonDecode(response.body);
-      logger.e('delete imageClear1: ${imageClear1}');
-      logger.e('delete imageClear1: ${imageClear1}');
     } catch (error) {
       logger.e('error delete image: ${error}');
     }

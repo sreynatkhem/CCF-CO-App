@@ -95,5 +95,19 @@
   "failed": "Failed",
   "no_list_customers": "No list customers",
   "no_list_loans": "No list loans",
-  "approval_history": "Approval History"
+  "approval_history": "Approval History",
+  "total_customer": "Total Customer",
+  "total_approved": "Total Approved",
+  "total_returned": "Total Returned",
+  "total_disapproved": "Total Disapproved",
+  "total_requested": "Total Requested",
+  "total_loan": "Total Loan",
+  "approve": "Approve",
+  "start_date": "Start date",
+  "end_date": "End date",
+  "reset": "Reset",
+  "apply": "Apply",
+  "list_branch": "List Branch",
+  "list_co": "List CO",
+  "list_co": "List CO"
 }

@@ -96,5 +96,18 @@
   "failed": "បានបរាជ័យ",
   "no_list_customers": "មិនមានបញ្ជីអតិថិជនទេ",
   "no_list_loans": "មិនមានបញ្ជីកម្ចីទេ",
-  "approval_history": "ប្រវត្តិអនុម័ត"
+  "approval_history": "ប្រវត្តិអនុម័ត",
+  "total_customer": "អតិថិជនសរុប",
+  "total_approved": "បានអនុម័តសរុប",
+  "total_returned": "សរុបមកវិញ",
+  "total_disapproved": "សរុបមិនយល់ព្រម",
+  "total_requested": "ស្នើសុំសរុប",
+  "total_loan": "ប្រាក់កម្ចីសរុប",
+  "approve": "យល់ព្រម",
+  "start_date": "ថ្ងៃ​ចាប់ផ្តើម",
+  "end_date": "កាលបរិច្ឆេទបញ្ចប់",
+  "reset": "កំណត់ឡើងវិញ",
+  "apply": "អនុវត្ត",
+  "list_branch": "បញ្ជីសាខា",
+  "list_co": "បញ្ជីCO"
 }
