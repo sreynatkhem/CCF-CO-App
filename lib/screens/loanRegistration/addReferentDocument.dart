@@ -450,6 +450,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
   }
 
   Future onSubmite(context) async {
+    print('hello world');
     var url = baseURLInternal + 'loanDocuments';
     var uri = Uri.parse(url);
     var request = new http.MultipartRequest("POST", uri);
@@ -703,25 +704,39 @@ class _GridHeaderState extends State<AddReferentDocument> {
     setState(() {
       _isLoading = true;
     });
+    print('loanCode 2: $loanCode');
+
+    print('branch 2: $branch');
+    print('user_ucode 2: $user_ucode');
+
+    print('headers: ${headers} 2');
+
     try {
       // send
+      print('hello world 3');
+
       var response = await request.send();
       final respStr = await response.stream.bytesToString();
       var json = jsonDecode(respStr);
       setState(() {
         validateImage = json[0];
       });
+
       if (response.statusCode == 200) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListLoanApproval()),
         );
+      } else {
+        logger.i('response.statusCode::::: ${response.statusCode}');
       }
       // listen for response
       response.stream.transform(utf8.decoder).listen((value) {
         logger.i('message::::: ${value}');
       });
     } catch (e) {
+      print('e::: $e');
+
       setState(() {
         _isLoading = false;
       });
@@ -754,6 +769,9 @@ class _GridHeaderState extends State<AddReferentDocument> {
   final storage = new FlutterSecureStorage();
 
   Future onDelete(value, imageClear1, imageClear2) async {
+    print('imageClear1 : $imageClear1');
+    print('imageClear2 : $imageClear2');
+
     var token = await storage.read(key: 'user_token');
     try {
       final response = await api().post(
@@ -1199,13 +1217,26 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getImage();
                     },
-                    onClearImage: () {
-                      // setState(() {
-                      //   _imageNation = null;
-                      //   imageDocumentedNation = null;
-                      // });
-                      showDailog(context, nationID, _imageNation,
-                          imageDocumentedNation);
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              nationID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageNation = null;
+                          imageDocumentedNation = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageNation),
                 WidgetCardAddRef(
@@ -1220,9 +1251,26 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getFamily();
                     },
-                    onClearImage: () {
-                      showDailog(context, familyID, _imageFamily,
-                          imageDocumentedFamily);
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              familyID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageFamily = null;
+                          imageDocumentedFamily = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageFamily),
               ],
@@ -1244,9 +1292,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getResident();
                     },
-                    onClearImage: () {
-                      showDailog(context, residentID, _imageResident,
-                          imageDocumentedResidentBook);
+                    // onClearImage: () {
+                    //   showDailog(context, residentID, _imageResident,
+                    //       imageDocumentedResidentBook);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              residentID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageResident = null;
+                          imageDocumentedResidentBook = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageResident),
                 WidgetCardAddRef(
@@ -1261,13 +1330,26 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getOther();
                     },
-                    onClearImage: () {
-                      setState(() {
-                        _imageOther = null;
-                        imageDocumentedKYCOther = null;
-                      });
-                      showDailog(context, kYCOtherID, _imageOther,
-                          imageDocumentedKYCOther);
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              kYCOtherID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageOther = null;
+                          imageDocumentedKYCOther = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageOther),
               ],
@@ -1302,9 +1384,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getSalarySlip();
                     },
-                    onClearImage: () {
-                      showDailog(context, employeeSalaySlipID, _imageSalarySlip,
-                          imageDocumentedEmployeeBankStatement);
+                    // onClearImage: () {
+                    //   showDailog(context, employeeSalaySlipID, _imageSalarySlip,
+                    //       imageDocumentedEmployeeBankStatement);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              employeeSalaySlipID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageSalarySlip = null;
+                          imageDocumentedEmployeeSalaySlip = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageSalarySlip),
                 WidgetCardAddRef(
@@ -1320,12 +1423,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBankStatement();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          employeeBankStatementID,
-                          _imageBankStatement,
-                          imageDocumentedEmployeeBankStatement);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       employeeBankStatementID,
+                    //       _imageBankStatement,
+                    //       imageDocumentedEmployeeBankStatement);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              employeeBankStatementID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageBankStatement = null;
+                          imageDocumentedEmployeeBankStatement = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageBankStatement),
               ],
@@ -1347,12 +1471,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getSalaryVerify();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          employeeSalaryVerifyID,
-                          _imageSalaryVerify,
-                          imageDocumentedEmployeeSalaryVerify);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       employeeSalaryVerifyID,
+                    //       _imageSalaryVerify,
+                    //       imageDocumentedEmployeeSalaryVerify);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              employeeSalaryVerifyID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageSalaryVerify = null;
+                          imageDocumentedEmployeeSalaryVerify = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageSalaryVerify),
                 WidgetCardAddRef(
@@ -1367,9 +1512,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getEmployeeID();
                     },
-                    onClearImage: () {
-                      showDailog(context, employeeEmployeeID, _imageEmployeeID,
-                          imageDocumentedEmployeeEmployeeID);
+                    // onClearImage: () {
+                    //   showDailog(context, employeeEmployeeID, _imageEmployeeID,
+                    //       imageDocumentedEmployeeEmployeeID);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              employeeEmployeeID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageEmployeeID = null;
+                          imageDocumentedEmployeeEmployeeID = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageEmployeeID),
               ],
@@ -1392,12 +1558,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getEmployeeContrat();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          employeeContractID,
-                          _imageEmployeeContrat,
-                          imageDocumentedEmployeeEmployeecontract);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       employeeContractID,
+                    //       _imageEmployeeContrat,
+                    //       imageDocumentedEmployeeEmployeecontract);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              employeeContractID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageEmployeeContrat = null;
+                          imageDocumentedEmployeeEmployeecontract = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageEmployeeContrat),
                 WidgetCardAddRef(
@@ -1413,9 +1600,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getEmployeeOther();
                     },
-                    onClearImage: () {
-                      showDailog(context, employeeOtherID, _imageEmployeeOther,
-                          imageDocumentedEmployeeEmployeeOther);
+                    // onClearImage: () {
+                    //   showDailog(context, employeeOtherID, _imageEmployeeOther,
+                    //       imageDocumentedEmployeeEmployeeOther);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              employeeOtherID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageEmployeeOther = null;
+                          imageDocumentedEmployeeEmployeeOther = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageEmployeeOther),
               ],
@@ -1451,12 +1659,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getPhotoOfService();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          businessPhotosServiceID,
-                          _imagePhotoOfService,
-                          imageDocumentedBusinessPhotosService);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       businessPhotosServiceID,
+                    //       _imagePhotoOfService,
+                    //       imageDocumentedBusinessPhotosService);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessPhotosServiceID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imagePhotoOfService = null;
+                          imageDocumentedBusinessPhotosService = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imagePhotoOfService),
                 WidgetCardAddRef(
@@ -1471,9 +1700,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessPermit();
                     },
-                    onClearImage: () {
-                      showDailog(context, businessPermitID,
-                          _imageBusinessPermit, imageDocumentedBusinessPermit);
+                    // onClearImage: () {
+                    //   showDailog(context, businessPermitID,
+                    //       _imageBusinessPermit, imageDocumentedBusinessPermit);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessPermitID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageBusinessPermit = null;
+                          imageDocumentedBusinessPermit = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageBusinessPermit),
               ],
@@ -1496,12 +1746,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getIncomeStatementAndBank();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          businessIncomeStatementID,
-                          _imageIncomeStatementBank,
-                          imageDocumentedBusinessIncomeStatement);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       businessIncomeStatementID,
+                    //       _imageIncomeStatementBank,
+                    //       imageDocumentedBusinessIncomeStatement);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessIncomeStatementID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageIncomeStatementBank = null;
+                          imageDocumentedBusinessIncomeStatement = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageIncomeStatementBank),
                 WidgetCardAddRef(
@@ -1516,9 +1787,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessPatent();
                     },
-                    onClearImage: () {
-                      showDailog(context, businessPatenID, _imagePatent,
-                          imageDocumentedBusinessPaten);
+                    // onClearImage: () {
+                    //   showDailog(context, businessPatenID, _imagePatent,
+                    //       imageDocumentedBusinessPaten);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessPatenID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imagePatent = null;
+                          imageDocumentedBusinessPaten = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imagePatent),
               ],
@@ -1540,12 +1832,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessSaleAndPurchase();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          businessSalePurchaseID,
-                          _imageSaleAndPurchase,
-                          imageDocumentedBusinessSalePurchase);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       businessSalePurchaseID,
+                    //       _imageSaleAndPurchase,
+                    //       imageDocumentedBusinessSalePurchase);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessSalePurchaseID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageSaleAndPurchase = null;
+                          imageDocumentedBusinessSalePurchase = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageSaleAndPurchase),
                 WidgetCardAddRef(
@@ -1560,9 +1873,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessRentalContract();
                     },
-                    onClearImage: () {
-                      showDailog(context, businessRentalID,
-                          _imageRentalContract, imageDocumentedBusinessRental);
+                    // onClearImage: () {
+                    //   showDailog(context, businessRentalID,
+                    //       _imageRentalContract, imageDocumentedBusinessRental);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessRentalID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageRentalContract = null;
+                          imageDocumentedBusinessRental = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageRentalContract),
               ],
@@ -1584,12 +1918,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessLocationTitle();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          businessLocationID,
-                          _imageBusinessLocationtitle,
-                          imageDocumentedBusinessLocation);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       businessLocationID,
+                    //       _imageBusinessLocationtitle,
+                    //       imageDocumentedBusinessLocation);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessLocationID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageBusinessLocationtitle = null;
+                          imageDocumentedBusinessLocation = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageBusinessLocationtitle),
                 WidgetCardAddRef(
@@ -1604,9 +1959,30 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessOther();
                     },
-                    onClearImage: () {
-                      showDailog(context, businessOtherID, _imageBusinessOther,
-                          imageDocumentedBusinessOther);
+                    // onClearImage: () {
+                    //   showDailog(context, businessOtherID, _imageBusinessOther,
+                    //       imageDocumentedBusinessOther);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              businessOtherID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageBusinessOther = null;
+                          imageDocumentedBusinessOther = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageBusinessOther),
               ],
@@ -1642,12 +2018,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getCollateralCertificate();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          collateralCertificateID,
-                          _imageCollateralCertificate,
-                          imageDocumentedCollateralCertificate);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       collateralCertificateID,
+                    //       _imageCollateralCertificate,
+                    //       imageDocumentedCollateralCertificate);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              collateralCertificateID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageCollateralCertificate = null;
+                          imageDocumentedCollateralCertificate = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageCollateralCertificate),
                 WidgetCardAddRef(
@@ -1662,12 +2059,33 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getCollateralPicture();
                     },
-                    onClearImage: () {
-                      showDailog(
-                          context,
-                          collateralPictureID,
-                          _imageCollateralPicture,
-                          imageDocumentedCollateralPicture);
+                    // onClearImage: () {
+                    //   showDailog(
+                    //       context,
+                    //       collateralPictureID,
+                    //       _imageCollateralPicture,
+                    //       imageDocumentedCollateralPicture);
+                    // },
+                    onClearImage: () async {
+                      var token = await storage.read(key: 'user_token');
+                      try {
+                        final response = await api().post(
+                          baseURLInternal +
+                              'loandocuments/' +
+                              collateralPictureID +
+                              '/delete',
+                          headers: {
+                            "contentType": "application/json",
+                            "Authorization": "Bearer " + token
+                          },
+                        );
+                        setState(() {
+                          _imageCollateralPicture = null;
+                          imageDocumentedCollateralPicture = null;
+                        });
+                      } catch (error) {
+                        logger.e('error delete image: ${error}');
+                      }
                     },
                     image: _imageCollateralPicture),
               ],

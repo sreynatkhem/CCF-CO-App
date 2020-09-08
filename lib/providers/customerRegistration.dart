@@ -45,11 +45,15 @@ class CustomerRegistrationProvider with ChangeNotifier {
         valueNationIdentification != null ? valueNationIdentification : '';
     var currentAdd = currentAddress != null ? currentAddress : '';
     var ntype = ntypes != null ? ntypes : '';
+    var englishName = valueEnglishName != null ? valueEnglishName : '';
+    var dateOfBirth = valueDatehofBrith != null ? valueDatehofBrith : '';
+    var phoneNumber2 = valuePhone2 != null ? valuePhone2 : '';
+
     isOkay = false;
     try {
       _isFetching = false;
       final boyrow =
-          "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"$valueDatehofBrith\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAdd\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntype\",\n    \"nid\": \"$nationIdentification\",\n    \"ndate\": \"$ndate\",\n    \"pro\": \"$prospective\",\n    \"cstatus\": \"$gurantorCustomer\"\n}";
+          "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$englishName\",\n    \"dob\": \"$dateOfBirth\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$phoneNumber2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAdd\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntype\",\n    \"nid\": \"$nationIdentification\",\n    \"ndate\": \"$ndate\",\n    \"pro\": \"$prospective\",\n    \"cstatus\": \"$gurantorCustomer\"\n}";
       final response = await api().post(baseURLInternal + 'Customers',
           headers: {
             "Content-Type": "application/json",
@@ -57,7 +61,11 @@ class CustomerRegistrationProvider with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
+      logger().e('parsed :: ${parsed}');
+
       if (response.statusCode == 201) {
+        logger().e('response.statusCode :: ${response.statusCode}');
+
         isOkay = true;
       }
       data.add(parsed);

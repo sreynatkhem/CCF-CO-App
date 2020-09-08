@@ -157,7 +157,7 @@ class _CustomerRegister extends State {
     try {
       if (khmerName.currentState.saveAndValidate() &&
           englishName.currentState.saveAndValidate() &&
-          datehofBrith.currentState.saveAndValidate() &&
+          phoneKey.currentState.saveAndValidate() &&
           occupationOfCustomer.currentState.saveAndValidate() &&
           _gender.currentState.saveAndValidate()) {
         await Provider.of<CustomerRegistrationProvider>(context, listen: false)
@@ -184,6 +184,7 @@ class _CustomerRegister extends State {
                 listen: false)
             .isFetchingOkay;
         if (nextNavigator == true) {
+          logger().e('push');
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ListCustomerRegistration()),
@@ -355,6 +356,114 @@ class _CustomerRegister extends State {
     });
   }
 
+  bool isAdult(String birthDateString) {
+    String datePattern = "dd-MM-yyyy";
+
+    DateTime birthDate = DateFormat(datePattern).parse(birthDateString);
+    DateTime today = DateTime.now();
+
+    int yearDiff = today.year - birthDate.year;
+    int monthDiff = today.month - birthDate.month;
+    int dayDiff = today.day - birthDate.day;
+    logger()
+        .e(yearDiff > 18 || yearDiff == 18 && monthDiff >= 0 && dayDiff >= 0);
+
+    return yearDiff > 18 || yearDiff == 18 && monthDiff >= 0 && dayDiff >= 0;
+  }
+
+  bool isAdult2(String birthDateString) {
+    String datePattern = "dd-MM-yyyy";
+
+    // Current time - at this moment
+    DateTime today = DateTime.now();
+
+    // Parsed date to check
+    DateTime birthDate = DateFormat(datePattern).parse(birthDateString);
+
+    // Date to check but moved 18 years ahead
+    DateTime adultDate = DateTime(
+      birthDate.year + 18,
+      birthDate.month,
+      birthDate.day,
+    );
+    logger().e('adultDate.isBefore ${adultDate.isBefore(today)}');
+    return adultDate.isBefore(today);
+  }
+
+  calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    logger().e('birthDate:: ${birthDate}');
+
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    logger().e('age:: ${age}');
+
+    return age;
+  }
+
+  checkMoreThenCurrentDay(dateToCheck) {
+    var fullDatePicker = "0";
+    var now = DateTime.now();
+    var day = DateTime(now.year, now.month, now.day).day;
+    var month = DateTime(now.year, now.month, now.day).month;
+    var year = DateTime(now.year, now.month, now.day).year;
+    var nday = day.toString().padLeft(2, "0");
+    var nmonth = month.toString().padLeft(2, "0");
+    var fullDate = "${year}${nmonth}${nday}";
+
+    logger().e('fullDate ::: ${fullDate}');
+
+    // final yesterday = DateTime(now.year, now.month, now.day - 1);
+    // final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    var aDay;
+    var aMonth;
+    var aYear;
+    // logger().e('now ::: ${now}');
+
+    if (dateToCheck != null) {
+      aDay = DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).day;
+      aMonth =
+          DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).month;
+      aYear =
+          DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).year;
+
+      var ndayPicker = aDay.toString().padLeft(2, "0");
+      var nmonthPicker = aMonth.toString().padLeft(2, "0");
+      fullDatePicker = "${aYear}${nmonthPicker}${ndayPicker}";
+    }
+
+    var val1 = int.parse(fullDate);
+    var val2 = int.parse(fullDatePicker);
+    int checkNext = val2 - val1;
+    logger().e('checkNext:: ${checkNext}');
+
+// if(aDate == today) {
+//   }
+//  // ignore: unnecessary_statements
+//  else (aDate == tomorrow)  {
+// };
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    khmerNameFocus.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    debugPrint("Focus: " + khmerNameFocus.hasFocus.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
@@ -375,16 +484,19 @@ class _CustomerRegister extends State {
                       keys: khmerName,
                       childs: FormBuilderTextField(
                         attribute: 'name',
+                        enabled: false,
                         focusNode: khmerNameFocus,
                         textInputAction: TextInputAction.next,
                         // onFieldSubmitted: (v) {
                         //   FocusScope.of(context).requestFocus(englishNameFocus);
                         // },
                         decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            labelText: AppLocalizations.of(context)
-                                    .translate('full_khmer_name') ??
-                                'Full Khmer Name'),
+                          border: InputBorder.none,
+                          labelText: AppLocalizations.of(context)
+                                  .translate('full_khmer_name') ??
+                              'Full Khmer Name',
+                        ),
+
                         onChanged: (v) {
                           setState(() {
                             valueKhmerName = v;
@@ -394,9 +506,16 @@ class _CustomerRegister extends State {
                           return text == null ? null : text;
                         },
                         validators: [
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context)
+                                      .translate('khmer_name_required') ??
+                                  "Khmer Name required"),
                         ],
                         keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          BlacklistingTextInputFormatter(
+                              RegExp("[0-9/\\\\|!.]")),
+                        ],
                       ),
                     ),
                     GroupFromBuilder(
@@ -423,120 +542,250 @@ class _CustomerRegister extends State {
                         valueTransformer: (text) {
                           return text == null ? null : text;
                         },
-                        validators: [
-                          FormBuilderValidators.required(),
-                        ],
                         keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          new WhitelistingTextInputFormatter(
+                              RegExp("[a-z A-Z]")),
+                        ],
                       ),
                     ),
+                    // GroupFromBuilder(
+                    //   icons: Icons.date_range,
+                    //   keys: datehofBrith,
+                    //   childs: FormBuilderDateTimePicker(
+                    //     focusNode: datehofBrithFocus,
+                    //     textInputAction: TextInputAction.next,
+                    //     inputType: InputType.date,
+                    //     onChanged: (v) {
+                    //       setState(() {
+                    //         valueDatehofBrith = v ?? '';
+                    //       });
+                    //     },
+                    //     validators: [FormBuilderValidators.required()],
+                    //     format: DateFormat("yyyy-MM-dd"),
+                    //     decoration: new InputDecoration(
+                    //         border: InputBorder.none,
+                    //         labelText: AppLocalizations.of(context)
+                    //                 .translate('date_of_brith') ??
+                    //             "Date of brith"),
+                    //   ),
+                    // ),
+                    // GroupFromBuilder(
+                    //   icons: Icons.date_range,
+                    //   keys: _gender,
+                    //   childs: FormBuilderDropdown(
+                    //     attribute: "gender",
+                    //     decoration: InputDecoration(
+                    //       labelText: "Gender",
+                    //       border: InputBorder.none,
+                    //     ),
+                    //     hint: Text(
+                    //       AppLocalizations.of(context)
+                    //               .translate('select_gender') ??
+                    //           'Select Gender',
+                    //     ),
+                    //     onChanged: (value) {
+                    //       setState(() {
+                    //         gender = value;
+                    //       });
+                    //     },
+                    //     validators: [FormBuilderValidators.required()],
+                    //     items: ['M', 'F', 'O']
+                    //         .map((gender) => DropdownMenuItem(
+                    //             value: gender,
+                    //             child: Text(
+                    //               "$gender",
+                    //             )))
+                    //         .toList(),
+                    //   ),
+                    // ),
+
+                    //Gender
+
+                    // Container(
+                    //   child: Center(
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       crossAxisAlignment: CrossAxisAlignment.center,
+                    //       children: [
+                    //         Card(
+                    //             child: InkWell(
+                    //           onTap: () => {
+                    //             setState(() {
+                    //               gender = 'F';
+                    //             })
+                    //           },
+                    //           child: Container(
+                    //               width:
+                    //                   MediaQuery.of(context).size.width * 0.45,
+                    //               height:
+                    //                   MediaQuery.of(context).size.width * 0.1,
+                    //               child: Container(
+                    //                 padding: EdgeInsets.all(4),
+                    //                 child: Column(
+                    //                   crossAxisAlignment:
+                    //                       CrossAxisAlignment.stretch,
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.spaceBetween,
+                    //                   children: [
+                    //                     Center(
+                    //                       child: Text(
+                    //                         'Female',
+                    //                         textAlign: TextAlign.center,
+                    //                       ),
+                    //                     ),
+                    //                     Container(
+                    //                       alignment: Alignment.bottomCenter,
+                    //                       child: Text(
+                    //                         'Gender required(*)',
+                    //                         style: TextStyle(
+                    //                             color: Colors.red,
+                    //                             fontSize: 10),
+                    //                       ),
+                    //                     )
+                    //                   ],
+                    //                 ),
+                    //               )),
+                    //         )),
+                    //         Card(
+                    //             child: InkWell(
+                    //           onTap: () => {
+                    //             setState(() {
+                    //               gender = 'M';
+                    //             })
+                    //           },
+                    //           child: Container(
+                    //               width:
+                    //                   MediaQuery.of(context).size.width * 0.45,
+                    //               height:
+                    //                   MediaQuery.of(context).size.width * 0.1,
+                    //               child: Container(
+                    //                 padding: EdgeInsets.all(4),
+                    //                 child: Column(
+                    //                   crossAxisAlignment:
+                    //                       CrossAxisAlignment.stretch,
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.spaceBetween,
+                    //                   children: [
+                    //                     Center(
+                    //                       child: Text(
+                    //                         'Male',
+                    //                         textAlign: TextAlign.center,
+                    //                       ),
+                    //                     ),
+                    //                     Container(
+                    //                       alignment: Alignment.bottomCenter,
+                    //                       child: Text(
+                    //                         'Gender required(*)',
+                    //                         style: TextStyle(
+                    //                             color: Colors.red,
+                    //                             fontSize: 10),
+                    //                       ),
+                    //                     )
+                    //                   ],
+                    //                 ),
+                    //               )),
+                    //         )),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+
                     GroupFromBuilder(
-                      icons: Icons.date_range,
-                      keys: datehofBrith,
-                      childs: FormBuilderDateTimePicker(
-                        focusNode: datehofBrithFocus,
-                        textInputAction: TextInputAction.next,
-                        inputType: InputType.date,
-                        onChanged: (v) {
-                          setState(() {
-                            valueDatehofBrith = v ?? '';
-                          });
-                        },
-                        validators: [FormBuilderValidators.required()],
-                        format: DateFormat("yyyy-MM-dd"),
-                        decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            labelText: AppLocalizations.of(context)
-                                    .translate('date_of_brith') ??
-                                "Date of brith"),
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.date_range,
+                      icons: Icons.wc,
                       keys: _gender,
-                      childs: FormBuilderDropdown(
-                        attribute: "gender",
-                        decoration: InputDecoration(
-                          labelText: "Gender",
+                      childs: FormBuilderRadio(
+                        decoration: new InputDecoration(
                           border: InputBorder.none,
+                          labelText: 'Gender',
                         ),
-                        hint: Text(
-                          AppLocalizations.of(context)
-                                  .translate('select_gender') ??
-                              'Select Gender',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            gender = value;
-                          });
+                        attribute: "best_language",
+                        validators: [
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context)
+                                      .translate('gender_required') ??
+                                  "Gender required(*)"),
+                        ],
+                        onChanged: (v) {
+                          logger().e('gender: $v');
+                          if (v == 'Female') {
+                            setState(() {
+                              gender = 'F';
+                            });
+                          } else {
+                            setState(() {
+                              gender = 'M';
+                            });
+                          }
                         },
-                        validators: [FormBuilderValidators.required()],
-                        items: ['M', 'F', 'O']
-                            .map((gender) => DropdownMenuItem(
-                                value: gender,
-                                child: Text(
-                                  "$gender",
-                                )))
-                            .toList(),
+                        options: [
+                          AppLocalizations.of(context).translate("female"),
+                          AppLocalizations.of(context).translate("male"),
+                        ]
+                            .map((lang) => FormBuilderFieldOption(value: lang))
+                            .toList(growable: false),
                       ),
                     ),
+
                     GroupFromBuilder(
                       icons: Icons.phone,
                       keys: phoneKey,
-                      childs: FormBuilderPhoneField(
+                      childs: FormBuilderTextField(
+                        attribute: 'phone',
                         focusNode: phoneKeyFocus,
+                        controller: controllerPhone1,
                         textInputAction: TextInputAction.next,
-                        onEditingComplete: () =>
-                            FocusScope.of(context).requestFocus(phoneKey2Focus),
-                        attribute: 'phone_number',
-                        initialValue: '0',
-                        defaultSelectedCountryIsoCode: 'KH',
-                        cursorColor: Colors.black,
-                        maxLength: 10,
-                        maxLengthEnforced: true,
                         decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            labelText: AppLocalizations.of(context)
-                                    .translate('phone_number_1') ??
-                                'Phone Number 1'),
+                          border: InputBorder.none,
+                          labelText: AppLocalizations.of(context)
+                                  .translate('phone_number_1') ??
+                              'Phone Number 1',
+                        ),
+                        maxLength: 10,
                         onChanged: (v) {
-                          setState(() {
-                            valuePhone1 = v;
-                          });
+                          valuePhone1 = v;
                         },
-                        priorityListByIsoCode: ['KH'],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
                         validators: [
                           FormBuilderValidators.numeric(
-                              errorText: 'Invalid phone number'),
+                              errorText: "Number only"),
                           FormBuilderValidators.required(
-                              errorText: 'This field reqired')
+                              errorText: AppLocalizations.of(context)
+                                      .translate('phone_number_1_required') ??
+                                  "Phone Number 1 Required(*)")
                         ],
+                        valueTransformer: (text) {
+                          return text == null ? null : text;
+                        },
                       ),
                     ),
                     GroupFromBuilder(
                       icons: Icons.phone,
                       keys: phoneKey2,
-                      childs: FormBuilderPhoneField(
-                        attribute: 'phone_number',
+                      childs: FormBuilderTextField(
+                        attribute: 'name',
                         focusNode: phoneKey2Focus,
+                        controller: controllerPhone2,
                         textInputAction: TextInputAction.next,
-                        onEditingComplete: () => FocusScope.of(context)
-                            .requestFocus(datehofRegisterFocus),
-                        initialValue: '0',
-                        maxLength: 10,
-                        maxLengthEnforced: true,
-                        defaultSelectedCountryIsoCode: 'KH',
-                        cursorColor: Colors.black,
                         decoration: new InputDecoration(
                             border: InputBorder.none,
                             labelText: AppLocalizations.of(context)
                                     .translate('phone_number_2') ??
                                 'Phone Number 2'),
+                        maxLength: 10,
                         onChanged: (v) {
-                          setState(() {
-                            valuePhone2 = v;
-                          });
+                          valuePhone2 = v;
                         },
-                        priorityListByIsoCode: ['KH'],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        valueTransformer: (text) {
+                          return text == null ? null : text;
+                        },
                       ),
                     ),
                     GroupFromBuilder(
@@ -560,7 +809,12 @@ class _CustomerRegister extends State {
                             valueOccupationOfCustomer = value;
                           });
                         },
-                        validators: [FormBuilderValidators.required()],
+                        validators: [
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context).translate(
+                                      'occupation_of_customer_required') ??
+                                  "Occupation of customer Required(*)")
+                        ],
                         items: ['Employee', 'Business ownership']
                             .map((v) => DropdownMenuItem(
                                 value: v,
@@ -577,8 +831,8 @@ class _CustomerRegister extends State {
                           attribute: 'name',
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
-                                    .translate('nation_id_family_book') ??
-                                "Nation ID, Family book, Passport",
+                                    .translate('personal_document_type') ??
+                                'Personal Document Type',
                             border: InputBorder.none,
                           ),
                           validators: [
@@ -586,8 +840,8 @@ class _CustomerRegister extends State {
                           ],
                           hint: Text(
                             AppLocalizations.of(context)
-                                    .translate('nation_id_family_book') ??
-                                'Nation ID, Famliy book, Passport',
+                                    .translate('personal_document_type') ??
+                                'Document Type',
                           ),
                           items: listID
                               .map((e) => DropdownMenuItem(
@@ -616,7 +870,7 @@ class _CustomerRegister extends State {
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
                                     .translate('nation_id_family_book') ??
-                                "Nation ID, Family book, Passport",
+                                "Document number",
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -642,7 +896,10 @@ class _CustomerRegister extends State {
                         textInputAction: TextInputAction.next,
                         onChanged: (v) {
                           valueNextVisitDate = v;
+                          checkMoreThenCurrentDay(v);
                         },
+                        initialValue: DateTime.now(),
+                        firstDate: DateTime.now(),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
                           labelText: AppLocalizations.of(context)
@@ -681,39 +938,6 @@ class _CustomerRegister extends State {
                                 value: valueProspective,
                                 child: Text(
                                   "$valueProspective",
-                                )))
-                            .toList(),
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.check,
-                      keys: gurantorCustomer,
-                      childs: FormBuilderDropdown(
-                        attribute: 'name',
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
-                                  .translate('guarantor_customer') ??
-                              "G=Gurantor, C=Customer",
-                          border: InputBorder.none,
-                        ),
-                        hint: Text(
-                          AppLocalizations.of(context)
-                                  .translate('guarantor_customer') ??
-                              'G=Gurantor, C=Customer',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            valueGurantorCustomer = value;
-                          });
-                        },
-                        items: [
-                          'G',
-                          'C',
-                        ]
-                            .map((valueGurantorCustomer) => DropdownMenuItem(
-                                value: valueGurantorCustomer,
-                                child: Text(
-                                  "$valueGurantorCustomer",
                                 )))
                             .toList(),
                       ),
@@ -975,17 +1199,28 @@ class _CustomerRegister extends State {
                                   FlatButton(
                                     child: Container(
                                       width: 240,
-                                      child: Text(
-                                        _currentAddress ??
-                                            AppLocalizations.of(context)
-                                                .translate('get_location') ??
-                                            "Get location",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontFamily: fontFamily,
-                                            fontSize: 17,
-                                            color: Colors.grey[500],
-                                            fontWeight: FontWeight.w400),
+                                      child: Container(
+                                        padding: EdgeInsets.all(4),
+                                        child: Column(
+                                          children: [
+                                            Center(
+                                              child: Text(
+                                                _currentAddress ??
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                            'get_location') ??
+                                                    "Get location",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontFamily: fontFamily,
+                                                    fontSize: 17,
+                                                    color: Colors.grey[500],
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     onPressed: () {
@@ -1011,46 +1246,55 @@ class _CustomerRegister extends State {
                       text: AppLocalizations.of(context).translate('submit') ??
                           'Submit',
                       color: logolightGreen,
-                      pressEvent: () {
-                        if (selectedValueVillage == 'Village code') {
-                          setState(() {
-                            validateVillage = true;
-                          });
-                        } else {
-                          AwesomeDialog(
-                              context: context,
-                              // animType: AnimType.LEFTSLIDE,
-                              headerAnimationLoop: false,
-                              dialogType: DialogType.INFO,
-                              title: AppLocalizations.of(context)
-                                      .translate('information') ??
-                                  'Information',
-                              desc: AppLocalizations.of(context)
-                                      .translate('are_you_sure_you') ??
-                                  'Are you sure you want to register the customer?',
-                              btnOkOnPress: () async {
-                                if (selectedValueVillage == 'Village code') {
-                                  setState(() {
-                                    validateVillage = true;
-                                  });
-                                } else {
-                                  await onSubmit(context);
-                                  setState(() {
-                                    validateVillage = false;
-                                  });
-                                }
-                              },
-                              btnCancelText: AppLocalizations.of(context)
-                                      .translate('no') ??
-                                  "No",
-                              btnCancelOnPress: () {},
-                              btnCancelIcon: Icons.close,
-                              btnOkIcon: Icons.check_circle,
-                              btnOkColor: logolightGreen,
-                              btnOkText: AppLocalizations.of(context)
-                                      .translate('yes') ??
-                                  'Yes')
-                            ..show();
+                      pressEvent: () async {
+                        if (khmerName.currentState.saveAndValidate() &&
+                            englishName.currentState.saveAndValidate() &&
+                            phoneKey.currentState.saveAndValidate() &&
+                            occupationOfCustomer.currentState
+                                .saveAndValidate() &&
+                            _gender.currentState.saveAndValidate()) {
+                          // await onSubmit(context);
+                          if (selectedValueVillage == 'Village code') {
+                            setState(() {
+                              validateVillage = true;
+                            });
+                          } else {
+                            AwesomeDialog(
+                                context: context,
+                                // animType: AnimType.LEFTSLIDE,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.INFO,
+                                title: AppLocalizations.of(context)
+                                        .translate('information') ??
+                                    'Information',
+                                desc: AppLocalizations.of(context)
+                                        .translate('are_you_sure_you') ??
+                                    'Are you sure you want to register the customer?',
+                                btnOkOnPress: () async {
+                                  if (selectedValueVillage == 'Village code') {
+                                    await onSubmit(context);
+                                    setState(() {
+                                      validateVillage = true;
+                                    });
+                                  } else {
+                                    await onSubmit(context);
+                                    setState(() {
+                                      validateVillage = false;
+                                    });
+                                  }
+                                },
+                                btnCancelText: AppLocalizations.of(context)
+                                        .translate('no') ??
+                                    "No",
+                                btnCancelOnPress: () {},
+                                btnCancelIcon: Icons.close,
+                                btnOkIcon: Icons.check_circle,
+                                btnOkColor: logolightGreen,
+                                btnOkText: AppLocalizations.of(context)
+                                        .translate('yes') ??
+                                    'Yes')
+                              ..show();
+                          }
                         }
                       },
                     ),

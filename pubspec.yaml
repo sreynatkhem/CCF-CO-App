@@ -90,6 +90,7 @@ flutter:
     - lang/km.json
     - assets/pdf/
     - assets/images/list.png
+    - assets/images/percentage.png
 
     - assets/images/101.png
     - assets/images/102.png

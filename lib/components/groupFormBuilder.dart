@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -19,8 +20,8 @@ class GroupFromBuilder extends StatelessWidget {
             if (imageIcon != null)
               Container(
                 padding: EdgeInsets.only(left: 5),
-                child: Image.network(
-                  imageIcon,
+                child: Image(
+                  image: imageIcon,
                   width: 18,
                   color: Colors.grey,
                 ),

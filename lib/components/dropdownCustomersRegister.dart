@@ -18,6 +18,8 @@ class DropDownCustomerRegister extends StatelessWidget {
   var iconsClose;
   var onPressed;
   var validate;
+  var validateForm;
+
   bool clear = true;
 
   DropDownCustomerRegister(
@@ -28,6 +30,7 @@ class DropDownCustomerRegister extends StatelessWidget {
       this.selectedValue,
       this.onChanged,
       this.items,
+      this.validateForm,
       this.title,
       this.styleTexts,
       this.clear,
@@ -66,11 +69,32 @@ class DropDownCustomerRegister extends StatelessWidget {
                               : null;
                         },
                     child: Container(
-                        child: Text(
-                            texts ??
-                                AppLocalizations.of(context).translate(title) ??
-                                '',
-                            style: styleTexts))),
+                        // padding: EdgeInsets.all(4),
+                        child: Column(
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Center(
+                          child: Text(
+                              texts ??
+                                  AppLocalizations.of(context)
+                                      .translate(title) ??
+                                  '',
+                              style: styleTexts),
+                        ),
+                        Padding(padding: EdgeInsets.all(1)),
+                        texts != null
+                            ? Padding(padding: EdgeInsets.all(1))
+                            : Container(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  validateForm,
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 10),
+                                ),
+                              ),
+                      ],
+                    ))),
               ),
               if (clear == true)
                 Container(

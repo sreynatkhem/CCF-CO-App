@@ -165,8 +165,8 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return Header(
-      headerTexts: AppLocalizations.of(context).translate('approval_history') ??
-          'Approval History',
+      headerTexts: AppLocalizations.of(context).translate('report_summary') ??
+          'Report Summary',
       actionsNotification: [
         Builder(
           builder: (context) => IconButton(

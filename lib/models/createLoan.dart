@@ -19,7 +19,9 @@ class CreateLoan {
   double intrate;
   double mfee;
   double afee;
+  double irr;
   String rmode;
+  String expdate;
   String odate;
   String mdate;
   String firdate;

@@ -119,7 +119,7 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
   void didChangeDependencies() {
     futureListLoanRegistraiton =
         Provider.of<LoanInternal>(context).getListLoan(20, 1);
-    getListLoan(20, 1, '', '', '', '');
+    getListLoan(20, 1, '', '', '', '', '');
     if (this.futureListLoanRegistraiton != futureListLoanRegistraiton) {
       this.futureListLoanRegistraiton = futureListLoanRegistraiton;
       Future.microtask(() => futureListLoanRegistraiton.doSomeHttpCall());
@@ -156,7 +156,8 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
   var _isFetching = true;
   var parsed = [];
 
-  getListLoan(_pageSize, _pageNumber, ucode, sdate, edate, status) async {
+  getListLoan(
+      _pageSize, _pageNumber, ucode, sdate, edate, status, bcodes) async {
     final storage = new FlutterSecureStorage();
     setState(() {
       isLoading = true;
@@ -167,9 +168,6 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
       var btlcode = status != null ? status : '';
-
-      var bcodes;
-      var ucode;
 
       if (level == '3') {
         bcodes = bcode != null ? bcode : branch;
@@ -284,7 +282,7 @@ class _ListLoanRegistrationState extends State<ListLoanRegistration> {
       edate,
       scode,
     });
-    getListLoan(20, 1, userCode, startDate, endDate, scodes);
+    getListLoan(20, 1, userCode, startDate, endDate, scodes, '');
     Navigator.of(context).pop();
   }
 
