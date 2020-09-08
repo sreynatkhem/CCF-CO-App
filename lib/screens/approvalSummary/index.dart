@@ -212,122 +212,133 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Container(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                child: ListView.builder(
-                    itemCount: listApprovalSummary.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      logger().e(
-                          'listApprovalSummary[index]: ${listApprovalSummary['listLoanApplications']}');
-                      if (listApprovalSummary.length > 0) {
-                        return Center(
-                            child: Column(
-                          children: [
-                            Container(
-                              height: 100,
-                              child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: logolightGreen, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: InkWell(
-                                      splashColor: Colors.blue.withAlpha(30),
-                                      onTap: () {
-                                        // onTapsDetail(parsed[index]);
-                                      },
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Row(
+            : Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                    child: ListView.builder(
+                        itemCount: listApprovalSummary.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          logger().e(
+                              'listApprovalSummary[index]: ${listApprovalSummary['listLoanApplications']}');
+                          if (listApprovalSummary.length > 0) {
+                            return Center(
+                                child: Column(
+                              children: [
+                                Container(
+                                  height: 100,
+                                  child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: logolightGreen, width: 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: InkWell(
+                                          splashColor:
+                                              Colors.blue.withAlpha(30),
+                                          onTap: () {
+                                            // onTapsDetail(parsed[index]);
+                                          },
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 5)),
-                                                Image(
-                                                  image: _imagesFindApproval,
-                                                  width: 50,
-                                                  height: 50,
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 15)),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                Row(
                                                   children: <Widget>[
-                                                    // Container(
-                                                    //     width: 200,
-                                                    //     child: Text(
-                                                    //       '${listApprovalSummary[index]['listLoanApplications']['userName']}',
-                                                    //       style: mainTitleBlack,
-                                                    //     )),
-                                                    // if (listApprovalSummary[
-                                                    //             index]
-                                                    //         ['lpourpose'] !=
-                                                    //     '')
-                                                    //   Text(
-                                                    //       '${listApprovalSummary[index]['listLoanApplications']['lcode']}'),
-                                                    // Padding(
-                                                    //     padding:
-                                                    //         EdgeInsets.only(
-                                                    //             bottom: 2)),
-                                                    // Padding(
-                                                    //     padding:
-                                                    //         EdgeInsets.only(
-                                                    //             bottom: 2)),
-                                                    // Text(
-                                                    //     '${listApprovalSummary[index]['listLoanApplications']['lamt']} (${listApprovalSummary[index]['listLoanApplications']['adate']})'),
-                                                    // Padding(
-                                                    //     padding:
-                                                    //         EdgeInsets.only(
-                                                    //             bottom: 2)),
-                                                    // Text(
-                                                    //     '${listApprovalSummary[index]['lamt']} (${listApprovalSummary[index]['listLoanApplications']['adate']})'),
-                                                    // Padding(
-                                                    //     padding:
-                                                    //         EdgeInsets.only(
-                                                    //             bottom: 2)),
-                                                    // Text(
-                                                    //     '${listApprovalSummary[index]['intrate']}/y'),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.only(
-                                                                bottom: 2)),
+                                                                left: 5)),
+                                                    Image(
+                                                      image:
+                                                          _imagesFindApproval,
+                                                      width: 50,
+                                                      height: 50,
+                                                    ),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 15)),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        // Container(
+                                                        //     width: 200,
+                                                        //     child: Text(
+                                                        //       '${listApprovalSummary[index]['listLoanApplications']['userName']}',
+                                                        //       style: mainTitleBlack,
+                                                        //     )),
+                                                        // if (listApprovalSummary[
+                                                        //             index]
+                                                        //         ['lpourpose'] !=
+                                                        //     '')
+                                                        //   Text(
+                                                        //       '${listApprovalSummary[index]['listLoanApplications']['lcode']}'),
+                                                        // Padding(
+                                                        //     padding:
+                                                        //         EdgeInsets.only(
+                                                        //             bottom: 2)),
+                                                        // Padding(
+                                                        //     padding:
+                                                        //         EdgeInsets.only(
+                                                        //             bottom: 2)),
+                                                        // Text(
+                                                        //     '${listApprovalSummary[index]['listLoanApplications']['lamt']} (${listApprovalSummary[index]['listLoanApplications']['adate']})'),
+                                                        // Padding(
+                                                        //     padding:
+                                                        //         EdgeInsets.only(
+                                                        //             bottom: 2)),
+                                                        // Text(
+                                                        //     '${listApprovalSummary[index]['lamt']} (${listApprovalSummary[index]['listLoanApplications']['adate']})'),
+                                                        // Padding(
+                                                        //     padding:
+                                                        //         EdgeInsets.only(
+                                                        //             bottom: 2)),
+                                                        // Text(
+                                                        //     '${listApprovalSummary[index]['intrate']}/y'),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom: 2)),
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                // Padding(
-                                                //     padding: EdgeInsets.only(
-                                                //         bottom: 2)),
-                                                // status,
-                                                // Padding(
-                                                //     padding: EdgeInsets.only(
-                                                //   top: 5,
-                                                // )),
-                                                // // Text(
-                                                // //     '#${parsed[index]['lcode']}'),
-                                                // Text(''),
-                                                // Padding(
-                                                //     padding: EdgeInsets.only(
-                                                //   right: 100,
-                                                // ))
-                                              ],
-                                            ),
-                                          ]))),
-                            ),
-                          ],
-                        ));
-                      }
-                    }),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    // Padding(
+                                                    //     padding: EdgeInsets.only(
+                                                    //         bottom: 2)),
+                                                    // status,
+                                                    // Padding(
+                                                    //     padding: EdgeInsets.only(
+                                                    //   top: 5,
+                                                    // )),
+                                                    // // Text(
+                                                    // //     '#${parsed[index]['lcode']}'),
+                                                    // Text(''),
+                                                    // Padding(
+                                                    //     padding: EdgeInsets.only(
+                                                    //   right: 100,
+                                                    // ))
+                                                  ],
+                                                ),
+                                              ]))),
+                                ),
+                              ],
+                            ));
+                          }
+                        }),
+                  ),
+                ],
               ),
       ),
     );
