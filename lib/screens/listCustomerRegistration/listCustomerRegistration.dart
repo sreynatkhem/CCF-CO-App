@@ -165,7 +165,8 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
                                 children: <Widget>[
                                   CardState(
                                     texts: '${snapshot.data[index].namekhr}',
-                                    textTwo: '${snapshot.data[index].nameeng}',
+                                    textTwo:
+                                        '${snapshot.data[index].nameeng != null ? snapshot.data[index].nameeng : ''}',
                                     id: '${snapshot.data[index].ccode}',
                                     phone: '${snapshot.data[index].phone1}',
                                     images: profile,

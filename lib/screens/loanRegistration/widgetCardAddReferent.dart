@@ -35,7 +35,7 @@ class WidgetCardAddRef extends StatelessWidget {
               bottomRight: Radius.circular(10)),
           boxShadow: [
             BoxShadow(
-              color: validateImage ?? Colors.grey.withOpacity(0.5),
+              color: validateImage ?? Colors.grey.withOpacity(0.1),
               spreadRadius: 5,
               blurRadius: 7,
               offset: Offset(0, 3), // changes position of shadow
@@ -50,7 +50,7 @@ class WidgetCardAddRef extends StatelessWidget {
                     : Container(height: 100, child: Image.file(image)),
                 Positioned(
                     top: 0,
-                    right: 0,
+                    right: 25,
                     child: GestureDetector(
                       onTap: onClearImage,
                       child: Icon(

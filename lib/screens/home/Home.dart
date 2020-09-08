@@ -8,6 +8,7 @@ import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
+import 'package:chokchey_finance/screens/approvalSummary/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
@@ -176,6 +177,13 @@ class _HomeState extends State<Home> {
         ModalRoute.withName(""));
   }
 
+  onListApprovalSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ApprovalSummary()),
+        ModalRoute.withName(""));
+  }
+
   englishLanguage() {
     Locale _temp;
     _temp = Locale('en', 'US');
@@ -256,10 +264,16 @@ class _HomeState extends State<Home> {
                             'Loan Register List',
                         () => {onListLoanRegistration()}),
                     CustomListTile(
-                        Icons.check_box,
+                        Icons.insert_chart,
                         AppLocalizations.of(context)
-                                .translate('approval_history') ??
-                            'Approval History',
+                                .translate('report_approval') ??
+                            'Report Approval',
+                        () => {onListApprovalSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_summary') ??
+                            'Report Summary',
                         () => {onListApprovalHistory()}),
                     CustomListTile(
                         Icons.language,
@@ -305,7 +319,7 @@ class _HomeState extends State<Home> {
       drawers: new Drawer(
         child: _drawerList(context),
       ),
-      headerTexts: AppLocalizations.of(context).translate('loan'),
+      headerTexts: AppLocalizations.of(context).translate('loans'),
       actionsNotification: <Widget>[
         // Using Stack to show Notification Badge
         new Stack(
@@ -400,7 +414,7 @@ class _HomeState extends State<Home> {
                                 color: logolightGreen,
                                 imageNetwork: register,
                                 text: AppLocalizations.of(context)
-                                        .translate('customer') ??
+                                        .translate('customers') ??
                                     'Customer',
                                 // AppLocalizations.of(context).locale.languageCode == 'en'
                                 text2: AppLocalizations.of(context)
@@ -510,8 +524,9 @@ class _HomeState extends State<Home> {
               textAlign: TextAlign.center,
               activeColor: logolightGreen),
           BottomNavyBarItem(
-              title: Text(AppLocalizations.of(context).translate('category') ??
-                  'Category'),
+              title: Text(
+                  AppLocalizations.of(context).translate('categories') ??
+                      'Category'),
               icon: Icon(Icons.apps),
               textAlign: TextAlign.center,
               activeColor: logolightGreen),

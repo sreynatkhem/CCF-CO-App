@@ -157,9 +157,8 @@ class _LoanRegister extends State {
   final GlobalKey<FormBuilderState> repaymentMethod =
       GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> openData = GlobalKey<FormBuilderState>();
-  final GlobalKey<FormBuilderState> datehMaturityDate =
-      GlobalKey<FormBuilderState>();
-  final GlobalKey<FormBuilderState> firstRepaymentDate =
+  final GlobalKey<FormBuilderState> iRRKeys = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> expectedDate =
       GlobalKey<FormBuilderState>();
 
   final GlobalKey<FormBuilderState> generateGracePeriodNumber =
@@ -185,47 +184,18 @@ class _LoanRegister extends State {
   var statusEdit;
 
   onSubmit(context) async {
-    // setState(() {
-    //   _loading = true;
-    // });
-    // try {
-    //   await Provider.of<LoanInternal>(context, listen: false)
-    //       .postLoanRegistration(
-    //           idCcode,
-    //           valueAmount,
-    //           curcode,
-    //           pcode,
-    //           valueNumberofTerm,
-    //           valueInterest,
-    //           valueAdminFee,
-    //           valueMaintenanceFee,
-    //           valueRepaymentMethod,
-    //           valueMaturityDate,
-    //           valueFirstRepaymentDate,
-    //           valueGenerateGracePeriodNumber,
-    //           valueLoanPurpose,
-    //           valueLTV,
-    //           valueDscr,
-    //           valueORARD,
-    //           valueReferByWho)
-    //       .then((value) => {
-    //             setState(() {
-    //               _loading = false;
-    //             }),
-    //           });
-    // } catch (error) {
-    //   setState(() {
-    //     _loading = false;
-    //   });
-    // }
     final storage = new FlutterSecureStorage();
 
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
+    var irr = iRRControllers.text;
+    var irrInt = double.parse(irr);
+    var expdate = expdateDay != null ? expdateDay : DateTime.now();
     try {
       final boyrow =
-          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
+          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"irr\": $irrInt,\n\t\"expdate\": \"$expdate\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"\",\n\t\"mdate\": \"\",\n\t\"firdate\": \"\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
+      logger.e('boyrow: ${boyrow}');
       final response = await api().post(baseURLInternal + 'loans',
           headers: {
             "Content-Type": "application/json",
@@ -233,6 +203,7 @@ class _LoanRegister extends State {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
+      logger.e('parsed:: ${parsed}');
       setState(() {
         loanCode = parsed;
       });
@@ -242,7 +213,9 @@ class _LoanRegister extends State {
           MaterialPageRoute(builder: (context) => ListLoanApproval()),
         );
       }
-    } catch (error) {}
+    } catch (error) {
+      logger.e('error:: ${error}');
+    }
   }
 
   Future onAddFile(context) async {
@@ -273,7 +246,7 @@ class _LoanRegister extends State {
   var loanAmountFocus = FocusNode();
 
   final TextEditingController customerNameControllers = TextEditingController();
-
+  final TextEditingController iRRControllers = TextEditingController(text: '');
   var data = [
     {'name': "Mr.Sea", 'id': '001'},
     {'name': "Mr.SOk", 'id': '002'},
@@ -321,10 +294,15 @@ class _LoanRegister extends State {
         },
       );
       final list = jsonDecode(response.body);
+
       setState(() {
         listCustomers = list;
       });
-    } catch (error) {}
+    } catch (error) {
+      setState(() {
+        listCustomers = [];
+      });
+    }
   }
 
   var listCurrencies = [];
@@ -367,12 +345,37 @@ class _LoanRegister extends State {
     } catch (error) {}
   }
 
+  var interestIRR;
+  var maintenanceFeeIRR;
+  var numberofTermIRR;
+  var adminFeeIRR;
+  var valueIRR;
+  var expdateDay;
+
+  iRRCalculation() {
+    // var term = numberofTermIRR != 0 ?
+    print('numberofTermIRR $numberofTermIRR');
+    interestIRR = double.parse(valueInterest);
+    maintenanceFeeIRR = double.parse(valueMaintenanceFee);
+    adminFeeIRR = double.parse(valueAdminFee);
+    numberofTermIRR = double.parse(valueNumberofTerm);
+    setState(() {
+      valueIRR = ((interestIRR + maintenanceFeeIRR) * 12) +
+          ((adminFeeIRR / numberofTermIRR) * 12);
+      iRRControllers.text = valueIRR.toString();
+    });
+  }
+
+  onCheckDay(v) {
+    logger.e('message:: ${v}');
+  }
+
   @override
   Widget build(BuildContext context) {
-    var percentage =
-        'https://uxwing.com/wp-content/themes/uxwing/download/03-text-editing/percentage.png';
+    var percentages = const AssetImage('assets/images/percentage.png');
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
+    DateTime now = DateTime.now();
     return Header(
         headerTexts: 'loan_registration',
         bodys: _loading
@@ -404,7 +407,7 @@ class _LoanRegister extends State {
                             items: List.generate(
                                 listCustomers.length,
                                 (index) =>
-                                    "${listCustomers[index]['ccode']} - ${listCustomers[index]['namekhr']}"),
+                                    "${listCustomers[index]['ccode']} - ${listCustomers[index]['namekhr']} - ${listCustomers[index]['phone1']}"),
                             onChange: (value) async {
                               setState(() {
                                 selectedValueCustmerName = value ?? '';
@@ -423,6 +426,7 @@ class _LoanRegister extends State {
                             selectedValueCustmerName = 'Customer';
                           });
                         },
+                        validateForm: "Customer(*)",
                         styleTexts: selectedValueCustmerName != ''
                             ? TextStyle(
                                 fontFamily: fontFamily,
@@ -455,10 +459,7 @@ class _LoanRegister extends State {
                                 "Customer ID",
                             border: InputBorder.none,
                           ),
-                          onFieldSubmitted: (v) {
-                            FocusScope.of(context)
-                                .requestFocus(loanAmountFocus);
-                          },
+                          onFieldSubmitted: (v) {},
                           onChanged: (v) {
                             setState(() {
                               valueAmount = v;
@@ -479,11 +480,47 @@ class _LoanRegister extends State {
                         ),
                       ),
                       GroupFromBuilder(
+                        icons: Icons.check,
+                        keys: currenciesKey,
+                        childs: FormBuilderDropdown(
+                            attribute: 'name',
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)
+                                      .translate('currencies') ??
+                                  "Currencies",
+                              border: InputBorder.none,
+                            ),
+                            validators: [
+                              FormBuilderValidators.required(
+                                  errorText: AppLocalizations.of(context)
+                                          .translate('currencies_required') ??
+                                      "Currencies Required(*)"),
+                            ],
+                            hint: Text(
+                              AppLocalizations.of(context)
+                                      .translate('currencies') ??
+                                  'Currencies',
+                            ),
+                            items: listCurrencies
+                                .map((e) => DropdownMenuItem(
+                                      value: e['curname'].toString(),
+                                      onTap: () => {
+                                        setState(() {
+                                          selectedValueCurrencies = '';
+                                          curcode = e['curcode'];
+                                        }),
+                                        FocusScope.of(context)
+                                            .requestFocus(loanAmountFocus)
+                                      },
+                                      child: Text("${e['curname']}"),
+                                    ))
+                                .toList()),
+                      ),
+                      GroupFromBuilder(
                         icons: Icons.attach_money,
                         keys: loanAmount,
                         childs: FormBuilderTextField(
                           attribute: 'number',
-                          autofocus: true,
                           inputFormatters: [
                             WhitelistingTextInputFormatter.digitsOnly
                           ],
@@ -508,7 +545,11 @@ class _LoanRegister extends State {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.required(),
+                            FormBuilderValidators.min(1),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('loan_amount_required') ??
+                                    "Loan amount Required(*)"),
                             FormBuilderValidators.numeric(
                                 errorText: AppLocalizations.of(context)
                                         .translate('number_only') ??
@@ -516,38 +557,6 @@ class _LoanRegister extends State {
                           ],
                           keyboardType: TextInputType.number,
                         ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.check,
-                        keys: currenciesKey,
-                        childs: FormBuilderDropdown(
-                            attribute: 'name',
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)
-                                      .translate('currencies') ??
-                                  "Currencies",
-                              border: InputBorder.none,
-                            ),
-                            validators: [
-                              FormBuilderValidators.required(),
-                            ],
-                            hint: Text(
-                              AppLocalizations.of(context)
-                                      .translate('currencies') ??
-                                  'Currencies',
-                            ),
-                            items: listCurrencies
-                                .map((e) => DropdownMenuItem(
-                                      value: e['curname'].toString(),
-                                      onTap: () => {
-                                        setState(() {
-                                          selectedValueCurrencies = '';
-                                          curcode = e['curcode'];
-                                        }),
-                                      },
-                                      child: Text("${e['curname']}"),
-                                    ))
-                                .toList()),
                       ),
                       GroupFromBuilder(
                         icons: Icons.check,
@@ -561,7 +570,11 @@ class _LoanRegister extends State {
                               border: InputBorder.none,
                             ),
                             validators: [
-                              FormBuilderValidators.required(),
+                              FormBuilderValidators.required(
+                                  errorText: AppLocalizations.of(context)
+                                          .translate(
+                                              'loan_products_required') ??
+                                      "Loan Products Required(*)"),
                             ],
                             hint: Text(
                               AppLocalizations.of(context)
@@ -593,7 +606,8 @@ class _LoanRegister extends State {
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
-                                    .translate('number_of_term') ??
+                                        .translate('number_of_term') +
+                                    '(month*)' ??
                                 'Number of term',
                             border: InputBorder.none,
                           ),
@@ -601,22 +615,27 @@ class _LoanRegister extends State {
                             setState(() {
                               valueNumberofTerm = v;
                             });
+                            iRRCalculation();
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.required(),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('number_of_term_required') ??
+                                    "Number of term Required(*)"),
                           ],
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                         ),
                       ),
                       GroupFromBuilder(
                         keys: interestRate,
-                        imageIcon: percentage,
+                        imageIcon: percentages,
                         childs: FormBuilderTextField(
                           attribute: 'number',
                           focusNode: interestRateFocus,
@@ -627,20 +646,27 @@ class _LoanRegister extends State {
                           },
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
-                                    .translate('interest_rate') ??
-                                'Interest rate',
+                                    .translate('monthly_interest_rate') ??
+                                'Monthly interest rate',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
                             setState(() {
                               valueInterest = v;
                             });
+                            iRRCalculation();
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.required(),
+                            FormBuilderValidators.min(1),
+                            FormBuilderValidators.max(1.5),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate(
+                                            'monthly_interest_rate_required') ??
+                                    "Monthly interest rate required(*)"),
                           ],
                           keyboardType: TextInputType.number,
                           inputFormatters: [
@@ -650,8 +676,8 @@ class _LoanRegister extends State {
                         ),
                       ),
                       GroupFromBuilder(
-                        icons: Icons.attach_money,
                         keys: maintenanceFee,
+                        imageIcon: percentages,
                         childs: FormBuilderTextField(
                           attribute: 'number',
                           focusNode: maintenanceFeeFocus,
@@ -669,12 +695,18 @@ class _LoanRegister extends State {
                             setState(() {
                               valueMaintenanceFee = v;
                             });
+                            iRRCalculation();
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.required(),
+                            FormBuilderValidators.max(0.7),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate(
+                                            'maintenance_fee_required') ??
+                                    "Maintenance fee required(*)"),
                           ],
                           keyboardType: TextInputType.number,
                           inputFormatters: [
@@ -684,8 +716,8 @@ class _LoanRegister extends State {
                         ),
                       ),
                       GroupFromBuilder(
-                        icons: Icons.attach_money,
                         keys: adminFee,
+                        imageIcon: percentages,
                         childs: FormBuilderTextField(
                           attribute: 'number',
                           focusNode: adminFeeFocus,
@@ -699,22 +731,54 @@ class _LoanRegister extends State {
                                 'Admin fee',
                             border: InputBorder.none,
                           ),
-                          onChanged: (v) {
+                          onChanged: (v) => {
                             setState(() {
                               valueAdminFee = v;
                               valueRepaymentMethod = v;
-                            });
+                            }),
+                            iRRCalculation(),
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.required(),
+                            FormBuilderValidators.max(1),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('admin_fee_required') ??
+                                    "Admin fee required(*)"),
                           ],
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             WhitelistingTextInputFormatter(
                                 RegExp(r'^(\d+)?\.?\d{0,2}')),
+                          ],
+                        ),
+                      ),
+                      GroupFromBuilder(
+                        imageIcon: percentages,
+                        keys: iRRKeys,
+                        childs: FormBuilderTextField(
+                          controller: iRRControllers,
+                          readOnly: true,
+                          attribute: 'number',
+                          focusNode: dscrFocus,
+                          decoration: InputDecoration(
+                            labelText: 'IRR',
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          keyboardType: TextInputType.number,
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('irr_required') ??
+                                    "IRR required(*)"),
+                          ],
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter.digitsOnly
                           ],
                         ),
                       ),
@@ -758,46 +822,36 @@ class _LoanRegister extends State {
                       ),
                       GroupFromBuilder(
                         icons: Icons.date_range,
-                        keys: datehMaturityDate,
-                        childs: FormBuilderDateTimePicker(
-                          focusNode: datehMaturityDateFocus,
-                          textInputAction: TextInputAction.next,
-                          inputType: InputType.date,
-                          onChanged: (v) {
-                            setState(() {
-                              valueMaturityDate = v ?? DateTime.now();
-                            });
-                          },
-                          validators: [FormBuilderValidators.required()],
-                          format: DateFormat("yyyy-MM-dd"),
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                    .translate('maturity_date') ??
-                                "Maturity date",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.date_range,
-                        keys: firstRepaymentDate,
+                        keys: expectedDate,
                         childs: FormBuilderDateTimePicker(
                           focusNode: firstRepaymentDateFocus,
                           textInputAction: TextInputAction.next,
                           inputType: InputType.date,
+                          firstDate: DateTime.now(),
                           onChanged: (v) {
                             setState(() {
-                              valueFirstRepaymentDate = v ?? DateTime.now();
+                              expdateDay = v ?? DateTime.now();
                             });
+                            onCheckDay(v);
                             FocusScope.of(context)
                                 .requestFocus(generateGracePeriodNumberFocus);
                           },
-                          validators: [FormBuilderValidators.required()],
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('expected_date_required') ??
+                                    "Expected date required(*)"),
+                          ],
+                          initialValue: DateTime(
+                            now.year,
+                            now.month,
+                            now.day + 15,
+                          ),
                           format: DateFormat("yyyy-MM-dd"),
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
-                                    .translate('first_repayment_date') ??
-                                "First repayment date",
+                                    .translate('expected_date') ??
+                                "Expected date(*)",
                             border: InputBorder.none,
                           ),
                         ),
@@ -816,7 +870,7 @@ class _LoanRegister extends State {
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context).translate(
                                     'generate_grace_period_number') ??
-                                'Generate grace period number',
+                                'Generate',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -844,6 +898,12 @@ class _LoanRegister extends State {
                           onFieldSubmitted: (v) {
                             FocusScope.of(context).requestFocus(lTVFocus);
                           },
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('loan_purpose_required') ??
+                                    "Loan purpose required(*)"),
+                          ],
                           decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
                                     .translate('loan_purpose') ??
@@ -860,7 +920,7 @@ class _LoanRegister extends State {
                         ),
                       ),
                       GroupFromBuilder(
-                        icons: Icons.confirmation_number,
+                        imageIcon: percentages,
                         keys: ltvKey,
                         childs: FormBuilderTextField(
                           attribute: 'number',
@@ -870,7 +930,7 @@ class _LoanRegister extends State {
                             FocusScope.of(context).requestFocus(dscrFocus);
                           },
                           decoration: const InputDecoration(
-                            labelText: 'LTV',
+                            labelText: 'LTV(*)',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -886,12 +946,13 @@ class _LoanRegister extends State {
                             FormBuilderValidators.required(),
                           ],
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                         ),
                       ),
                       GroupFromBuilder(
-                        icons: Icons.confirmation_number,
+                        imageIcon: percentages,
                         keys: dscrKey,
                         childs: FormBuilderTextField(
                           attribute: 'number',
@@ -902,7 +963,7 @@ class _LoanRegister extends State {
                                 .requestFocus(referByWhoFocus);
                           },
                           decoration: InputDecoration(
-                            labelText: 'Dscr',
+                            labelText: 'Dscr(*)',
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
@@ -918,7 +979,8 @@ class _LoanRegister extends State {
                             FormBuilderValidators.required(),
                           ],
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                         ),
                       ),
@@ -952,20 +1014,19 @@ class _LoanRegister extends State {
                             'Save',
                         color: logolightGreen,
                         pressEvent: () {
-                          if (loanAmount.currentState.saveAndValidate() &&
-                              currenciesKey.currentState.saveAndValidate() &&
+                          if (currenciesKey.currentState.saveAndValidate() &&
+                              loanAmount.currentState.saveAndValidate() &&
                               loanProductsKey.currentState.saveAndValidate() &&
                               numberOfTerm.currentState.saveAndValidate() &&
                               interestRate.currentState.saveAndValidate() &&
                               maintenanceFee.currentState.saveAndValidate() &&
                               adminFee.currentState.saveAndValidate() &&
+                              iRRKeys.currentState.saveAndValidate() &&
                               repaymentMethod.currentState.saveAndValidate() &&
-                              datehMaturityDate.currentState
-                                  .saveAndValidate() &&
-                              firstRepaymentDate.currentState
-                                  .saveAndValidate() &&
+                              expectedDate.currentState.saveAndValidate() &&
                               generateGracePeriodNumber.currentState
                                   .saveAndValidate() &&
+                              loanPurpose.currentState.saveAndValidate() &&
                               ltvKey.currentState.saveAndValidate() &&
                               dscrKey.currentState.saveAndValidate()) {
                             if (selectedValueCustomer == false) {
@@ -1025,6 +1086,9 @@ class _LoanRegister extends State {
                                       'Yes')
                                 ..show();
                             }
+                          } else {
+                            print(
+                                'what worn${loanAmount.currentState.saveAndValidate()}}');
                           }
                         },
                       ),

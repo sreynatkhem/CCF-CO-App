@@ -279,13 +279,15 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                                                                   .center,
                                                           children: <Widget>[
                                                             Container(
+                                                                width: 200,
                                                                 child: Text(
-                                                              parsed[index]
-                                                                      ['loan']
-                                                                  ['customer'],
-                                                              style:
-                                                                  mainTitleBlack,
-                                                            )),
+                                                                  parsed[index][
+                                                                          'loan']
+                                                                      [
+                                                                      'customer'],
+                                                                  style:
+                                                                      mainTitleBlack,
+                                                                )),
                                                             Text(
                                                                 '${parsed[index]['rcode']}'),
                                                             Padding(

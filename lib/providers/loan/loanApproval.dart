@@ -11,10 +11,13 @@ import '../manageService.dart';
 
 class LoanApproval with ChangeNotifier {
   final storage = new FlutterSecureStorage();
+  var isLoading = false;
 
 //Request list loan
   Future<List<RequestLoanApproval>> getLoanApproval(
       _pageSize, _pageNumber) async {
+    isLoading = true;
+
     try {
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
@@ -27,9 +30,14 @@ class LoanApproval with ChangeNotifier {
       };
       final response = await api().post(baseURLInternal + 'loanRequests/byuser',
           headers: headers, body: bodyRow);
+      isLoading = false;
+      print('isLoading ${isLoading}');
+
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.addAll(jsonDecode(response.body));
+        // print('response list approval::: ${jsonDecode(response.body)}');
+
         notifyListeners();
         return jsonDecode(response.body)
             .map<RequestLoanApproval>(
@@ -37,8 +45,11 @@ class LoanApproval with ChangeNotifier {
             .toList();
       } else {
         print('statusCode::: ${response.statusCode}');
+        isLoading = false;
       }
-    } catch (error) {}
+    } catch (error) {
+      isLoading = false;
+    }
   }
 
   Future<List<RequestDetailLoan>> getLoanApprovalDetail(rcode) async {
@@ -164,4 +175,5 @@ class LoanApproval with ChangeNotifier {
   bool get isFetchingSuccessfully => successfully;
   bool get isFetchingSuccessfullyReturn => successfullyReturn;
   bool get isFetchingSuccessfullyReject => successfullyReject;
+  bool get isFetchingLoading => isLoading;
 }

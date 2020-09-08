@@ -19,7 +19,9 @@ CreateLoan _$CreateLoanFromJson(Map<String, dynamic> json) {
     ..intrate = (json['intrate'] as num)?.toDouble()
     ..mfee = (json['mfee'] as num)?.toDouble()
     ..afee = (json['afee'] as num)?.toDouble()
+    ..irr = (json['irr'] as num)?.toDouble()
     ..rmode = json['rmode'] as String
+    ..expdate = json['expdate'] as String
     ..odate = json['odate'] as String
     ..mdate = json['mdate'] as String
     ..firdate = json['firdate'] as String
