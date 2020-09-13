@@ -122,7 +122,6 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
   void dispose() {
     _streamController.close();
     _scrollController.dispose();
-
     super.dispose();
   }
 

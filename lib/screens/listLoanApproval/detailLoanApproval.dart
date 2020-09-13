@@ -38,7 +38,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
   final dynamic lists;
   var list;
   var _isloading = false;
-
+  PhotoViewController controller;
   _CardDetailLoanRegitrationState(
     this.lists,
   );
@@ -70,6 +70,29 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
       context,
     ).getLoanByID(locode['lcode']);
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    controller = PhotoViewController();
+    super.initState();
+  }
+
+  void listener(PhotoViewControllerValue value) {
+    setState(() {
+      scaleCopy = value.scale;
+    });
+    logger().e('scaleCopy :: ${scaleCopy}');
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    // setState(() {
+    //   _imageDocument = null;
+    // });
+    logger().e('dispose');
+    super.dispose();
   }
 
   var _imageDocument;
@@ -124,8 +147,24 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
         final directory = await getApplicationDocumentsDirectory();
         var file = Io.File('${directory.path}/101.png');
         file.writeAsBytesSync(List.from(_bytes));
-        await showDialog(context: context, builder: (_) => ImageDialog(file));
-
+        await showDialog(
+            context: context,
+            builder: (_) => Dialog(
+                  child: Container(
+                    color: Colors.white,
+                    width: 350,
+                    height: 330,
+                    child: PhotoView(
+                      controller: controller,
+                      backgroundDecoration: BoxDecoration(color: Colors.white),
+                      imageProvider: _imageDocument != null
+                          ? AssetImage(file.path)
+                          : AssetImage(imageFile.path),
+                    ),
+                  ),
+                ));
+        file = Io.File('assets/images/101.png');
+        logger().e("controller:: ${controller}");
         break;
       case '102':
         var uri = image['filepath'];
@@ -135,7 +174,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
         var file = Io.File('${directory.path}/102.png');
         file.writeAsBytesSync(List.from(_bytes));
         await showDialog(context: context, builder: (_) => ImageDialog(file));
-
         break;
       //
       case '103':
@@ -305,7 +343,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     }
   }
 
-  PhotoViewController controller;
   double scaleCopy;
   @override
   Widget build(BuildContext context) {
@@ -317,6 +354,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
         : FutureBuilder<List<CreateLoan>>(
             future: detiaLoan,
             builder: (context, snapshot) {
+              var f = new NumberFormat("#,###.00", "en_US");
               return snapshot.hasData
                   ? ListView.builder(
                       itemCount: snapshot.data.length,
@@ -361,7 +399,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'loan_amount',
                                                 value:
-                                                    '${snapshot.data[index].lamt}',
+                                                    '\$ ${f.format(snapshot.data[index].lamt)}',
                                               ),
                                               // //
                                               ListDetail(
@@ -379,25 +417,31 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'number_of_term',
                                                 value:
-                                                    '${snapshot.data[index].ints}',
+                                                    '${snapshot.data[index].ints.toInt()}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'interest_rate',
                                                 value:
-                                                    '${snapshot.data[index].intrate}',
+                                                    '${snapshot.data[index].intrate}%',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'maintenance_fee',
                                                 value:
-                                                    '${snapshot.data[index].mfee}',
+                                                    '${snapshot.data[index].mfee}%',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'admin_fee',
                                                 value:
-                                                    '${snapshot.data[index].afee}',
+                                                    '${snapshot.data[index].afee}%',
+                                              ),
+                                              // //
+                                              ListDetail(
+                                                name: 'irr',
+                                                value:
+                                                    '${snapshot.data[index].irr}%',
                                               ),
                                               // //
                                               ListDetail(
@@ -486,47 +530,44 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                               .split(',')
                                                               .last);
 
-                                                      return Stack(
-                                                          children: <Widget>[
-                                                            Container(
-                                                                padding: EdgeInsets
-                                                                    .only(
+                                                      return Stack(children: <
+                                                          Widget>[
+                                                        Container(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    bottom: 10),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  _imageDocument[
+                                                                          index]
+                                                                      [
+                                                                      'description'],
+                                                                  style:
+                                                                      mainTitleBlack,
+                                                                ),
+                                                                Padding(
+                                                                    padding: EdgeInsets.only(
                                                                         bottom:
-                                                                            10),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      _imageDocument[
-                                                                              index]
-                                                                          [
-                                                                          'description'],
-                                                                      style:
-                                                                          mainTitleBlack,
-                                                                    ),
-                                                                    Padding(
-                                                                        padding:
-                                                                            EdgeInsets.only(bottom: 10)),
-                                                                    InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        showImage(
-                                                                            _imageDocument[index]);
-                                                                      },
-                                                                      child: Image
-                                                                          .memory(
-                                                                        _bytes,
-                                                                        height:
-                                                                            230,
-                                                                        width:
-                                                                            300,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ))
-                                                          ]);
+                                                                            10)),
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    // showImage(
+                                                                    //     _imageDocument[index]);
+                                                                  },
+                                                                  child: Image
+                                                                      .memory(
+                                                                    _bytes,
+                                                                    height: 230,
+                                                                    width: 300,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ))
+                                                      ]);
                                                     }),
                                                   ),
                                                 ),

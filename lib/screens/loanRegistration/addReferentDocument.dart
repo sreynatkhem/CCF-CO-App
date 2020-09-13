@@ -1218,24 +1218,32 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getImage();
                     },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              nationID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      logger.e('image: ');
+                      if (nationID != null) {
+                        try {
+                          var token = await storage.read(key: 'user_token');
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                nationID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageNation = null;
+                            imageDocumentedNation = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageNation = null;
                           imageDocumentedNation = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageNation),
@@ -1252,24 +1260,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getFamily();
                     },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              familyID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (familyID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                familyID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageFamily = null;
+                            imageDocumentedFamily = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageFamily = null;
                           imageDocumentedFamily = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageFamily),
@@ -1297,24 +1312,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedResidentBook);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              residentID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (residentID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                residentID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageResident = null;
+                            imageDocumentedResidentBook = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageResident = null;
                           imageDocumentedResidentBook = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageResident),
@@ -1331,24 +1353,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       getOther();
                     },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              kYCOtherID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (kYCOtherID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                kYCOtherID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageOther = null;
+                            imageDocumentedKYCOther = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageOther = null;
                           imageDocumentedKYCOther = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageOther),
@@ -1389,24 +1418,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedEmployeeBankStatement);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              employeeSalaySlipID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (employeeSalaySlipID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                employeeSalaySlipID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageSalarySlip = null;
+                            imageDocumentedEmployeeSalaySlip = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageSalarySlip = null;
                           imageDocumentedEmployeeSalaySlip = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageSalarySlip),
@@ -1431,24 +1467,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedEmployeeBankStatement);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              employeeBankStatementID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (employeeBankStatementID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                employeeBankStatementID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageBankStatement = null;
+                            imageDocumentedEmployeeBankStatement = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageBankStatement = null;
                           imageDocumentedEmployeeBankStatement = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageBankStatement),
@@ -1479,24 +1522,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedEmployeeSalaryVerify);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              employeeSalaryVerifyID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (employeeSalaryVerifyID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                employeeSalaryVerifyID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageSalaryVerify = null;
+                            imageDocumentedEmployeeSalaryVerify = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageSalaryVerify = null;
                           imageDocumentedEmployeeSalaryVerify = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageSalaryVerify),
@@ -1517,24 +1567,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedEmployeeEmployeeID);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              employeeEmployeeID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (employeeEmployeeID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                employeeEmployeeID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageEmployeeID = null;
+                            imageDocumentedEmployeeEmployeeID = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageEmployeeID = null;
                           imageDocumentedEmployeeEmployeeID = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageEmployeeID),
@@ -1566,24 +1623,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedEmployeeEmployeecontract);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              employeeContractID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (employeeContractID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                employeeContractID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageEmployeeContrat = null;
+                            imageDocumentedEmployeeEmployeecontract = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageEmployeeContrat = null;
                           imageDocumentedEmployeeEmployeecontract = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageEmployeeContrat),
@@ -1605,24 +1669,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedEmployeeEmployeeOther);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              employeeOtherID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (employeeOtherID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                employeeOtherID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageEmployeeOther = null;
+                            imageDocumentedEmployeeEmployeeOther = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageEmployeeOther = null;
                           imageDocumentedEmployeeEmployeeOther = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageEmployeeOther),
@@ -1659,32 +1730,32 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getPhotoOfService();
                     },
-                    // onClearImage: () {
-                    //   showDailog(
-                    //       context,
-                    //       businessPhotosServiceID,
-                    //       _imagePhotoOfService,
-                    //       imageDocumentedBusinessPhotosService);
-                    // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessPhotosServiceID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessPhotosServiceID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessPhotosServiceID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imagePhotoOfService = null;
+                            imageDocumentedBusinessPhotosService = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imagePhotoOfService = null;
                           imageDocumentedBusinessPhotosService = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imagePhotoOfService),
@@ -1700,29 +1771,32 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getBusinessPermit();
                     },
-                    // onClearImage: () {
-                    //   showDailog(context, businessPermitID,
-                    //       _imageBusinessPermit, imageDocumentedBusinessPermit);
-                    // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessPermitID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessPermitID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessPermitID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageBusinessPermit = null;
+                            imageDocumentedBusinessPermit = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageBusinessPermit = null;
                           imageDocumentedBusinessPermit = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageBusinessPermit),
@@ -1754,24 +1828,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedBusinessIncomeStatement);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessIncomeStatementID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessIncomeStatementID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessIncomeStatementID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageIncomeStatementBank = null;
+                            imageDocumentedBusinessIncomeStatement = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageIncomeStatementBank = null;
                           imageDocumentedBusinessIncomeStatement = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageIncomeStatementBank),
@@ -1792,24 +1873,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedBusinessPaten);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessPatenID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessPatenID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessPatenID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imagePatent = null;
+                            imageDocumentedBusinessPaten = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imagePatent = null;
                           imageDocumentedBusinessPaten = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imagePatent),
@@ -1840,24 +1928,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedBusinessSalePurchase);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessSalePurchaseID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessSalePurchaseID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessSalePurchaseID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageSaleAndPurchase = null;
+                            imageDocumentedBusinessSalePurchase = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageSaleAndPurchase = null;
                           imageDocumentedBusinessSalePurchase = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageSaleAndPurchase),
@@ -1878,24 +1973,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       _imageRentalContract, imageDocumentedBusinessRental);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessRentalID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessRentalID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessRentalID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageRentalContract = null;
+                            imageDocumentedBusinessRental = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageRentalContract = null;
                           imageDocumentedBusinessRental = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageRentalContract),
@@ -1926,24 +2028,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedBusinessLocation);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessLocationID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessLocationID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessLocationID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageBusinessLocationtitle = null;
+                            imageDocumentedBusinessLocation = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageBusinessLocationtitle = null;
                           imageDocumentedBusinessLocation = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageBusinessLocationtitle),
@@ -1964,24 +2073,31 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     //       imageDocumentedBusinessOther);
                     // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              businessOtherID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (businessOtherID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                businessOtherID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageBusinessOther = null;
+                            imageDocumentedBusinessOther = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageBusinessOther = null;
                           imageDocumentedBusinessOther = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageBusinessOther),
@@ -2018,32 +2134,32 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getCollateralCertificate();
                     },
-                    // onClearImage: () {
-                    //   showDailog(
-                    //       context,
-                    //       collateralCertificateID,
-                    //       _imageCollateralCertificate,
-                    //       imageDocumentedCollateralCertificate);
-                    // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              collateralCertificateID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (collateralCertificateID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                collateralCertificateID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageCollateralCertificate = null;
+                            imageDocumentedCollateralCertificate = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageCollateralCertificate = null;
                           imageDocumentedCollateralCertificate = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageCollateralCertificate),
@@ -2059,32 +2175,32 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     onTaps: () {
                       getCollateralPicture();
                     },
-                    // onClearImage: () {
-                    //   showDailog(
-                    //       context,
-                    //       collateralPictureID,
-                    //       _imageCollateralPicture,
-                    //       imageDocumentedCollateralPicture);
-                    // },
                     onClearImage: () async {
-                      var token = await storage.read(key: 'user_token');
-                      try {
-                        final response = await api().post(
-                          baseURLInternal +
-                              'loandocuments/' +
-                              collateralPictureID +
-                              '/delete',
-                          headers: {
-                            "contentType": "application/json",
-                            "Authorization": "Bearer " + token
-                          },
-                        );
+                      if (collateralPictureID != null) {
+                        var token = await storage.read(key: 'user_token');
+                        try {
+                          final response = await api().post(
+                            baseURLInternal +
+                                'loandocuments/' +
+                                collateralPictureID +
+                                '/delete',
+                            headers: {
+                              "contentType": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          setState(() {
+                            _imageCollateralPicture = null;
+                            imageDocumentedCollateralPicture = null;
+                          });
+                        } catch (error) {
+                          logger.e('error delete image: ${error}');
+                        }
+                      } else {
                         setState(() {
                           _imageCollateralPicture = null;
                           imageDocumentedCollateralPicture = null;
                         });
-                      } catch (error) {
-                        logger.e('error delete image: ${error}');
                       }
                     },
                     image: _imageCollateralPicture),

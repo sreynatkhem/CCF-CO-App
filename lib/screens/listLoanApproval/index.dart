@@ -229,8 +229,9 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                                   itemCount: parsed.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    var status = statusApproval(
-                                        parsed[index]['rstatus']);
+                                    var status = statusApproval(parsed != null
+                                        ? parsed[index]['rstatus']
+                                        : '');
                                     return Container(
                                       height: 110,
                                       margin: EdgeInsets.only(bottom: 5.0),
@@ -308,7 +309,7 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                                                                         bottom:
                                                                             2)),
                                                             Text(
-                                                                '${parsed[index]['loan']['currency']} ${parsed[index]['loan']['lamt']}'),
+                                                                '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
                                                             Padding(
                                                                 padding: EdgeInsets
                                                                     .only(

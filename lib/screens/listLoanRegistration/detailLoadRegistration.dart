@@ -7,6 +7,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/detailLoanApproval.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'editLoanRegistration.dart';
 import 'listLoanRegistration.dart';
+import 'dart:io' as Io;
 
 class CardDetailLoanRegitration extends StatefulWidget {
   final dynamic list;
@@ -80,6 +83,16 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     getImageDocument();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    setState(() {
+      _imageDocument = [];
+    });
+    convertImagePath(dosp);
+    super.dispose();
+  }
+
   //fetch image referent document loan
   Future getImageDocument() async {
     var url = baseURLInternal + 'loanDocuments/byloan/' + list;
@@ -99,7 +112,203 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     }
   }
 
-  var onStatus;
+  var dosp = {
+    'dcode': '',
+    'type': 0,
+    'lcode': 0,
+    'description': '',
+    'filepath': ''
+  };
+  convertImagePath(image) async {
+    logger().e("image:$image");
+    var file;
+    switch (image['type']) {
+      case '101':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+
+        final directory = await getApplicationDocumentsDirectory();
+        file = Io.File('${directory.path}/101.png');
+        file.writeAsBytesSync(List.from(_bytes).cast<int>());
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+
+        break;
+      case '102':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/102.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+
+        break;
+      //
+      case '103':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/103.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      case '104':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/104.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+
+        break;
+      //
+      case '211':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/211.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+
+        break;
+      case '212':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/212.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+
+        break;
+      //
+      case '213':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/213.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      case '215':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/215.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '214':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/214.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      case '216':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/216.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+
+      //Business
+      case '221':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/221.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      case '222':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/222.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '223':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/223.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '224':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/224.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      case '225':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/225.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '226':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/226.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '227':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/227.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '228':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/228.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      //
+      case '301':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/301.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+      case '302':
+        var uri = image['filepath'];
+        Uint8List _bytes = base64.decode(uri.split(',').last);
+        final directory = await getApplicationDocumentsDirectory();
+        var file = Io.File('${directory.path}/302.png');
+        file.writeAsBytesSync(List.from(_bytes));
+        await showDialog(context: context, builder: (_) => ImageDialog(file));
+        break;
+
+      default:
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +352,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                   ? ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
+                        var f = new NumberFormat("#,###.00", "en_US");
                         return SingleChildScrollView(
                           child: Container(
                             margin: EdgeInsets.all(10),
@@ -177,7 +387,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'loan_amount',
                                                 value:
-                                                    '\$ ${snapshot.data[index].lamt}',
+                                                    '\$ ${f.format(snapshot.data[index].lamt)}',
                                               ),
                                               //
                                               ListDetail(
@@ -195,27 +405,32 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'number_of_term',
                                                 value:
-                                                    '${snapshot.data[index].ints}',
+                                                    '${snapshot.data[index].ints.toInt()}',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'interest_rate',
                                                 value:
-                                                    '${snapshot.data[index].intrate}',
+                                                    '${snapshot.data[index].intrate}%',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'maintenance_fee',
                                                 value:
-                                                    '${snapshot.data[index].mfee}',
+                                                    '${snapshot.data[index].mfee}%',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'admin_fee',
                                                 value:
-                                                    '${snapshot.data[index].afee}',
+                                                    '${snapshot.data[index].afee}%',
                                               ),
                                               //
+                                              ListDetail(
+                                                name: 'irr',
+                                                value:
+                                                    '${snapshot.data[index].irr}%',
+                                              ),
                                               ListDetail(
                                                 name: 'repayment_method',
                                                 value:
@@ -280,41 +495,53 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                           base64.decode(uri
                                                               .split(',')
                                                               .last);
-                                                      return Stack(children: <
-                                                          Widget>[
-                                                        Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    bottom: 10),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                if (_imageDocument !=
-                                                                    null)
-                                                                  Text(
-                                                                    _imageDocument[
-                                                                            index]
-                                                                        [
-                                                                        'description'],
-                                                                    style:
-                                                                        mainTitleBlack,
-                                                                  ),
-                                                                Padding(
-                                                                    padding: EdgeInsets.only(
+                                                      return Stack(
+                                                          children: <Widget>[
+                                                            Container(
+                                                                padding: EdgeInsets
+                                                                    .only(
                                                                         bottom:
-                                                                            10)),
-                                                                if (_imageDocument !=
-                                                                    null)
-                                                                  Image.memory(
-                                                                    _bytes,
-                                                                    height: 230,
-                                                                    width: 300,
-                                                                  ),
-                                                              ],
-                                                            ))
-                                                      ]);
+                                                                            10),
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    if (_imageDocument !=
+                                                                        null)
+                                                                      Text(
+                                                                        _imageDocument[index]
+                                                                            [
+                                                                            'description'],
+                                                                        style:
+                                                                            mainTitleBlack,
+                                                                      ),
+                                                                    Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(bottom: 10)),
+                                                                    if (_imageDocument !=
+                                                                        null)
+                                                                      InkWell(
+                                                                        onTap:
+                                                                            () =>
+                                                                                {
+                                                                          // convertImagePath(
+                                                                          //     _imageDocument[index]),
+                                                                          // logger()
+                                                                          //     .e('inkWell: ${_imageDocument[index]}')
+                                                                        },
+                                                                        child: Image
+                                                                            .memory(
+                                                                          _bytes,
+                                                                          height:
+                                                                              230,
+                                                                          width:
+                                                                              300,
+                                                                        ),
+                                                                      ),
+                                                                  ],
+                                                                ))
+                                                          ]);
                                                     }),
                                                   ),
                                                 ),

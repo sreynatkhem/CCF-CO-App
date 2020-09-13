@@ -203,19 +203,38 @@ class _LoanRegister extends State {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      logger.e('parsed:: ${parsed}');
-      setState(() {
-        loanCode = parsed;
-      });
-      if (statusEdit == 'save') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ListLoanApproval()),
-        );
+      if (response.statusCode == 201) {
+        setState(() {
+          loanCode = parsed;
+        });
+        showInSnackBar(
+            AppLocalizations.of(context)
+                    .translate('loan_registration_has_been_successfully') ??
+                'Loan registration has been successfully completed!',
+            logolightGreen);
+        if (statusEdit == 'save') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ListLoanApproval()),
+          );
+        }
+      } else {
+        showInSnackBar(
+            AppLocalizations.of(context)
+                    .translate('loan_registration_has_been_failed') ??
+                'Loan registration has been failed!',
+            Colors.redAccent);
       }
     } catch (error) {
       logger.e('error:: ${error}');
     }
+  }
+
+  void showInSnackBar(String value, colorsBackground) {
+    _scaffoldKeyCreateLoan.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: colorsBackground,
+    ));
   }
 
   Future onAddFile(context) async {
@@ -370,6 +389,9 @@ class _LoanRegister extends State {
     logger.e('message:: ${v}');
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKeyCreateLoan =
+      new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     var percentages = const AssetImage('assets/images/percentage.png');
@@ -377,6 +399,7 @@ class _LoanRegister extends State {
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     DateTime now = DateTime.now();
     return Header(
+        keys: _scaffoldKeyCreateLoan,
         headerTexts: 'loan_registration',
         bodys: _loading
             ? Center(
@@ -660,7 +683,7 @@ class _LoanRegister extends State {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.min(1),
+                            FormBuilderValidators.min(0.1),
                             FormBuilderValidators.max(1.5),
                             FormBuilderValidators.required(
                                 errorText: AppLocalizations.of(context)
@@ -742,7 +765,7 @@ class _LoanRegister extends State {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.max(1),
+                            FormBuilderValidators.max(2),
                             FormBuilderValidators.required(
                                 errorText: AppLocalizations.of(context)
                                         .translate('admin_fee_required') ??
@@ -944,6 +967,7 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
+                            FormBuilderValidators.max(99)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(
@@ -977,6 +1001,7 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
+                            FormBuilderValidators.max(99)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(

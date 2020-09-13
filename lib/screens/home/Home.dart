@@ -263,12 +263,12 @@ class _HomeState extends State<Home> {
                                 .translate('loan_register_list') ??
                             'Loan Register List',
                         () => {onListLoanRegistration()}),
-                    CustomListTile(
-                        Icons.insert_chart,
-                        AppLocalizations.of(context)
-                                .translate('report_approval') ??
-                            'Report Approval',
-                        () => {onListApprovalSummary()}),
+                    // CustomListTile(
+                    //     Icons.insert_chart,
+                    //     AppLocalizations.of(context)
+                    //             .translate('report_approval') ??
+                    //         'Report Approval',
+                    //     () => {onListApprovalSummary()}),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)

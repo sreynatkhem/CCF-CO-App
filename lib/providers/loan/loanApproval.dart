@@ -31,13 +31,10 @@ class LoanApproval with ChangeNotifier {
       final response = await api().post(baseURLInternal + 'loanRequests/byuser',
           headers: headers, body: bodyRow);
       isLoading = false;
-      print('isLoading ${isLoading}');
 
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.addAll(jsonDecode(response.body));
-        // print('response list approval::: ${jsonDecode(response.body)}');
-
         notifyListeners();
         return jsonDecode(response.body)
             .map<RequestLoanApproval>(
@@ -104,6 +101,7 @@ class LoanApproval with ChangeNotifier {
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 200) {
         successfully = true;
+        return parsed;
       } else {
         successfully = false;
       }
@@ -135,6 +133,7 @@ class LoanApproval with ChangeNotifier {
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 200) {
         successfullyReject = true;
+        return parsed;
       } else {
         successfullyReject = false;
       }
@@ -164,6 +163,7 @@ class LoanApproval with ChangeNotifier {
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 200) {
         successfullyReturn = true;
+        return parsed;
       } else {
         successfullyReturn = false;
       }

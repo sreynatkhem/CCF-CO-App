@@ -39,14 +39,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   void didChangeDependencies() {
-    setState(() {
-      _isInit = true;
-    });
-    if (_isInit) {
-      // list = fetchListDetail(loanApprovalApplicationNo);
-    }
+    futureLoanApproval =
+        Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
     var test = storage.read(key: 'roles');
-
     test.then(
       (value) => setState(() {
         userRoles = jsonDecode(value);
@@ -56,21 +51,25 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     if (list != null) {
       getDetail();
     }
+    logger().e("hideBottomTabBar :: $hideBottomTabBar");
   }
 
   var listDetail;
   Future getDetail() async {
     var token = await storage.read(key: 'user_token');
+    logger().e("list: ${list}");
     final response = await api().get(
-      baseURLInternal + 'loans/' + list['lcode'],
+      baseURLInternal + 'loanRequests/Applications/' + list['rcode'],
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
       },
     );
     final parsed = jsonDecode(response.body);
+    logger().e("parsed: ${parsed}");
+
     setState(() {
-      listDetail = parsed;
+      listDetail = parsed != null ? parsed : null;
     });
   }
 
@@ -81,6 +80,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   var isFetchingSuccessfully;
   var isFetchingSuccessfullReturn;
   var isFetchingSuccessfullReject;
+  bool hideBottomTabBar = false;
 
   authrize(value, context) async {
     var branch = await storage.read(key: 'branch');
@@ -93,15 +93,22 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var lcode = value['lcode'];
     var rdate = '';
     var roleList = userRoles;
+
     setState(() {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
         .approval(rcode, ucode, bcode, lcode, rdate, roleList, comments)
         .then((value) => {
-              setState(() {
-                _isLoading = false;
-              }),
+              logger().e("value: ${value}"),
+              if (value['key'] == 200)
+                {
+                  getDetail(),
+                  setState(() {
+                    _isLoading = false;
+                    hideBottomTabBar = true;
+                  }),
+                },
             });
     isFetchingSuccessfully =
         await Provider.of<LoanApproval>(context, listen: false)
@@ -135,10 +142,16 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
-        .returnFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments);
-    setState(() {
-      _isLoading = false;
-    });
+        .returnFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments)
+        .then((value) => {
+              if (value['key'] == 200)
+                {
+                  setState(() {
+                    _isLoading = false;
+                    hideBottomTabBar = true;
+                  }),
+                },
+            });
     isFetchingSuccessfullReturn =
         await Provider.of<LoanApproval>(context, listen: false)
             .isFetchingSuccessfullyReturn;
@@ -169,7 +182,16 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
-        .rejectFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments);
+        .rejectFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments)
+        .then((value) => {
+              if (value['key'] == 200)
+                {
+                  setState(() {
+                    _isLoading = false;
+                    hideBottomTabBar = true;
+                  }),
+                },
+            });
 
     setState(() {
       _isLoading = false;
@@ -202,10 +224,11 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   Widget build(BuildContext context) {
+    var checkListNullStatus = listDetail != null ? listDetail : null;
+    futureLoanApproval =
+        Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
-    print("listDetail::: ${listDetail}");
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -279,9 +302,11 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                     ),
                   ),
                 ),
-                listDetail != null &&
-                        listDetail['loanRequest'] != null &&
-                        listDetail['loanRequest']['rstatus'] != 'A'
+                checkListNullStatus != null &&
+                        checkListNullStatus['rstatus'] != null &&
+                        checkListNullStatus['rstatus'] != 'A' &&
+                        checkListNullStatus['rstatus'] != 'D' &&
+                        checkListNullStatus['rstatus'] != 'T'
                     ? Align(
                         heightFactor: 1,
                         alignment: FractionalOffset.bottomCenter,

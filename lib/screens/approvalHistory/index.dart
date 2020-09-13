@@ -71,7 +71,33 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
     return [
       new charts.Series<OrdinalSales, String>(
         id: 'Report',
-        colorFn: (_, __) => charts.ColorUtil.fromDartColor(logolightGreen),
+        // colorFn: (_, __) => charts.ColorUtil.fromDartColor(logolightGreen),
+        colorFn: (OrdinalSales segment, _) {
+          switch (segment.year) {
+            case 'Approve':
+              {
+                return charts.ColorUtil.fromDartColor(Colors.green);
+              }
+            case 'យល់ព្រម':
+              {
+                return charts.ColorUtil.fromDartColor(Colors.green);
+              }
+            case "Disapprove":
+              {
+                return charts.ColorUtil.fromDartColor(Colors.red);
+              }
+
+            case "មិនពេញចិត្ត":
+              {
+                return charts.ColorUtil.fromDartColor(Colors.red);
+              }
+
+            default:
+              {
+                return charts.ColorUtil.fromDartColor(logolightGreen);
+              }
+          }
+        },
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: data,
@@ -129,13 +155,16 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   Future onClickApply(context) {}
 
   void _closeEndDrawer() {
-    // Navigator.of(context).pop();
     setState(() {
       code = null;
       bcode = null;
       controllerEndDate.text = '';
       controllerStartDate.text = '';
     });
+    getReportSummary(_pageSize, _pageNumber, '', '', '', '', '');
+    getListBranches();
+    getListCO('');
+    // Navigator.of(context).pop();
   }
 
   _applyEndDrawer() {
@@ -209,7 +238,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                             padding: const EdgeInsets.only(
                                 left: 2, right: 2, bottom: 5, top: 5),
                             child: CardReport(
-                              backgroundColors: logolightGreen,
+                              backgroundColors: Colors.green,
                               iconSizes: 25.0,
                               icons: Icons.check_box,
                               text: 'total_approved',
@@ -233,7 +262,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                             padding: const EdgeInsets.only(
                                 left: 2, right: 2, bottom: 5, top: 5),
                             child: CardReport(
-                              backgroundColors: logolightGreen,
+                              backgroundColors: Colors.red,
                               iconSizes: 25.0,
                               icons: Icons.cancel,
                               text: 'total_disapproved',
