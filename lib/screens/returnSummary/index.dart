@@ -14,14 +14,14 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-import 'detailLoadRegistration.dart';
+import 'summaryDetail.dart';
 
-class ApprovalSummary extends StatefulWidget {
+class ReturnSummary extends StatefulWidget {
   @override
-  _ApprovalSummaryState createState() => _ApprovalSummaryState();
+  _ReturnSummaryState createState() => _ReturnSummaryState();
 }
 
-class _ApprovalSummaryState extends State<ApprovalSummary> {
+class _ReturnSummaryState extends State<ReturnSummary> {
   var isLoading = false;
   var listTotal;
   var listApproval;
@@ -31,7 +31,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     super.didChangeDependencies();
     if (mounted) {
       getReportApprovalSummary(
-          _pageSize, _pageNumber, '', '', '', '', '', 'approve');
+          _pageSize, _pageNumber, '', '', '', '', '', 'request');
       getListBranches();
       getListCO('');
     }
@@ -44,7 +44,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     });
     await ApprovalSummaryProvider()
         .getApprovalSummary(_pageSize, _pageNumber, status, code, bcode, sdate,
-            edate, 'approve')
+            edate, 'request')
         .then((value) => {
               value.forEach((v) => {
                     setState(() {
@@ -90,7 +90,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
       // Fetch newItems with http
       await Provider.of<ApprovalSummaryProvider>(context, listen: false)
           .getApprovalSummary(
-              _pageSize, _pageNumber, '', '', '', '', '', 'approve');
+              _pageSize, _pageNumber, '', '', '', '', '', 'request');
       setState(() {
         isLoading = false;
       });
@@ -123,8 +123,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
       case 'D':
         {
           return Text(
-              AppLocalizations.of(context).translate('disapprove') ??
-                  'Disapprove',
+              AppLocalizations.of(context).translate('request') ?? 'request',
               style: mainTitleBlack);
         }
         break;
@@ -210,7 +209,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
       controllerStartDate.text = '';
     });
     getReportApprovalSummary(
-        _pageSize, _pageNumber, '', '', '', '', '', 'approve');
+        _pageSize, _pageNumber, '', '', '', '', '', 'request');
     getListBranches();
     getListCO('');
     // Navigator.of(context).pop();
@@ -232,7 +231,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     var startDate = sdate != null ? sdate : DateTime.now();
     var endDate = edate != null ? edate : DateTime.now();
     getReportApprovalSummary(20, 1, '', code, bcode, startDate.toString(),
-        endDate.toString(), 'approve');
+        endDate.toString(), 'request');
     // Navigator.of(context).pop();
   }
 
@@ -243,7 +242,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     return NotificationListener(
       onNotification: onNotification,
       child: Header(
-        headerTexts: 'report_approval' ?? 'Report Approval',
+        headerTexts: 'report_return' ?? 'Report Return',
         actionsNotification: [
           Builder(
             builder: (context) => IconButton(
@@ -275,7 +274,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
                         child: Center(
                             child: Text(
                           AppLocalizations.of(context)
-                                  .translate('total_approved') +
+                                  .translate('total_return') +
                               ': ${listTotal['total'].toString()}',
                           style: TextStyle(color: Colors.white, fontSize: 15),
                         ))),

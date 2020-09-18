@@ -1,6 +1,7 @@
 import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/models/index.dart';
 import 'package:chokchey_finance/models/listLoan.dart';
+import 'package:chokchey_finance/models/listLoanNew.dart';
 import 'package:chokchey_finance/models/valueListCustomers.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -84,11 +85,10 @@ class LoanInternal with ChangeNotifier {
   }
 
   //Request list loan
-  Future<List<ListLoan>> getListLoan(
+  Future<List<ListLoanNew>> getListLoan(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     _isFetching = true;
     try {
-      logger().e("getListLoan _pageSize: ${_pageSize}");
       _isFetching = false;
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
@@ -134,17 +134,19 @@ class LoanInternal with ChangeNotifier {
         "Authorization": "Bearer $token"
       };
 
-      final response = await api()
-          .post(baseURLInternal + 'loans/all', headers: headers, body: bodyRow);
+      final response = await api().post(baseURLInternal + 'loans/all/mobile',
+          headers: headers, body: bodyRow);
       if (response.statusCode == 200) {
         final dynamic parsed = [];
+        logger().e("parsed: ${jsonDecode(response.body)}");
         parsed.addAll(jsonDecode(response.body));
         data.addAll(parsed[0]['listLoans']);
         totalLoans = parsed[0]['totalLoan'].toString();
-        // logger().e("ដាតា: ${parsed[0]['listLoans']}");
+        logger().e("parsed: ${jsonDecode(response.body)}");
+
         notifyListeners();
-        return parsed[0]['listLoans']
-            .map<ListLoan>((json) => ListLoan.fromJson(json))
+        return parsed
+            .map<ListLoanNew>((json) => ListLoanNew.fromJson(json))
             .toList();
       } else {
         print('statusCode::: ${response.statusCode}');

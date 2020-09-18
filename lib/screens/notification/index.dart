@@ -52,12 +52,14 @@ class _NotificationState extends State<NotificationScreen> {
       setState(() {
         _isLoading = false;
       });
-      setState(() {
-        totalMessage = parsed[0]['totalMessage'];
-        totalUnread = parsed[0]['totalUnread'];
-        totalRead = parsed[0]['totalRead'];
-        listMessages = parsed[0]['listMessages'];
-      });
+      for (var item in parsed) {
+        setState(() {
+          totalMessage = item['totalMessage'];
+          totalUnread = item['totalUnread'];
+          totalRead = item['totalRead'];
+          listMessages = item['listMessages'];
+        });
+      }
     } catch (error) {
       setState(() {
         _isLoading = false;
@@ -112,16 +114,16 @@ class _NotificationState extends State<NotificationScreen> {
   StreamController _streamController = StreamController();
   StreamSink get itemsSink => _streamController.sink;
   bool onNotification(ScrollNotification notification) {
-    if (notification is ScrollUpdateNotification) {
-      if (_scrollController.position.maxScrollExtent >=
-              _scrollController.offset &&
-          _scrollController.position.maxScrollExtent -
-                  _scrollController.offset <=
-              1) {
-        _additems();
-      }
-    }
-    return true;
+    // if (notification is ScrollUpdateNotification) {
+    //   if (_scrollController.position.maxScrollExtent >=
+    //           _scrollController.offset &&
+    //       _scrollController.position.maxScrollExtent -
+    //               _scrollController.offset <=
+    //           1) {
+    //     _additems();
+    //   }
+    // }
+    // return true;
   }
 
   bool isLoading = false;
@@ -150,10 +152,48 @@ class _NotificationState extends State<NotificationScreen> {
     }
   }
 
+  Future loadMore(_pageSize, _pageNumber) async {
+    final storage = new FlutterSecureStorage();
+
+    var token = await storage.read(key: 'user_token');
+    var user_ucode = await storage.read(key: "user_ucode");
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+    var bodyRow =
+        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n}";
+    try {
+      final response = await api().post(baseURLInternal + 'messages/byuser',
+          headers: headers, body: bodyRow);
+      var parsed = jsonDecode(response.body);
+      for (var item in parsed) {
+        setState(() {
+          totalMessage = item['totalMessage'];
+          totalUnread = item['totalUnread'];
+          totalRead = item['totalRead'];
+          listMessages = item['listMessages'];
+        });
+      }
+    } catch (error) {
+      logger().e('error: ${error}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return NotificationListener(
-      onNotification: onNotification,
+      onNotification: (ScrollNotification scrollInfo) {
+        if (!isLoading &&
+            scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          // start loading data
+          setState(() {
+            _pageSize += 10;
+          });
+          loadMore(_pageSize, _pageNumber);
+        }
+      },
       child: isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -170,6 +210,7 @@ class _NotificationState extends State<NotificationScreen> {
                   : Container(
                       padding: EdgeInsets.all(10),
                       child: ListView.builder(
+                          controller: _scrollController,
                           itemCount: listMessages.length,
                           itemBuilder: (BuildContext context, int index) {
                             // var status = statusApproval(parsed[index]['rstatus']);

@@ -29,6 +29,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   var totalDisapproved;
   var totalRequested;
   var totalLoan;
+  var totalProcessing;
 
   //get branch
   var bcode;
@@ -54,6 +55,9 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
           totalCustomer),
       new OrdinalSales(
           AppLocalizations.of(context).translate('approve') ?? 'Approve',
+          totalApproved),
+      new OrdinalSales(
+          AppLocalizations.of(context).translate('processing') ?? 'Processing',
           totalApproved),
       new OrdinalSales(
           AppLocalizations.of(context).translate('return') ?? 'Return',
@@ -90,6 +94,15 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
             case "មិនពេញចិត្ត":
               {
                 return charts.ColorUtil.fromDartColor(Colors.red);
+              }
+            case "Processing":
+              {
+                return charts.ColorUtil.fromDartColor(Colors.orange);
+              }
+
+            case "ដំណើរការ":
+              {
+                return charts.ColorUtil.fromDartColor(Colors.orange);
               }
 
             default:
@@ -135,6 +148,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
         .getApprovalHistorySummary(
             pageSize, pageNumber, statuses, codes, bcode, sdates, edates)
         .then((value) => {
+              logger().e('value:: ${value}'),
               value.forEach((v) => {
                     setState(() {
                       totalCustomer = v['totalCustomer'];
@@ -143,6 +157,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                       totalDisapproved = v['totalDisapproved'];
                       totalRequested = v['totalRequested'];
                       totalLoan = v['totalLoan'];
+                      totalProcessing = v['totalProcessing'];
                     }),
                   }),
             })
@@ -212,120 +227,138 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
             MaterialPageRoute(builder: (context) => Home()),
             ModalRoute.withName("/Home")),
       ),
-      bodys: Column(
-        children: [
-          Container(
-            height: 500,
-            padding: EdgeInsets.all(5),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 2, bottom: 5, top: 5),
-                            child: CardReport(
-                              backgroundColors: logolightGreen,
-                              iconSizes: 25.0,
-                              icons: Icons.face,
-                              text: 'total_customer',
-                              value: totalCustomer.toString(),
-                            )),
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 2, bottom: 5, top: 5),
-                            child: CardReport(
-                              backgroundColors: Colors.green,
-                              iconSizes: 25.0,
-                              icons: Icons.check_box,
-                              text: 'total_approved',
-                              value: totalApproved.toString(),
-                            )),
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 2, bottom: 5, top: 5),
-                            child: CardReport(
-                              backgroundColors: logolightGreen,
-                              iconSizes: 25.0,
-                              icons: Icons.replay,
-                              text: 'total_returned',
-                              value: totalReturned.toString(),
-                            )),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 2, bottom: 5, top: 5),
-                            child: CardReport(
-                              backgroundColors: Colors.red,
-                              iconSizes: 25.0,
-                              icons: Icons.cancel,
-                              text: 'total_disapproved',
-                              value: totalDisapproved.toString(),
-                            )),
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 2, bottom: 5, top: 5),
-                            child: CardReport(
-                              backgroundColors: logolightGreen,
-                              iconSizes: 25.0,
-                              icons: Icons.receipt,
-                              text: 'total_requested',
-                              value: totalRequested.toString(),
-                            )),
-                        Padding(
-                            padding: const EdgeInsets.only(
-                                left: 2, right: 2, bottom: 5, top: 5),
-                            child: CardReport(
-                              backgroundColors: logolightGreen,
-                              iconSizes: 25.0,
-                              icons: Icons.payment,
-                              text: 'total_loan',
-                              value: totalLoan.toString(),
-                            )),
-                      ],
-                    ),
-                    Expanded(
-                      child: charts.BarChart(
-                        _createSampleData(),
-                        animate: true,
-                        domainAxis: new charts.OrdinalAxisSpec(
-                            renderSpec: new charts.SmallTickRendererSpec(
-
-                                // Tick and Label styling here.
-                                labelStyle: new charts.TextStyleSpec(
-                                    fontSize: 12, // size in Pts.
-                                    color: charts.MaterialPalette.black),
-
-                                // Change the line colors to match text color.
-                                lineStyle: new charts.LineStyleSpec(
-                                    color: charts.MaterialPalette.black))),
-
-                        /// Assign a custom style for the measure axis.
-                        primaryMeasureAxis: new charts.NumericAxisSpec(
-                            renderSpec: new charts.GridlineRendererSpec(
-
-                                // Tick and Label styling here.
-                                labelStyle: new charts.TextStyleSpec(
-                                    fontSize: 12, // size in Pts.
-                                    color: charts.MaterialPalette.black),
-
-                                // Change the line colors to match text color.
-                                lineStyle: new charts.LineStyleSpec(
-                                    color: charts.MaterialPalette.black))),
+      bodys: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 700,
+              padding: EdgeInsets.all(5),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: logolightGreen,
+                                iconSizes: 25.0,
+                                icons: Icons.face,
+                                text: 'total_customer',
+                                value: totalCustomer.toString(),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: Colors.green,
+                                iconSizes: 25.0,
+                                icons: Icons.check_box,
+                                text: 'total_approved',
+                                value: totalApproved.toString(),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: Colors.orange,
+                                iconSizes: 25.0,
+                                icons: Icons.replay,
+                                text: 'total_processing',
+                                value: totalProcessing.toString(),
+                              )),
+                        ],
                       ),
-                    )
-                  ],
+                      Row(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: logolightGreen,
+                                iconSizes: 25.0,
+                                icons: Icons.cancel,
+                                text: 'total_returned',
+                                value: totalReturned.toString(),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: Colors.red,
+                                iconSizes: 25.0,
+                                icons: Icons.receipt,
+                                text: 'total_disapproved',
+                                value: totalDisapproved.toString(),
+                              )),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: logolightGreen,
+                                iconSizes: 25.0,
+                                icons: Icons.payment,
+                                text: 'total_requested',
+                                value: totalRequested.toString(),
+                              )),
+                        ],
+                      ),
+                      //New
+                      Row(
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 2, right: 2, bottom: 5, top: 5),
+                              child: CardReport(
+                                backgroundColors: logolightGreen,
+                                iconSizes: 25.0,
+                                icons: Icons.cancel,
+                                text: 'total_loan',
+                                value: totalLoan.toString(),
+                              )),
+                        ],
+                      ),
+                      //
+                      Expanded(
+                        child: charts.BarChart(
+                          _createSampleData(),
+                          animate: true,
+                          domainAxis: new charts.OrdinalAxisSpec(
+                              renderSpec: new charts.SmallTickRendererSpec(
+
+                                  // Tick and Label styling here.
+                                  labelStyle: new charts.TextStyleSpec(
+                                      fontSize: 10, // size in Pts.
+                                      color: charts.MaterialPalette.black),
+
+                                  // Change the line colors to match text color.
+                                  lineStyle: new charts.LineStyleSpec(
+                                      color: charts.MaterialPalette.black))),
+
+                          /// Assign a custom style for the measure axis.
+                          primaryMeasureAxis: new charts.NumericAxisSpec(
+                              renderSpec: new charts.GridlineRendererSpec(
+
+                                  // Tick and Label styling here.
+                                  labelStyle: new charts.TextStyleSpec(
+                                      fontSize: 12, // size in Pts.
+                                      color: charts.MaterialPalette.black),
+
+                                  // Change the line colors to match text color.
+                                  lineStyle: new charts.LineStyleSpec(
+                                      color: charts.MaterialPalette.black))),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       endDrawer: Drawer(
         child: SingleChildScrollView(

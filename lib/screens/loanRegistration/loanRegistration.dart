@@ -683,8 +683,8 @@ class _LoanRegister extends State {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.min(0.1),
-                            FormBuilderValidators.max(1.5),
+                            FormBuilderValidators.min(1),
+                            FormBuilderValidators.max(240),
                             FormBuilderValidators.required(
                                 errorText: AppLocalizations.of(context)
                                         .translate(
@@ -967,7 +967,7 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
-                            FormBuilderValidators.max(99)
+                            FormBuilderValidators.max(0.9)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(
@@ -1001,7 +1001,8 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
-                            FormBuilderValidators.max(99)
+                            FormBuilderValidators.max(99),
+                            FormBuilderValidators.min(1)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(

@@ -10,6 +10,7 @@ import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
+import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
@@ -17,6 +18,8 @@ import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart'
 import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
+import 'package:chokchey_finance/screens/requestSummary/index.dart';
+import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -184,6 +187,27 @@ class _HomeState extends State<Home> {
         ModalRoute.withName(""));
   }
 
+  onListDisApprovalSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => DisApprovalSummary()),
+        ModalRoute.withName(""));
+  }
+
+  onListRequestSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => RequestSummary()),
+        ModalRoute.withName(""));
+  }
+
+  onListReturnSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ReturnSummary()),
+        ModalRoute.withName(""));
+  }
+
   englishLanguage() {
     Locale _temp;
     _temp = Locale('en', 'US');
@@ -263,12 +287,30 @@ class _HomeState extends State<Home> {
                                 .translate('loan_register_list') ??
                             'Loan Register List',
                         () => {onListLoanRegistration()}),
-                    // CustomListTile(
-                    //     Icons.insert_chart,
-                    //     AppLocalizations.of(context)
-                    //             .translate('report_approval') ??
-                    //         'Report Approval',
-                    //     () => {onListApprovalSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_approval') ??
+                            'Report Approval',
+                        () => {onListApprovalSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_disapproval') ??
+                            'Report Disapproval',
+                        () => {onListDisApprovalSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_request') ??
+                            'Report Request',
+                        () => {onListRequestSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_return') ??
+                            'Report Return',
+                        () => {onListReturnSummary()}),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)

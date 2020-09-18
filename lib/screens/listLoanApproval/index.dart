@@ -47,20 +47,20 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
   int _pageSize = 20;
   int _pageNumber = 1;
   Future _additems() async {
-    setState(() {
-      isLoading = true;
-    });
+    logger().e('add more');
+
     try {
       _pageSize += 10;
+      logger().e('_pageSize: $_pageSize');
+
+      // futureLoanApproval =
+      //     Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
       getListLoan(_pageSize, _pageNumber);
-      setState(() {
-        isLoading = false;
-      });
     } catch (e) {
-      itemsSink.addError(e);
-      setState(() {
-        isLoading = false;
-      });
+      logger().e('e::::');
+
+      // itemsSink.addError(e);
+
     }
   }
 
@@ -122,14 +122,16 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
   @override
   void initState() {
     // TODO: implement initState
-    getListLoan(20, 1);
     super.initState();
   }
 
   bool _isInit = false;
-
+  var provideerLoading;
   @override
   void didChangeDependencies() {
+    if (mounted) {
+      provideerLoading = Provider.of<LoanApproval>(context).isFetchingLoading;
+    }
     setState(() {
       _isInit = true;
       isLoading = true;
@@ -139,8 +141,9 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
         _isInit = false;
         isLoading = false;
       });
-      futureLoanApproval =
-          Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
+      futureLoanApproval = Provider.of<LoanApproval>(context, listen: false)
+          .getLoanApproval(20, 1);
+
       getListLoan(20, 1);
       setState(() {
         _isInit = false;
@@ -169,6 +172,8 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
       var branch = await storage.read(key: "branch");
       var bodyRow =
           "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
+      print('bodyRow::: ${bodyRow}');
+
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
@@ -178,7 +183,7 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
         setState(() {
-          parsed = listLoan[0]['listLoanRequests'];
+          parsed.addAll(listLoan[0]['listLoanRequests']);
           dataListLoanApproval = listLoan[0];
         });
       } else {
@@ -190,42 +195,57 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
   final _imagesFindApproval =
       const AssetImage('assets/images/profile_create.jpg');
 
+  Future<void> _getData() async {
+    setState(() {
+      futureLoanApproval = Provider.of<LoanApproval>(context, listen: false)
+          .getLoanApproval(20, 1);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    futureLoanApproval =
-        Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
-    getListLoan(20, 1);
+    futureLoanApproval = Provider.of<LoanApproval>(context, listen: false)
+        .getLoanApproval(20, 1);
     return NotificationListener(
-      onNotification: onNotification,
-      child: isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : new Scaffold(
-              appBar: new AppBar(
-                title: new Text(
-                    AppLocalizations.of(context).translate('approval_list') ??
-                        "Approval List"),
-                backgroundColor: logolightGreen,
-                leading: new IconButton(
-                  icon: new Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home()),
-                      ModalRoute.withName("/Home")),
-                ),
-              ),
-              body: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : FutureBuilder<List<RequestLoanApproval>>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (!isLoading &&
+            scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          // start loading data
+          setState(() {
+            isLoading = true;
+            _pageSize += 10;
+          });
+          getListLoan(_pageSize, _pageNumber);
+        }
+      },
+      child: new Scaffold(
+          appBar: new AppBar(
+            title: new Text(
+                AppLocalizations.of(context).translate('approval_list') ??
+                    "Approval List"),
+            backgroundColor: logolightGreen,
+            leading: new IconButton(
+              icon: new Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                  ModalRoute.withName("/Home")),
+            ),
+          ),
+          body: provideerLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : RefreshIndicator(
+                  onRefresh: _getData,
+                  child: FutureBuilder<List<RequestLoanApproval>>(
                       future: futureLoanApproval,
                       builder: (context, snapshot) {
-                        if (isLoading == false) {
+                        if (provideerLoading == false) {
                           return Container(
                               padding: EdgeInsets.all(10),
                               child: ListView.builder(
+                                  controller: _scrollController,
                                   itemCount: parsed.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
@@ -358,7 +378,8 @@ class _ListLoanApprovalState extends State<ListLoanApproval> {
                             ),
                           );
                         }
-                      })),
+                      }),
+                )),
     );
   }
 }

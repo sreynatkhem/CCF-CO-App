@@ -7,8 +7,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class ApprovalSummaryProvider {
   final storage = new FlutterSecureStorage();
 
-  Future getApprovalSummary(
-      _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
+  Future getApprovalSummary(_pageSize, _pageNumber, status, code, bcode, sdate,
+      edate, statusRequest) async {
     try {
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
@@ -47,14 +47,14 @@ class ApprovalSummaryProvider {
       }
       bodyRow =
           "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      logger().e('bodyRow :: ${bodyRow}');
+
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      logger().e('bodyRow :: ${bodyRow}');
-
       final response = await api().post(
-          baseURLInternal + 'reports/loanapproval',
+          baseURLInternal + 'reports/loanrequest/' + statusRequest,
           headers: headers,
           body: bodyRow);
       if (response.statusCode == 200) {

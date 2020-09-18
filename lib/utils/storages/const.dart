@@ -101,3 +101,10 @@ logger() {
 var numFormat = new NumberFormat("#,###.00", "en_US");
 // const width = MediaQuery.of(context).size.width * 1;
 // const height = MediaQuery.of(context).size.width * 0.12;
+
+void showInSnackBar(String value, colorsBackground, scaffoldKey) {
+  scaffoldKey.currentState.showSnackBar(new SnackBar(
+    content: new Text(value),
+    backgroundColor: colorsBackground,
+  ));
+}

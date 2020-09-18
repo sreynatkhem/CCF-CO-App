@@ -144,5 +144,10 @@
   "loan_registration_has_been_failed": "Loan registration has been failed!",
   "english_name_required": "English Name required",
   "customer_registration_has_been_successfully": "Customer registration has been successfully completed!",
-  "customer_registration_has_been_failed": "Customer registration has been failed!"
+  "customer_registration_has_been_failed": "Customer registration has been failed!",
+  "total_processing": "Total Processing",
+  "processing": "Processing",
+  "report_disapproval": "Report Disapproval",
+  "report_request": "Report Request",
+  "report_return": "Report Return"
 }

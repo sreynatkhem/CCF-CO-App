@@ -125,11 +125,17 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
     super.dispose();
   }
 
+  Future<void> _getData() async {
+    setState(() async {
+      futureListCustomerRegistraiton =
+          await Provider.of<ListCustomerRegistrationProvider>(context,
+                  listen: false)
+              .fetchListCustomerRegistration(_pageSize, _pageNumber);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    futureListCustomerRegistraiton =
-        Provider.of<ListCustomerRegistrationProvider>(context, listen: false)
-            .fetchListCustomerRegistration(_pageSize, _pageNumber);
     return NotificationListener(
       onNotification: onNotification,
       child: isLoading
@@ -150,42 +156,45 @@ class _ListCustomerRegistrationState extends State<ListCustomerRegistration> {
                       ModalRoute.withName("/Home")),
                 ),
               ),
-              body: FutureBuilder<List<Customers>>(
-                future: futureListCustomerRegistraiton,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                        padding: EdgeInsets.all(10),
-                        child: ListView.builder(
-                            controller: _scrollController,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: <Widget>[
-                                  CardState(
-                                    texts: '${snapshot.data[index].namekhr}',
-                                    textTwo:
-                                        '${snapshot.data[index].nameeng != null ? snapshot.data[index].nameeng : ''}',
-                                    id: '${snapshot.data[index].ccode}',
-                                    phone: '${snapshot.data[index].phone1}',
-                                    images: profile,
-                                    onTaps: () {
-                                      onTapsDetail(snapshot.data[index]);
-                                    },
-                                  )
-                                ],
-                              );
-                            }));
-                  } else {
-                    return Center(
-                      child: Container(
-                        child: Text(AppLocalizations.of(context)
-                                .translate('no_list_customers') ??
-                            'No list customers'),
-                      ),
-                    );
-                  }
-                },
+              body: RefreshIndicator(
+                onRefresh: _getData,
+                child: FutureBuilder<List<Customers>>(
+                  future: futureListCustomerRegistraiton,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                          padding: EdgeInsets.all(10),
+                          child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Column(
+                                  children: <Widget>[
+                                    CardState(
+                                      texts: '${snapshot.data[index].namekhr}',
+                                      textTwo:
+                                          '${snapshot.data[index].nameeng != null ? snapshot.data[index].nameeng : ''}',
+                                      id: '${snapshot.data[index].ccode}',
+                                      phone: '${snapshot.data[index].phone1}',
+                                      images: profile,
+                                      onTaps: () {
+                                        onTapsDetail(snapshot.data[index]);
+                                      },
+                                    )
+                                  ],
+                                );
+                              }));
+                    } else {
+                      return Center(
+                        child: Container(
+                          child: Text(AppLocalizations.of(context)
+                                  .translate('no_list_customers') ??
+                              'No list customers'),
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
     );

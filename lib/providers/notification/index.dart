@@ -49,6 +49,30 @@ class NotificationProvider with ChangeNotifier {
       "Authorization": "Bearer $token"
     };
     var bodyRow =
+        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n}";
+    try {
+      final response = await api().post(baseURLInternal + 'messages/byuser',
+          headers: headers, body: bodyRow);
+      var parsed = jsonDecode(response.body);
+      notifyListeners();
+      return parsed;
+    } catch (error) {
+      logger().i('error: ${error}');
+    }
+  }
+
+  Future getNotificationProvider(
+    _pageSize,
+    _pageNumber,
+  ) async {
+    var token = await storage.read(key: 'user_token');
+    var user_ucode = await storage.read(key: "user_ucode");
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+    var bodyRow =
         "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"$user_ucode\",\n}";
     try {
       final response = await api().post(baseURLInternal + 'messages/byuser',

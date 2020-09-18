@@ -143,5 +143,10 @@
   "loan_registration_has_been_failed": "ការចុះឈ្មោះខ្ចីប្រាក់ត្រូវបានបរាជ័យ!",
   "english_name_required": "ឈ្មោះអង់គ្លេសទាមទារ",
   "customer_registration_has_been_successfully": "ការចុះឈ្មោះអតិថិជនត្រូវបានបញ្ចប់ដោយជោគជ័យ!",
-  "customer_registration_has_been_failed": "ការចុះឈ្មោះអតិថិជនបានបរាជ័យ!"
+  "customer_registration_has_been_failed": "ការចុះឈ្មោះអតិថិជនបានបរាជ័យ!",
+  "total_processing": "ដំណើរការសរុប",
+  "processing": "ដំណើរការ",
+  "report_disapproval": "របាយការណ៍ការមិនយល់ព្រម",
+  "report_request": "ស្នើសុំរបាយការណ៍",
+  "report_return": "របាយការណ៍ត្រឡប់"
 }
