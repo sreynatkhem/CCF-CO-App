@@ -5,7 +5,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/components/header.dart';
-import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
 import 'package:chokchey_finance/screens/loanRegistration/widgetCardAddReferent.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -725,7 +725,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       if (response.statusCode == 200) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ListLoanApproval()),
+          MaterialPageRoute(builder: (context) => ListLoanApprovals()),
         );
       } else {
         logger.i('response.statusCode::::: ${response.statusCode}');

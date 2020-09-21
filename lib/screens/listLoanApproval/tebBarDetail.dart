@@ -39,8 +39,8 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   void didChangeDependencies() {
-    futureLoanApproval =
-        Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
+    futureLoanApproval = Provider.of<LoanApproval>(context)
+        .getLoanApproval(20, 1, '', '', '', '', '');
     var test = storage.read(key: 'roles');
     test.then(
       (value) => setState(() {
@@ -260,8 +260,8 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   Widget build(BuildContext context) {
-    futureLoanApproval =
-        Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
+    futureLoanApproval = Provider.of<LoanApproval>(context)
+        .getLoanApproval(20, 1, '', '', '', '', '');
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(

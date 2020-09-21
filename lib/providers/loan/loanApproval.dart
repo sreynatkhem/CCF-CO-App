@@ -15,20 +15,53 @@ class LoanApproval with ChangeNotifier {
 
 //Request list loan
   Future<List<RequestLoanApproval>> getLoanApproval(
-      _pageSize, _pageNumber) async {
+      _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     isLoading = true;
 
     try {
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
-      var bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
+      var level = await storage.read(key: "level");
+      var bodyRow;
+      var sdates = sdate != null ? sdate : '';
+      var edates = edate != null ? edate : '';
+      var codes = code != null ? code : '';
+      var statuses = status != null ? status : '';
+      var btlcode = status != null ? status : '';
+      var bcodes;
+      var ucode;
+      if (level == '3') {
+        bcodes = bcode != null ? bcode : branch;
+        btlcode = '';
+        ucode = code != null ? code : '';
+      }
+
+      if (level == '2') {
+        bcodes = bcode != null ? bcode : branch;
+        btlcode = user_ucode;
+        ucode = code != null ? code : '';
+      }
+
+      if (level == '1') {
+        bcodes = bcode != null ? bcode : branch;
+        ucode = user_ucode;
+        btlcode = '';
+      }
+
+      if (level == '4' || level == '5' || level == '6') {
+        bcodes = bcode != null ? bcode : '';
+        btlcode = '';
+        ucode = code != null ? code : '';
+      }
+      bodyRow =
+          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      logger().e('bodyRow :: ${bodyRow}');
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/byuser',
+      final response = await api().post(baseURLInternal + 'loanRequests/all',
           headers: headers, body: bodyRow);
       if (response.statusCode == 200) {
         final dynamic parsed = [];
@@ -45,6 +78,7 @@ class LoanApproval with ChangeNotifier {
       }
     } catch (error) {
       isLoading = false;
+      print('error provider::: ${error}');
     }
   }
 

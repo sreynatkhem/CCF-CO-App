@@ -5,12 +5,9 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
+import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
-import 'package:custom_radio_grouped_button/CustomButtons/CustomCheckBoxGroup.dart';
-import 'package:custom_radio_grouped_button/CustomButtons/CustomRadioButton.dart';
-import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -197,7 +194,8 @@ class _CustomerRegister extends State {
               logolightGreen);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ListCustomerRegistration()),
+            MaterialPageRoute(
+                builder: (context) => ListCustomerRegistrations()),
           );
         } else {
           showInSnackBar(

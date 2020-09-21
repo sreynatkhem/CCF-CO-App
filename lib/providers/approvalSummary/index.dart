@@ -57,6 +57,8 @@ class ApprovalSummaryProvider {
           baseURLInternal + 'reports/loanrequest/' + statusRequest,
           headers: headers,
           body: bodyRow);
+      logger().e(
+          'url:: ${baseURLInternal + 'reports/loanrequest/' + statusRequest}');
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;

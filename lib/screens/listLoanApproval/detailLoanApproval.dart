@@ -441,7 +441,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'irr',
                                                 value:
-                                                    '${snapshot.data[index].irr}%',
+                                                    '${numFormat.format(snapshot.data[index].irr).toString()}%',
                                               ),
                                               // //
                                               ListDetail(

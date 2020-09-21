@@ -31,7 +31,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     super.didChangeDependencies();
     if (mounted) {
       getReportApprovalSummary(
-          _pageSize, _pageNumber, '', '', '', '', '', 'approve');
+          _pageSize, _pageNumber, '', '', '', '', '', 'Approve');
       getListBranches();
       getListCO('');
     }
@@ -44,7 +44,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     });
     await ApprovalSummaryProvider()
         .getApprovalSummary(_pageSize, _pageNumber, status, code, bcode, sdate,
-            edate, 'approve')
+            edate, 'Approve')
         .then((value) => {
               value.forEach((v) => {
                     setState(() {
@@ -90,7 +90,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
       // Fetch newItems with http
       await Provider.of<ApprovalSummaryProvider>(context, listen: false)
           .getApprovalSummary(
-              _pageSize, _pageNumber, '', '', '', '', '', 'approve');
+              _pageSize, _pageNumber, '', '', '', '', '', 'Approve');
       setState(() {
         isLoading = false;
       });
@@ -212,8 +212,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     getReportApprovalSummary(
         _pageSize, _pageNumber, '', '', '', '', '', 'approve');
     getListBranches();
-    getListCO('');
-    // Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   void _onClickListCO(v) {
@@ -231,43 +230,51 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
   _applyEndDrawer() {
     var startDate = sdate != null ? sdate : DateTime.now();
     var endDate = edate != null ? edate : DateTime.now();
-    getReportApprovalSummary(20, 1, '', code, bcode, startDate.toString(),
-        endDate.toString(), 'approve');
-    // Navigator.of(context).pop();
+    getReportApprovalSummary(20, 1, '', '', bcode, startDate.toString(),
+        endDate.toString(), 'Approve');
+    Navigator.of(context).pop();
+  }
+
+  Future<bool> _onBackPressed() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+        ModalRoute.withName("/Home"));
   }
 
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
-
-    return NotificationListener(
-      onNotification: onNotification,
-      child: Header(
-        headerTexts: 'report_approval' ?? 'Report Approval',
-        actionsNotification: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.filter_list),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: NotificationListener(
+        onNotification: onNotification,
+        child: Header(
+          headerTexts: 'report_approval' ?? 'Report Approval',
+          actionsNotification: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(Icons.filter_list),
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              ),
             ),
+          ],
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+                ModalRoute.withName("/Home")),
           ),
-        ],
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Home()),
-              ModalRoute.withName("/Home")),
-        ),
-        bodys: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
+          bodys: isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(children: [
+                  Expanded(
+                    flex: 0,
+                    child: Container(
                         margin: EdgeInsets.only(bottom: 10),
                         padding: EdgeInsets.all(4),
                         width: MediaQuery.of(context).size.width * 1,
@@ -279,9 +286,11 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
                               ': ${listTotal['total'].toString()}',
                           style: TextStyle(color: Colors.white, fontSize: 15),
                         ))),
-                    Container(
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
                       padding: EdgeInsets.only(left: 10, right: 10),
-                      height: 500,
                       child: ListView.builder(
                           itemCount: listApproval.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -290,7 +299,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
                                   child: Column(
                                 children: [
                                   Container(
-                                    height: 80,
+                                    height: 90,
                                     child: Card(
                                         shape: RoundedRectangleBorder(
                                           side: BorderSide(
@@ -403,182 +412,143 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
                             }
                           }),
                     ),
+                  ),
+                ]),
+          endDrawer: Drawer(
+            child: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 35)),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: [
+                          Icon(Icons.filter_list),
+                          Padding(padding: EdgeInsets.only(right: 5)),
+                          Text(
+                            'Filter',
+                            style: TextStyle(
+                                fontWeight: fontWeight800, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        AppLocalizations.of(context).translate('list_branch') ??
+                            'List Branch',
+                        style: TextStyle(
+                          fontWeight: fontWeight700,
+                        ),
+                      ),
+                    ),
+                    listBranch != null
+                        ? Container(
+                            height: 180,
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: ListView.builder(
+                                itemCount: listBranch != null
+                                    ? listBranch.length
+                                    : [].length,
+                                padding: const EdgeInsets.only(top: 10.0),
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    child: InkWell(
+                                      onTap: () =>
+                                          _onClickListBranch(listBranch[index]),
+                                      child: Center(
+                                        child: Container(
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              '${listBranch[index]['bname']}',
+                                              style: TextStyle(
+                                                  color: bcode ==
+                                                          listBranch[index]
+                                                              ['bcode']
+                                                      ? logolightGreen
+                                                      : Colors.black),
+                                            )),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          )
+                        : Padding(padding: EdgeInsets.only(bottom: 1)),
+                    //Pick start date
+                    Container(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: FormBuilderDateTimePicker(
+                        attribute: 'date',
+                        controller: controllerStartDate,
+                        inputType: InputType.date,
+                        onChanged: (v) {
+                          setState(() {
+                            sdate = v != null ? v : DateTime.now();
+                          });
+                        },
+                        initialValue: DateTime(now.year, now.month, 1),
+                        format: DateFormat("yyyy-MM-dd"),
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)
+                                  .translate('start_date') ??
+                              "Start date",
+                        ),
+                      ),
+                    ),
+                    //Pick date End
+                    Container(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: FormBuilderDateTimePicker(
+                        attribute: 'date',
+                        controller: controllerEndDate,
+                        inputType: InputType.date,
+                        onChanged: (v) {
+                          setState(() {
+                            edate = v != null ? v : DateTime.now();
+                          });
+                        },
+                        initialValue: DateTime.now(),
+                        format: DateFormat("yyyy-MM-dd"),
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)
+                                  .translate('end_date') ??
+                              "End date",
+                        ),
+                      ),
+                    ),
+                    //Bottom Reset and Apply
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RaisedButton(
+                            onPressed: _closeEndDrawer,
+                            child: Text(AppLocalizations.of(context)
+                                    .translate('reset') ??
+                                "Reset"),
+                          ),
+                          RaisedButton(
+                            color: logolightGreen,
+                            onPressed: _applyEndDrawer,
+                            child: Text(
+                              AppLocalizations.of(context).translate('apply') ??
+                                  "Apply",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ),
-        endDrawer: Drawer(
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 35)),
-                  Text(
-                    'Filter Report',
-                    style: TextStyle(fontWeight: fontWeight800, fontSize: 15),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    child: TextField(
-                        onChanged: (v) => {getListCO(v)},
-                        decoration: InputDecoration(
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: logolightGreen),
-                            ),
-                            labelText: AppLocalizations.of(context)
-                                        .translate('search') +
-                                    ' CO' ??
-                                'Search CO',
-                            labelStyle: TextStyle(
-                                fontSize: 15, color: const Color(0xff0ABAB5)))),
-                  ),
-                  //List CO
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Text(
-                    AppLocalizations.of(context).translate('list_co') ??
-                        'List CO',
-                    style: TextStyle(
-                      fontWeight: fontWeight700,
-                    ),
-                  ),
-                  listCO != null
-                      ? Container(
-                          height: 180,
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: ListView.builder(
-                              itemCount:
-                                  listCO != null ? listCO.length : [].length,
-                              padding: const EdgeInsets.only(top: 10.0),
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  child: InkWell(
-                                    onTap: () => _onClickListCO(listCO[index]),
-                                    child: Center(
-                                      child: Container(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            '${listCO[index]['uname']}',
-                                            style: TextStyle(
-                                                color: code ==
-                                                        listCO[index]['ucode']
-                                                    ? logolightGreen
-                                                    : Colors.black),
-                                          )),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        )
-                      : Padding(padding: EdgeInsets.only(bottom: 1)),
-                  //List Branch
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Text(
-                    AppLocalizations.of(context).translate('list_branch') ??
-                        'List Branch',
-                    style: TextStyle(
-                      fontWeight: fontWeight700,
-                    ),
-                  ),
-                  listBranch != null
-                      ? Container(
-                          height: 180,
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: ListView.builder(
-                              itemCount: listBranch != null
-                                  ? listBranch.length
-                                  : [].length,
-                              padding: const EdgeInsets.only(top: 10.0),
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  child: InkWell(
-                                    onTap: () =>
-                                        _onClickListBranch(listBranch[index]),
-                                    child: Center(
-                                      child: Container(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            '${listBranch[index]['bname']}',
-                                            style: TextStyle(
-                                                color: bcode ==
-                                                        listBranch[index]
-                                                            ['bcode']
-                                                    ? logolightGreen
-                                                    : Colors.black),
-                                          )),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        )
-                      : Padding(padding: EdgeInsets.only(bottom: 1)),
-                  //Pick start date
-                  Container(
-                    padding: EdgeInsets.only(left: 15, right: 15),
-                    child: FormBuilderDateTimePicker(
-                      attribute: 'date',
-                      controller: controllerStartDate,
-                      inputType: InputType.date,
-                      onChanged: (v) {
-                        setState(() {
-                          sdate = v != null ? v : DateTime.now();
-                        });
-                      },
-                      initialValue: DateTime(now.year, now.month, 1),
-                      format: DateFormat("yyyy-MM-dd"),
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)
-                                .translate('start_date') ??
-                            "Start date",
-                      ),
-                    ),
-                  ),
-                  //Pick date End
-                  Container(
-                    padding: EdgeInsets.only(left: 15, right: 15),
-                    child: FormBuilderDateTimePicker(
-                      attribute: 'date',
-                      controller: controllerEndDate,
-                      inputType: InputType.date,
-                      onChanged: (v) {
-                        setState(() {
-                          edate = v != null ? v : DateTime.now();
-                        });
-                      },
-                      initialValue: DateTime.now(),
-                      format: DateFormat("yyyy-MM-dd"),
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)
-                                .translate('end_date') ??
-                            "End date",
-                      ),
-                    ),
-                  ),
-                  //Bottom Reset and Apply
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        RaisedButton(
-                          onPressed: _closeEndDrawer,
-                          child: Text(
-                              AppLocalizations.of(context).translate('reset') ??
-                                  "Reset"),
-                        ),
-                        RaisedButton(
-                          color: logolightGreen,
-                          onPressed: _applyEndDrawer,
-                          child: Text(
-                            AppLocalizations.of(context).translate('apply') ??
-                                "Apply",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
           ),

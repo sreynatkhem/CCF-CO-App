@@ -60,6 +60,7 @@ class _NotificationState extends State<NotificationScreen> {
           listMessages = item['listMessages'];
         });
       }
+      return parsed;
     } catch (error) {
       setState(() {
         _isLoading = false;
@@ -181,6 +182,23 @@ class _NotificationState extends State<NotificationScreen> {
     }
   }
 
+  Future<void> _getData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    getNotificationLock(_pageSize, _pageNumber)
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return NotificationListener(
@@ -207,129 +225,142 @@ class _NotificationState extends State<NotificationScreen> {
                         child: CircularProgressIndicator(),
                       ),
                     )
-                  : Container(
-                      padding: EdgeInsets.all(10),
-                      child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: listMessages.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            // var status = statusApproval(parsed[index]['rstatus']);
-                            if (listMessages.length >= 0) {
-                              return Container(
-                                height: 100,
-                                margin: EdgeInsets.only(bottom: 5.0),
-                                child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                          color: logolightGreen, width: 1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: InkWell(
-                                        splashColor: Colors.blue.withAlpha(30),
-                                        onTap: () {
-                                          // var value = listMessages[index];
-                                          onTapsDetail(listMessages[index]);
-                                        },
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Row(
+                  : RefreshIndicator(
+                      onRefresh: _getData,
+                      child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: listMessages.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                // var status = statusApproval(parsed[index]['rstatus']);
+                                if (listMessages.length >= 0) {
+                                  return Container(
+                                    height: 100,
+                                    margin: EdgeInsets.only(bottom: 5.0),
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                              color: logolightGreen, width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: InkWell(
+                                            splashColor:
+                                                Colors.blue.withAlpha(30),
+                                            onTap: () {
+                                              // var value = listMessages[index];
+                                              onTapsDetail(listMessages[index]);
+                                            },
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: <Widget>[
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 5)),
-                                                  // Image(
-                                                  //   image: _imagesFindApproval,
-                                                  //   width: 50,
-                                                  //   height: 50,
-                                                  // ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 15)),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 5)),
+                                                      // Image(
+                                                      //   image: _imagesFindApproval,
+                                                      //   width: 50,
+                                                      //   height: 50,
+                                                      // ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 15)),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Container(
+                                                              child: Text(
+                                                            listMessages[index]
+                                                                ['title'],
+                                                            style:
+                                                                mainTitleBlack,
+                                                          )),
+                                                          Container(
+                                                            width: 260,
+                                                            child: Text(
+                                                              '${listMessages[index]['body']}',
+                                                              maxLines: 4,
+                                                            ),
+                                                          ),
+                                                          // Padding(
+                                                          //     padding:
+                                                          //         EdgeInsets.only(bottom: 2)),
+                                                          // Padding(
+                                                          //     padding:
+                                                          //         EdgeInsets.only(bottom: 2)),
+                                                          // Text(
+                                                          //     '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
+                                                          // Padding(
+                                                          //     padding:
+                                                          //         EdgeInsets.only(bottom: 2)),
+                                                          // Text(
+                                                          //     '${parsed[index]['loan']['currency']} ${parsed[index]['loan']['lamt']}'),
+                                                          // Padding(
+                                                          //     padding:
+                                                          //         EdgeInsets.only(bottom: 2)),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                   Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
                                                     children: <Widget>[
-                                                      Container(
-                                                          child: Text(
-                                                        listMessages[index]
-                                                            ['title'],
-                                                        style: mainTitleBlack,
-                                                      )),
-                                                      Container(
-                                                        width: 260,
-                                                        child: Text(
-                                                          '${listMessages[index]['body']}',
-                                                          maxLines: 4,
-                                                        ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      // status,
+                                                      Text(
+                                                        '${listMessages[index]['date']}',
+                                                        style: TextStyle(
+                                                            fontSize: 10),
                                                       ),
-                                                      // Padding(
-                                                      //     padding:
-                                                      //         EdgeInsets.only(bottom: 2)),
-                                                      // Padding(
-                                                      //     padding:
-                                                      //         EdgeInsets.only(bottom: 2)),
-                                                      // Text(
-                                                      //     '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
-                                                      // Padding(
-                                                      //     padding:
-                                                      //         EdgeInsets.only(bottom: 2)),
-                                                      // Text(
-                                                      //     '${parsed[index]['loan']['currency']} ${parsed[index]['loan']['lamt']}'),
-                                                      // Padding(
-                                                      //     padding:
-                                                      //         EdgeInsets.only(bottom: 2)),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                        top: 5,
+                                                      )),
+                                                      if (listMessages[index]
+                                                              ['mstatus'] ==
+                                                          1)
+                                                        Icon(
+                                                          Icons.done_all,
+                                                          size: 15,
+                                                        ),
+                                                      // if (listMessages[index]['rdate'] != '')
+                                                      //   Text(getDateTimeYMD(
+                                                      //       listMessages[index]['rdate'])),
+                                                      Text(''),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                        right: 100,
+                                                      ))
                                                     ],
                                                   ),
-                                                ],
-                                              ),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: 2)),
-                                                  // status,
-                                                  Text(
-                                                    '${listMessages[index]['date']}',
-                                                    style:
-                                                        TextStyle(fontSize: 10),
-                                                  ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                    top: 5,
-                                                  )),
-                                                  if (listMessages[index]
-                                                          ['mstatus'] ==
-                                                      1)
-                                                    Icon(
-                                                      Icons.done_all,
-                                                      size: 15,
-                                                    ),
-                                                  // if (listMessages[index]['rdate'] != '')
-                                                  //   Text(getDateTimeYMD(
-                                                  //       listMessages[index]['rdate'])),
-                                                  Text(''),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                    right: 100,
-                                                  ))
-                                                ],
-                                              ),
-                                            ]))),
-                              );
-                            } else {
-                              return Center(
-                                child: Text('No notification'),
-                              );
-                            }
-                          })),
+                                                ]))),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: Text('No notification'),
+                                  );
+                                }
+                              })),
+                    ),
             ),
     );
   }

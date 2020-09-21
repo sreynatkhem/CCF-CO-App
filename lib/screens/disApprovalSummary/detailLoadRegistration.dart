@@ -9,7 +9,7 @@ import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/detailLoanApproval.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/editLoanRegistration.dart';
-import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
+import 'package:chokchey_finance/screens/listLoanRegistration/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -321,7 +321,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
           onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => ListLoanRegistration(),
+                builder: (BuildContext context) => ListLoanRegistrations(),
               ),
               ModalRoute.withName('/')),
         ),

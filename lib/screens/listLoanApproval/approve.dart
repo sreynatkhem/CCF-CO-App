@@ -88,19 +88,20 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
 
   @override
   void didChangeDependencies() {
-    futureLoanApproval =
-        Provider.of<LoanApproval>(context).getLoanApproval(20, 1);
-    getListLoan(20, 1);
-    getDetail();
-
-    if (this.futureLoanApproval != futureLoanApproval) {
-      this.futureLoanApproval = futureLoanApproval;
-      Future.microtask(() => futureLoanApproval.doSomeHttpCall());
+    if (mounted) {
+      futureLoanApproval = Provider.of<LoanApproval>(context)
+          .getLoanApproval(20, 1, '', '', '', '', '');
+      getListLoan(20, 1);
+      getDetail();
+      if (this.futureLoanApproval != futureLoanApproval) {
+        this.futureLoanApproval = futureLoanApproval;
+        Future.microtask(() => futureLoanApproval.doSomeHttpCall());
+      }
     }
     super.didChangeDependencies();
   }
 
-  getListLoan(_pageSize, _pageNumber) async {
+  Future getListLoan(_pageSize, _pageNumber) async {
     final storage = new FlutterSecureStorage();
     try {
       var token = await storage.read(key: 'user_token');
@@ -114,6 +115,8 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
       };
       final response = await api().post(baseURLInternal + 'loanRequests/byuser',
           headers: headers, body: bodyRow);
+      print('response.statusCode::: ${response.statusCode}');
+
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
         setState(() {
@@ -123,7 +126,9 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
       } else {
         print('statusCode::: ${response.statusCode}');
       }
-    } catch (error) {}
+    } catch (error) {
+      print('error in fuction::: ${error}');
+    }
   }
 
   var list;
