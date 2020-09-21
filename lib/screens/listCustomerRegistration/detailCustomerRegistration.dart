@@ -2,6 +2,7 @@ import 'package:chokchey_finance/components/ListDatial.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/models/customerRegistration.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
+import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'editCustomerRegistration.dart';
-import 'listCustomerRegistration.dart';
 
 class CardDetailCustomer extends StatefulWidget {
   final dynamic list;
@@ -89,7 +89,7 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
           onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (BuildContext context) => ListCustomerRegistration(),
+                builder: (BuildContext context) => ListCustomerRegistrations(),
               ),
               ModalRoute.withName('/')),
         ),

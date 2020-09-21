@@ -113,25 +113,59 @@ class _PolicyScreenState extends State<PolicyScreen> {
             : Column(
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 10)),
+                  // _isLoading
+                  //     ? Center(
+                  //         child: CircularProgressIndicator(),
+                  //       )
+                  // CardState(
+                  //     texts: 'loan_check_list',
+                  //     images: hrPolicy,
+                  //     onTaps: () => onTapDetail()),
                   _isLoading
                       ? Center(
                           child: CircularProgressIndicator(),
                         )
-                      : CardState(
-                          texts: 'loan_check_list',
-                          images: hrPolicy,
-                          onTaps: () {
-                            // onTapsPolicy('Requirement Check List');
-                            onTapDetail();
-                          },
-                        ),
-                  // CardState(
-                  //   texts: 'credit_policy',
-                  //   images: creditPolicy,
-                  //   onTaps: () {
-                  //     onTapsPolicy('Credit Policy');
-                  //   },
-                  // ),
+                      : Container(
+                          margin: EdgeInsets.only(bottom: 5.0),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                side:
+                                    BorderSide(color: logolightGreen, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                                child: InkWell(
+                                    onTap: () {
+                                      onTapDetail();
+                                    },
+                                    splashColor: Colors.blue.withAlpha(30),
+                                    child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 60, left: 10)),
+                                          Image(
+                                            image: hrPolicy,
+                                            width: 45,
+                                            height: 45,
+                                          ),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 10)),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(AppLocalizations.of(context)
+                                                  .translate(
+                                                      'loan_check_list')),
+                                            ],
+                                          ),
+                                        ])),
+                              )),
+                        )
                 ],
               ));
   }

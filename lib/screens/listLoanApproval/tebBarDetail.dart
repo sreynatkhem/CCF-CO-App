@@ -39,14 +39,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   void didChangeDependencies() {
-    setState(() {
-      _isInit = true;
-    });
-    if (_isInit) {
-      // list = fetchListDetail(loanApprovalApplicationNo);
-    }
+    futureLoanApproval = Provider.of<LoanApproval>(context)
+        .getLoanApproval(20, 1, '', '', '', '', '');
     var test = storage.read(key: 'roles');
-
     test.then(
       (value) => setState(() {
         userRoles = jsonDecode(value);
@@ -62,7 +57,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   Future getDetail() async {
     var token = await storage.read(key: 'user_token');
     final response = await api().get(
-      baseURLInternal + 'loans/' + list['lcode'],
+      baseURLInternal + 'loanRequests/Applications/' + list['rcode'],
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
@@ -70,8 +65,17 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     );
     final parsed = jsonDecode(response.body);
     setState(() {
-      listDetail = parsed;
+      listDetail = parsed != null ? parsed : null;
     });
+    if (parsed['loan']['lstatus'] == 'R') {
+      setState(() {
+        hideBottomTabBar = true;
+      });
+    } else {
+      setState(() {
+        hideBottomTabBar = false;
+      });
+    }
   }
 
   double _widtdButton = 100.0;
@@ -81,6 +85,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   var isFetchingSuccessfully;
   var isFetchingSuccessfullReturn;
   var isFetchingSuccessfullReject;
+  bool hideBottomTabBar = true;
 
   authrize(value, context) async {
     var branch = await storage.read(key: 'branch');
@@ -93,6 +98,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var lcode = value['lcode'];
     var rdate = '';
     var roleList = userRoles;
+
     setState(() {
       _isLoading = true;
     });
@@ -102,7 +108,24 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
               setState(() {
                 _isLoading = false;
               }),
-            });
+              if (value['loan']['lstatus'] == 'R')
+                {
+                  setState(() {
+                    hideBottomTabBar = true;
+                  }),
+                }
+              else
+                {
+                  setState(() {
+                    hideBottomTabBar = false;
+                  }),
+                },
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     isFetchingSuccessfully =
         await Provider.of<LoanApproval>(context, listen: false)
             .isFetchingSuccessfully;
@@ -135,9 +158,25 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
-        .returnFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments);
-    setState(() {
-      _isLoading = false;
+        .returnFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments)
+        .then((value) => {
+              if (value['loan']['lstatus'] == 'R')
+                {
+                  setState(() {
+                    hideBottomTabBar = true;
+                  }),
+                }
+              else
+                {
+                  setState(() {
+                    hideBottomTabBar = false;
+                  }),
+                },
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
     });
     isFetchingSuccessfullReturn =
         await Provider.of<LoanApproval>(context, listen: false)
@@ -169,11 +208,30 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       _isLoading = true;
     });
     await Provider.of<LoanApproval>(context, listen: false)
-        .rejectFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments);
-
-    setState(() {
-      _isLoading = false;
+        .rejectFunction(rcode, ucode, bcode, lcode, rdate, roleList, comments)
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              }),
+              if (value['loan']['lstatus'] == 'R')
+                {
+                  setState(() {
+                    hideBottomTabBar = true;
+                  }),
+                }
+              else
+                {
+                  setState(() {
+                    hideBottomTabBar = false;
+                  }),
+                },
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
     });
+
     isFetchingSuccessfullReject =
         await Provider.of<LoanApproval>(context, listen: false)
             .isFetchingSuccessfullyReject;
@@ -202,10 +260,10 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   Widget build(BuildContext context) {
+    futureLoanApproval = Provider.of<LoanApproval>(context)
+        .getLoanApproval(20, 1, '', '', '', '', '');
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
-    print("listDetail::: ${listDetail}");
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -279,145 +337,139 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                     ),
                   ),
                 ),
-                listDetail != null &&
-                        listDetail['loanRequest'] != null &&
-                        listDetail['loanRequest']['rstatus'] != 'A'
-                    ? Align(
-                        heightFactor: 1,
-                        alignment: FractionalOffset.bottomCenter,
-                        child: MaterialButton(
-                            onPressed: () => {},
-                            child: Container(
-                              padding: EdgeInsets.only(top: 0),
-                              margin: EdgeInsets.all(0),
-                              child: Container(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Button(
-                                      widtdButton: _widtdButton,
-                                      heightButton: _heightButton,
-                                      borderRadius: _borderRadius,
-                                      onPressed: () {
-                                        AwesomeDialog(
-                                            context: context,
-                                            // animType: AnimType.LEFTSLIDE,
-                                            headerAnimationLoop: false,
-                                            dialogType: DialogType.INFO,
-                                            title: AppLocalizations.of(context)
-                                                    .translate('reject') ??
-                                                'Reject',
-                                            desc:
-                                                // AppLocalizations.of(context)
-                                                //         .translate('thank_you') ??
-                                                'Would you like to Reject?',
-                                            btnOkOnPress: () async {
-                                              reject(list, context);
-                                            },
-                                            btnCancelText:
-                                                AppLocalizations.of(context)
-                                                        .translate('cancel') ??
-                                                    "Cancel",
-                                            btnCancelOnPress: () async {},
-                                            btnCancelIcon: Icons.close,
-                                            btnOkIcon: Icons.check_circle,
-                                            btnOkColor: logolightGreen,
-                                            btnOkText:
-                                                AppLocalizations.of(context)
-                                                        .translate('okay') ??
-                                                    'Okay')
-                                          ..show();
-                                      },
-                                      color: Colors.red,
-                                      text: AppLocalizations.of(context)
-                                              .translate('reject') ??
-                                          'Reject'),
-                                  Padding(padding: EdgeInsets.only(right: 5)),
-                                  Button(
-                                      widtdButton: _widtdButton,
-                                      heightButton: _heightButton,
-                                      borderRadius: _borderRadius,
-                                      onPressed: () {
-                                        AwesomeDialog(
-                                            context: context,
-                                            // animType: AnimType.LEFTSLIDE,
-                                            headerAnimationLoop: false,
-                                            dialogType: DialogType.INFO,
-                                            title: AppLocalizations.of(context)
-                                                    .translate('return') ??
-                                                'Return',
-                                            desc:
-                                                // AppLocalizations.of(context)
-                                                //         .translate('thank_you') ??
-                                                'Would you like to Return?',
-                                            btnOkOnPress: () async {
-                                              returnFuc(list, context);
-                                            },
-                                            btnCancelText:
-                                                AppLocalizations.of(context)
-                                                        .translate('cancel') ??
-                                                    "Cancel",
-                                            btnCancelOnPress: () async {},
-                                            btnCancelIcon: Icons.close,
-                                            btnOkIcon: Icons.check_circle,
-                                            btnOkColor: logolightGreen,
-                                            btnOkText:
-                                                AppLocalizations.of(context)
-                                                        .translate('okay') ??
-                                                    'Okay')
-                                          ..show();
-                                      },
-                                      color: Colors.grey,
-                                      text: AppLocalizations.of(context)
-                                              .translate('return') ??
-                                          'Return'),
-                                  Padding(padding: EdgeInsets.only(right: 5)),
-                                  Button(
-                                      widtdButton: _widtdButton,
-                                      heightButton: _heightButton,
-                                      borderRadius: _borderRadius,
-                                      onPressed: () {
-                                        AwesomeDialog(
-                                            context: context,
-                                            // animType: AnimType.LEFTSLIDE,
-                                            headerAnimationLoop: false,
-                                            dialogType: DialogType.INFO,
-                                            title: AppLocalizations.of(context)
-                                                    .translate('authrize') ??
-                                                'Authrize',
-                                            desc:
-                                                // AppLocalizations.of(context)
-                                                //         .translate('thank_you') ??
-                                                'Would you like to authrize?',
-                                            btnOkOnPress: () async {
-                                              authrize(list, context);
-                                            },
-                                            btnCancelText:
-                                                AppLocalizations.of(context)
-                                                        .translate('cancel') ??
-                                                    "Cancel",
-                                            btnCancelOnPress: () async {},
-                                            btnCancelIcon: Icons.close,
-                                            btnOkIcon: Icons.check_circle,
-                                            btnOkColor: logolightGreen,
-                                            btnOkText:
-                                                AppLocalizations.of(context)
-                                                        .translate('okay') ??
-                                                    'Okay')
-                                          ..show();
-                                      },
-                                      color: logolightGreen,
-                                      text: _isLoading
-                                          ? 'loading'
-                                          : AppLocalizations.of(context)
-                                                  .translate('authrize') ??
-                                              'Authrize'),
-                                ],
-                              )),
-                            )),
-                      )
-                    : Padding(padding: EdgeInsets.only(bottom: 5)),
+                if (hideBottomTabBar == true)
+                  Align(
+                    heightFactor: 1,
+                    alignment: FractionalOffset.bottomCenter,
+                    child: MaterialButton(
+                        onPressed: () => {},
+                        child: Container(
+                          padding: EdgeInsets.only(top: 0),
+                          margin: EdgeInsets.all(0),
+                          child: Container(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Button(
+                                  widtdButton: _widtdButton,
+                                  heightButton: _heightButton,
+                                  borderRadius: _borderRadius,
+                                  onPressed: () {
+                                    AwesomeDialog(
+                                        context: context,
+                                        // animType: AnimType.LEFTSLIDE,
+                                        headerAnimationLoop: false,
+                                        dialogType: DialogType.INFO,
+                                        title: AppLocalizations.of(context)
+                                                .translate('reject') ??
+                                            'Reject',
+                                        desc:
+                                            // AppLocalizations.of(context)
+                                            //         .translate('thank_you') ??
+                                            'Would you like to Reject?',
+                                        btnOkOnPress: () async {
+                                          reject(list, context);
+                                        },
+                                        btnCancelText:
+                                            AppLocalizations.of(context)
+                                                    .translate('cancel') ??
+                                                "Cancel",
+                                        btnCancelOnPress: () async {},
+                                        btnCancelIcon: Icons.close,
+                                        btnOkIcon: Icons.check_circle,
+                                        btnOkColor: logolightGreen,
+                                        btnOkText: AppLocalizations.of(context)
+                                                .translate('okay') ??
+                                            'Okay')
+                                      ..show();
+                                  },
+                                  color: Colors.red,
+                                  text: AppLocalizations.of(context)
+                                          .translate('reject') ??
+                                      'Reject'),
+                              Padding(padding: EdgeInsets.only(right: 5)),
+                              Button(
+                                  widtdButton: _widtdButton,
+                                  heightButton: _heightButton,
+                                  borderRadius: _borderRadius,
+                                  onPressed: () {
+                                    AwesomeDialog(
+                                        context: context,
+                                        // animType: AnimType.LEFTSLIDE,
+                                        headerAnimationLoop: false,
+                                        dialogType: DialogType.INFO,
+                                        title: AppLocalizations.of(context)
+                                                .translate('return') ??
+                                            'Return',
+                                        desc:
+                                            // AppLocalizations.of(context)
+                                            //         .translate('thank_you') ??
+                                            'Would you like to Return?',
+                                        btnOkOnPress: () async {
+                                          returnFuc(list, context);
+                                        },
+                                        btnCancelText:
+                                            AppLocalizations.of(context)
+                                                    .translate('cancel') ??
+                                                "Cancel",
+                                        btnCancelOnPress: () async {},
+                                        btnCancelIcon: Icons.close,
+                                        btnOkIcon: Icons.check_circle,
+                                        btnOkColor: logolightGreen,
+                                        btnOkText: AppLocalizations.of(context)
+                                                .translate('okay') ??
+                                            'Okay')
+                                      ..show();
+                                  },
+                                  color: Colors.grey,
+                                  text: AppLocalizations.of(context)
+                                          .translate('return') ??
+                                      'Return'),
+                              Padding(padding: EdgeInsets.only(right: 5)),
+                              Button(
+                                  widtdButton: _widtdButton,
+                                  heightButton: _heightButton,
+                                  borderRadius: _borderRadius,
+                                  onPressed: () {
+                                    AwesomeDialog(
+                                        context: context,
+                                        // animType: AnimType.LEFTSLIDE,
+                                        headerAnimationLoop: false,
+                                        dialogType: DialogType.INFO,
+                                        title: AppLocalizations.of(context)
+                                                .translate('authrize') ??
+                                            'Authrize',
+                                        desc:
+                                            // AppLocalizations.of(context)
+                                            //         .translate('thank_you') ??
+                                            'Would you like to authrize?',
+                                        btnOkOnPress: () async {
+                                          authrize(list, context);
+                                        },
+                                        btnCancelText:
+                                            AppLocalizations.of(context)
+                                                    .translate('cancel') ??
+                                                "Cancel",
+                                        btnCancelOnPress: () async {},
+                                        btnCancelIcon: Icons.close,
+                                        btnOkIcon: Icons.check_circle,
+                                        btnOkColor: logolightGreen,
+                                        btnOkText: AppLocalizations.of(context)
+                                                .translate('okay') ??
+                                            'Okay')
+                                      ..show();
+                                  },
+                                  color: logolightGreen,
+                                  text: _isLoading
+                                      ? 'loading'
+                                      : AppLocalizations.of(context)
+                                              .translate('authrize') ??
+                                          'Authrize'),
+                            ],
+                          )),
+                        )),
+                  ),
                 Padding(padding: EdgeInsets.only(bottom: bottomPadding))
               ],
             ),

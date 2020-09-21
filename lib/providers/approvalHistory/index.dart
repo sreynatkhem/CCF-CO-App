@@ -83,6 +83,7 @@ class ApprovalHistoryProvider {
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
+
         return list;
       } else {
         logger().e('response.statusCode != 200 :: ${response.statusCode}');

@@ -10,13 +10,16 @@ import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
-import 'package:chokchey_finance/screens/listCustomerRegistration/listCustomerRegistration.dart';
-import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
-import 'package:chokchey_finance/screens/listLoanRegistration/listLoanRegistration.dart';
+import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
+import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
+import 'package:chokchey_finance/screens/listLoanRegistration/index.dart';
 import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart';
 import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
+import 'package:chokchey_finance/screens/requestSummary/index.dart';
+import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -152,21 +155,21 @@ class _HomeState extends State<Home> {
   onListLoanApproval() async {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => ListLoanApproval()),
+        MaterialPageRoute(builder: (context) => ListLoanApprovals()),
         ModalRoute.withName(""));
   }
 
   onListCustomerRegistration() async {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => ListCustomerRegistration()),
+        MaterialPageRoute(builder: (context) => ListCustomerRegistrations()),
         ModalRoute.withName(""));
   }
 
   onListLoanRegistration() async {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => ListLoanRegistration()),
+        MaterialPageRoute(builder: (context) => ListLoanRegistrations()),
         ModalRoute.withName(""));
   }
 
@@ -181,6 +184,27 @@ class _HomeState extends State<Home> {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => ApprovalSummary()),
+        ModalRoute.withName(""));
+  }
+
+  onListDisApprovalSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => DisApprovalSummary()),
+        ModalRoute.withName(""));
+  }
+
+  onListRequestSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => RequestSummary()),
+        ModalRoute.withName(""));
+  }
+
+  onListReturnSummary() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ReturnSummary()),
         ModalRoute.withName(""));
   }
 
@@ -272,6 +296,24 @@ class _HomeState extends State<Home> {
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)
+                                .translate('report_disapproval') ??
+                            'Report Disapproval',
+                        () => {onListDisApprovalSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_request') ??
+                            'Report Request',
+                        () => {onListRequestSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
+                                .translate('report_return') ??
+                            'Report Return',
+                        () => {onListReturnSummary()}),
+                    CustomListTile(
+                        Icons.insert_chart,
+                        AppLocalizations.of(context)
                                 .translate('report_summary') ??
                             'Report Summary',
                         () => {onListApprovalHistory()}),
@@ -305,6 +347,28 @@ class _HomeState extends State<Home> {
   final list = const AssetImage('assets/images/findApproval.png');
   final policy = const AssetImage('assets/images/policy.png');
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(false),
+                child: Text("NO"),
+              ),
+              SizedBox(height: 16),
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(true),
+                child: Text("YES"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var langCode = AppLocalizations.of(context).locale.languageCode;
@@ -314,235 +378,239 @@ class _HomeState extends State<Home> {
         userRoles = jsonDecode(value);
       }),
     );
-
-    return Header(
-      drawers: new Drawer(
-        child: _drawerList(context),
-      ),
-      headerTexts: AppLocalizations.of(context).translate('loans'),
-      actionsNotification: <Widget>[
-        // Using Stack to show Notification Badge
-        new Stack(
-          children: <Widget>[
-            new IconButton(
-                icon: Icon(
-                  Icons.notifications,
-                  size: 25,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => NotificationScreen()),
-                  );
-                }),
-            totalUnread != 0
-                ? new Positioned(
-                    right: 11,
-                    top: 11,
-                    child: new Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: new BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 14,
-                        minHeight: 14,
-                      ),
-                      child: Text(
-                        totalUnread.toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )
-                : new Container()
-          ],
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Header(
+        drawers: new Drawer(
+          child: _drawerList(context),
         ),
-      ],
-      bodys: SizedBox.expand(
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => _currentIndex = index);
-          },
-          children: <Widget>[
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: GridView.count(
-                        primary: false,
-                        padding: const EdgeInsets.only(
-                            left: 45.0, right: 45.0, top: 20),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        crossAxisCount: 2,
-                        children: List.generate(userRoles.length, (index) {
-                          if (userRoles[index].toString() == '100001') {
-                            return MenuCard(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ApprovalLists()),
-                              ),
-                              color: logolightGreen,
-                              imageNetwork: list,
-                              text: AppLocalizations.of(context)
-                                  .translate('list_loan_approval'),
-                            );
-                          }
-                          if (userRoles[index].toString() == '100001') {
-                            return Padding(
-                              padding: EdgeInsets.all(10),
-                            );
-                          }
-
-                          if (userRoles[index].toString() == '100002') {
-                            if (langCode == 'en') {
+        headerTexts: AppLocalizations.of(context).translate('loans'),
+        actionsNotification: <Widget>[
+          // Using Stack to show Notification Badge
+          new Stack(
+            children: <Widget>[
+              new IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    size: 25,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationScreen()),
+                    );
+                  }),
+              totalUnread != 0
+                  ? new Positioned(
+                      right: 11,
+                      top: 11,
+                      child: new Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: new BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Text(
+                          totalUnread.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  : new Container()
+            ],
+          ),
+        ],
+        bodys: SizedBox.expand(
+          child: PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            children: <Widget>[
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: GridView.count(
+                          primary: false,
+                          padding: const EdgeInsets.only(
+                              left: 45.0, right: 45.0, top: 20),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          crossAxisCount: 2,
+                          children: List.generate(userRoles.length, (index) {
+                            if (userRoles[index].toString() == '100001') {
                               return MenuCard(
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => CustomerRegister()),
+                                      builder: (context) => ApprovalLists()),
                                 ),
                                 color: logolightGreen,
-                                imageNetwork: register,
+                                imageNetwork: list,
                                 text: AppLocalizations.of(context)
-                                        .translate('customers') ??
-                                    'Customer',
-                                // AppLocalizations.of(context).locale.languageCode == 'en'
-                                text2: AppLocalizations.of(context)
-                                        .translate('registration') ??
-                                    'Registration',
-                              );
-                            } else {
-                              return MenuCard(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CustomerRegister()),
-                                ),
-                                color: logolightGreen,
-                                imageNetwork: register,
-                                text: AppLocalizations.of(context)
-                                        .translate('customer_registration') ??
-                                    'Customer',
+                                    .translate('list_loan_approval'),
                               );
                             }
-                          }
-                          if (userRoles[index].toString() == '100002') {
-                            return Padding(
-                              padding: EdgeInsets.all(10),
-                            );
-                          }
-                          if (userRoles[index].toString() == '100003') {
-                            return MenuCard(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoanRegister()),
-                              ),
-                              color: logolightGreen,
-                              imageNetwork: loanRegistration,
-                              text: AppLocalizations.of(context)
-                                      .translate('loan_registration') ??
-                                  'Loan Registration',
-                            );
-                          }
-                          if (userRoles[index].toString() == '100003') {
-                            return Padding(
-                              padding: EdgeInsets.all(10),
-                            );
-                          }
-                          if (userRoles[index].toString() == '100004') {
-                            return Container(
-                              width: 10,
-                              height: 20,
-                              child: MenuCard(
+                            if (userRoles[index].toString() == '100001') {
+                              return Padding(
+                                padding: EdgeInsets.all(10),
+                              );
+                            }
+
+                            if (userRoles[index].toString() == '100002') {
+                              if (langCode == 'en') {
+                                return MenuCard(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CustomerRegister()),
+                                  ),
+                                  color: logolightGreen,
+                                  imageNetwork: register,
+                                  text: AppLocalizations.of(context)
+                                          .translate('customers') ??
+                                      'Customer',
+                                  // AppLocalizations.of(context).locale.languageCode == 'en'
+                                  text2: AppLocalizations.of(context)
+                                          .translate('registration') ??
+                                      'Registration',
+                                );
+                              } else {
+                                return MenuCard(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CustomerRegister()),
+                                  ),
+                                  color: logolightGreen,
+                                  imageNetwork: register,
+                                  text: AppLocalizations.of(context)
+                                          .translate('customer_registration') ??
+                                      'Customer',
+                                );
+                              }
+                            }
+                            if (userRoles[index].toString() == '100002') {
+                              return Padding(
+                                padding: EdgeInsets.all(10),
+                              );
+                            }
+                            if (userRoles[index].toString() == '100003') {
+                              return MenuCard(
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => PolicyScreen()),
+                                      builder: (context) => LoanRegister()),
                                 ),
                                 color: logolightGreen,
-                                imageNetwork: policy,
+                                imageNetwork: loanRegistration,
                                 text: AppLocalizations.of(context)
-                                        .translate('policy') ??
-                                    'Policy',
-                              ),
-                            );
-                          }
-                          if (userRoles[index].toString() == '100005') {
-                            return Text('');
-                          }
-                          if (userRoles[index].toString() == '100006') {
-                            return Text('');
-                          }
-                        }) // List View
-                        ),
-                  ),
-                  CardMessage(
-                    title: AppLocalizations.of(context)
-                            .translate('message_from_ceo') ??
-                        'Message from CEO',
-                    textMessage: AppLocalizations.of(context)
-                            .translate('our_reputation_for_corporate') ??
-                        'Our reputation for corporate integrity attracts great team members, great customers, and even greater opportunities. It is a key to our long-term success. I am continually impressed by the resourcefulness and entrepreneurial quality displayed by our people and the exceptional value they bring to the company',
-                  )
-                ],
+                                        .translate('loan_registration') ??
+                                    'Loan Registration',
+                              );
+                            }
+                            if (userRoles[index].toString() == '100003') {
+                              return Padding(
+                                padding: EdgeInsets.all(10),
+                              );
+                            }
+                            if (userRoles[index].toString() == '100004') {
+                              return Container(
+                                width: 10,
+                                height: 20,
+                                child: MenuCard(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PolicyScreen()),
+                                  ),
+                                  color: logolightGreen,
+                                  imageNetwork: policy,
+                                  text: AppLocalizations.of(context)
+                                          .translate('policy') ??
+                                      'Policy',
+                                ),
+                              );
+                            }
+                            if (userRoles[index].toString() == '100005') {
+                              return Text('');
+                            }
+                            if (userRoles[index].toString() == '100006') {
+                              return Text('');
+                            }
+                          }) // List View
+                          ),
+                    ),
+                    CardMessage(
+                      title: AppLocalizations.of(context)
+                              .translate('message_from_ceo') ??
+                          'Message from CEO',
+                      textMessage: AppLocalizations.of(context)
+                              .translate('our_reputation_for_corporate') ??
+                          'Our reputation for corporate integrity attracts great team members, great customers, and even greater opportunities. It is a key to our long-term success. I am continually impressed by the resourcefulness and entrepreneurial quality displayed by our people and the exceptional value they bring to the company',
+                    )
+                  ],
+                ),
               ),
-            ),
-            Container(
-              color: Colors.white,
-            ),
-            Container(
-              color: Colors.white,
-            ),
-            Container(
-              color: Colors.white,
-            ),
+              Container(
+                color: Colors.white,
+              ),
+              Container(
+                color: Colors.white,
+              ),
+              Container(
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBars: BottomNavyBar(
+          selectedIndex: _currentIndex,
+          onItemSelected: (index) {
+            setState(() => _currentIndex = index);
+            _pageController.jumpToPage(index);
+          },
+          items: <BottomNavyBarItem>[
+            BottomNavyBarItem(
+                title: Text(
+                    AppLocalizations.of(context).translate('home') ?? 'Home'),
+                icon: Icon(Icons.home),
+                textAlign: TextAlign.center,
+                activeColor: logolightGreen),
+            BottomNavyBarItem(
+                title: Text(
+                    AppLocalizations.of(context).translate('categories') ??
+                        'Category'),
+                icon: Icon(Icons.apps),
+                textAlign: TextAlign.center,
+                activeColor: logolightGreen),
+            BottomNavyBarItem(
+                title: Text(AppLocalizations.of(context).translate('search') ??
+                    'Search'),
+                icon: Icon(Icons.search),
+                textAlign: TextAlign.center,
+                activeColor: logolightGreen),
+            BottomNavyBarItem(
+                title: Text(AppLocalizations.of(context).translate('setting') ??
+                    'Setting'),
+                icon: Icon(Icons.settings),
+                textAlign: TextAlign.center,
+                activeColor: logolightGreen),
           ],
         ),
-      ),
-      bottomNavigationBars: BottomNavyBar(
-        selectedIndex: _currentIndex,
-        onItemSelected: (index) {
-          setState(() => _currentIndex = index);
-          _pageController.jumpToPage(index);
-        },
-        items: <BottomNavyBarItem>[
-          BottomNavyBarItem(
-              title: Text(
-                  AppLocalizations.of(context).translate('home') ?? 'Home'),
-              icon: Icon(Icons.home),
-              textAlign: TextAlign.center,
-              activeColor: logolightGreen),
-          BottomNavyBarItem(
-              title: Text(
-                  AppLocalizations.of(context).translate('categories') ??
-                      'Category'),
-              icon: Icon(Icons.apps),
-              textAlign: TextAlign.center,
-              activeColor: logolightGreen),
-          BottomNavyBarItem(
-              title: Text(
-                  AppLocalizations.of(context).translate('search') ?? 'Search'),
-              icon: Icon(Icons.search),
-              textAlign: TextAlign.center,
-              activeColor: logolightGreen),
-          BottomNavyBarItem(
-              title: Text(AppLocalizations.of(context).translate('setting') ??
-                  'Setting'),
-              icon: Icon(Icons.settings),
-              textAlign: TextAlign.center,
-              activeColor: logolightGreen),
-        ],
       ),
     );
   }

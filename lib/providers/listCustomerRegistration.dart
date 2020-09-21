@@ -13,31 +13,70 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   var totalCustomer = '';
   final storage = new FlutterSecureStorage();
   Future<List<Customers>> fetchListCustomerRegistration(
-      _pageSize, _pageNumber) async {
+      _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     _isFetching = true;
     try {
       _isFetching = false;
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
+      var level = await storage.read(key: "level");
+      var bodyRow;
+      var sdates = sdate != null ? sdate : '';
+      var edates = edate != null ? edate : '';
+      var codes = code != null ? code : '';
+      var statuses = status != null ? status : '';
+      var btlcode = status != null ? status : '';
+      var bcodes;
+      var ucode;
+      if (level == '3') {
+        bcodes = bcode != null ? bcode : branch;
+        btlcode = '';
+        ucode = code != null ? code : '';
+      }
 
-      var bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
+      if (level == '2') {
+        bcodes = bcode != null ? bcode : branch;
+        btlcode = user_ucode;
+        ucode = code != null ? code : '';
+      }
+
+      if (level == '1') {
+        bcodes = bcode != null ? bcode : branch;
+        ucode = user_ucode;
+        btlcode = '';
+      }
+
+      if (level == '4' || level == '5' || level == '6') {
+        bcodes = bcode != null ? bcode : '';
+        btlcode = '';
+        ucode = code != null ? code : '';
+      }
+      bodyRow =
+          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      var uri = baseURLInternal + 'customers/byuser';
+      print('bodyRow: ${bodyRow}');
+      var uri = baseURLInternal + 'customers/all';
       final response = await api().post(uri, headers: headers, body: bodyRow);
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.addAll(jsonDecode(response.body));
         data.addAll(parsed[0]['listCustomers']);
         totalCustomer = parsed[0]['totalCustomer'].toString();
+        print('data: ${jsonDecode(response.body)}');
+        print('data 2: ${parsed[0]['listCustomers'].length}');
+
         notifyListeners();
-        return parsed[0]['listCustomers']
-            .map<Customers>((json) => Customers.fromJson(json))
-            .toList();
+        if (parsed[0]['listCustomers'].length > 1) {
+          return parsed[0]['listCustomers']
+              .map<Customers>((json) => Customers.fromJson(json))
+              .toList();
+        } else {
+          return [].map<Customers>((json) => Customers.fromJson(json)).toList();
+        }
       } else {
         print('statusCode::: ${response.statusCode}');
       }

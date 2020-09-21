@@ -8,6 +8,7 @@ import 'package:chokchey_finance/models/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/detailLoanApproval.dart';
+import 'package:chokchey_finance/screens/listLoanRegistration/editLoanRegistration.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -18,7 +19,6 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'editLoanRegistration.dart';
 import 'dart:io' as Io;
 
 class CardDetailLoanRegitration extends StatefulWidget {

@@ -44,7 +44,7 @@ class CardReport extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     AppLocalizations.of(context).translate(text) ?? text,
-                    style: TextStyle(color: Colors.white, fontSize: 10),
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
                 value != null

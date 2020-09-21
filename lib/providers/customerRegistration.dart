@@ -61,11 +61,7 @@ class CustomerRegistrationProvider with ChangeNotifier {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      logger().e('parsed :: ${parsed}');
-
       if (response.statusCode == 201) {
-        logger().e('response.statusCode :: ${response.statusCode}');
-
         isOkay = true;
       }
       data.add(parsed);

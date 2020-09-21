@@ -21,7 +21,7 @@
   "message_from_ceo": "Message from CEO",
   "our_reputation_for_corporate": "Our reputation for corporate integrity attracts great team members, great customers, and even greater opportunities. It is a key to our long-term success. I am continually impressed by the resourcefulness and entrepreneurial quality displayed by our people and the exceptional value they bring to the company",
   "full_khmer_name": "Full Khmer Name(*)",
-  "full_khmer_english": "Full Khmer English",
+  "full_english_name": "Full Khmer English(*)",
   "date_of_brith": "Date of brith",
   "select_gender": "Select Gender(*)",
   "phone_number_1": "Phone Number 1(*)",
@@ -139,5 +139,15 @@
   "total_return": "Total Return",
   "total_disapprove": "Total Disapprove",
   "female": "Female",
-  "male": "Male"
+  "male": "Male",
+  "loan_registration_has_been_successfully": "Loan registration has been successfully completed!",
+  "loan_registration_has_been_failed": "Loan registration has been failed!",
+  "english_name_required": "English Name required",
+  "customer_registration_has_been_successfully": "Customer registration has been successfully completed!",
+  "customer_registration_has_been_failed": "Customer registration has been failed!",
+  "total_processing": "Total Processing",
+  "processing": "Processing",
+  "report_disapproval": "Report Disapproval",
+  "report_request": "Report Request",
+  "report_return": "Report Return"
 }

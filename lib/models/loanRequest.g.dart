@@ -15,7 +15,12 @@ LoanRequest _$LoanRequestFromJson(Map<String, dynamic> json) {
     ..rdate = json['rdate'] as String
     ..rstatus = json['rstatus'] as String
     ..user = json['user'] as String
-    ..loanApplications = json['loanApplications'] as String;
+    ..loanApplications = json['loanApplications'] == null
+        ? null
+        : json['loanApplications'] as String
+    ..aby = json['aby'] as String
+    ..adate = json['adate'] as String
+    ..abyName = json['abyName'] as String;
 }
 
 Map<String, dynamic> _$LoanRequestToJson(LoanRequest instance) =>
@@ -27,5 +32,8 @@ Map<String, dynamic> _$LoanRequestToJson(LoanRequest instance) =>
       'rdate': instance.rdate,
       'rstatus': instance.rstatus,
       'user': instance.user,
-      'loanApplications': instance.loanApplications
+      'loanApplications': instance.loanApplications,
+      'aby': instance.aby,
+      'adate': instance.adate,
+      'abyName': instance.abyName
     };

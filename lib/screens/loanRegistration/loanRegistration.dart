@@ -6,7 +6,7 @@ import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/screens/listLoanApproval/index.dart';
+import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:file_picker/file_picker.dart';
@@ -203,19 +203,38 @@ class _LoanRegister extends State {
           },
           body: boyrow);
       final parsed = jsonDecode(response.body);
-      logger.e('parsed:: ${parsed}');
-      setState(() {
-        loanCode = parsed;
-      });
-      if (statusEdit == 'save') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ListLoanApproval()),
-        );
+      if (response.statusCode == 201) {
+        setState(() {
+          loanCode = parsed;
+        });
+        showInSnackBar(
+            AppLocalizations.of(context)
+                    .translate('loan_registration_has_been_successfully') ??
+                'Loan registration has been successfully completed!',
+            logolightGreen);
+        if (statusEdit == 'save') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ListLoanApprovals()),
+          );
+        }
+      } else {
+        showInSnackBar(
+            AppLocalizations.of(context)
+                    .translate('loan_registration_has_been_failed') ??
+                'Loan registration has been failed!',
+            Colors.redAccent);
       }
     } catch (error) {
       logger.e('error:: ${error}');
     }
+  }
+
+  void showInSnackBar(String value, colorsBackground) {
+    _scaffoldKeyCreateLoan.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: colorsBackground,
+    ));
   }
 
   Future onAddFile(context) async {
@@ -267,7 +286,7 @@ class _LoanRegister extends State {
       _isIint = true;
       _loading = true;
     });
-    if (_isIint == true) {
+    if (_isIint == true && mounted) {
       getCustomer();
       getCurrencies();
       getLoanProducts();
@@ -345,30 +364,44 @@ class _LoanRegister extends State {
     } catch (error) {}
   }
 
-  var interestIRR;
-  var maintenanceFeeIRR;
-  var numberofTermIRR;
-  var adminFeeIRR;
-  var valueIRR;
   var expdateDay;
 
   iRRCalculation() {
-    // var term = numberofTermIRR != 0 ?
-    print('numberofTermIRR $numberofTermIRR');
-    interestIRR = double.parse(valueInterest);
-    maintenanceFeeIRR = double.parse(valueMaintenanceFee);
-    adminFeeIRR = double.parse(valueAdminFee);
-    numberofTermIRR = double.parse(valueNumberofTerm);
-    setState(() {
-      valueIRR = ((interestIRR + maintenanceFeeIRR) * 12) +
-          ((adminFeeIRR / numberofTermIRR) * 12);
-      iRRControllers.text = valueIRR.toString();
-    });
+    if (valueNumberofTerm != '0' &&
+        valueNumberofTerm != null &&
+        valueNumberofTerm != '') {
+      var interestIRR;
+      var maintenanceFeeIRR;
+      var numberofTermIRR;
+      var adminFeeIRR;
+      var valueIRR;
+
+      interestIRR = valueInterest != null
+          ? double.parse(valueInterest)
+          : double.parse('0.0');
+      maintenanceFeeIRR = valueMaintenanceFee != null
+          ? double.parse(valueMaintenanceFee)
+          : double.parse('0.0');
+      adminFeeIRR = valueAdminFee != null
+          ? double.parse(valueAdminFee)
+          : double.parse('0.0');
+      numberofTermIRR = valueNumberofTerm != null
+          ? double.parse(valueNumberofTerm)
+          : double.parse('0.0');
+      setState(() {
+        valueIRR = ((interestIRR + maintenanceFeeIRR) * 12) +
+            ((adminFeeIRR / numberofTermIRR) * 12);
+        iRRControllers.text = valueIRR.toString();
+      });
+    }
   }
 
   onCheckDay(v) {
     logger.e('message:: ${v}');
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKeyCreateLoan =
+      new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -377,6 +410,7 @@ class _LoanRegister extends State {
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     DateTime now = DateTime.now();
     return Header(
+        keys: _scaffoldKeyCreateLoan,
         headerTexts: 'loan_registration',
         bodys: _loading
             ? Center(
@@ -409,22 +443,27 @@ class _LoanRegister extends State {
                                 (index) =>
                                     "${listCustomers[index]['ccode']} - ${listCustomers[index]['namekhr']} - ${listCustomers[index]['phone1']}"),
                             onChange: (value) async {
-                              setState(() {
-                                selectedValueCustmerName = value ?? '';
-                                selectedValueCustomer = true;
-                              });
-                              setState(() {
-                                idCcode = value.substring(0, 6);
-                                selectedCustomerID.text = value.substring(0, 6);
-                              });
+                              if (mounted) {
+                                setState(() {
+                                  selectedValueCustmerName = value ?? '';
+                                  selectedValueCustomer = true;
+                                });
+                                setState(() {
+                                  idCcode = value.substring(0, 6);
+                                  selectedCustomerID.text =
+                                      value.substring(0, 6);
+                                });
+                              }
                             },
                           );
                         },
                         iconsClose: Icon(Icons.close),
                         onPressed: () {
-                          setState(() {
-                            selectedValueCustmerName = 'Customer';
-                          });
+                          if (mounted) {
+                            setState(() {
+                              selectedValueCustmerName = 'Customer';
+                            });
+                          }
                         },
                         validateForm: "Customer(*)",
                         styleTexts: selectedValueCustmerName != ''
@@ -461,9 +500,11 @@ class _LoanRegister extends State {
                           ),
                           onFieldSubmitted: (v) {},
                           onChanged: (v) {
-                            setState(() {
-                              valueAmount = v;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                valueAmount = v;
+                              });
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -505,12 +546,15 @@ class _LoanRegister extends State {
                                 .map((e) => DropdownMenuItem(
                                       value: e['curname'].toString(),
                                       onTap: () => {
-                                        setState(() {
-                                          selectedValueCurrencies = '';
-                                          curcode = e['curcode'];
-                                        }),
-                                        FocusScope.of(context)
-                                            .requestFocus(loanAmountFocus)
+                                        if (mounted)
+                                          {
+                                            setState(() {
+                                              selectedValueCurrencies = '';
+                                              curcode = e['curcode'];
+                                            }),
+                                            FocusScope.of(context)
+                                                .requestFocus(loanAmountFocus)
+                                          }
                                       },
                                       child: Text("${e['curname']}"),
                                     ))
@@ -537,9 +581,11 @@ class _LoanRegister extends State {
                                 .requestFocus(numberOfTermFocus);
                           },
                           onChanged: (v) {
-                            setState(() {
-                              valueAmount = v;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                valueAmount = v;
+                              });
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -585,9 +631,12 @@ class _LoanRegister extends State {
                                 .map((e) => DropdownMenuItem(
                                       value: e['pname'].toString(),
                                       onTap: () => {
-                                        setState(() {
-                                          pcode = e['pcode'];
-                                        }),
+                                        if (mounted)
+                                          {
+                                            setState(() {
+                                              pcode = e['pcode'];
+                                            }),
+                                          }
                                       },
                                       child: Text("${e['pname']}"),
                                     ))
@@ -612,10 +661,12 @@ class _LoanRegister extends State {
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
-                            setState(() {
-                              valueNumberofTerm = v;
-                            });
-                            iRRCalculation();
+                            if (mounted) {
+                              setState(() {
+                                valueNumberofTerm = v;
+                              });
+                              iRRCalculation();
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -651,17 +702,19 @@ class _LoanRegister extends State {
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
-                            setState(() {
-                              valueInterest = v;
-                            });
-                            iRRCalculation();
+                            if (mounted) {
+                              setState(() {
+                                valueInterest = v;
+                              });
+                              iRRCalculation();
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
                           validators: [
                             FormBuilderValidators.min(1),
-                            FormBuilderValidators.max(1.5),
+                            FormBuilderValidators.max(240),
                             FormBuilderValidators.required(
                                 errorText: AppLocalizations.of(context)
                                         .translate(
@@ -692,10 +745,12 @@ class _LoanRegister extends State {
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
-                            setState(() {
-                              valueMaintenanceFee = v;
-                            });
-                            iRRCalculation();
+                            if (mounted) {
+                              setState(() {
+                                valueMaintenanceFee = v;
+                              });
+                              iRRCalculation();
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -732,17 +787,20 @@ class _LoanRegister extends State {
                             border: InputBorder.none,
                           ),
                           onChanged: (v) => {
-                            setState(() {
-                              valueAdminFee = v;
-                              valueRepaymentMethod = v;
-                            }),
-                            iRRCalculation(),
+                            if (mounted)
+                              {
+                                setState(() {
+                                  valueAdminFee = v;
+                                  valueRepaymentMethod = v;
+                                }),
+                                iRRCalculation(),
+                              }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.max(1),
+                            FormBuilderValidators.max(2),
                             FormBuilderValidators.required(
                                 errorText: AppLocalizations.of(context)
                                         .translate('admin_fee_required') ??
@@ -802,8 +860,10 @@ class _LoanRegister extends State {
                                 'Repayment method',
                           ),
                           onChanged: (value) {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            setState(() => valueRepaymentMethod = value);
+                            if (mounted) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              setState(() => valueRepaymentMethod = value);
+                            }
                           },
                           items: [
                             'Declining',
@@ -829,12 +889,14 @@ class _LoanRegister extends State {
                           inputType: InputType.date,
                           firstDate: DateTime.now(),
                           onChanged: (v) {
-                            setState(() {
-                              expdateDay = v ?? DateTime.now();
-                            });
-                            onCheckDay(v);
-                            FocusScope.of(context)
-                                .requestFocus(generateGracePeriodNumberFocus);
+                            if (mounted) {
+                              setState(() {
+                                expdateDay = v ?? DateTime.now();
+                              });
+                              onCheckDay(v);
+                              FocusScope.of(context)
+                                  .requestFocus(generateGracePeriodNumberFocus);
+                            }
                           },
                           validators: [
                             FormBuilderValidators.required(
@@ -934,9 +996,11 @@ class _LoanRegister extends State {
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
-                            setState(() {
-                              valueLTV = v;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                valueLTV = v;
+                              });
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -944,6 +1008,7 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
+                            FormBuilderValidators.max(0.9)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(
@@ -967,9 +1032,11 @@ class _LoanRegister extends State {
                             border: InputBorder.none,
                           ),
                           onChanged: (v) {
-                            setState(() {
-                              valueDscr = v;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                valueDscr = v;
+                              });
+                            }
                           },
                           valueTransformer: (text) {
                             return text == null ? null : text;
@@ -977,6 +1044,8 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
+                            FormBuilderValidators.max(99),
+                            FormBuilderValidators.min(1)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(
@@ -1063,20 +1132,20 @@ class _LoanRegister extends State {
                                   btnCancelText: AppLocalizations.of(context)
                                           .translate('no') ??
                                       "No",
-                                  btnCancelOnPress: () async {
-                                    if (selectedValueCustomer == false) {
-                                      setState(() {
-                                        validateCustomer = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        statusEdit = 'save';
-                                      });
-                                      await onSubmit(context);
-                                      setState(() {
-                                        validateCustomer = false;
-                                      });
-                                    }
+                                  btnCancelOnPress: () {
+                                    // if (selectedValueCustomer == false) {
+                                    //   setState(() {
+                                    //     validateCustomer = true;
+                                    //   });
+                                    // } else {
+                                    //   setState(() {
+                                    //     statusEdit = 'save';
+                                    //   });
+                                    //   await onSubmit(context);
+                                    //   setState(() {
+                                    //     validateCustomer = false;
+                                    //   });
+                                    // }
                                   },
                                   btnCancelIcon: Icons.close,
                                   btnOkIcon: Icons.check_circle,
