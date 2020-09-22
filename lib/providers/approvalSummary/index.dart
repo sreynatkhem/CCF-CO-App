@@ -47,8 +47,6 @@ class ApprovalSummaryProvider {
       }
       bodyRow =
           "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
-      logger().e('bodyRow :: ${bodyRow}');
-
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"

@@ -56,7 +56,6 @@ class LoanApproval with ChangeNotifier {
       }
       bodyRow =
           "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
-      logger().e('bodyRow :: ${bodyRow}');
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
@@ -168,7 +167,7 @@ class LoanApproval with ChangeNotifier {
           },
           body: bodyRow);
       final parsed = jsonDecode(response.body);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         successfullyReject = true;
         return parsed;
       } else {
@@ -198,7 +197,7 @@ class LoanApproval with ChangeNotifier {
           },
           body: bodyRow);
       final parsed = jsonDecode(response.body);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         successfullyReturn = true;
         return parsed;
       } else {

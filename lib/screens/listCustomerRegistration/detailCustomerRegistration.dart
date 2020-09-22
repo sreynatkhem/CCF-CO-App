@@ -154,13 +154,6 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                             ),
                                             //
                                             ListDetail(
-                                              name: 'date_of_brith',
-                                              value: getDateTimeYMD(snapshot
-                                                      .data[index].dob ??
-                                                  DateTime.now().toString()),
-                                            ),
-                                            //
-                                            ListDetail(
                                               name: 'gender',
                                               value:
                                                   '${snapshot.data[index].gender}',
@@ -172,11 +165,15 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                                   '${snapshot.data[index].phone1}',
                                             ),
                                             //
-                                            ListDetail(
-                                              name: 'phone_number_2',
-                                              value:
-                                                  '${snapshot.data[index].phone2}',
-                                            ),
+                                            if (snapshot.data[index].phone2 !=
+                                                    null &&
+                                                snapshot.data[index].phone2 !=
+                                                    '')
+                                              ListDetail(
+                                                name: 'phone_number_2',
+                                                value:
+                                                    '${snapshot.data[index].phone2}',
+                                              ),
                                             //
                                             ListDetail(
                                               name: 'occupation_of_customer',
@@ -184,36 +181,20 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                                                   '${snapshot.data[index].occupation}',
                                             ),
                                             //
-                                            ListDetail(
-                                              name: 'nation_id_family_book',
-                                              value:
-                                                  '${snapshot.data[index].ntype}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'nation_id_family_book',
-                                              value:
-                                                  '${snapshot.data[index].nid}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'next_visit_date',
-                                              value: getDateTimeYMD(snapshot
-                                                      .data[index].ndate ??
-                                                  DateTime.now().toString()),
-                                            ),
+                                            if (snapshot.data[index].ndate !=
+                                                null)
+                                              ListDetail(
+                                                name: 'next_visit_date',
+                                                value: getDateTimeYMD(snapshot
+                                                        .data[index].ndate ??
+                                                    DateTime.now().toString()),
+                                              ),
                                             //
 
                                             ListDetail(
                                               name: 'prospective',
                                               value:
                                                   '${snapshot.data[index].pro}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'guarantor_customer',
-                                              value:
-                                                  '${snapshot.data[index].cstatus}',
                                             ),
                                             //
                                             ListDetail(

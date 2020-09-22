@@ -713,8 +713,8 @@ class _LoanRegister extends State {
                             return text == null ? null : text;
                           },
                           validators: [
-                            FormBuilderValidators.min(1),
-                            FormBuilderValidators.max(240),
+                            FormBuilderValidators.min(0.1),
+                            FormBuilderValidators.max(1.5),
                             FormBuilderValidators.required(
                                 errorText: AppLocalizations.of(context)
                                         .translate(

@@ -149,5 +149,6 @@
   "processing": "Processing",
   "report_disapproval": "Report Disapproval",
   "report_request": "Report Request",
-  "report_return": "Report Return"
+  "report_return": "Report Return",
+  "do_you_want_to_exit": "Do you want to exit?"
 }

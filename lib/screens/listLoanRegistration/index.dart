@@ -214,6 +214,48 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
         ModalRoute.withName("/Home"));
   }
 
+  statusApproval(value) {
+    switch (value) {
+      case 'R':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('request') ?? 'Request',
+              style: mainTitleBlack);
+        }
+        break;
+
+      case 'A':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              style: mainTitleBlack);
+        }
+        break;
+
+      case 'D':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('disapprove') ??
+                  'Disapprove',
+              style: mainTitleBlack);
+        }
+        break;
+
+      case 'T':
+        {
+          return Text(
+              AppLocalizations.of(context).translate('return') ?? 'Return',
+              style: mainTitleBlack);
+        }
+        break;
+      default:
+        {
+          return Text('', style: mainTitleBlack);
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -272,6 +314,8 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                         } else {
                           irr = '0.0';
                         }
+                        var status = statusApproval(
+                            parsed != null ? parsed[index]['lstatus'] : '');
                         return Container(
                           height: 110,
                           margin: EdgeInsets.only(bottom: 5.0),
@@ -290,7 +334,6 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        // Text('hello'),
                                         Row(
                                           children: <Widget>[
                                             Padding(
@@ -317,7 +360,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                                       style: mainTitleBlack,
                                                     )),
                                                 Text(
-                                                    '${parsed[index]['lpourpose']}'),
+                                                    '${parsed[index]['purpose']}'),
                                                 Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 2)),
@@ -342,7 +385,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                             Padding(
                                                 padding:
                                                     EdgeInsets.only(bottom: 2)),
-                                            // status,
+                                            status,
                                             Padding(
                                                 padding: EdgeInsets.only(
                                               top: 5,

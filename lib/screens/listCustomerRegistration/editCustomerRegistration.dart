@@ -71,6 +71,7 @@ class _CustomerRegister extends State {
       controllerGoogleLocation.text = list.goglocation;
       _currentAddress = list.goglocation;
     });
+    _groupValue = list.gender == "F" ? 1 : 0;
     getListNationID();
     getListProvince();
     super.initState();
@@ -116,6 +117,7 @@ class _CustomerRegister extends State {
   var idDistrict;
   var idCommune;
   var idVillage;
+  var stateProvince;
 
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> datehofBrith =
@@ -256,10 +258,10 @@ class _CustomerRegister extends State {
     }
   }
 
-  getDistrict() async {
+  getDistrict(stateProvince) async {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
-    listProvince.forEach((item) async {
+    stateProvince.forEach((item) async {
       if (selectedValueProvince == item['prodes']) {
         setState(() {
           idProvince = item['procode'];
@@ -406,7 +408,57 @@ class _CustomerRegister extends State {
   var selectedValueProvincefocus = false;
 
   onBack() {}
+  getGenderValueF(v) {
+    setState(() {
+      gender = 'F';
+    });
+  }
 
+  checkMoreThenCurrentDay(dateToCheck) {
+    var fullDatePicker = "0";
+    var now = DateTime.now();
+    var day = DateTime(now.year, now.month, now.day).day;
+    var month = DateTime(now.year, now.month, now.day).month;
+    var year = DateTime(now.year, now.month, now.day).year;
+    var nday = day.toString().padLeft(2, "0");
+    var nmonth = month.toString().padLeft(2, "0");
+    var fullDate = "${year}${nmonth}${nday}";
+
+    logger().e('fullDate ::: ${fullDate}');
+
+    // final yesterday = DateTime(now.year, now.month, now.day - 1);
+    // final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    var aDay;
+    var aMonth;
+    var aYear;
+    // logger().e('now ::: ${now}');
+
+    if (dateToCheck != null) {
+      aDay = DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).day;
+      aMonth =
+          DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).month;
+      aYear =
+          DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).year;
+
+      var ndayPicker = aDay.toString().padLeft(2, "0");
+      var nmonthPicker = aMonth.toString().padLeft(2, "0");
+      fullDatePicker = "${aYear}${nmonthPicker}${ndayPicker}";
+    }
+
+    var val1 = int.parse(fullDate);
+    var val2 = int.parse(fullDatePicker);
+    int checkNext = val2 - val1;
+    logger().e('checkNext:: ${checkNext}');
+
+// if(aDate == today) {
+//   }
+//  // ignore: unnecessary_statements
+//  else (aDate == tomorrow)  {
+// };
+  }
+
+  UnfocusDisposition disposition = UnfocusDisposition.scope;
+  int _groupValue = -1;
   @override
   Widget build(BuildContext context) {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
@@ -423,45 +475,59 @@ class _CustomerRegister extends State {
                   size: 25,
                 ),
                 onPressed: () {
-                  if (selectedValueVillage == 'Village code') {
-                    setState(() {
-                      validateVillage = true;
-                    });
-                  } else {
-                    AwesomeDialog(
-                        context: context,
-                        // animType: AnimType.LEFTSLIDE,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.SUCCES,
-                        title:
-                            AppLocalizations.of(context).translate('succes') ??
-                                'Succes',
-                        desc: AppLocalizations.of(context)
-                                .translate('thank_you') ??
-                            'Thank you',
-                        btnOkOnPress: () async {
-                          if (selectedValueVillage == 'Village code') {
-                            setState(() {
-                              validateVillage = true;
-                            });
-                          } else {
-                            await onSubmit(context);
-                            setState(() {
-                              validateVillage = false;
-                            });
-                          }
-                        },
-                        btnCancelText:
-                            AppLocalizations.of(context).translate('cancel') ??
-                                "Cancel",
-                        btnCancelOnPress: () {},
-                        btnCancelIcon: Icons.close,
-                        btnOkIcon: Icons.check_circle,
-                        btnOkColor: logolightGreen,
-                        btnOkText:
-                            AppLocalizations.of(context).translate('okay') ??
-                                'Okay')
-                      ..show();
+                  if (khmerName.currentState.saveAndValidate() &&
+                      englishName.currentState.saveAndValidate() &&
+                      _gender.currentState.saveAndValidate() &&
+                      phoneKey.currentState.saveAndValidate() &&
+                      occupationOfCustomer.currentState.saveAndValidate()) {
+                    // await onSubmit(context);
+                    if (selectedValueVillage == null ||
+                        selectedValueVillage ==
+                            AppLocalizations.of(context)
+                                .translate('village_code')) {
+                      setState(() {
+                        validateVillage = true;
+                      });
+                    } else {
+                      AwesomeDialog(
+                          context: context,
+                          // animType: AnimType.LEFTSLIDE,
+                          headerAnimationLoop: false,
+                          dialogType: DialogType.INFO,
+                          title: AppLocalizations.of(context)
+                                  .translate('information') ??
+                              'Information',
+                          desc: AppLocalizations.of(context)
+                                  .translate('are_you_sure_you') ??
+                              'Are you sure you want to register the customer?',
+                          btnOkOnPress: () async {
+                            if (selectedValueVillage == null ||
+                                selectedValueVillage ==
+                                    AppLocalizations.of(context)
+                                        .translate('village_code')) {
+                              // await onSubmit(context);
+                              setState(() {
+                                validateVillage = true;
+                              });
+                            } else {
+                              await onSubmit(context);
+                              setState(() {
+                                validateVillage = false;
+                              });
+                            }
+                          },
+                          btnCancelText:
+                              AppLocalizations.of(context).translate('no') ??
+                                  "No",
+                          btnCancelOnPress: () {},
+                          btnCancelIcon: Icons.close,
+                          btnOkIcon: Icons.check_circle,
+                          btnOkColor: logolightGreen,
+                          btnOkText:
+                              AppLocalizations.of(context).translate('yes') ??
+                                  'Yes')
+                        ..show();
+                    }
                   }
                 }),
           ],
@@ -491,19 +557,28 @@ class _CustomerRegister extends State {
                             border: InputBorder.none,
                             labelText: AppLocalizations.of(context)
                                     .translate('full_khmer_name') ??
-                                'Full Khmer Name'),
+                                'Full Khmer Name(*)'),
                         onChanged: (v) {
-                          setState(() {
-                            valueKhmerName = v;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              valueKhmerName = v;
+                            });
+                          }
                         },
                         valueTransformer: (text) {
                           return text == null ? null : text;
                         },
                         validators: [
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context)
+                                      .translate('khmer_name_required') ??
+                                  "Khmer Name required"),
                         ],
                         keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          BlacklistingTextInputFormatter(
+                              RegExp("[0-9/\\\\|!.]")),
+                        ],
                       ),
                     ),
                     GroupFromBuilder(
@@ -524,83 +599,139 @@ class _CustomerRegister extends State {
                                     .translate('full_english_name') ??
                                 'Full English Name'),
                         onChanged: (v) {
-                          setState(() {
-                            valueEnglishName = v;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              valueEnglishName = v;
+                            });
+                          }
                         },
                         valueTransformer: (text) {
                           return text == null ? null : text;
                         },
                         validators: [
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context)
+                                      .translate('english_name_required') ??
+                                  "English Name required"),
                         ],
                         keyboardType: TextInputType.text,
+                        inputFormatters: [
+                          new WhitelistingTextInputFormatter(
+                              RegExp("[a-z A-Z]")),
+                        ],
                       ),
                     ),
-                    GroupFromBuilder(
-                      icons: Icons.date_range,
-                      keys: datehofBrith,
-                      childs: FormBuilderDateTimePicker(
-                        focusNode: datehofBrithFocus,
-                        controller: controllerDatehofBrith,
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (v) {
-                          FocusScope.of(context).requestFocus(englishNameFocus);
-                        },
-                        inputType: InputType.date,
-                        onChanged: (v) {
-                          setState(() {
-                            valueDatehofBrith = v;
-                          });
-                        },
-                        validators: [FormBuilderValidators.required()],
-                        format: DateFormat("yyyy-MM-dd"),
-                        decoration: InputDecoration(
-                          labelText: list.dob.toString() != ''
-                              ? getDateTimeYMD(
-                                  list.dob ?? DateTime.now().toString())
-                              : AppLocalizations.of(context)
-                                      .translate('date_of_brith') ??
-                                  "Date of brith",
-                          labelStyle: TextStyle(color: Colors.black),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(
-                          fontFamily: fontFamily,
-                          fontSize: fontSizeXs,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.date_range,
-                      keys: _gender,
-                      childs: FormBuilderDropdown(
-                        attribute: "gender",
-                        decoration: InputDecoration(
-                          labelText: "Gender",
-                          border: InputBorder.none,
-                        ),
-                        hint: Text(
-                          gender ??
-                              AppLocalizations.of(context)
-                                  .translate('select_gender') ??
-                              'Select Gender',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            gender = value;
-                          });
-                        },
-                        validators: [FormBuilderValidators.required()],
-                        items: ['M', 'F', 'O']
-                            .map((gender) => DropdownMenuItem(
-                                value: gender,
-                                child: Text(
-                                  "$gender",
-                                )))
-                            .toList(),
+                    // GroupFromBuilder(
+                    //   icons: Icons.wc,
+                    //   keys: _gender,
+                    //   childs: FormBuilderRadioGroup(
+                    //     decoration: new InputDecoration(
+                    //       border: InputBorder.none,
+                    //       labelText: 'Gender',
+                    //     ),
+                    //     attribute: "radio_group",
+                    //     validators: [
+                    //       FormBuilderValidators.required(
+                    //           errorText: AppLocalizations.of(context)
+                    //                   .translate('gender_required') ??
+                    //               "Gender required(*)"),
+                    //     ],
+                    //     onChanged: (v) {
+                    //       if (v == 'Female') {
+                    //         FocusScope.of(context)
+                    //             .unfocus(disposition: disposition);
+                    //         getGenderValueF(v);
+                    //       } else {
+                    //         FocusScope.of(context)
+                    //             .unfocus(disposition: disposition);
+                    //         setState(() {
+                    //           gender = 'M';
+                    //         });
+                    //       }
+                    //     },
+                    //     options: [
+                    //       AppLocalizations.of(context).translate("female"),
+                    //       AppLocalizations.of(context).translate("male"),
+                    //     ]
+                    //         .map((lang) => FormBuilderFieldOption(value: lang))
+                    //         .toList(growable: false),
+                    //   ),
+                    // ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Card(
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    padding: EdgeInsets.only(left: 55, top: 5),
+                                    child: Text(
+                                      'Gender',
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.grey),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          flex: 0,
+                                          child: Container(
+                                            padding: EdgeInsets.only(left: 3),
+                                            child: Icon(
+                                              Icons.wc,
+                                              color: Colors.grey,
+                                            ),
+                                          )),
+                                      Expanded(
+                                        flex: 1,
+                                        child: RadioListTile(
+                                          value: 1,
+                                          groupValue: _groupValue,
+                                          title: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate("female")),
+                                          onChanged: (newValue) => {
+                                            setState(() {
+                                              gender = 'F';
+                                              _groupValue = newValue;
+                                            })
+                                          },
+                                          activeColor: Colors.blue,
+                                          selected: false,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: RadioListTile(
+                                          value: 0,
+                                          groupValue: _groupValue,
+                                          title: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate("male")),
+                                          onChanged: (newValue) => {
+                                            setState(() {
+                                              gender = 'M';
+                                              _groupValue = newValue;
+                                            })
+                                          },
+                                          activeColor: Colors.blue,
+                                          selected: false,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 70,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     GroupFromBuilder(
@@ -616,10 +747,20 @@ class _CustomerRegister extends State {
                             labelText: AppLocalizations.of(context)
                                     .translate('phone_number_1') ??
                                 'Phone Number 1'),
-                        maxLength: 14,
+                        maxLength: 10,
                         onChanged: (v) {
-                          valuePhone1 = v;
+                          if (mounted) {
+                            valuePhone1 = v;
+                          }
                         },
+                        validators: [
+                          FormBuilderValidators.numeric(
+                              errorText: "Number only"),
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context)
+                                      .translate('phone_number_1_required') ??
+                                  "Phone Number 1 Required(*)")
+                        ],
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           WhitelistingTextInputFormatter.digitsOnly
@@ -642,9 +783,11 @@ class _CustomerRegister extends State {
                             labelText: AppLocalizations.of(context)
                                     .translate('phone_number_2') ??
                                 'Phone Number 2'),
-                        maxLength: 14,
+                        maxLength: 10,
                         onChanged: (v) {
-                          valuePhone2 = v;
+                          if (mounted) {
+                            valuePhone2 = v;
+                          }
                         },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
@@ -658,92 +801,47 @@ class _CustomerRegister extends State {
                     GroupFromBuilder(
                       icons: Icons.work,
                       keys: occupationOfCustomer,
-                      childs: FormBuilderTextField(
-                        attribute: 'name',
-                        focusNode: occupationOfCustomerFocus,
-                        controller: controllerOccupationofCustomer,
-                        textInputAction: TextInputAction.next,
+                      childs: FormBuilderDropdown(
+                        attribute: "Name",
                         decoration: InputDecoration(
                           labelText: AppLocalizations.of(context)
                                   .translate('occupation_of_customer') ??
                               "Occupation of customer",
                           border: InputBorder.none,
                         ),
-                        onChanged: (v) {
-                          valueOccupationOfCustomer = v;
-                        },
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.check,
-                      keys: nationIdentification,
-                      childs: FormBuilderDropdown(
-                          attribute: 'name',
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                    .translate('nation_id_family_book') ??
-                                "Nation ID, Famliy book, Passport",
-                            border: InputBorder.none,
-                          ),
-                          validators: [
-                            FormBuilderValidators.required(),
-                          ],
-                          hint: Text(
-                            valueTextNationBookFamily ??
-                                AppLocalizations.of(context)
-                                    .translate('nation_id_family_book') ??
-                                'Nation ID, Famliy book, Passport',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          style: TextStyle(color: Colors.black),
-                          items: listID
-                              .map((e) => DropdownMenuItem(
-                                    value: e['name'].toString(),
-                                    onTap: () => {
-                                      setState(() {
-                                        valueSelectedNativeID = '';
-                                        ntypes = e['id'];
-                                      })
-                                    },
-                                    child: Text("${e['name']}"),
-                                  ))
-                              .toList()),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.payment,
-                      keys: nationIdentificationValue,
-                      childs: FormBuilderTextField(
-                        focusNode: nationIdentificationValueFocus,
-                        attribute: 'name',
-                        controller: controllerValueNationIdentification,
-                        textInputAction: TextInputAction.next,
-                        onEditingComplete: () => FocusScope.of(context)
-                            .requestFocus(nextVisitDateFocus),
-                        maxLength: 9,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
-                                  .translate('nation_id_family_book') ??
-                              "Nation ID, Family book, Passport",
-                          border: InputBorder.none,
+                        hint: Text(
+                          list.occupation ??
+                              AppLocalizations.of(context)
+                                  .translate('occupation_of_customer') ??
+                              'Occupation of customer',
+                          style: TextStyle(
+                              color: list.occupation != null &&
+                                      list.occupation != ""
+                                  ? Colors.black
+                                  : null),
                         ),
-                        onChanged: (v) {
-                          setState(() {
-                            valueNationIdentification = v;
-                          });
-                          // FocusScope.of(context).requestFocus(nextVisitDateFocus);
+                        onChanged: (value) {
+                          if (mounted) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            setState(() {
+                              valueOccupationOfCustomer = value;
+                            });
+                          }
                         },
-                        // onTap: () =>
-                        //     FocusScope.of(context).requestFocus(nextVisitDateFocus),
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly
+                        validators: [
+                          FormBuilderValidators.required(
+                              errorText: AppLocalizations.of(context).translate(
+                                      'occupation_of_customer_required') ??
+                                  "Occupation of customer Required(*)")
                         ],
+                        items: ['Employee', 'Business ownership']
+                            .map((v) => DropdownMenuItem(
+                                value: v,
+                                child: Text(
+                                  "$v",
+                                )))
+                            .toList(),
                       ),
                     ),
                     GroupFromBuilder(
@@ -757,16 +855,23 @@ class _CustomerRegister extends State {
                         onEditingComplete: () => FocusScope.of(context)
                             .requestFocus(datehofRegisterFocus),
                         onChanged: (v) {
-                          valueNextVisitDate = v;
+                          if (mounted) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            valueNextVisitDate = v;
+                            checkMoreThenCurrentDay(v);
+                          }
                         },
+                        // initialValue: DateTime.now(),
+                        // firstDate: DateTime.now(),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: getDateTimeYMD(
-                                  list.ndate ?? DateTime.now().toString()) ??
-                              AppLocalizations.of(context)
-                                  .translate('next_visit_date') ??
-                              "Next visit date",
-                          labelStyle: list.ndate != null
+                          labelText: list.ndate != null && list.ndate != ""
+                              ? getDateTimeYMD(list.ndate)
+                              : AppLocalizations.of(context)
+                                      .translate('next_visit_date') ??
+                                  "Next visit date",
+                          labelStyle: list.ndate != null && list.ndate != ''
                               ? TextStyle(color: Colors.black)
                               : null,
                           border: InputBorder.none,
@@ -793,9 +898,13 @@ class _CustomerRegister extends State {
                         ),
                         style: TextStyle(color: Colors.black),
                         onChanged: (value) {
-                          setState(() {
-                            valueProspective = value;
-                          });
+                          if (mounted) {
+                            setState(() {
+                              valueProspective = value;
+                            });
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                          }
                         },
                         items: [
                           'Y',
@@ -809,42 +918,6 @@ class _CustomerRegister extends State {
                             .toList(),
                       ),
                     ),
-                    GroupFromBuilder(
-                      icons: Icons.check,
-                      keys: gurantorCustomer,
-                      childs: FormBuilderDropdown(
-                        attribute: 'name',
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
-                                  .translate('guarantor_customer') ??
-                              "G=Gurantor, C=Customer",
-                          border: InputBorder.none,
-                        ),
-                        hint: Text(
-                          valueGurantorCustomer ??
-                              AppLocalizations.of(context)
-                                  .translate('guarantor_customer') ??
-                              'G=Gurantor, C=Customer',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            valueGurantorCustomer = value;
-                          });
-                        },
-                        items: [
-                          'G',
-                          'C',
-                        ]
-                            .map((valueGurantorCustomer) => DropdownMenuItem(
-                                value: valueGurantorCustomer,
-                                child: Text(
-                                  "$valueGurantorCustomer",
-                                )))
-                            .toList(),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
                     Padding(padding: EdgeInsets.only(top: 10)),
                     DropDownCustomerRegister(
                       icons: Icons.location_on,
@@ -854,40 +927,92 @@ class _CustomerRegister extends State {
                               borderRadius: BorderRadius.circular(10),
                             )
                           : null,
-                      onInSidePress: () {
+                      onInSidePress: () async {
+                        FocusScope.of(context)
+                            .unfocus(disposition: disposition);
+                        final storage = new FlutterSecureStorage();
+                        var token = await storage.read(key: 'user_token');
+                        var list;
+                        try {
+                          final response = await api().get(
+                            baseURLInternal + 'addresses/provinces',
+                            headers: {
+                              "Content-Type": "application/json",
+                              "Authorization": "Bearer " + token
+                            },
+                          );
+                          list = jsonDecode(response.body);
+                          setState(() {
+                            stateProvince = list ?? '';
+                          });
+                        } catch (error) {}
                         SelectDialog.showModal<String>(
                           context,
                           label: AppLocalizations.of(context)
                                   .translate('search') ??
                               'Search',
-                          items: List.generate(listProvince.length,
-                              (index) => "${listProvince[index]['prodes']}"),
+                          items: List.generate(list.length,
+                              (index) => "${list[index]['prodes']}"),
                           onChange: (value) {
-                            setState(() {
-                              selectedValueProvince = value;
-                              selectedValueDistrict = '';
-                              selectedValueCommune = '';
-                              selectedValueVillage = '';
-                              districtreadOnlys = true;
-                            });
+                            if (mounted) {
+                              FocusScope.of(context)
+                                  .unfocus(disposition: disposition);
+                              setState(() {
+                                selectedValueProvince = value ?? '';
+                                selectedValueDistrict =
+                                    AppLocalizations.of(context)
+                                            .translate('district_code') ??
+                                        'District code';
+                                selectedValueCommune =
+                                    AppLocalizations.of(context)
+                                            .translate('commune_code') ??
+                                        'Commune code';
+                                selectedValueVillage =
+                                    AppLocalizations.of(context)
+                                            .translate('village_code') ??
+                                        'Village code';
+                                districtreadOnlys = true;
+                              });
+                            }
                           },
                         );
                       },
                       selectedValue: selectedValueProvince,
-                      texts: selectedValueProvince,
-                      title: 'province_code',
+                      texts: selectedValueProvince != null
+                          ? selectedValueProvince
+                          : AppLocalizations.of(context)
+                                  .translate('province_code') ??
+                              'Province code',
+                      title: selectedValueProvince != null
+                          ? selectedValueProvince
+                          : AppLocalizations.of(context)
+                                  .translate('province_code') ??
+                              'Province code',
+                      clear: true,
                       readOnlys: true,
                       iconsClose: Icon(Icons.close),
                       onPressed: () {
-                        setState(() {
-                          selectedValueProvince = 'Province code';
-                          selectedValueDistrict = 'District code';
-                          selectedValueCommune = 'Commune code';
-                          selectedValueVillage = 'Village code';
-                          districtreadOnlys = false;
-                          communereadOnlys = false;
-                          villagereadOnlys = false;
-                        });
+                        if (mounted) {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          setState(() {
+                            selectedValueProvince = AppLocalizations.of(context)
+                                    .translate('province_code') ??
+                                'Province code';
+                            selectedValueDistrict = AppLocalizations.of(context)
+                                    .translate('district_code') ??
+                                'District code';
+                            selectedValueCommune = AppLocalizations.of(context)
+                                    .translate('commune_code') ??
+                                'Commune code';
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            districtreadOnlys = false;
+                            communereadOnlys = false;
+                            villagereadOnlys = false;
+                          });
+                        }
                       },
                       styleTexts: selectedValueProvince != ''
                           ? TextStyle(
@@ -911,38 +1036,59 @@ class _CustomerRegister extends State {
                               borderRadius: BorderRadius.circular(10),
                             )
                           : null,
-                      texts: selectedValueDistrict != ''
+                      texts: selectedValueDistrict != null
                           ? selectedValueDistrict
-                          : 'district_code',
-                      title: 'district_code',
+                          : AppLocalizations.of(context)
+                                  .translate('district_code') ??
+                              'District code',
+                      title: selectedValueDistrict != null
+                          ? selectedValueDistrict
+                          : AppLocalizations.of(context)
+                                  .translate('district_code') ??
+                              'District code',
+                      clear: true,
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
-                        if (districtreadOnlys == true) {
-                          await getDistrict();
-                          await SelectDialog.showModal<String>(
-                            context,
-                            label: AppLocalizations.of(context)
-                                    .translate('search') ??
-                                'Search',
-                            items: List.generate(listDistricts.length,
-                                (index) => "${listDistricts[index]['disdes']}"),
-                            onChange: (value) {
-                              setState(() {
-                                selectedValueDistrict = value ?? '';
-                                communereadOnlys = true;
-                              });
-                            },
-                          );
+                        if (mounted) {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          if (districtreadOnlys == true) {
+                            await getDistrict(stateProvince);
+                            await SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)
+                                      .translate('search') ??
+                                  'Search',
+                              items: List.generate(
+                                  listDistricts.length,
+                                  (index) =>
+                                      "${listDistricts[index]['disdes']}"),
+                              onChange: (value) {
+                                setState(() {
+                                  selectedValueDistrict = value ?? '';
+                                  communereadOnlys = true;
+                                });
+                              },
+                            );
+                          }
                         }
                       },
                       onPressed: () {
-                        setState(() {
-                          selectedValueDistrict = 'District code';
-                          selectedValueCommune = 'Commune code';
-                          selectedValueVillage = 'Village code';
-                          villagereadOnlys = false;
-                          communereadOnlys = false;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedValueDistrict = AppLocalizations.of(context)
+                                    .translate('district_code') ??
+                                'District code';
+                            selectedValueCommune = AppLocalizations.of(context)
+                                    .translate('commune_code') ??
+                                'Commune code';
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            villagereadOnlys = false;
+                            communereadOnlys = false;
+                          });
+                        }
                       },
                       readOnlys: districtreadOnlys,
                       styleTexts: selectedValueDistrict != ''
@@ -969,32 +1115,50 @@ class _CustomerRegister extends State {
                           : null,
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
-                        if (communereadOnlys == true) {
-                          await getCommune();
-                          SelectDialog.showModal<String>(
-                            context,
-                            label: AppLocalizations.of(context)
-                                    .translate('search') ??
-                                'Search',
-                            items: List.generate(listComunes.length,
-                                (index) => "${listComunes[index]['comdes']}"),
-                            onChange: (value) {
-                              setState(() {
-                                selectedValueCommune = value ?? '';
-                                villagereadOnlys = true;
-                              });
-                            },
-                          );
+                        if (mounted) {
+                          if (communereadOnlys == true) {
+                            await getCommune();
+                            SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)
+                                      .translate('search') ??
+                                  'Search',
+                              items: List.generate(listComunes.length,
+                                  (index) => "${listComunes[index]['comdes']}"),
+                              onChange: (value) {
+                                setState(() {
+                                  selectedValueCommune = value ?? '';
+                                  villagereadOnlys = true;
+                                });
+                              },
+                            );
+                          }
                         }
                       },
                       onPressed: () {
-                        setState(() {
-                          selectedValueCommune = 'Commune code';
-                          selectedValueVillage = 'Village code';
-                          villagereadOnlys = false;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedValueCommune = AppLocalizations.of(context)
+                                    .translate('commune_code') ??
+                                'Commune code';
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            villagereadOnlys = false;
+                          });
+                        }
                       },
-                      title: 'commune_code',
+                      texts: selectedValueCommune != null
+                          ? selectedValueCommune
+                          : AppLocalizations.of(context)
+                                  .translate('commune_code') ??
+                              'District code',
+                      title: selectedValueCommune != null
+                          ? selectedValueCommune
+                          : AppLocalizations.of(context)
+                                  .translate('commune_code') ??
+                              'Commune code',
+                      clear: true,
                       styleTexts: selectedValueCommune != ''
                           ? TextStyle(
                               fontFamily: fontFamily,
@@ -1006,9 +1170,6 @@ class _CustomerRegister extends State {
                               fontSize: fontSizeXs,
                               color: Colors.grey,
                               fontWeight: fontWeight500),
-                      texts: selectedValueCommune != ''
-                          ? selectedValueCommune
-                          : "commune_code",
                       readOnlys: communereadOnlys,
                     ),
                     Padding(padding: EdgeInsets.only(top: 10)),
@@ -1022,36 +1183,49 @@ class _CustomerRegister extends State {
                             )
                           : null,
                       onInSidePress: () async {
-                        if (villagereadOnlys == true) {
-                          await getVillage();
-                          SelectDialog.showModal<String>(
-                            context,
-                            label: AppLocalizations.of(context)
-                                    .translate('search') ??
-                                'Search',
-                            items: List.generate(listVillages.length,
-                                (index) => "${listVillages[index]['vildes']}"),
-                            onChange: (value) async {
-                              setState(() {
-                                selectedValueVillage = value ?? '';
-                              });
-                              listVillages.forEach((item) {
-                                if (selectedValueVillage == item['vildes']) {
-                                  setState(() {
-                                    idVillage = item['vilcode'];
-                                  });
-                                }
-                              });
-                            },
-                          );
+                        if (mounted) {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          if (villagereadOnlys == true) {
+                            await getVillage();
+                            SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)
+                                      .translate('search') ??
+                                  'Search',
+                              items: List.generate(
+                                  listVillages.length,
+                                  (index) =>
+                                      "${listVillages[index]['vildes']}"),
+                              onChange: (value) async {
+                                setState(() {
+                                  selectedValueVillage = value ?? '';
+                                });
+                                listVillages.forEach((item) {
+                                  if (selectedValueVillage == item['vildes']) {
+                                    setState(() {
+                                      idVillage = item['vilcode'];
+                                    });
+                                  }
+                                });
+                              },
+                            );
+                          } else {
+                            logger().e('false');
+                          }
                         }
                       },
                       iconsClose: Icon(Icons.close),
+                      clear: true,
                       onPressed: () {
-                        setState(() {
-                          selectedValueVillage = 'Village code';
-                          villagereadOnlys = false;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            villagereadOnlys = true;
+                          });
+                        }
                       },
                       styleTexts: selectedValueVillage != ''
                           ? TextStyle(
@@ -1064,10 +1238,16 @@ class _CustomerRegister extends State {
                               fontSize: fontSizeXs,
                               color: Colors.grey,
                               fontWeight: fontWeight500),
-                      texts: selectedValueVillage != ''
+                      texts: selectedValueVillage != null
                           ? selectedValueVillage
-                          : "village_code",
-                      title: 'village_code',
+                          : AppLocalizations.of(context)
+                                  .translate('village_code') ??
+                              'Village code',
+                      title: selectedValueVillage != null
+                          ? selectedValueVillage
+                          : AppLocalizations.of(context)
+                                  .translate('village_code') ??
+                              'Village code',
                       readOnlys: villagereadOnlys,
                     ),
                     Card(
@@ -1112,7 +1292,9 @@ class _CustomerRegister extends State {
                                       ),
                                     ),
                                     onPressed: () {
-                                      _getCurrentLocation();
+                                      if (mounted) {
+                                        _getCurrentLocation();
+                                      }
                                     },
                                   ),
                                   Container(
@@ -1134,46 +1316,61 @@ class _CustomerRegister extends State {
                       text: AppLocalizations.of(context).translate('submit') ??
                           'Submit',
                       color: logolightGreen,
-                      pressEvent: () {
-                        if (selectedValueVillage == 'Village code') {
-                          setState(() {
-                            validateVillage = true;
-                          });
-                        } else {
-                          AwesomeDialog(
-                            context: context,
-                            // animType: AnimType.LEFTSLIDE,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.INFO,
-                            title: AppLocalizations.of(context)
-                                    .translate('information') ??
-                                'information',
-                            desc: AppLocalizations.of(context)
-                                    .translate('are_you_sure_you') ??
-                                'Are you sure you want to register the customer?',
-                            btnOkOnPress: () async {
-                              if (selectedValueVillage == 'Village code') {
-                                setState(() {
-                                  validateVillage = true;
-                                });
-                              } else {
-                                await onSubmit(context);
-                                setState(() {
-                                  validateVillage = false;
-                                });
-                              }
-                            },
-                            btnOkText:
-                                AppLocalizations.of(context).translate('yes') ??
-                                    "Yes",
-                            btnCancelText:
-                                AppLocalizations.of(context).translate('no') ??
+                      pressEvent: () async {
+                        if (khmerName.currentState.saveAndValidate() &&
+                            englishName.currentState.saveAndValidate() &&
+                            _gender.currentState.saveAndValidate() &&
+                            phoneKey.currentState.saveAndValidate() &&
+                            occupationOfCustomer.currentState
+                                .saveAndValidate()) {
+                          // await onSubmit(context);
+                          if (selectedValueVillage == null ||
+                              selectedValueVillage ==
+                                  AppLocalizations.of(context)
+                                      .translate('village_code')) {
+                            setState(() {
+                              validateVillage = true;
+                            });
+                          } else {
+                            AwesomeDialog(
+                                context: context,
+                                // animType: AnimType.LEFTSLIDE,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.INFO,
+                                title: AppLocalizations.of(context)
+                                        .translate('information') ??
+                                    'Information',
+                                desc: AppLocalizations.of(context)
+                                        .translate('are_you_sure_you') ??
+                                    'Are you sure you want to register the customer?',
+                                btnOkOnPress: () async {
+                                  if (selectedValueVillage == null ||
+                                      selectedValueVillage ==
+                                          AppLocalizations.of(context)
+                                              .translate('village_code')) {
+                                    // await onSubmit(context);
+                                    setState(() {
+                                      validateVillage = true;
+                                    });
+                                  } else {
+                                    await onSubmit(context);
+                                    setState(() {
+                                      validateVillage = false;
+                                    });
+                                  }
+                                },
+                                btnCancelText: AppLocalizations.of(context)
+                                        .translate('no') ??
                                     "No",
-                            btnCancelOnPress: () {},
-                            btnCancelIcon: Icons.close,
-                            btnOkIcon: Icons.check_circle,
-                            btnOkColor: logolightGreen,
-                          )..show();
+                                btnCancelOnPress: () {},
+                                btnCancelIcon: Icons.close,
+                                btnOkIcon: Icons.check_circle,
+                                btnOkColor: logolightGreen,
+                                btnOkText: AppLocalizations.of(context)
+                                        .translate('yes') ??
+                                    'Yes')
+                              ..show();
+                          }
                         }
                       },
                     ),

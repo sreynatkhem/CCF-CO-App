@@ -162,8 +162,6 @@ class ApprovalHistoryProvider {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      logger().e('bodyRow :: ${bodyRow}');
-
       final response = await api().post(
           baseURLInternal + 'reports/loanapproval',
           headers: headers,
