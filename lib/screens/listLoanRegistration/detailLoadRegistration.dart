@@ -330,18 +330,16 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
           // Using Stack to show edit registration
           new Stack(
             children: <Widget>[
-              new IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    size: 25,
-                  ),
-                  onPressed: () {
-                    if (statusLoan != 'R' &&
-                        statusLoan != 'D' &&
-                        statusLoan != 'A') {
+              if (statusLoan != 'R' && statusLoan != 'D' && statusLoan != 'A')
+                new IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      size: 25,
+                    ),
+                    onPressed: () {
                       onEdit(list);
-                    }
-                  }),
+                    }),
+              Text('')
             ],
           ),
         ],

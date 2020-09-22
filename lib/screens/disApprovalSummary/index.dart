@@ -394,16 +394,13 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                                                           MainAxisAlignment
                                                               .center,
                                                       children: <Widget>[
-                                                        if (listApproval[index]
-                                                                ['adate'] !=
-                                                            null)
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: 10),
-                                                            child: Text(
-                                                                '${getDateTimeYMD(listApproval[index]['adate'])}'),
-                                                          ),
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 10),
+                                                          child: Text(
+                                                              '${getDateTimeYMD(listApproval[index]['rdate'])}'),
+                                                        ),
                                                       ],
                                                     ),
                                                   ]))),

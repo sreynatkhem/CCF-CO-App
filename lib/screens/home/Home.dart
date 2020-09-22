@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
@@ -25,6 +26,7 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
@@ -348,25 +350,46 @@ class _HomeState extends State<Home> {
   final policy = const AssetImage('assets/images/policy.png');
 
   Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit an App'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(true),
-                child: Text("YES"),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    AwesomeDialog(
+        context: context,
+        // animType: AnimType.LEFTSLIDE,
+        headerAnimationLoop: false,
+        dialogType: DialogType.INFO,
+        title: AppLocalizations.of(context).translate('information') ??
+            'Information',
+        desc: AppLocalizations.of(context).translate('do_you_want_to_exit') ??
+            'Do you want to exit?',
+        btnOkOnPress: () async {
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          });
+        },
+        btnCancelText: AppLocalizations.of(context).translate('no') ?? "No",
+        btnCancelOnPress: () {},
+        btnCancelIcon: Icons.close,
+        btnOkIcon: Icons.check_circle,
+        btnOkColor: logolightGreen,
+        btnOkText: AppLocalizations.of(context).translate('yes') ?? 'Yes')
+      ..show();
+    // return showDialog(
+    //       context: context,
+    //       builder: (context) => new AlertDialog(
+    //         title: new Text('Are you sure?'),
+    //         content: new Text('Do you want to exit an App'),
+    //         actions: <Widget>[
+    //           new GestureDetector(
+    //             onTap: () => Navigator.of(context).pop(false),
+    //             child: Text("NO"),
+    //           ),
+    //           SizedBox(height: 16),
+    //           new GestureDetector(
+    //             onTap: () => Navigator.of(context).pop(true),
+    //             child: Text("YES"),
+    //           ),
+    //         ],
+    //       ),
+    //     ) ??
+    //     false;
   }
 
   @override

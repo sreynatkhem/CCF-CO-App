@@ -375,9 +375,9 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
                                                                 EdgeInsets.only(
                                                           top: 5,
                                                         )),
-                                                        if (list['rdate'] != '')
-                                                          Text(getDateTimeYMD(
-                                                              list['rdate'])),
+                                                        Text(getDateTimeYMD(
+                                                            getListDetail[index]
+                                                                ['adate'])),
                                                         Text(''),
                                                         Padding(
                                                             padding:

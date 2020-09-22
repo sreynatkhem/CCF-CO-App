@@ -552,7 +552,9 @@ class _CustomerRegister extends State {
                               'Full Khmer Name(*)',
                         ),
                         onChanged: (v) {
-                          getValueKhmerName(v);
+                          if (mounted) {
+                            getValueKhmerName(v);
+                          }
                         },
                         valueTransformer: (text) {
                           return text == null ? null : text;
@@ -589,7 +591,9 @@ class _CustomerRegister extends State {
                                     .translate('full_english_name') ??
                                 'Full English Name'),
                         onChanged: (v) {
-                          getValueEnglishName(v);
+                          if (mounted) {
+                            getValueEnglishName(v);
+                          }
                         },
                         validators: [
                           FormBuilderValidators.required(
@@ -610,7 +614,7 @@ class _CustomerRegister extends State {
                     GroupFromBuilder(
                       icons: Icons.wc,
                       keys: _gender,
-                      childs: FormBuilderRadio(
+                      childs: FormBuilderRadioGroup(
                         decoration: new InputDecoration(
                           border: InputBorder.none,
                           labelText: 'Gender',
@@ -663,7 +667,9 @@ class _CustomerRegister extends State {
                         },
                         maxLength: 10,
                         onChanged: (v) {
-                          valuePhone1 = v;
+                          if (mounted) {
+                            valuePhone1 = v;
+                          }
                         },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
@@ -697,7 +703,9 @@ class _CustomerRegister extends State {
                                 'Phone Number 2'),
                         maxLength: 10,
                         onChanged: (v) {
-                          valuePhone2 = v;
+                          if (mounted) {
+                            valuePhone2 = v;
+                          }
                         },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
@@ -725,11 +733,13 @@ class _CustomerRegister extends State {
                               'Occupation of customer',
                         ),
                         onChanged: (value) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                          setState(() {
-                            valueOccupationOfCustomer = value;
-                          });
+                          if (mounted) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            setState(() {
+                              valueOccupationOfCustomer = value;
+                            });
+                          }
                         },
                         validators: [
                           FormBuilderValidators.required(
@@ -841,24 +851,26 @@ class _CustomerRegister extends State {
                           items: List.generate(list.length,
                               (index) => "${list[index]['prodes']}"),
                           onChange: (value) async {
-                            FocusScope.of(context)
-                                .unfocus(disposition: disposition);
-                            setState(() {
-                              selectedValueProvince = value ?? '';
-                              selectedValueDistrict =
-                                  AppLocalizations.of(context)
-                                          .translate('district_code') ??
-                                      'District code';
-                              selectedValueCommune =
-                                  AppLocalizations.of(context)
-                                          .translate('commune_code') ??
-                                      'Commune code';
-                              selectedValueVillage =
-                                  AppLocalizations.of(context)
-                                          .translate('village_code') ??
-                                      'Village code';
-                              districtreadOnlys = true;
-                            });
+                            if (mounted) {
+                              FocusScope.of(context)
+                                  .unfocus(disposition: disposition);
+                              setState(() {
+                                selectedValueProvince = value ?? '';
+                                selectedValueDistrict =
+                                    AppLocalizations.of(context)
+                                            .translate('district_code') ??
+                                        'District code';
+                                selectedValueCommune =
+                                    AppLocalizations.of(context)
+                                            .translate('commune_code') ??
+                                        'Commune code';
+                                selectedValueVillage =
+                                    AppLocalizations.of(context)
+                                            .translate('village_code') ??
+                                        'Village code';
+                                districtreadOnlys = true;
+                              });
+                            }
                           },
                         );
                       },
@@ -877,25 +889,27 @@ class _CustomerRegister extends State {
                       readOnlys: true,
                       iconsClose: Icon(Icons.close),
                       onPressed: () {
-                        FocusScope.of(context)
-                            .unfocus(disposition: disposition);
-                        setState(() {
-                          selectedValueProvince = AppLocalizations.of(context)
-                                  .translate('province_code') ??
-                              'Province code';
-                          selectedValueDistrict = AppLocalizations.of(context)
-                                  .translate('district_code') ??
-                              'District code';
-                          selectedValueCommune = AppLocalizations.of(context)
-                                  .translate('commune_code') ??
-                              'Commune code';
-                          selectedValueVillage = AppLocalizations.of(context)
-                                  .translate('village_code') ??
-                              'Village code';
-                          districtreadOnlys = false;
-                          communereadOnlys = false;
-                          villagereadOnlys = false;
-                        });
+                        if (mounted) {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          setState(() {
+                            selectedValueProvince = AppLocalizations.of(context)
+                                    .translate('province_code') ??
+                                'Province code';
+                            selectedValueDistrict = AppLocalizations.of(context)
+                                    .translate('district_code') ??
+                                'District code';
+                            selectedValueCommune = AppLocalizations.of(context)
+                                    .translate('commune_code') ??
+                                'Commune code';
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            districtreadOnlys = false;
+                            communereadOnlys = false;
+                            villagereadOnlys = false;
+                          });
+                        }
                       },
                       styleTexts: selectedValueProvince != ''
                           ? TextStyle(
@@ -932,40 +946,46 @@ class _CustomerRegister extends State {
                       clear: true,
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
-                        FocusScope.of(context)
-                            .unfocus(disposition: disposition);
-                        if (districtreadOnlys == true) {
-                          await getDistrict(stateProvince);
-                          await SelectDialog.showModal<String>(
-                            context,
-                            label: AppLocalizations.of(context)
-                                    .translate('search') ??
-                                'Search',
-                            items: List.generate(listDistricts.length,
-                                (index) => "${listDistricts[index]['disdes']}"),
-                            onChange: (value) {
-                              setState(() {
-                                selectedValueDistrict = value ?? '';
-                                communereadOnlys = true;
-                              });
-                            },
-                          );
+                        if (mounted) {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          if (districtreadOnlys == true) {
+                            await getDistrict(stateProvince);
+                            await SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)
+                                      .translate('search') ??
+                                  'Search',
+                              items: List.generate(
+                                  listDistricts.length,
+                                  (index) =>
+                                      "${listDistricts[index]['disdes']}"),
+                              onChange: (value) {
+                                setState(() {
+                                  selectedValueDistrict = value ?? '';
+                                  communereadOnlys = true;
+                                });
+                              },
+                            );
+                          }
                         }
                       },
                       onPressed: () {
-                        setState(() {
-                          selectedValueDistrict = AppLocalizations.of(context)
-                                  .translate('district_code') ??
-                              'District code';
-                          selectedValueCommune = AppLocalizations.of(context)
-                                  .translate('commune_code') ??
-                              'Commune code';
-                          selectedValueVillage = AppLocalizations.of(context)
-                                  .translate('village_code') ??
-                              'Village code';
-                          villagereadOnlys = false;
-                          communereadOnlys = false;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedValueDistrict = AppLocalizations.of(context)
+                                    .translate('district_code') ??
+                                'District code';
+                            selectedValueCommune = AppLocalizations.of(context)
+                                    .translate('commune_code') ??
+                                'Commune code';
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            villagereadOnlys = false;
+                            communereadOnlys = false;
+                          });
+                        }
                       },
                       readOnlys: districtreadOnlys,
                       styleTexts: selectedValueDistrict != ''
@@ -992,36 +1012,40 @@ class _CustomerRegister extends State {
                           : null,
                       iconsClose: Icon(Icons.close),
                       onInSidePress: () async {
-                        FocusScope.of(context)
-                            .unfocus(disposition: disposition);
-                        if (communereadOnlys == true) {
-                          await getCommune();
-                          SelectDialog.showModal<String>(
-                            context,
-                            label: AppLocalizations.of(context)
-                                    .translate('search') ??
-                                'Search',
-                            items: List.generate(listComunes.length,
-                                (index) => "${listComunes[index]['comdes']}"),
-                            onChange: (value) {
-                              setState(() {
-                                selectedValueCommune = value ?? '';
-                                villagereadOnlys = true;
-                              });
-                            },
-                          );
+                        if (mounted) {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          if (communereadOnlys == true) {
+                            await getCommune();
+                            SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)
+                                      .translate('search') ??
+                                  'Search',
+                              items: List.generate(listComunes.length,
+                                  (index) => "${listComunes[index]['comdes']}"),
+                              onChange: (value) {
+                                setState(() {
+                                  selectedValueCommune = value ?? '';
+                                  villagereadOnlys = true;
+                                });
+                              },
+                            );
+                          }
                         }
                       },
                       onPressed: () {
-                        setState(() {
-                          selectedValueCommune = AppLocalizations.of(context)
-                                  .translate('commune_code') ??
-                              'Commune code';
-                          selectedValueVillage = AppLocalizations.of(context)
-                                  .translate('village_code') ??
-                              'Village code';
-                          villagereadOnlys = false;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedValueCommune = AppLocalizations.of(context)
+                                    .translate('commune_code') ??
+                                'Commune code';
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            villagereadOnlys = false;
+                          });
+                        }
                       },
                       texts: selectedValueCommune != null
                           ? selectedValueCommune
@@ -1089,12 +1113,14 @@ class _CustomerRegister extends State {
                       },
                       iconsClose: Icon(Icons.close),
                       onPressed: () {
-                        setState(() {
-                          selectedValueVillage = AppLocalizations.of(context)
-                                  .translate('village_code') ??
-                              'Village code';
-                          villagereadOnlys = true;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedValueVillage = AppLocalizations.of(context)
+                                    .translate('village_code') ??
+                                'Village code';
+                            villagereadOnlys = true;
+                          });
+                        }
                       },
                       styleTexts: selectedValueVillage != ''
                           ? TextStyle(
@@ -1166,7 +1192,9 @@ class _CustomerRegister extends State {
                                       ),
                                     ),
                                     onPressed: () {
-                                      _getCurrentLocation();
+                                      if (mounted) {
+                                        _getCurrentLocation();
+                                      }
                                     },
                                   ),
                                   Container(
