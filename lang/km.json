@@ -13,7 +13,7 @@
   "list_customer_registration": "បញ្ជីចុះឈ្មោះ អតិថិជន",
   "list_loan_registration": "បញ្ជីកម្ចី",
   "loan_registration": "ការចុះឈ្មោះ ខ្ចីប្រាក់",
-  "your_id": "អត្តសញ្ញាណប័ណ្ណរបស់អ្នក",
+  "your_id": "លេខសំគាល់",
   "english_language": "ភាសាអង់គ្លេស",
   "log_out": "ចាកចេញ",
   "policy": "គោលនយោបាយ",
@@ -136,7 +136,7 @@
   "total_approve": "អនុម័តសរុប",
   "total_return": "ការត្រឡប់មកវិញសរុប",
   "total_disapprove": "ការមិនយល់ព្រមសរុប",
-  "report_approval": "របាយការណ៍សង្ខេបការអនុម័ត",
+  "report_approval": "របាយការណ៍អនុម័ត",
   "female": "ស្រី",
   "male": "ប្រុស",
   "loan_registration_has_been_successfully": "ការចុះឈ្មោះខ្ចីប្រាក់ត្រូវបានបញ្ចប់ដោយជោគជ័យ!",
@@ -147,7 +147,10 @@
   "total_processing": "ដំណើរការសរុប",
   "processing": "ដំណើរការ",
   "report_disapproval": "របាយការណ៍ការមិនយល់ព្រម",
-  "report_request": "ស្នើសុំរបាយការណ៍",
+  "loan_product": "ផលិតផលកម្ចី",
+  "report_request": "របាយការណ៍ស្នើសុំ",
   "report_return": "របាយការណ៍ត្រឡប់",
-  "do_you_want_to_exit": "តើអ្នកចង់ចាកចេញទេ?"
+  "do_you_want_to_exit": "តើអ្នកចង់ចាកចេញទេ?",
+  "irr": "IRR",
+  "no_data": "ពុំមានទិន្នន័យ"
 }

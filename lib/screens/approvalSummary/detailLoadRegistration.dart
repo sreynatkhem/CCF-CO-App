@@ -120,7 +120,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     'filepath': ''
   };
   convertImagePath(image) async {
-    logger().e("image:$image");
     var file;
     switch (image['type']) {
       case '101':

@@ -390,9 +390,6 @@ class _CustomerRegister extends State {
     int yearDiff = today.year - birthDate.year;
     int monthDiff = today.month - birthDate.month;
     int dayDiff = today.day - birthDate.day;
-    logger()
-        .e(yearDiff > 18 || yearDiff == 18 && monthDiff >= 0 && dayDiff >= 0);
-
     return yearDiff > 18 || yearDiff == 18 && monthDiff >= 0 && dayDiff >= 0;
   }
 
@@ -411,13 +408,11 @@ class _CustomerRegister extends State {
       birthDate.month,
       birthDate.day,
     );
-    logger().e('adultDate.isBefore ${adultDate.isBefore(today)}');
     return adultDate.isBefore(today);
   }
 
   calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
-    logger().e('birthDate:: ${birthDate}');
 
     int age = currentDate.year - birthDate.year;
     int month1 = currentDate.month;
@@ -431,8 +426,6 @@ class _CustomerRegister extends State {
         age--;
       }
     }
-    logger().e('age:: ${age}');
-
     return age;
   }
 
@@ -446,14 +439,11 @@ class _CustomerRegister extends State {
     var nmonth = month.toString().padLeft(2, "0");
     var fullDate = "${year}${nmonth}${nday}";
 
-    logger().e('fullDate ::: ${fullDate}');
-
     // final yesterday = DateTime(now.year, now.month, now.day - 1);
     // final tomorrow = DateTime(now.year, now.month, now.day + 1);
     var aDay;
     var aMonth;
     var aYear;
-    // logger().e('now ::: ${now}');
 
     if (dateToCheck != null) {
       aDay = DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).day;
@@ -470,13 +460,6 @@ class _CustomerRegister extends State {
     var val1 = int.parse(fullDate);
     var val2 = int.parse(fullDatePicker);
     int checkNext = val2 - val1;
-    logger().e('checkNext:: ${checkNext}');
-
-// if(aDate == today) {
-//   }
-//  // ignore: unnecessary_statements
-//  else (aDate == tomorrow)  {
-// };
   }
 
   UnfocusDisposition disposition = UnfocusDisposition.scope;
@@ -492,7 +475,6 @@ class _CustomerRegister extends State {
   }
 
   void _handleRadioValueChange1(v) {
-    logger().e('handleRadio $v');
     setState(() {
       _radioValueState = true;
     });

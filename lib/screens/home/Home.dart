@@ -79,14 +79,26 @@ class _HomeState extends State<Home> {
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         // _showItemDialog(message);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationScreen()),
+            ModalRoute.withName(""));
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         // _navigateToItemDetail(message);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationScreen()),
+            ModalRoute.withName(""));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         // _navigateToItemDetail(message);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationScreen()),
+            ModalRoute.withName(""));
       },
     );
     _firebaseMessaging.requestNotificationPermissions(

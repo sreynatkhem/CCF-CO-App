@@ -120,7 +120,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     'filepath': ''
   };
   convertImagePath(image) async {
-    logger().e("image:$image");
     var file;
     switch (image['type']) {
       case '101':
@@ -427,7 +426,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'irr',
                                                 value:
-                                                    '${snapshot.data[index].irr}%',
+                                                    '${numFormat.format(snapshot.data[index].irr)}%',
                                               ),
                                               ListDetail(
                                                 name: 'repayment_method',

@@ -121,8 +121,6 @@ class LoanApproval with ChangeNotifier {
     successfully = false;
     var bodyRow =
         "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
-    logger().e("bodyRow: ${bodyRow}");
-
     try {
       final response = await api().post(
           baseURLInternal + 'loanRequests/post/' + rcode + '/Approve',
@@ -133,10 +131,7 @@ class LoanApproval with ChangeNotifier {
           body: bodyRow);
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 201) {
-        logger().e("response.statusCode: ${response.statusCode}");
-
         successfully = true;
-        logger().e("parsed: ${parsed}");
         return parsed;
       } else {
         successfully = false;

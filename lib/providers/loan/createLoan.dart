@@ -138,12 +138,9 @@ class LoanInternal with ChangeNotifier {
           headers: headers, body: bodyRow);
       if (response.statusCode == 200) {
         final dynamic parsed = [];
-        logger().e("parsed: ${jsonDecode(response.body)}");
         parsed.addAll(jsonDecode(response.body));
         data.addAll(parsed[0]['listLoans']);
         totalLoans = parsed[0]['totalLoan'].toString();
-        logger().e("parsed: ${jsonDecode(response.body)}");
-
         notifyListeners();
         return parsed
             .map<ListLoanNew>((json) => ListLoanNew.fromJson(json))

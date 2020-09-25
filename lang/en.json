@@ -150,5 +150,8 @@
   "report_disapproval": "Report Disapproval",
   "report_request": "Report Request",
   "report_return": "Report Return",
-  "do_you_want_to_exit": "Do you want to exit?"
+  "do_you_want_to_exit": "Do you want to exit?",
+  "loan_product": "Loan Product",
+  "irr": "IRR",
+  "no_data": "No Data"
 }

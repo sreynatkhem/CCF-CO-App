@@ -115,8 +115,6 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
       };
       final response = await api().post(baseURLInternal + 'loanRequests/byuser',
           headers: headers, body: bodyRow);
-      print('response.statusCode::: ${response.statusCode}');
-
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
         setState(() {

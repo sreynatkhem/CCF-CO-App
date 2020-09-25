@@ -1156,8 +1156,7 @@ class _LoanRegister extends State {
                                 ..show();
                             }
                           } else {
-                            print(
-                                'what worn${loanAmount.currentState.saveAndValidate()}}');
+                            print('error');
                           }
                         },
                       ),
