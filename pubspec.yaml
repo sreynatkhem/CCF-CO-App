@@ -58,7 +58,7 @@ dependencies:
   firebase_core: ^0.5.0
   photo_view: ^0.10.2
   charts_flutter: ^0.9.0
-  custom_radio_grouped_button: ^1.0.6
+  url_launcher: ^5.7.2
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +92,7 @@ flutter:
     - assets/pdf/
     - assets/images/list.png
     - assets/images/percentage.png
+    - assets/pdf/requirementchecklist.pdf
 
     - assets/images/101.png
     - assets/images/102.png

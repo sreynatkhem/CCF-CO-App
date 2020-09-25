@@ -339,6 +339,7 @@ class _CustomerRegister extends State {
     } catch (error) {}
   }
 
+  var statusCodes;
   getIDVillage() async {
     listVillages.forEach((item) async {
       if (selectedValueVillage == item['vildes']) {
@@ -352,45 +353,45 @@ class _CustomerRegister extends State {
   var ccode;
   onSubmit(context) async {
     try {
-      if (khmerName.currentState.saveAndValidate() &&
-          englishName.currentState.saveAndValidate()) {
-        var ccdoe = list.ccode;
-        var acode = list.acode;
-        var rdate = list.rdate;
-        await Provider.of<ListCustomerRegistrationProvider>(context,
-                listen: false)
-            .editCustomerRegistration(
-                ccdoe,
-                acode,
-                rdate,
-                valueKhmerName,
-                valueEnglishName,
-                valueDatehofBrith,
-                gender,
-                valuePhone1,
-                valuePhone2,
-                valueOccupationOfCustomer,
-                ntypes,
-                valueNationIdentification,
-                valueNextVisitDate,
-                valueProspective,
-                valueGurantorCustomer,
-                idProvince,
-                idDistrict,
-                idCommune,
-                idVillage,
-                _currentAddress)
-            .then((value) async => {
-                  await Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => CardDetailCustomer(
-                          list: ccdoe,
+      var ccdoe = list.ccode;
+      var acode = list.acode;
+      var rdate = list.rdate;
+      await Provider.of<ListCustomerRegistrationProvider>(context,
+              listen: false)
+          .editCustomerRegistration(
+              ccdoe,
+              acode,
+              rdate,
+              valueKhmerName,
+              valueEnglishName,
+              gender,
+              valuePhone1,
+              valuePhone2,
+              valueOccupationOfCustomer,
+              valueNextVisitDate,
+              valueProspective,
+              idProvince,
+              idDistrict,
+              idCommune,
+              idVillage,
+              _currentAddress)
+          .then((value) async => {
+                statusCodes =
+                    await Provider.of<ListCustomerRegistrationProvider>(context,
+                            listen: false)
+                        .isStatusCode,
+                if (statusCodes == true)
+                  {
+                    await Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => CardDetailCustomer(
+                            list: ccdoe,
+                          ),
                         ),
-                      ),
-                      ModalRoute.withName('/')),
-                });
-      }
+                        ModalRoute.withName('/')),
+                  }
+              });
     } catch (error) {
       print('error :::: $error');
     }
@@ -424,14 +425,11 @@ class _CustomerRegister extends State {
     var nmonth = month.toString().padLeft(2, "0");
     var fullDate = "${year}${nmonth}${nday}";
 
-    logger().e('fullDate ::: ${fullDate}');
-
     // final yesterday = DateTime(now.year, now.month, now.day - 1);
     // final tomorrow = DateTime(now.year, now.month, now.day + 1);
     var aDay;
     var aMonth;
     var aYear;
-    // logger().e('now ::: ${now}');
 
     if (dateToCheck != null) {
       aDay = DateTime(dateToCheck.year, dateToCheck.month, dateToCheck.day).day;
@@ -448,7 +446,6 @@ class _CustomerRegister extends State {
     var val1 = int.parse(fullDate);
     var val2 = int.parse(fullDatePicker);
     int checkNext = val2 - val1;
-    logger().e('checkNext:: ${checkNext}');
 
 // if(aDate == today) {
 //   }
@@ -477,9 +474,7 @@ class _CustomerRegister extends State {
                 onPressed: () {
                   if (khmerName.currentState.saveAndValidate() &&
                       englishName.currentState.saveAndValidate() &&
-                      _gender.currentState.saveAndValidate() &&
-                      phoneKey.currentState.saveAndValidate() &&
-                      occupationOfCustomer.currentState.saveAndValidate()) {
+                      phoneKey.currentState.saveAndValidate()) {
                     // await onSubmit(context);
                     if (selectedValueVillage == null ||
                         selectedValueVillage ==
@@ -528,6 +523,8 @@ class _CustomerRegister extends State {
                                   'Yes')
                         ..show();
                     }
+                  } else {
+                    logger().e("edit: custmer");
                   }
                 }),
           ],
@@ -1319,10 +1316,7 @@ class _CustomerRegister extends State {
                       pressEvent: () async {
                         if (khmerName.currentState.saveAndValidate() &&
                             englishName.currentState.saveAndValidate() &&
-                            _gender.currentState.saveAndValidate() &&
-                            phoneKey.currentState.saveAndValidate() &&
-                            occupationOfCustomer.currentState
-                                .saveAndValidate()) {
+                            phoneKey.currentState.saveAndValidate()) {
                           // await onSubmit(context);
                           if (selectedValueVillage == null ||
                               selectedValueVillage ==

@@ -59,6 +59,7 @@ class _RequestSummaryState extends State<RequestSummary> {
         isLoading = false;
       });
     });
+    return false;
   }
 
   ScrollController _scrollController = ScrollController();
@@ -196,9 +197,7 @@ class _RequestSummaryState extends State<RequestSummary> {
                 listCO = value;
               }),
             })
-        .catchError((onError) {
-      logger().e('getListBranches onError:: ${onError}');
-    });
+        .catchError((onError) {});
   }
 
   void _closeEndDrawer() {
@@ -207,9 +206,23 @@ class _RequestSummaryState extends State<RequestSummary> {
       bcode = null;
       controllerEndDate.text = '';
       controllerStartDate.text = '';
+      isLoading = true;
+    });
+    setState(() {
+      isLoading = false;
     });
     getReportApprovalSummary(
-        _pageSize, _pageNumber, '', '', '', '', '', 'Request');
+            _pageSize, _pageNumber, '', '', '', '', '', 'Request')
+        .then((value) => {
+              setState(() {
+                isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        isLoading = false;
+      });
+    });
     getListBranches();
     // getListCO('');
     Navigator.of(context).pop();
@@ -228,10 +241,23 @@ class _RequestSummaryState extends State<RequestSummary> {
   }
 
   _applyEndDrawer() {
+    setState(() {
+      isLoading = true;
+    });
     var startDate = sdate != null ? sdate : DateTime.now();
     var endDate = edate != null ? edate : DateTime.now();
     getReportApprovalSummary(20, 1, '', '', bcode, startDate.toString(),
-        endDate.toString(), 'Request');
+            endDate.toString(), 'Request')
+        .then((value) => {
+              setState(() {
+                isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        isLoading = false;
+      });
+    });
     Navigator.of(context).pop();
   }
 
@@ -288,133 +314,140 @@ class _RequestSummaryState extends State<RequestSummary> {
                             style: TextStyle(color: Colors.white, fontSize: 15),
                           ))),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        child: ListView.builder(
-                            itemCount: listApproval.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (listApproval.length > 0) {
-                                logger()
-                                    .e('date: ${listApproval[index]['adate']}');
-                                return Center(
-                                    child: Column(
-                                  children: [
-                                    Container(
-                                      height: 90,
-                                      child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                                color: logolightGreen,
-                                                width: 1),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: InkWell(
-                                              splashColor:
-                                                  Colors.blue.withAlpha(30),
-                                              onTap: () {
-                                                onTapsDetail(
-                                                    listApproval[index]);
-                                              },
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 5)),
-                                                        Image(
-                                                          image:
-                                                              _imagesFindApproval,
-                                                          width: 50,
-                                                          height: 50,
-                                                        ),
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: 15)),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: <Widget>[
-                                                            Container(
-                                                                width: 200,
+                    listApproval.length > 0
+                        ? Expanded(
+                            flex: 1,
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: ListView.builder(
+                                  itemCount: listApproval.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    if (listApproval.length > 0) {
+                                      return Center(
+                                          child: Column(
+                                        children: [
+                                          Container(
+                                            height: 90,
+                                            child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                  side: BorderSide(
+                                                      color: logolightGreen,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: InkWell(
+                                                    splashColor: Colors.blue
+                                                        .withAlpha(30),
+                                                    onTap: () {
+                                                      onTapsDetail(
+                                                          listApproval[index]);
+                                                    },
+                                                    child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Row(
+                                                            children: <Widget>[
+                                                              Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              5)),
+                                                              Image(
+                                                                image:
+                                                                    _imagesFindApproval,
+                                                                width: 50,
+                                                                height: 50,
+                                                              ),
+                                                              Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          right:
+                                                                              15)),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Container(
+                                                                      width:
+                                                                          200,
+                                                                      child:
+                                                                          Text(
+                                                                        '${listApproval[index]['loan']['customer']}',
+                                                                        style:
+                                                                            mainTitleBlack,
+                                                                      )),
+                                                                  Text(
+                                                                      '${listApproval[index]['rcode']}'),
+                                                                  Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              2)),
+                                                                  Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              2)),
+                                                                  Text(
+                                                                      '${listApproval[index]['loan']['currency']} ${numFormat.format(listApproval[index]['loan']['lamt'])}'),
+                                                                  Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              2)),
+                                                                  // Text(
+                                                                  //     '${listTotal[index]['lamt']} (${listTotal[index]['listLoanApplications']['adate']})'),
+                                                                  Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              2)),
+                                                                  // Text(
+                                                                  //     '${listTotal[index]['intrate']}/y'),
+                                                                  Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              2)),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        right:
+                                                                            10),
                                                                 child: Text(
-                                                                  '${listApproval[index]['loan']['customer']}',
-                                                                  style:
-                                                                      mainTitleBlack,
-                                                                )),
-                                                            Text(
-                                                                '${listApproval[index]['rcode']}'),
-                                                            Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        bottom:
-                                                                            2)),
-                                                            Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        bottom:
-                                                                            2)),
-                                                            Text(
-                                                                '${listApproval[index]['loan']['currency']} ${numFormat.format(listApproval[index]['loan']['lamt'])}'),
-                                                            Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        bottom:
-                                                                            2)),
-                                                            // Text(
-                                                            //     '${listTotal[index]['lamt']} (${listTotal[index]['listLoanApplications']['adate']})'),
-                                                            Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        bottom:
-                                                                            2)),
-                                                            // Text(
-                                                            //     '${listTotal[index]['intrate']}/y'),
-                                                            Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        bottom:
-                                                                            2)),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 10),
-                                                          child: Text(
-                                                              '${getDateTimeYMD(listApproval[index]['rdate'])}'),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ]))),
-                                    ),
-                                  ],
-                                ));
-                              } else {
-                                return Text('No list');
-                              }
-                            }),
-                      ),
-                    ),
+                                                                    '${getDateTimeYMD(listApproval[index]['rdate'])}'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ]))),
+                                          ),
+                                        ],
+                                      ));
+                                    } else {
+                                      return Text('No list');
+                                    }
+                                  }),
+                            ),
+                          )
+                        : Expanded(
+                            flex: 1,
+                            child: Center(
+                                child: Container(
+                                    child: Text(AppLocalizations.of(context)
+                                        .translate('no_data'))))),
                   ],
                 ),
           endDrawer: Drawer(
@@ -492,7 +525,9 @@ class _RequestSummaryState extends State<RequestSummary> {
                         inputType: InputType.date,
                         onChanged: (v) {
                           setState(() {
-                            sdate = v != null ? v : DateTime.now();
+                            sdate = v != null
+                                ? v
+                                : DateTime(now.year, now.month, 1);
                           });
                         },
                         initialValue: DateTime(now.year, now.month, 1),

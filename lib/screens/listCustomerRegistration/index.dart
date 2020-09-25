@@ -117,6 +117,7 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
         setState(() {
           parsed = [];
         });
+        return parsed;
       }
     } catch (error) {
       print('error::: ${error}');
@@ -138,8 +139,20 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
       bcode = null;
       controllerEndDate.text = '';
       controllerStartDate.text = '';
+      _isLoading = true;
     });
-    getListCustomer(20, 1, '', '', '', '', '');
+    getListCustomer(20, 1, '', '', '', '', '')
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    ;
     getListBranches();
     Navigator.of(context).pop();
   }
@@ -155,13 +168,33 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
         .catchError((onError) {});
   }
 
-  _applyEndDrawer() async {
-    DateTime now = DateTime.now();
+  var isHasData = true;
 
+  Future _applyEndDrawer() async {
+    setState(() {
+      _isLoading = true;
+    });
+    DateTime now = DateTime.now();
+    logger().e('sdate: $sdate');
     var startDate = sdate != null ? sdate : DateTime(now.year, now.month, 1);
     var endDate = edate != null ? edate : DateTime.now();
-    getListCustomer(20, 1, '', '', bcode, startDate, endDate);
+    getListCustomer(20, 1, '', '', bcode, startDate, endDate)
+        .then((value) => {
+              logger().i("value: $value"),
+              setState(() {
+                _isLoading = false;
+              }),
+            })
+        .catchError((onError) {
+      logger().e("error: $onError");
+      setState(() {
+        _isLoading = false;
+      });
+    });
     Navigator.of(context).pop();
+    setState(() {
+      _isLoading = true;
+    });
   }
 
   _onClickListBranch(v) {
@@ -231,30 +264,100 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                   child: CircularProgressIndicator(),
                 ),
               )
-            : RefreshIndicator(
-                onRefresh: _getData,
-                child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: parsed.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      // print("snapshot.data.length: ${snapshot.data.length}");
-                      return Column(
-                        children: <Widget>[
-                          CardState(
-                            texts: '${parsed[index]['namekhr']}',
-                            textTwo:
-                                '${parsed[index]['nameeng'] != null ? parsed[index]['nameeng'] : ''}',
-                            id: '${parsed[index]['ccode']}',
-                            phone: '${parsed[index]['phone1']}',
-                            images: profile,
-                            onTaps: () {
-                              onTapsDetail(parsed[index]);
-                            },
-                          )
-                        ],
-                      );
-                    }),
-              ),
+            : parsed.length > 0
+                ? RefreshIndicator(
+                    onRefresh: _getData,
+                    child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: parsed.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            height: 90,
+                            padding: EdgeInsets.only(left: 5, right: 5, top: 3),
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: logolightGreen, width: 1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: InkWell(
+                                    splashColor: Colors.blue.withAlpha(30),
+                                    onTap: () {
+                                      onTapsDetail(parsed[index]);
+                                    },
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding:
+                                                      EdgeInsets.only(left: 5)),
+                                              Image(
+                                                image: profile,
+                                                width: 50,
+                                                height: 50,
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      right: 15)),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Container(
+                                                      width: 200,
+                                                      child: Text(
+                                                        '${parsed[index]['namekhr']}',
+                                                        style: mainTitleBlack,
+                                                      )),
+                                                  Text(
+                                                      '${parsed[index]['nameeng'] != null ? parsed[index]['nameeng'] : ''}'),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2)),
+                                                  Text(
+                                                      '${parsed[index]['ccode']}'),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2)),
+                                                  Text(
+                                                      '${parsed[index]['phone1']}'),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 2)),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                top: 5,
+                                              )),
+                                              Text(
+                                                  '${getDateTimeYMD(parsed[index]['rdate'])}'),
+                                              Text(''),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                right: 100,
+                                              ))
+                                            ],
+                                          ),
+                                        ]))),
+                          );
+                        }),
+                  )
+                : Center(
+                    child: Container(
+                        child: Text(AppLocalizations.of(context)
+                            .translate('no_data')))),
         endDrawer: Drawer(
           child: SingleChildScrollView(
             child: Container(
@@ -301,8 +404,9 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                               itemBuilder: (context, index) {
                                 return Card(
                                   child: InkWell(
-                                    onTap: () =>
-                                        _onClickListBranch(listBranch[index]),
+                                    onTap: () {
+                                      _onClickListBranch(listBranch[index]);
+                                    },
                                     child: Center(
                                       child: Container(
                                           padding: EdgeInsets.all(5),
@@ -330,7 +434,8 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                       inputType: InputType.date,
                       onChanged: (v) {
                         setState(() {
-                          sdate = v != null ? v : DateTime.now();
+                          sdate =
+                              v != null ? v : DateTime(now.year, now.month, 1);
                         });
                       },
                       initialValue: DateTime(now.year, now.month, 1),
@@ -378,7 +483,9 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                         ),
                         RaisedButton(
                           color: logolightGreen,
-                          onPressed: _applyEndDrawer,
+                          onPressed: () {
+                            _applyEndDrawer();
+                          },
                           child: Text(
                             AppLocalizations.of(context).translate('apply') ??
                                 "Apply",

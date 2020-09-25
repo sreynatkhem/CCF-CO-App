@@ -85,9 +85,6 @@ class _EditLoanRegister extends State {
       valueRepaymentMethod = list.rmode;
       // valueORARD = list.loanRequest;
     });
-    logger().e('irr: ${list.expdate}');
-    logger().e('expectedDateController: ${expectedDateController.text}');
-
     super.initState();
   }
 
@@ -285,7 +282,6 @@ class _EditLoanRegister extends State {
     var curCode =
         selectedValueCurrencies != null ? selectedValueCurrencies : '';
     var expdate = expdateDay != null ? expdateDay : DateTime.now();
-    print('list.odate: ${list.odate}');
 
     try {
       final boyrow =
@@ -1152,8 +1148,7 @@ class _EditLoanRegister extends State {
                     keyboardType: TextInputType.number,
                     validators: [
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.max(99),
-                      FormBuilderValidators.min(1)
+                      FormBuilderValidators.min(0),
                     ],
                     inputFormatters: [
                       WhitelistingTextInputFormatter(

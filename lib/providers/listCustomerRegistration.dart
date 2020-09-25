@@ -11,6 +11,7 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   bool _isFetching = false;
   final data = [];
   var totalCustomer = '';
+  bool statusCode = false;
   final storage = new FlutterSecureStorage();
   Future<List<Customers>> fetchListCustomerRegistration(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
@@ -58,7 +59,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      print('bodyRow: ${bodyRow}');
       var uri = baseURLInternal + 'customers/all';
       final response = await api().post(uri, headers: headers, body: bodyRow);
       if (response.statusCode == 200) {
@@ -66,9 +66,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
         parsed.addAll(jsonDecode(response.body));
         data.addAll(parsed[0]['listCustomers']);
         totalCustomer = parsed[0]['totalCustomer'].toString();
-        print('data: ${jsonDecode(response.body)}');
-        print('data 2: ${parsed[0]['listCustomers'].length}');
-
         notifyListeners();
         if (parsed[0]['listCustomers'].length > 1) {
           return parsed[0]['listCustomers']
@@ -92,16 +89,12 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
       rdate,
       valueKhmerName,
       valueEnglishName,
-      valueDatehofBrith,
       gender,
       valuePhone1,
       valuePhone2,
       valueOccupationOfCustomer,
-      ntypes,
-      valueNationIdentification,
       valueNextVisitDate,
       valueProspective,
-      valueGurantorCustomer,
       selectedValueProvince,
       selectedValueDistrict,
       selectedValueCommune,
@@ -111,35 +104,14 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
+    var nextDate = valueNextVisitDate != null && valueNextVisitDate != ''
+        ? valueNextVisitDate
+        : '';
     try {
       _isFetching = false;
-      var body = {
-        'ccode': ccode,
-        'ucode': user_ucode,
-        'bcode': branch,
-        'rdate': rdate,
-        'acode': acode,
-        'comcode': selectedValueCommune,
-        'cstatus': valueGurantorCustomer,
-        'discode': selectedValueDistrict,
-        'dob': '2020-09-11',
-        'gender': gender,
-        'goglocation': currentAddress,
-        'nameeng': valueEnglishName,
-        'namekhr': valueKhmerName,
-        'ndate': '2020-09-11',
-        'ntype': ntypes,
-        'nid': valueNationIdentification,
-        'occupation': valueOccupationOfCustomer,
-        'phone1': valuePhone1,
-        'phone2': valuePhone2,
-        'pro': valueProspective,
-        'procode': selectedValueProvince,
-        'ucode': user_ucode,
-        'vilcode': idVillage,
-      };
+
       final boyrow =
-          "{\n    \"ccode\": \"$ccode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"acode\": \"$acode\",\n    \"rdate\": \"$rdate\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"$valueDatehofBrith\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAddress\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntypes\",\n    \"nid\": \"$valueNationIdentification\",\n    \"ndate\": \"$valueNextVisitDate\",\n    \"pro\": \"$valueProspective\",\n    \"cstatus\": \"$valueGurantorCustomer\"\n}";
+          "{\n    \"ccode\": \"$ccode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"acode\": \"$acode\",\n    \"rdate\": \"$rdate\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAddress\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"\",\n    \"nid\": \"\",\n    \"ndate\": \"$nextDate\",\n    \"pro\": \"$valueProspective\",\n    \"cstatus\": \"\"\n}";
       final response = await api().put(
           baseURLInternal + 'Customers/' + '$ccode',
           headers: {
@@ -147,9 +119,13 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
             "Authorization": "Bearer " + token
           },
           body: boyrow);
-      final parsed = jsonDecode(response.body);
-      data.add(parsed);
-      notifyListeners();
+      if (response.statusCode == 201) {
+        statusCode = true;
+        final parsed = jsonDecode(response.body);
+        data.add(parsed);
+        notifyListeners();
+        return parsed;
+      }
     } catch (error) {
       _isFetching = false;
       print('error :: ${error}');
@@ -185,4 +161,5 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   bool get isFetching => _isFetching;
   get isFetchData => data;
   get isTotalListCustomer => totalCustomer;
+  bool get isStatusCode => statusCode;
 }

@@ -82,7 +82,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     setState(() {
       scaleCopy = value.scale;
     });
-    logger().e('scaleCopy :: ${scaleCopy}');
   }
 
   @override
@@ -91,7 +90,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     // setState(() {
     //   _imageDocument = null;
     // });
-    logger().e('dispose');
     super.dispose();
   }
 
@@ -164,7 +162,6 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                   ),
                 ));
         file = Io.File('assets/images/101.png');
-        logger().e("controller:: ${controller}");
         break;
       case '102':
         var uri = image['filepath'];

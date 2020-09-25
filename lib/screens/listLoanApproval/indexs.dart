@@ -161,8 +161,19 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
       bcode = null;
       controllerEndDate.text = '';
       controllerStartDate.text = '';
+      _isLoading = true;
     });
-    getListLoan(20, 1, '', '', '', '', '');
+    getListLoan(20, 1, '', '', '', '', '')
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              }),
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     getListBranches();
     getListCO('');
     Navigator.of(context).pop();
@@ -181,11 +192,22 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
 
   _applyEndDrawer() async {
     DateTime now = DateTime.now();
-
+    setState(() {
+      _isLoading = true;
+    });
     var startDate = sdate != null ? sdate : DateTime(now.year, now.month, 1);
     var endDate = edate != null ? edate : DateTime.now();
-    getListLoan(20, 1, '', '', bcode, startDate, endDate);
-
+    getListLoan(20, 1, '', '', bcode, startDate, endDate)
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     Navigator.of(context).pop();
   }
 
@@ -385,108 +407,118 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : RefreshIndicator(
-                  onRefresh: _getData,
-                  child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: parsed.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        var status = statusApproval(
-                            parsed != null ? parsed[index]['rstatus'] : '');
-
-                        return Container(
-                          height: 110,
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                side:
-                                    BorderSide(color: logolightGreen, width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: InkWell(
-                                  splashColor: Colors.blue.withAlpha(30),
-                                  onTap: () {
-                                    var value = parsed[index];
-                                    onTapsDetail(value, context);
-                                  },
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Row(
+              : parsed.length > 0
+                  ? RefreshIndicator(
+                      onRefresh: _getData,
+                      child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: parsed.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var status = statusApproval(
+                                parsed != null ? parsed[index]['rstatus'] : '');
+                            return Container(
+                              height: 110,
+                              padding:
+                                  EdgeInsets.only(left: 5, right: 5, top: 3),
+                              child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: logolightGreen, width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: InkWell(
+                                      splashColor: Colors.blue.withAlpha(30),
+                                      onTap: () {
+                                        var value = parsed[index];
+                                        onTapsDetail(value, context);
+                                      },
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 5)),
-                                            Image(
-                                              image: _imagesFindApproval,
-                                              width: 50,
-                                              height: 50,
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 5)),
+                                                Image(
+                                                  image: _imagesFindApproval,
+                                                  width: 50,
+                                                  height: 50,
+                                                ),
+                                                Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 15)),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                        width: 200,
+                                                        child: Text(
+                                                          parsed[index]['loan']
+                                                              ['customer'],
+                                                          style: mainTitleBlack,
+                                                        )),
+                                                    Text(
+                                                        '${parsed[index]['rcode']}'),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 2)),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 2)),
+                                                    Text(
+                                                        '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 2)),
+                                                    Text(
+                                                        '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 2)),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 15)),
                                             Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: <Widget>[
-                                                Container(
-                                                    width: 200,
-                                                    child: Text(
-                                                      parsed[index]['loan']
-                                                          ['customer'],
-                                                      style: mainTitleBlack,
-                                                    )),
-                                                Text(
-                                                    '${parsed[index]['rcode']}'),
                                                 Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 2)),
+                                                status,
                                                 Padding(
                                                     padding: EdgeInsets.only(
-                                                        bottom: 2)),
-                                                Text(
-                                                    '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
+                                                  top: 5,
+                                                )),
+                                                if (parsed[index]['rdate'] !=
+                                                    '')
+                                                  Text(getDateTimeYMD(
+                                                      parsed[index]['rdate'])),
+                                                Text(''),
                                                 Padding(
                                                     padding: EdgeInsets.only(
-                                                        bottom: 2)),
-                                                Text(
-                                                    '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 2)),
+                                                  right: 100,
+                                                ))
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 2)),
-                                            status,
-                                            Padding(
-                                                padding: EdgeInsets.only(
-                                              top: 5,
-                                            )),
-                                            if (parsed[index]['rdate'] != '')
-                                              Text(getDateTimeYMD(
-                                                  parsed[index]['rdate'])),
-                                            Text(''),
-                                            Padding(
-                                                padding: EdgeInsets.only(
-                                              right: 100,
-                                            ))
-                                          ],
-                                        ),
-                                      ]))),
-                        );
-                      }),
-                ),
+                                          ]))),
+                            );
+                          }),
+                    )
+                  : Center(
+                      child: Container(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('no_data')))),
           endDrawer: Drawer(
             child: SingleChildScrollView(
               child: Container(
@@ -509,60 +541,6 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                         ],
                       ),
                     ),
-                    // Container(
-                    //   padding: EdgeInsets.all(10),
-                    //   child: TextField(
-                    //       onChanged: (v) => {getListCO(v)},
-                    //       decoration: InputDecoration(
-                    //           focusedBorder: UnderlineInputBorder(
-                    //             borderSide: BorderSide(color: logolightGreen),
-                    //           ),
-                    //           labelText: AppLocalizations.of(context)
-                    //                       .translate('search') +
-                    //                   ' CO' ??
-                    //               'Search CO',
-                    //           labelStyle: TextStyle(
-                    //               fontSize: 15, color: const Color(0xff0ABAB5)))),
-                    // ),
-                    //List CO
-                    // Padding(padding: EdgeInsets.only(top: 10)),
-                    // Text(
-                    //   AppLocalizations.of(context).translate('list_co') ??
-                    //       'List CO',
-                    //   style: TextStyle(
-                    //     fontWeight: fontWeight700,
-                    //   ),
-                    // ),
-                    // listCO != null
-                    //     ? Container(
-                    //         height: 180,
-                    //         padding: EdgeInsets.only(left: 10, right: 10),
-                    //         child: ListView.builder(
-                    //             itemCount:
-                    //                 listCO != null ? listCO.length : [].length,
-                    //             padding: const EdgeInsets.only(top: 10.0),
-                    //             itemBuilder: (context, index) {
-                    //               return Card(
-                    //                 child: InkWell(
-                    //                   onTap: () => _onClickListCO(listCO[index]),
-                    //                   child: Center(
-                    //                     child: Container(
-                    //                         padding: EdgeInsets.all(5),
-                    //                         child: Text(
-                    //                           '${listCO[index]['uname']}',
-                    //                           style: TextStyle(
-                    //                               color: code ==
-                    //                                       listCO[index]['ucode']
-                    //                                   ? logolightGreen
-                    //                                   : Colors.black),
-                    //                         )),
-                    //                   ),
-                    //                 ),
-                    //               );
-                    //             }),
-                    //       )
-                    //     : Padding(padding: EdgeInsets.only(bottom: 1)),
-                    // //List Branch
                     Padding(padding: EdgeInsets.only(top: 10)),
                     Container(
                       alignment: Alignment.topLeft,
@@ -616,7 +594,9 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                         inputType: InputType.date,
                         onChanged: (v) {
                           setState(() {
-                            sdate = v != null ? v : DateTime.now();
+                            sdate = v != null
+                                ? v
+                                : DateTime(now.year, now.month, 1);
                           });
                         },
                         initialValue: DateTime(now.year, now.month, 1),

@@ -450,7 +450,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
   }
 
   Future onSubmite(context) async {
-    print('hello world');
     var url = baseURLInternal + 'loanDocuments';
     var uri = Uri.parse(url);
     var request = new http.MultipartRequest("POST", uri);
@@ -704,17 +703,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
     setState(() {
       _isLoading = true;
     });
-    print('loanCode 2: $loanCode');
-
-    print('branch 2: $branch');
-    print('user_ucode 2: $user_ucode');
-
-    print('headers: ${headers} 2');
-
     try {
       // send
-      print('hello world 3');
-
       var response = await request.send();
       final respStr = await response.stream.bytesToString();
       var json = jsonDecode(respStr);
@@ -769,9 +759,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
   final storage = new FlutterSecureStorage();
 
   Future onDelete(value, imageClear1, imageClear2) async {
-    print('imageClear1 : $imageClear1');
-    print('imageClear2 : $imageClear2');
-
     var token = await storage.read(key: 'user_token');
     try {
       final response = await api().post(

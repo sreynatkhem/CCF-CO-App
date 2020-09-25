@@ -22,6 +22,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   var code;
   var sdate;
   var edate;
+  var _isLoading;
 
   var totalCustomer;
   var totalApproved;
@@ -42,9 +43,24 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getReportSummary(_pageSize, _pageNumber, '', '', '', '', '');
-    getListBranches();
-    getListCO('');
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+      getReportSummary(_pageSize, _pageNumber, '', '', '', '', '')
+          .then((value) => {
+                setState(() {
+                  _isLoading = false;
+                })
+              })
+          .catchError((e) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+      getListBranches();
+      getListCO('');
+    }
   }
 
   /// Create one series with sample hard coded data.
@@ -137,9 +153,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                 listCO = value;
               }),
             })
-        .catchError((onError) {
-      logger().e('getListBranches onError:: ${onError}');
-    });
+        .catchError((onError) {});
   }
 
   Future getReportSummary(
@@ -148,7 +162,6 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
         .getApprovalHistorySummary(
             pageSize, pageNumber, statuses, codes, bcode, sdates, edates)
         .then((value) => {
-              logger().e('value:: ${value}'),
               value.forEach((v) => {
                     setState(() {
                       totalCustomer = v['totalCustomer'];
@@ -161,9 +174,8 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                     }),
                   }),
             })
-        .catchError((onError) {
-      logger().e('catchError onError:: ${onError}');
-    });
+        .catchError((onError) {});
+    return false;
   }
 
   final TextEditingController searchId = TextEditingController();
@@ -175,17 +187,42 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
       bcode = null;
       controllerEndDate.text = '';
       controllerStartDate.text = '';
+      _isLoading = true;
     });
-    getReportSummary(_pageSize, _pageNumber, '', '', '', '', '');
+
+    getReportSummary(_pageSize, _pageNumber, '', '', '', '', '')
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     getListBranches();
     Navigator.of(context).pop();
   }
 
   _applyEndDrawer() {
+    setState(() {
+      _isLoading = true;
+    });
     var startDate = sdate != null ? sdate : DateTime.now();
     var endDate = edate != null ? edate : DateTime.now();
     getReportSummary(
-        20, 1, '', '', bcode, startDate.toString(), endDate.toString());
+            20, 1, '', '', bcode, startDate.toString(), endDate.toString())
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              })
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
     Navigator.of(context).pop();
   }
 
@@ -235,139 +272,152 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
               MaterialPageRoute(builder: (context) => Home()),
               ModalRoute.withName("/Home")),
         ),
-        bodys: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 700,
-                padding: EdgeInsets.all(5),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: logolightGreen,
-                                  iconSizes: 25.0,
-                                  icons: Icons.face,
-                                  text: 'total_customer',
-                                  value: totalCustomer.toString(),
-                                )),
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: Colors.green,
-                                  iconSizes: 25.0,
-                                  icons: Icons.check_box,
-                                  text: 'total_approved',
-                                  value: totalApproved.toString(),
-                                )),
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: Colors.orange,
-                                  iconSizes: 25.0,
-                                  icons: Icons.replay,
-                                  text: 'total_processing',
-                                  value: totalProcessing.toString(),
-                                )),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: logolightGreen,
-                                  iconSizes: 25.0,
-                                  icons: Icons.cancel,
-                                  text: 'total_returned',
-                                  value: totalReturned.toString(),
-                                )),
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: Colors.red,
-                                  iconSizes: 25.0,
-                                  icons: Icons.receipt,
-                                  text: 'total_disapproved',
-                                  value: totalDisapproved.toString(),
-                                )),
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: logolightGreen,
-                                  iconSizes: 25.0,
-                                  icons: Icons.payment,
-                                  text: 'total_requested',
-                                  value: totalRequested.toString(),
-                                )),
-                          ],
-                        ),
-                        //New
-                        Row(
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2, right: 2, bottom: 5, top: 5),
-                                child: CardReport(
-                                  backgroundColors: logolightGreen,
-                                  iconSizes: 25.0,
-                                  icons: Icons.cancel,
-                                  text: 'total_loan',
-                                  value: totalLoan.toString(),
-                                )),
-                          ],
-                        ),
-                        //
-                        Expanded(
-                          child: charts.BarChart(
-                            _createSampleData(),
-                            animate: true,
-                            domainAxis: new charts.OrdinalAxisSpec(
-                                renderSpec: new charts.SmallTickRendererSpec(
+        bodys: _isLoading
+            ? Center(
+                child: Container(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      height: 700,
+                      padding: EdgeInsets.all(5),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: logolightGreen,
+                                        iconSizes: 25.0,
+                                        icons: Icons.face,
+                                        text: 'total_customer',
+                                        value: totalCustomer.toString(),
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: Colors.green,
+                                        iconSizes: 25.0,
+                                        icons: Icons.check_box,
+                                        text: 'total_approved',
+                                        value: totalApproved.toString(),
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: Colors.orange,
+                                        iconSizes: 25.0,
+                                        icons: Icons.replay,
+                                        text: 'total_processing',
+                                        value: totalProcessing.toString(),
+                                      )),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: logolightGreen,
+                                        iconSizes: 25.0,
+                                        icons: Icons.cancel,
+                                        text: 'total_returned',
+                                        value: totalReturned.toString(),
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: Colors.red,
+                                        iconSizes: 25.0,
+                                        icons: Icons.receipt,
+                                        text: 'total_disapproved',
+                                        value: totalDisapproved.toString(),
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: logolightGreen,
+                                        iconSizes: 25.0,
+                                        icons: Icons.payment,
+                                        text: 'total_requested',
+                                        value: totalRequested.toString(),
+                                      )),
+                                ],
+                              ),
+                              //New
+                              Row(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2, right: 2, bottom: 5, top: 5),
+                                      child: CardReport(
+                                        backgroundColors: logolightGreen,
+                                        iconSizes: 25.0,
+                                        icons: Icons.cancel,
+                                        text: 'total_loan',
+                                        value: totalLoan.toString(),
+                                      )),
+                                ],
+                              ),
+                              //
+                              Expanded(
+                                child: charts.BarChart(
+                                  _createSampleData(),
+                                  animate: true,
+                                  domainAxis: new charts.OrdinalAxisSpec(
+                                      renderSpec: new charts
+                                              .SmallTickRendererSpec(
 
-                                    // Tick and Label styling here.
-                                    labelStyle: new charts.TextStyleSpec(
-                                        fontSize: 10, // size in Pts.
-                                        color: charts.MaterialPalette.black),
+                                          // Tick and Label styling here.
+                                          labelStyle: new charts.TextStyleSpec(
+                                              fontSize: 10, // size in Pts.
+                                              color:
+                                                  charts.MaterialPalette.black),
 
-                                    // Change the line colors to match text color.
-                                    lineStyle: new charts.LineStyleSpec(
-                                        color: charts.MaterialPalette.black))),
+                                          // Change the line colors to match text color.
+                                          lineStyle: new charts.LineStyleSpec(
+                                              color: charts
+                                                  .MaterialPalette.black))),
 
-                            /// Assign a custom style for the measure axis.
-                            primaryMeasureAxis: new charts.NumericAxisSpec(
-                                renderSpec: new charts.GridlineRendererSpec(
+                                  /// Assign a custom style for the measure axis.
+                                  primaryMeasureAxis: new charts
+                                          .NumericAxisSpec(
+                                      renderSpec: new charts
+                                              .GridlineRendererSpec(
 
-                                    // Tick and Label styling here.
-                                    labelStyle: new charts.TextStyleSpec(
-                                        fontSize: 12, // size in Pts.
-                                        color: charts.MaterialPalette.black),
+                                          // Tick and Label styling here.
+                                          labelStyle: new charts.TextStyleSpec(
+                                              fontSize: 12, // size in Pts.
+                                              color:
+                                                  charts.MaterialPalette.black),
 
-                                    // Change the line colors to match text color.
-                                    lineStyle: new charts.LineStyleSpec(
-                                        color: charts.MaterialPalette.black))),
+                                          // Change the line colors to match text color.
+                                          lineStyle: new charts.LineStyleSpec(
+                                              color: charts
+                                                  .MaterialPalette.black))),
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
         endDrawer: Drawer(
           child: SingleChildScrollView(
             child: Container(
@@ -443,7 +493,8 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                       inputType: InputType.date,
                       onChanged: (v) {
                         setState(() {
-                          sdate = v != null ? v : DateTime.now();
+                          sdate =
+                              v != null ? v : DateTime(now.year, now.month, 1);
                         });
                       },
                       initialValue: DateTime(now.year, now.month, 1),
