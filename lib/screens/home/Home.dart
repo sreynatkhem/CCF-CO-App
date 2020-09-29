@@ -463,6 +463,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     const String toLaunch =
         'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
+    const String guildeLine =
+        'http://192.168.111.18:2020/policy/The%20Guidelines%20mobile%20application.pdf';
     var langCode = AppLocalizations.of(context).locale.languageCode;
     var test = storage.read(key: 'roles');
     test.then(
@@ -485,7 +487,7 @@ class _HomeState extends State<Home> {
               ),
               onPressed: () {
                 setState(() {
-                  _launched = _launchInBrowser(toLaunch);
+                  _launched = _launchInBrowser(guildeLine);
                 });
               }),
           // Using Stack to show Notification Badge
