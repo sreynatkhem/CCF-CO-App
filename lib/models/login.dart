@@ -10,7 +10,8 @@ class LoginModels {
       this.uid,
       this.uname,
       this.changePassword,
-      this.roles});
+      this.roles,
+      this.isapprover});
 
   String ucode;
   String uid;
@@ -18,6 +19,8 @@ class LoginModels {
   num level;
   String branch;
   String uname;
+  String isapprover;
+
   List<dynamic> roles;
   String changePassword;
 
@@ -28,6 +31,7 @@ class LoginModels {
       token: json['token'] as String,
       level: json['level'] as num,
       branch: json['branch'] as String,
+      isapprover: json['isapprover'] as String,
       uname: json['uname'] as String,
       changePassword: json['changePassword'] as String,
       roles: json['roles'] as List<dynamic>,

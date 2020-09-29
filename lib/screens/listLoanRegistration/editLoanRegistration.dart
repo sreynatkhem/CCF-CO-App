@@ -297,16 +297,14 @@ class _EditLoanRegister extends State {
         loanCode = parsed;
       });
       if (response.statusCode == 201) {
-        if (statusEdit == 'save') {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => CardDetailLoanRegitration(
-                  list: lcode,
-                ),
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => CardDetailLoanRegitration(
+                list: lcode,
               ),
-              ModalRoute.withName('/'));
-        }
+            ),
+            ModalRoute.withName('/'));
       }
     } catch (error) {
       print('errorgg: $error');
@@ -460,9 +458,7 @@ class _EditLoanRegister extends State {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Header(
-        headerTexts:
-            AppLocalizations.of(context).translate('edit_loans_registers') ??
-                'Edit Loans Register',
+        headerTexts: 'edit_loans_register' ?? 'Edit Loans Register',
         actionsNotification: <Widget>[
           // Using Stack to show edit registration
           new Stack(
@@ -498,6 +494,8 @@ class _EditLoanRegister extends State {
                               statusEdit = 'add';
                             });
                             await onAddFile(context);
+                            logger().e(
+                                'selectedValueCustmerName: ${selectedValueCustmerName}');
                           },
                           btnCancelText:
                               AppLocalizations.of(context).translate('no') ??

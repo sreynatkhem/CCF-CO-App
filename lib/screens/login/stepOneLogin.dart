@@ -101,6 +101,9 @@ class _LoginState extends State<Login> {
                     await storage.write(key: "branch", value: value[0].branch),
                     await storage.write(
                         key: "level", value: value[0].level.toString()),
+                    await storage.write(
+                        key: "isapprover",
+                        value: value[0].isapprover.toString()),
                     setState(() {
                       _isLoading = false;
                     }),
@@ -139,6 +142,10 @@ class _LoginState extends State<Login> {
                             key: "branch", value: value[0].branch),
                         await storage.write(
                             key: "level", value: value[0].level.toString()),
+                        await storage.write(
+                            key: "isapprover",
+                            value: value[0].isapprover.toString()),
+
                         _firebaseMessaging.getToken().then((String token) {
                           assert(token != null);
                           // setState(() {

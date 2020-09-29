@@ -11,6 +11,9 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
+
+import 'messageFromCEO.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -23,6 +26,7 @@ class _NotificationState extends State<NotificationScreen> {
   var totalRead;
   var listMessages;
   final storage = new FlutterSecureStorage();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -66,6 +70,80 @@ class _NotificationState extends State<NotificationScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _showDialog(value) {
+    slideDialog.showSlideDialog(
+      context: context,
+      child: Container(
+          child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width * 1,
+                child: Image.network(
+                  value['annpath'],
+                  width: MediaQuery.of(context).size.width * 1,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                  padding: EdgeInsets.only(top: 5),
+                  alignment: Alignment.center,
+                  child: Text(
+                    value['anntitle'],
+                    style: mainTitleBlack,
+                  )),
+              Container(
+                  padding: EdgeInsets.only(top: 5),
+                  alignment: Alignment.center,
+                  child: Text(
+                    value['anndes'],
+                  )),
+            ],
+          ),
+        ],
+      )),
+      barrierColor: Colors.white.withOpacity(0.7),
+      pillColor: logolightGreen,
+      backgroundColor: Colors.white,
+    );
+  }
+
+  Future onTapsAnnouncement(values) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AnnouncementDetail(
+                list: values,
+              )),
+    );
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    // await NotificationProvider()
+    //     .fetchNotificationAnnouncement(values['lcode'])
+    //     .then((value) => {
+    //           setState(() {
+    //             _isLoading = false;
+    //           }),
+    //           Navigator.push(
+    //             context,
+    //             MaterialPageRoute(
+    //                 builder: (context) => AnnouncementDetail(
+    //                       list: values,
+    //                     )),
+    //           )
+    //         })
+    //     .catchError((onError) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    // });
   }
 
   var isFetchingSuccessfully;
@@ -250,7 +328,14 @@ class _NotificationState extends State<NotificationScreen> {
                                                 Colors.blue.withAlpha(30),
                                             onTap: () {
                                               // var value = listMessages[index];
-                                              onTapsDetail(listMessages[index]);
+                                              if (listMessages[index]['data'] ==
+                                                  "announcement") {
+                                                onTapsAnnouncement(
+                                                    listMessages[index]);
+                                              } else {
+                                                onTapsDetail(
+                                                    listMessages[index]);
+                                              }
                                             },
                                             child: Row(
                                                 mainAxisAlignment:
@@ -281,17 +366,20 @@ class _NotificationState extends State<NotificationScreen> {
                                                                 .center,
                                                         children: <Widget>[
                                                           Container(
+                                                              width: 250,
                                                               child: Text(
-                                                            listMessages[index]
-                                                                ['title'],
-                                                            style:
-                                                                mainTitleBlack,
-                                                          )),
+                                                                listMessages[
+                                                                        index]
+                                                                    ['title'],
+                                                                style:
+                                                                    mainTitleBlack,
+                                                                maxLines: 1,
+                                                              )),
                                                           Container(
                                                             width: 260,
                                                             child: Text(
                                                               '${listMessages[index]['body']}',
-                                                              maxLines: 4,
+                                                              maxLines: 3,
                                                             ),
                                                           ),
                                                           // Padding(

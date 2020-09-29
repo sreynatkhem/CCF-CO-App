@@ -109,7 +109,7 @@
   "start_date": "ថ្ងៃ​ចាប់ផ្តើម",
   "end_date": "កាលបរិច្ឆេទបញ្ចប់",
   "reset": "កំណត់ឡើងវិញ",
-  "apply": "អនុវត្ត",
+  "apply": "ដាក់បញ្ចូល",
   "list_branch": "បញ្ជីសាខា",
   "list_co": "បញ្ជីCO",
   "personal_document_type": "ប្រភេទឯកសារផ្ទាល់ខ្លួន",
@@ -129,7 +129,7 @@
   "expected_date_required": "កាលបរិច្ឆេទរំពឹងទុក(*)",
   "expected_date": "កាលបរិច្ឆេទរំពឹង(*)",
   "irr_required": "IRR ទាមទា(*)",
-  "report_summary": "របាយការណ៍សង្ខេប",
+  "report_summary": "របាយការណ៍សរុប",
   "approval_summary": "សង្ខេបការអនុម័ត",
   "total_loan_application": "ពាក្យសុំកម្ចីសរុប",
   "total_request": "សំណើសរុប",
@@ -152,5 +152,11 @@
   "report_return": "របាយការណ៍ត្រឡប់",
   "do_you_want_to_exit": "តើអ្នកចង់ចាកចេញទេ?",
   "irr": "IRR",
-  "no_data": "ពុំមានទិន្នន័យ"
+  "no_data": "ពុំមានទិន្នន័យ",
+  "add_referent_document": "បន្ថែមឯកសារយោង",
+  "employee": "និយោជិក",
+  "interest": "ការប្រាក់",
+  "please_enter_comment": "សូមបញ្ចូលមតិយោបល់...",
+  "announment": "សេចក្តីជូនដំណឹង",
+  "please_select_document": "សូមជ្រើសរើសឯកសារ"
 }

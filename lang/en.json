@@ -153,5 +153,11 @@
   "do_you_want_to_exit": "Do you want to exit?",
   "loan_product": "Loan Product",
   "irr": "IRR",
-  "no_data": "No Data"
+  "no_data": "No Data",
+  "add_referent_document": "Add Referent Document",
+  "employee": "Employee",
+  "interest": "Interest",
+  "please_enter_comment": "Please enter comment...",
+  "announment": "Announment",
+  "please_select_document": "Please select document"
 }

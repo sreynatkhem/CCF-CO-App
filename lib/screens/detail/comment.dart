@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,9 @@ class _CommentsState extends State<Comments> {
         maxLength: 150,
         controller: controller,
         decoration: InputDecoration(
-          hintText: "Enter your comments here ",
+          hintText:
+              AppLocalizations.of(context).translate('please_enter_comment') ??
+                  "Please enter comment...",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),
             borderSide: BorderSide(width: 1, color: logolightGreen),

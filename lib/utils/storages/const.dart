@@ -32,6 +32,12 @@ final mainTitleStyle = TextStyle(
     color: Colors.white,
     fontWeight: fontWeight700);
 
+final mainTitleStyleBlack = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: fontSizeSm,
+    color: Colors.black,
+    fontWeight: fontWeight700);
+
 final textTextStyle = TextStyle(
     fontFamily: fontFamily,
     fontSize: fontSizeXs,

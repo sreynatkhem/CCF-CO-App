@@ -37,6 +37,29 @@ class NotificationProvider with ChangeNotifier {
     }
   }
 
+  Future fetchNotificationAnnouncement(number) async {
+    var token = await storage.read(key: 'user_token');
+    try {
+      final response = await api().get(
+        baseURLInternal + 'announcements/' + number,
+        headers: {
+          "contentType": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      );
+      final list = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        successfully = true;
+      } else {
+        successfully = false;
+      }
+      notifyListeners();
+      return list;
+    } catch (error) {
+      logger().i('error: ${error}');
+    }
+  }
+
   Future getNotification(
     _pageSize,
     _pageNumber,
@@ -82,6 +105,22 @@ class NotificationProvider with ChangeNotifier {
       return parsed;
     } catch (error) {
       logger().i('error: ${error}');
+    }
+  }
+
+  Future fetchMessageFromCEO() async {
+    final storage = new FlutterSecureStorage();
+    var token = await storage.read(key: 'user_token');
+    try {
+      final response = await api()
+          .get(baseURLInternal + 'Announcements/CEOMessage', headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      });
+      final parsed = jsonDecode(response.body);
+      return parsed;
+    } catch (error) {
+      logger().e(error);
     }
   }
 

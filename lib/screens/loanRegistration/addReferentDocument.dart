@@ -730,7 +730,21 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _isLoading = false;
       });
+      showInSnackBar(
+          AppLocalizations.of(context).translate('please_select_document') ??
+              'Please select document',
+          Colors.redAccent);
     }
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKeyAddDocument =
+      new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value, colorsBackground) {
+    _scaffoldKeyAddDocument.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: colorsBackground,
+    ));
   }
 
   showDailog(context, value, imageClear1, imageClear2) {
@@ -781,7 +795,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
   @override
   Widget build(BuildContext context) {
     return Header(
-      headerTexts: "Add Referent Document",
+      keys: _scaffoldKeyAddDocument,
+      headerTexts: "add_referent_document",
       actionsNotification: <Widget>[
         // Using Stack to show edit registration
         new Stack(
