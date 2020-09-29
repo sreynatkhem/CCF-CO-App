@@ -323,7 +323,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
                                         child: Column(
                                       children: [
                                         Container(
-                                          height: 90,
+                                          height: 100,
                                           child: Card(
                                               shape: RoundedRectangleBorder(
                                                 side: BorderSide(

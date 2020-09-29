@@ -407,7 +407,7 @@ class _LoanRegister extends State {
   Widget build(BuildContext context) {
     var percentages = const AssetImage('assets/images/percentage.png');
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
-    final double bottomPadding = iphonex ? 16.0 : 0.0;
+    final double bottomPadding = iphonex ? 16.0 : 3.0;
     DateTime now = DateTime.now();
     return Header(
         keys: _scaffoldKeyCreateLoan,
@@ -1044,8 +1044,7 @@ class _LoanRegister extends State {
                           keyboardType: TextInputType.number,
                           validators: [
                             FormBuilderValidators.required(),
-                            FormBuilderValidators.max(99),
-                            FormBuilderValidators.min(1)
+                            FormBuilderValidators.min(0)
                           ],
                           inputFormatters: [
                             WhitelistingTextInputFormatter(

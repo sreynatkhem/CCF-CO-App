@@ -394,8 +394,11 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                                         padding:
                                                             EdgeInsets.only(
                                                                 bottom: 2)),
-                                                    Text(
-                                                        'Interest ${parsed[index]['intrate']}%/m, IRR ${irr}%'),
+                                                    Text(AppLocalizations.of(
+                                                                context)
+                                                            .translate(
+                                                                'interest') +
+                                                        '${parsed[index]['intrate']}%/m, IRR ${irr}%'),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.only(

@@ -29,6 +29,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
 class Home extends StatefulWidget {
@@ -66,8 +67,47 @@ class _HomeState extends State<Home> {
   @override
   void didChangeDependencies() {
     getStoreUser();
+    getMessageFromCEO();
     profile = const AssetImage('assets/images/profile_create.jpg');
     super.didChangeDependencies();
+  }
+
+  var messageFromCEO;
+  var listMessageFromCEO;
+  var _isLoading = false;
+  var langCode;
+
+  Future getMessageFromCEO() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    await Provider.of<NotificationProvider>(context, listen: false)
+        .fetchMessageFromCEO()
+        .then((value) => {
+              setState(() {
+                _isLoading = false;
+              }),
+              langCode = AppLocalizations.of(context).locale.languageCode,
+              if (langCode == 'en')
+                {
+                  setState(() {
+                    listMessageFromCEO = value['en'];
+                  }),
+                }
+              else
+                {
+                  setState(() {
+                    listMessageFromCEO = value['kh'];
+                  }),
+                }
+            })
+        .catchError((onError) {
+      setState(() {
+        _isLoading = false;
+      });
+      logger().e("value: $onError");
+    });
   }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -79,26 +119,26 @@ class _HomeState extends State<Home> {
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         // _showItemDialog(message);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationScreen()),
-            ModalRoute.withName(""));
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => NotificationScreen()),
+        //     ModalRoute.withName(""));
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         // _navigateToItemDetail(message);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationScreen()),
-            ModalRoute.withName(""));
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => NotificationScreen()),
+        //     ModalRoute.withName(""));
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         // _navigateToItemDetail(message);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationScreen()),
-            ModalRoute.withName(""));
+        // Navigator.pushAndRemoveUntil(
+        //     context,
+        //     MaterialPageRoute(builder: (context) => NotificationScreen()),
+        //     ModalRoute.withName(""));
       },
     );
     _firebaseMessaging.requestNotificationPermissions(
@@ -404,8 +444,25 @@ class _HomeState extends State<Home> {
     //     false;
   }
 
+  Future<void> _launched;
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    const String toLaunch =
+        'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
     var langCode = AppLocalizations.of(context).locale.languageCode;
     var test = storage.read(key: 'roles');
     test.then(
@@ -421,8 +478,19 @@ class _HomeState extends State<Home> {
         ),
         headerTexts: AppLocalizations.of(context).translate('loans'),
         actionsNotification: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.help,
+                size: 25,
+              ),
+              onPressed: () {
+                setState(() {
+                  _launched = _launchInBrowser(toLaunch);
+                });
+              }),
           // Using Stack to show Notification Badge
           new Stack(
+            alignment: Alignment.center,
             children: <Widget>[
               new IconButton(
                   icon: Icon(
@@ -439,7 +507,7 @@ class _HomeState extends State<Home> {
               totalUnread != 0
                   ? new Positioned(
                       right: 11,
-                      top: 11,
+                      top: 14,
                       child: new Container(
                         padding: EdgeInsets.all(2),
                         decoration: new BoxDecoration(
@@ -464,154 +532,162 @@ class _HomeState extends State<Home> {
             ],
           ),
         ],
-        bodys: SizedBox.expand(
-          child: PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() => _currentIndex = index);
-            },
-            children: <Widget>[
-              Container(
-                child: Column(
+        bodys: _isLoading
+            ? Center(
+                child: Container(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : SizedBox.expand(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() => _currentIndex = index);
+                  },
                   children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: GridView.count(
-                          primary: false,
-                          padding: const EdgeInsets.only(
-                              left: 45.0, right: 45.0, top: 20),
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          crossAxisCount: 2,
-                          children: List.generate(userRoles.length, (index) {
-                            if (userRoles[index].toString() == '100001') {
-                              return MenuCard(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ApprovalLists()),
-                                ),
-                                color: logolightGreen,
-                                imageNetwork: list,
-                                text: AppLocalizations.of(context)
-                                    .translate('list_loan_approval'),
-                              );
-                            }
-                            if (userRoles[index].toString() == '100001') {
-                              return Padding(
-                                padding: EdgeInsets.all(10),
-                              );
-                            }
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: GridView.count(
+                                primary: false,
+                                padding: const EdgeInsets.only(
+                                    left: 45.0, right: 45.0, top: 20),
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                crossAxisCount: 2,
+                                children:
+                                    List.generate(userRoles.length, (index) {
+                                  if (userRoles[index].toString() == '100001') {
+                                    return MenuCard(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ApprovalLists()),
+                                      ),
+                                      color: logolightGreen,
+                                      imageNetwork: list,
+                                      text: AppLocalizations.of(context)
+                                          .translate('list_loan_approval'),
+                                    );
+                                  }
+                                  if (userRoles[index].toString() == '100001') {
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                    );
+                                  }
 
-                            if (userRoles[index].toString() == '100002') {
-                              if (langCode == 'en') {
-                                return MenuCard(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CustomerRegister()),
-                                  ),
-                                  color: logolightGreen,
-                                  imageNetwork: register,
-                                  text: AppLocalizations.of(context)
-                                          .translate('customers') ??
-                                      'Customer',
-                                  // AppLocalizations.of(context).locale.languageCode == 'en'
-                                  text2: AppLocalizations.of(context)
-                                          .translate('registration') ??
-                                      'Registration',
-                                );
-                              } else {
-                                return MenuCard(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CustomerRegister()),
-                                  ),
-                                  color: logolightGreen,
-                                  imageNetwork: register,
-                                  text: AppLocalizations.of(context)
-                                          .translate('customer_registration') ??
-                                      'Customer',
-                                );
-                              }
-                            }
-                            if (userRoles[index].toString() == '100002') {
-                              return Padding(
-                                padding: EdgeInsets.all(10),
-                              );
-                            }
-                            if (userRoles[index].toString() == '100003') {
-                              return MenuCard(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoanRegister()),
+                                  if (userRoles[index].toString() == '100002') {
+                                    if (langCode == 'en') {
+                                      return MenuCard(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CustomerRegister()),
+                                        ),
+                                        color: logolightGreen,
+                                        imageNetwork: register,
+                                        text: AppLocalizations.of(context)
+                                                .translate('customers') ??
+                                            'Customer',
+                                        // AppLocalizations.of(context).locale.languageCode == 'en'
+                                        text2: AppLocalizations.of(context)
+                                                .translate('registration') ??
+                                            'Registration',
+                                      );
+                                    } else {
+                                      return MenuCard(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CustomerRegister()),
+                                        ),
+                                        color: logolightGreen,
+                                        imageNetwork: register,
+                                        text: AppLocalizations.of(context)
+                                                .translate(
+                                                    'customer_registration') ??
+                                            'Customer',
+                                      );
+                                    }
+                                  }
+                                  if (userRoles[index].toString() == '100002') {
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                    );
+                                  }
+                                  if (userRoles[index].toString() == '100003') {
+                                    return MenuCard(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LoanRegister()),
+                                      ),
+                                      color: logolightGreen,
+                                      imageNetwork: loanRegistration,
+                                      text: AppLocalizations.of(context)
+                                              .translate('loan_registration') ??
+                                          'Loan Registration',
+                                    );
+                                  }
+                                  if (userRoles[index].toString() == '100003') {
+                                    return Padding(
+                                      padding: EdgeInsets.all(10),
+                                    );
+                                  }
+                                  if (userRoles[index].toString() == '100004') {
+                                    return Container(
+                                      width: 10,
+                                      height: 20,
+                                      child: MenuCard(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PolicyScreen()),
+                                        ),
+                                        color: logolightGreen,
+                                        imageNetwork: policy,
+                                        text: AppLocalizations.of(context)
+                                                .translate('policy') ??
+                                            'Policy',
+                                      ),
+                                    );
+                                  }
+                                  if (userRoles[index].toString() == '100005') {
+                                    return Text('');
+                                  }
+                                  if (userRoles[index].toString() == '100006') {
+                                    return Text('');
+                                  }
+                                }) // List View
                                 ),
-                                color: logolightGreen,
-                                imageNetwork: loanRegistration,
-                                text: AppLocalizations.of(context)
-                                        .translate('loan_registration') ??
-                                    'Loan Registration',
-                              );
-                            }
-                            if (userRoles[index].toString() == '100003') {
-                              return Padding(
-                                padding: EdgeInsets.all(10),
-                              );
-                            }
-                            if (userRoles[index].toString() == '100004') {
-                              return Container(
-                                width: 10,
-                                height: 20,
-                                child: MenuCard(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PolicyScreen()),
-                                  ),
-                                  color: logolightGreen,
-                                  imageNetwork: policy,
-                                  text: AppLocalizations.of(context)
-                                          .translate('policy') ??
-                                      'Policy',
-                                ),
-                              );
-                            }
-                            if (userRoles[index].toString() == '100005') {
-                              return Text('');
-                            }
-                            if (userRoles[index].toString() == '100006') {
-                              return Text('');
-                            }
-                          }) // List View
                           ),
+                          CardMessage(
+                              title: AppLocalizations.of(context)
+                                      .translate('message_from_ceo') ??
+                                  'Message from CEO',
+                              textMessage: listMessageFromCEO)
+                        ],
+                      ),
                     ),
-                    CardMessage(
-                      title: AppLocalizations.of(context)
-                              .translate('message_from_ceo') ??
-                          'Message from CEO',
-                      textMessage: AppLocalizations.of(context)
-                              .translate('our_reputation_for_corporate') ??
-                          'Our reputation for corporate integrity attracts great team members, great customers, and even greater opportunities. It is a key to our long-term success. I am continually impressed by the resourcefulness and entrepreneurial quality displayed by our people and the exceptional value they bring to the company',
-                    )
+                    Container(
+                      color: Colors.white,
+                    ),
+                    Container(
+                      color: Colors.white,
+                    ),
+                    Container(
+                      color: Colors.white,
+                    ),
                   ],
                 ),
               ),
-              Container(
-                color: Colors.white,
-              ),
-              Container(
-                color: Colors.white,
-              ),
-              Container(
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
         bottomNavigationBars: BottomNavyBar(
           selectedIndex: _currentIndex,
           onItemSelected: (index) {

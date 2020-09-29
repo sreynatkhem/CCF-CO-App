@@ -325,25 +325,25 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
               ModalRoute.withName('/')),
         ),
         headerTexts: 'detail_loan_registration',
-        actionsNotification: <Widget>[
-          // Using Stack to show edit registration
-          new Stack(
-            children: <Widget>[
-              new IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    size: 25,
-                  ),
-                  onPressed: () {
-                    if (statusLoan != 'R' &&
-                        statusLoan != 'D' &&
-                        statusLoan != 'A') {
-                      onEdit(list);
-                    }
-                  }),
-            ],
-          ),
-        ],
+        // actionsNotification: <Widget>[
+        //   // Using Stack to show edit registration
+        //   new Stack(
+        //     children: <Widget>[
+        //       new IconButton(
+        //           icon: Icon(
+        //             Icons.edit,
+        //             size: 25,
+        //           ),
+        //           onPressed: () {
+        //             if (statusLoan != 'R' &&
+        //                 statusLoan != 'D' &&
+        //                 statusLoan != 'A') {
+        //               onEdit(list);
+        //             }
+        //           }),
+        //     ],
+        //   ),
+        // ],
         bodys: FutureBuilder<List<CreateLoan>>(
             future: detiaLoan,
             builder: (context, snapshot) {

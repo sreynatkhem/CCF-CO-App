@@ -36,6 +36,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   var response = [];
   var futureLoanApproval;
   final storage = new FlutterSecureStorage();
+  var _isApprover;
 
   @override
   void didChangeDependencies() {
@@ -51,6 +52,13 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     if (list != null) {
       getDetail();
     }
+    if (mounted) {
+      getIsApproval();
+    }
+  }
+
+  getIsApproval() async {
+    _isApprover = await storage.read(key: 'roles');
   }
 
   var listDetail;
@@ -337,7 +345,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                     ),
                   ),
                 ),
-                if (hideBottomTabBar == true)
+                if (hideBottomTabBar == true || _isApprover == 'Y')
                   Align(
                     heightFactor: 1,
                     alignment: FractionalOffset.bottomCenter,

@@ -1,4 +1,5 @@
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
+import 'package:chokchey_finance/screens/policy/card.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -41,44 +42,15 @@ class _PolicyScreenState extends State<PolicyScreen> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(bottom: 5.0),
-                child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: logolightGreen, width: 1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _launched = _launchInBrowser(toLaunch);
-                            });
-                          },
-                          splashColor: Colors.blue.withAlpha(30),
-                          child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 60, left: 10)),
-                                Image(
-                                  image: hrPolicy,
-                                  width: 45,
-                                  height: 45,
-                                ),
-                                Padding(padding: EdgeInsets.only(right: 10)),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(AppLocalizations.of(context)
-                                        .translate('loan_check_list')),
-                                  ],
-                                ),
-                              ])),
-                    )),
-              )
+              CardPolicy(
+                imageCard: hrPolicy,
+                onTap: () {
+                  setState(() {
+                    _launched = _launchInBrowser(toLaunch);
+                  });
+                },
+                title: 'loan_check_list',
+              ),
             ],
           ),
         ],
