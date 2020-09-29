@@ -713,6 +713,10 @@ class _GridHeaderState extends State<AddReferentDocument> {
       });
 
       if (response.statusCode == 200) {
+        showInSnackBar(
+            AppLocalizations.of(context).translate('successfully') ??
+                'Successfully',
+            Colors.redAccent);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListLoanApprovals()),
