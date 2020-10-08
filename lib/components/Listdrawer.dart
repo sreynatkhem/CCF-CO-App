@@ -5,8 +5,9 @@ class CustomListTile extends StatelessWidget {
   final IconData icon;
   final String text;
   final Function onTap;
+  final isFlag;
 
-  CustomListTile(this.icon, this.text, this.onTap);
+  CustomListTile(this.icon, this.text, this.onTap, this.isFlag);
   @override
   Widget build(BuildContext context) {
     //ToDO
@@ -25,6 +26,12 @@ class CustomListTile extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
+                        if (isFlag != null)
+                          Image(
+                            image: isFlag,
+                            height: 20,
+                            fit: BoxFit.fill,
+                          ),
                         Icon(
                           icon,
                           size: 20,
