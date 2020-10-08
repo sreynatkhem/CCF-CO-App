@@ -328,62 +328,77 @@ class _HomeState extends State<Home> {
                         AppLocalizations.of(context)
                                 .translate('approval_list') ??
                             'Approval List',
-                        () => {onListLoanApproval()}),
+                        () => {onListLoanApproval()},
+                        null),
                     CustomListTile(
                         Icons.face,
                         AppLocalizations.of(context)
                                 .translate('customer_list') ??
                             'Customer List',
-                        () => {onListCustomerRegistration()}),
+                        () => {onListCustomerRegistration()},
+                        null),
                     CustomListTile(
                         Icons.payment,
                         AppLocalizations.of(context)
                                 .translate('loan_register_list') ??
                             'Loan Register List',
-                        () => {onListLoanRegistration()}),
+                        () => {onListLoanRegistration()},
+                        null),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)
                                 .translate('report_approval') ??
                             'Report Approval',
-                        () => {onListApprovalSummary()}),
+                        () => {onListApprovalSummary()},
+                        null),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)
                                 .translate('report_disapproval') ??
                             'Report Disapproval',
-                        () => {onListDisApprovalSummary()}),
+                        () => {onListDisApprovalSummary()},
+                        null),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)
                                 .translate('report_request') ??
                             'Report Request',
-                        () => {onListRequestSummary()}),
+                        () => {onListRequestSummary()},
+                        null),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)
                                 .translate('report_return') ??
                             'Report Return',
-                        () => {onListReturnSummary()}),
+                        () => {onListReturnSummary()},
+                        null),
                     CustomListTile(
                         Icons.insert_chart,
                         AppLocalizations.of(context)
                                 .translate('report_summary') ??
                             'Report Summary',
-                        () => {onListApprovalHistory()}),
+                        () => {onListApprovalHistory()},
+                        null),
                     CustomListTile(
-                        Icons.language,
-                        AppLocalizations.of(context)
-                                .translate('english_language') ??
-                            'English',
-                        () => {englishLanguage()}),
+                      null,
+                      AppLocalizations.of(context)
+                              .translate('english_language') ??
+                          'English',
+                      () => {englishLanguage()},
+                      english,
+                    ),
                     CustomListTile(
-                        Icons.language, 'ភាសាខ្មែរ', () => {khmerLanguage()}),
+                      null,
+                      'ភាសាខ្មែរ',
+                      () => {khmerLanguage()},
+                      khmer,
+                    ),
                     CustomListTile(
                         Icons.lock,
                         AppLocalizations.of(context).translate('log_out') ??
                             'Log Out',
-                        () => {onLogOut()}),
+                        () => {onLogOut()},
+                        null),
                     Padding(padding: EdgeInsets.only(top: 10)),
                   ],
                 ),
@@ -458,6 +473,9 @@ class _HomeState extends State<Home> {
       throw 'Could not launch $url';
     }
   }
+
+  final english = const AssetImage('assets/images/english.png');
+  final khmer = const AssetImage('assets/images/khmer.png');
 
   @override
   Widget build(BuildContext context) {
