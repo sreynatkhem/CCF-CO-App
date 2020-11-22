@@ -159,5 +159,14 @@
   "interest": "Interest",
   "please_enter_comment": "Please enter comment...",
   "announment": "Announment",
-  "please_select_document": "Please select document"
+  "please_select_document": "Please select document",
+  "exchange_rate":"Exchange Rate:",
+  "select_currency":"Select Currency",
+  "gross_disbursement_amount": "Gross Disbursement Amount",
+  "loana_amount_in_USD":  "Loan Amount in USD",
+  "loan_term": "Loan Term",
+  "monthly_interest": "Monthly Interest",
+  "monthly_fee_rate": "Monthly Fee Rate",
+  "admin_fee_rate": "Admin Fee Rate",
+  "income": "Income"
 }

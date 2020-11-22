@@ -77,25 +77,25 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
       var bcodes;
       var ucode;
       if (level == '3') {
-        bcodes = bcode != null ? bcode : branch;
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
         btlcode = '';
-        ucode = code != null ? code : '';
+        ucode = codes != null && codes != "" ? codes : "";
       }
 
       if (level == '2') {
-        bcodes = bcode != null ? bcode : branch;
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
         btlcode = user_ucode;
         ucode = code != null ? code : '';
       }
 
       if (level == '1') {
-        bcodes = bcode != null ? bcode : branch;
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
         ucode = user_ucode;
         btlcode = '';
       }
 
       if (level == '4' || level == '5' || level == '6') {
-        bcodes = bcode != null ? bcode : '';
+        bcodes = bcode != null && bcode != "" ? bcode : '';
         btlcode = '';
         ucode = code != null ? code : '';
       }
@@ -180,7 +180,6 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
     var endDate = edate != null ? edate : DateTime.now();
     getListCustomer(20, 1, '', '', bcode, startDate, endDate)
         .then((value) => {
-              logger().i("value: $value"),
               setState(() {
                 _isLoading = false;
               }),

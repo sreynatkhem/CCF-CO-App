@@ -12,6 +12,7 @@ import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
+import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/index.dart';
@@ -696,9 +697,7 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
-                    Container(
-                      color: Colors.white,
-                    ),
+                    IRRScreen(),
                     Container(
                       color: Colors.white,
                     ),
@@ -723,9 +722,8 @@ class _HomeState extends State<Home> {
                 activeColor: logolightGreen),
             BottomNavyBarItem(
                 title: Text(
-                    AppLocalizations.of(context).translate('categories') ??
-                        'Category'),
-                icon: Icon(Icons.apps),
+                    AppLocalizations.of(context).translate('irr') ?? 'IRR'),
+                icon: Icon(Icons.calculate),
                 textAlign: TextAlign.center,
                 activeColor: logolightGreen),
             BottomNavyBarItem(
