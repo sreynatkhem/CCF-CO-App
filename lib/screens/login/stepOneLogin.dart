@@ -81,6 +81,16 @@ class _LoginState extends State<Login> {
   //   );
   // }
 
+  final GlobalKey<ScaffoldState> _scaffoldKeySignUp =
+      new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value, colorsBackground) {
+    _scaffoldKeySignUp.currentState.showSnackBar(new SnackBar(
+      content: new Text(value),
+      backgroundColor: colorsBackground,
+    ));
+  }
+
 // Create storage Login
   Future<void> onClickLogin(context) async {
     final String user_id = id.text;
@@ -94,6 +104,7 @@ class _LoginState extends State<Login> {
           .then((value) async => {
                 if (value[0].token != null)
                   {
+                    showInSnackBar('Welcome!', logolightGreen),
                     await storage.write(
                         key: "user_ucode", value: value[0].ucode),
                     await storage.write(
@@ -160,11 +171,16 @@ class _LoginState extends State<Login> {
                             ModalRoute.withName("/login"))
                       }
                   }
+                else
+                  {
+                    showInSnackBar('Invalid User and Password!', Colors.red),
+                  }
               })
           .catchError((e) => {
                 setState(() {
                   _isLoading = false;
                 }),
+                showInSnackBar('Invalid User and Password!', Colors.red),
               });
     } catch (error) {
       setState(() {
@@ -193,6 +209,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKeySignUp,
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,

@@ -403,6 +403,12 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                                         padding:
                                                             EdgeInsets.only(
                                                                 bottom: 2)),
+                                                    Text(
+                                                        '${parsed[index]['user'].substring(9)} - ${parsed[index]['branch']}'),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 2)),
                                                   ],
                                                 ),
                                               ],

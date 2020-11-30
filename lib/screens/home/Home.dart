@@ -107,7 +107,6 @@ class _HomeState extends State<Home> {
       setState(() {
         _isLoading = false;
       });
-      logger().e("value: $onError");
     });
   }
 

@@ -168,5 +168,15 @@
   "monthly_interest": "Monthly Interest",
   "monthly_fee_rate": "Monthly Fee Rate",
   "admin_fee_rate": "Admin Fee Rate",
-  "income": "Income"
+  "income": "Income",
+  "add": "Add",
+  "clear_list":"Clear List",
+  "clear_form": "Clear Form",
+  "reset_irr": "Reset",
+  "no_irr": "No",
+  "currency": "Currency",
+  "amount_USD" : "Amount USD",
+  "clear_successfully": "Clear Successfully",
+  "usd": "USD"
+
 }

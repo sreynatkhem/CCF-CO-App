@@ -175,7 +175,6 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
       _isLoading = true;
     });
     DateTime now = DateTime.now();
-    logger().e('sdate: $sdate');
     var startDate = sdate != null ? sdate : DateTime(now.year, now.month, 1);
     var endDate = edate != null ? edate : DateTime.now();
     getListCustomer(20, 1, '', '', bcode, startDate, endDate)
@@ -271,7 +270,7 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                         itemCount: parsed.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
-                            height: 90,
+                            height: 120,
                             padding: EdgeInsets.only(left: 5, right: 5, top: 3),
                             child: Card(
                                 shape: RoundedRectangleBorder(
@@ -325,6 +324,14 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                                                           bottom: 2)),
                                                   Text(
                                                       '${parsed[index]['phone1']}'),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2)),
+                                                  Text(
+                                                      '${parsed[index]['userName'].substring(9)} - ${parsed[index]['branchName']}'),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2)),
                                                 ],
                                               ),
                                             ],
