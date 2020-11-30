@@ -272,7 +272,6 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
         .getLoanApproval(20, 1, '', '', '', '', '');
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
-    logger().e('_isApprover: $_isApprover');
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(

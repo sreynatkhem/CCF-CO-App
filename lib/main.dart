@@ -9,7 +9,6 @@ import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
@@ -21,7 +20,6 @@ import 'providers/login.dart';
 
 Future<void> main() async {
   Provider.debugCheckInvalidValueType = null;
-  Stetho.initialize();
   runApp(MyHomePage());
 }
 

@@ -158,5 +158,25 @@
   "interest": "ការប្រាក់",
   "please_enter_comment": "សូមបញ្ចូលមតិយោបល់...",
   "announment": "សេចក្តីជូនដំណឹង",
-  "please_select_document": "សូមជ្រើសរើសឯកសារ"
+  "please_select_document": "សូមជ្រើសរើសឯកសារ",
+  "exchange_rate":"អត្រា​ប្តូ​រ​ប្រាក់:",
+  "select_currency": "ជ្រើសរើសរូបិយប័ណ្ណ",
+  "gross_disbursement_amount": "ចំនួនទឹកប្រាក់នៃការទូទាត់សរុប",
+  "loana_amount_in_USD":  "ចំនួនប្រាក់កម្ចីគិតជាដុល្លារ",
+  "loan_term": "រយៈពេលខ្ចី",
+  "monthly_interest": "ការប្រាក់ប្រចាំខែ",
+  "monthly_fee_rate": "អត្រាថ្លៃសេវាប្រចាំខែ",
+  "admin_fee_rate": "អត្រាថ្លៃរដ្ឋបាល",
+  "income": "ប្រាក់ចំណូល",
+  "add": "បន្ថែម",
+  "clear_list": "សម្អាត​បញ្ជី",
+  "clear_form": "កំណត់ឡើងវិញ",
+  "reset_irr": "កំណត់ឡើងវិញ",
+  "no_irr": "លេខសម្គាល់",
+  "currency": "រូបិយប័ណ្ណ",
+  "amount_USD" : "ចំនួនដុល្លារ",
+  "clear_successfully": "ជម្រះដោយជោគជ័យ",
+  "usd": "ដុល្លារ​អាមេរិក"
+
+
 }

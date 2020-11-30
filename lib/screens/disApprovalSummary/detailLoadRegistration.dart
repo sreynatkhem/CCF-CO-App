@@ -521,14 +521,8 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                                     if (_imageDocument !=
                                                                         null)
                                                                       InkWell(
-                                                                        onTap:
-                                                                            () =>
-                                                                                {
-                                                                          // convertImagePath(
-                                                                          //     _imageDocument[index]),
-                                                                          // logger()
-                                                                          //     .e('inkWell: ${_imageDocument[index]}')
-                                                                        },
+                                                                        onTap: () =>
+                                                                            {},
                                                                         child: Image
                                                                             .memory(
                                                                           _bytes,
