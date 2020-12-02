@@ -31,7 +31,7 @@ class ApprovalSummaryProvider {
       if (level == '2') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
         btlcode = user_ucode;
-        ucode = code != null ? code : '';
+        ucode = code != null && code != "" ? code : '';
       }
 
       if (level == '1') {
@@ -43,7 +43,7 @@ class ApprovalSummaryProvider {
       if (level == '4' || level == '5' || level == '6') {
         bcodes = bcode != null && bcode != "" ? bcode : '';
         btlcode = '';
-        ucode = code != null ? code : '';
+        ucode = code != null && code != "" ? code : '';
       }
       bodyRow =
           "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";

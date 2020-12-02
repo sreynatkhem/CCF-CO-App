@@ -114,3 +114,8 @@ void showInSnackBar(String value, colorsBackground, scaffoldKey) {
     backgroundColor: colorsBackground,
   ));
 }
+
+isIphoneX(context) {
+  final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
+  return iphonex;
+}

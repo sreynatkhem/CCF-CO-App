@@ -75,27 +75,27 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       var bcodes;
       var ucode;
       if (level == '3') {
-        bcodes = bcode != null ? bcode : branch;
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
         btlcode = '';
-        ucode = code != null ? code : '';
+        ucode = codes != null && codes != "" ? codes : "";
       }
 
       if (level == '2') {
-        bcodes = bcode != null ? bcode : branch;
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
         btlcode = user_ucode;
-        ucode = code != null ? code : '';
+        ucode = code != null && code != "" ? code : '';
       }
 
       if (level == '1') {
-        bcodes = bcode != null ? bcode : branch;
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
         ucode = user_ucode;
         btlcode = '';
       }
 
       if (level == '4' || level == '5' || level == '6') {
-        bcodes = bcode != null ? bcode : '';
+        bcodes = bcode != null && bcode != "" ? bcode : '';
         btlcode = '';
-        ucode = code != null ? code : '';
+        ucode = code != null && code != "" ? code : '';
       }
       bodyRow =
           "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";

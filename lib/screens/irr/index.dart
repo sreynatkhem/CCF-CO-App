@@ -828,7 +828,6 @@ class _IRRScreenState extends State<IRRScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(''),
                           RaisedButton(
                             color: logolightGreen,
                             child: Text(
@@ -1023,7 +1022,33 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                             },
                           ),
-                          Text('')
+                          RaisedButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              setState(() {
+                                data = [];
+                                sumAmount = [];
+                                sumIncome = [];
+                                _isShowDefault = true;
+                                finalSumIRR = null;
+                                FocusScope.of(context)
+                                    .unfocus(disposition: disposition);
+                                showInSnackBar(
+                                    AppLocalizations.of(context)
+                                            .translate('clear_successfully') ??
+                                        'Clear Successfully',
+                                    logolightGreen);
+                              });
+                            },
+                            child: Container(
+                              height: 15,
+                              child: Text(
+                                AppLocalizations.of(context)
+                                        .translate('clear_list') ??
+                                    "Clear List",
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -1113,37 +1138,37 @@ class _IRRScreenState extends State<IRRScreen> {
                                             "Income",
                                         style: TextStyle(fontSize: fontSizeXxs),
                                       )),
-                                  Expanded(
-                                      flex: 1,
-                                      child: RaisedButton(
-                                        padding: EdgeInsets.all(0),
-                                        onPressed: () {
-                                          setState(() {
-                                            data = [];
-                                            sumAmount = [];
-                                            sumIncome = [];
-                                            _isShowDefault = true;
-                                            finalSumIRR = null;
-                                            FocusScope.of(context).unfocus(
-                                                disposition: disposition);
-                                            showInSnackBar(
-                                                AppLocalizations.of(context)
-                                                        .translate(
-                                                            'clear_successfully') ??
-                                                    'Clear Successfully',
-                                                logolightGreen);
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 15,
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                    .translate('clear_list') ??
-                                                "Clear List",
-                                            style: TextStyle(fontSize: 11),
-                                          ),
-                                        ),
-                                      )),
+                                  // Expanded(
+                                  //     flex: 1,
+                                  //     child: RaisedButton(
+                                  //       padding: EdgeInsets.all(0),
+                                  //       onPressed: () {
+                                  //         setState(() {
+                                  //           data = [];
+                                  //           sumAmount = [];
+                                  //           sumIncome = [];
+                                  //           _isShowDefault = true;
+                                  //           finalSumIRR = null;
+                                  //           FocusScope.of(context).unfocus(
+                                  //               disposition: disposition);
+                                  //           showInSnackBar(
+                                  //               AppLocalizations.of(context)
+                                  //                       .translate(
+                                  //                           'clear_successfully') ??
+                                  //                   'Clear Successfully',
+                                  //               logolightGreen);
+                                  //         });
+                                  //       },
+                                  //       child: Container(
+                                  //         height: 15,
+                                  //         child: Text(
+                                  //           AppLocalizations.of(context)
+                                  //                   .translate('clear_list') ??
+                                  //               "Clear List",
+                                  //           style: TextStyle(fontSize: 11),
+                                  //         ),
+                                  //       ),
+                                  //     )),
                                 ],
                               ),
                             ),
@@ -1170,15 +1195,17 @@ class _IRRScreenState extends State<IRRScreen> {
                                         Expanded(
                                             flex: 0,
                                             child: Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 5),
                                                 child: Text(
-                                              data[index]["Currency"],
-                                              style: TextStyle(
-                                                  fontSize: fontSizeXxs),
-                                            ))),
+                                                  data[index]["Currency"],
+                                                  style: TextStyle(
+                                                      fontSize: fontSizeXxs),
+                                                ))),
                                         Expanded(
                                             flex: 2,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 50),
+                                              margin: EdgeInsets.only(left: 53),
                                               child: Text(
                                                 data[index]["Amount"],
                                                 style: TextStyle(
@@ -1188,7 +1215,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                         Expanded(
                                             flex: 1,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 10),
+                                              margin: EdgeInsets.only(left: 3),
                                               child: Text(
                                                 data[index]["IRR"],
                                                 style: TextStyle(
@@ -1199,20 +1226,20 @@ class _IRRScreenState extends State<IRRScreen> {
                                             flex: 1,
                                             child: Container(
                                               width: 200,
-                                              margin: EdgeInsets.only(left: 10),
+                                              margin: EdgeInsets.only(left: 0),
                                               child: Text(
                                                 data[index]["Income"],
                                                 style: TextStyle(
                                                     fontSize: fontSizeXxs),
                                               ),
                                             )),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Text(
-                                              "",
-                                              style: TextStyle(
-                                                  fontSize: fontSizeXxs),
-                                            )),
+                                        // Expanded(
+                                        //     flex: 1,
+                                        //     child: Text(
+                                        //       "",
+                                        //       style: TextStyle(
+                                        //           fontSize: fontSizeXxs),
+                                        //     )),
                                       ],
                                     ),
                                   ),
