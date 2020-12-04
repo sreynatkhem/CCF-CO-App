@@ -220,6 +220,7 @@ class _HomeState extends State<Home> {
         ModalRoute.withName(""));
   }
 
+  onListGroupLoan() {}
   onListLoanRegistration() async {
     Navigator.pushAndRemoveUntil(
         context,
@@ -318,89 +319,98 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               flex: 1,
-              child: Container(
-                padding: EdgeInsets.only(top: 10),
-                color: Colors.white,
-                child: Column(
-                  children: <Widget>[
-                    CustomListTile(
-                        Icons.monetization_on,
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(top: 10),
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      CustomListTile(
+                          Icons.monetization_on,
+                          AppLocalizations.of(context)
+                                  .translate('approval_list') ??
+                              'Approval List',
+                          () => {onListLoanApproval()},
+                          null),
+                      CustomListTile(
+                          Icons.face,
+                          AppLocalizations.of(context)
+                                  .translate('customer_list') ??
+                              'Customer List',
+                          () => {onListCustomerRegistration()},
+                          null),
+                      CustomListTile(
+                          Icons.payment,
+                          AppLocalizations.of(context)
+                                  .translate('loan_register_list') ??
+                              'Loan Register List',
+                          () => {onListLoanRegistration()},
+                          null),
+                      // CustomListTile(
+                      //     Icons.group_add,
+                      //     AppLocalizations.of(context)
+                      //             .translate('group_loan') ??
+                      //         'Group Loan',
+                      //     () => {onListGroupLoan()},
+                      //     null),
+                      CustomListTile(
+                          Icons.insert_chart,
+                          AppLocalizations.of(context)
+                                  .translate('report_approval') ??
+                              'Report Approval',
+                          () => {onListApprovalSummary()},
+                          null),
+                      CustomListTile(
+                          Icons.insert_chart,
+                          AppLocalizations.of(context)
+                                  .translate('report_disapproval') ??
+                              'Report Disapproval',
+                          () => {onListDisApprovalSummary()},
+                          null),
+                      CustomListTile(
+                          Icons.insert_chart,
+                          AppLocalizations.of(context)
+                                  .translate('report_request') ??
+                              'Report Request',
+                          () => {onListRequestSummary()},
+                          null),
+                      CustomListTile(
+                          Icons.insert_chart,
+                          AppLocalizations.of(context)
+                                  .translate('report_return') ??
+                              'Report Return',
+                          () => {onListReturnSummary()},
+                          null),
+                      CustomListTile(
+                          Icons.insert_chart,
+                          AppLocalizations.of(context)
+                                  .translate('report_summary') ??
+                              'Report Summary',
+                          () => {onListApprovalHistory()},
+                          null),
+                      CustomListTile(
+                        null,
                         AppLocalizations.of(context)
-                                .translate('approval_list') ??
-                            'Approval List',
-                        () => {onListLoanApproval()},
-                        null),
-                    CustomListTile(
-                        Icons.face,
-                        AppLocalizations.of(context)
-                                .translate('customer_list') ??
-                            'Customer List',
-                        () => {onListCustomerRegistration()},
-                        null),
-                    CustomListTile(
-                        Icons.payment,
-                        AppLocalizations.of(context)
-                                .translate('loan_register_list') ??
-                            'Loan Register List',
-                        () => {onListLoanRegistration()},
-                        null),
-                    CustomListTile(
-                        Icons.insert_chart,
-                        AppLocalizations.of(context)
-                                .translate('report_approval') ??
-                            'Report Approval',
-                        () => {onListApprovalSummary()},
-                        null),
-                    CustomListTile(
-                        Icons.insert_chart,
-                        AppLocalizations.of(context)
-                                .translate('report_disapproval') ??
-                            'Report Disapproval',
-                        () => {onListDisApprovalSummary()},
-                        null),
-                    CustomListTile(
-                        Icons.insert_chart,
-                        AppLocalizations.of(context)
-                                .translate('report_request') ??
-                            'Report Request',
-                        () => {onListRequestSummary()},
-                        null),
-                    CustomListTile(
-                        Icons.insert_chart,
-                        AppLocalizations.of(context)
-                                .translate('report_return') ??
-                            'Report Return',
-                        () => {onListReturnSummary()},
-                        null),
-                    CustomListTile(
-                        Icons.insert_chart,
-                        AppLocalizations.of(context)
-                                .translate('report_summary') ??
-                            'Report Summary',
-                        () => {onListApprovalHistory()},
-                        null),
-                    CustomListTile(
-                      null,
-                      AppLocalizations.of(context)
-                              .translate('english_language') ??
-                          'English',
-                      () => {englishLanguage()},
-                      english,
-                    ),
-                    CustomListTile(
-                      null,
-                      'ភាសាខ្មែរ',
-                      () => {khmerLanguage()},
-                      khmer,
-                    ),
-                    CustomListTile(
-                        Icons.lock,
-                        AppLocalizations.of(context).translate('log_out') ??
-                            'Log Out',
-                        () => {onLogOut()},
-                        null),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                  ],
+                                .translate('english_language') ??
+                            'English',
+                        () => {englishLanguage()},
+                        english,
+                      ),
+                      CustomListTile(
+                        null,
+                        'ភាសាខ្មែរ',
+                        () => {khmerLanguage()},
+                        khmer,
+                      ),
+                      CustomListTile(
+                          Icons.lock,
+                          AppLocalizations.of(context).translate('log_out') ??
+                              'Log Out',
+                          () => {onLogOut()},
+                          null),
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                    ],
+                  ),
                 ),
               ),
             ),

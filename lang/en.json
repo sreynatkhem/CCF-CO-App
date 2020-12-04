@@ -177,6 +177,7 @@
   "currency": "Currency",
   "amount_USD" : "Amount USD",
   "clear_successfully": "Clear Successfully",
-  "usd": "USD"
+  "usd": "USD",
+  "group_loan": "Group Loan"
 
 }
