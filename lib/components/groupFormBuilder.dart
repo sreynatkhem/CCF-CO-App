@@ -7,12 +7,24 @@ class GroupFromBuilder extends StatelessWidget {
   var keys;
   var childs;
   var imageIcon;
+  var colors;
+  var shapes;
+  var imageColor;
 
-  GroupFromBuilder({this.icons, this.childs, this.keys, this.imageIcon});
+  GroupFromBuilder(
+      {this.icons,
+      this.childs,
+      this.keys,
+      this.imageIcon,
+      this.colors,
+      this.shapes,
+      this.imageColor});
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: shapes ?? null,
       child: (Container(
+        color: colors ?? null,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -23,7 +35,7 @@ class GroupFromBuilder extends StatelessWidget {
                 child: Image(
                   image: imageIcon,
                   width: 18,
-                  color: Colors.grey,
+                  color: imageColor ?? Colors.grey,
                 ),
               ),
             if (imageIcon == null)

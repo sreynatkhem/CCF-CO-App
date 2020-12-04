@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -42,6 +43,7 @@ class _IRRScreenState extends State<IRRScreen> {
   final TextEditingController adminFeeRateController = TextEditingController();
   final TextEditingController iRRController = TextEditingController();
   final TextEditingController incomeController = TextEditingController();
+  final TextEditingController irrFinalController = TextEditingController();
 
   //
   final TextEditingController grossAmountDefaultController =
@@ -49,6 +51,7 @@ class _IRRScreenState extends State<IRRScreen> {
   final TextEditingController iRRDefaultController = TextEditingController();
   final TextEditingController incomeDefaultController = TextEditingController();
 
+// grossDisbursementAmounttGlobalKey
   var numberofTermIRR;
   var monthlyInterestIRR;
   var monthlyFeeIRR;
@@ -108,6 +111,8 @@ class _IRRScreenState extends State<IRRScreen> {
           ((adminFeeIRR / numberofTermIRR) * 12);
       income = inComeInputText;
       storeIncomeInput = inputArreyIncomeNoFormat;
+      iRRController.text = ((monthlyInterestIRR + monthlyFeeIRR) * 12) +
+          ((adminFeeIRR / numberofTermIRR) * 12).toString();
     });
   }
 
@@ -193,6 +198,28 @@ class _IRRScreenState extends State<IRRScreen> {
       GlobalKey<FormBuilderState>();
   final GlobalKey<FormBuilderState> irrDefaultGlobalKey =
       GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> currenciesKey =
+      GlobalKey<FormBuilderState>();
+
+  final GlobalKey<FormBuilderState> grossDisbursementAmounttGlobalKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> loanaAmountInUSDGlobalKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> loanTermInUSDGlobalKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> monthlyFeeGlobalKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> iRRGlobalKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> inComeGlobalKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> incomeDefaultKey =
+      GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> irrFinalGlobalKey =
+      GlobalKey<FormBuilderState>();
+
+  //
+  var percentages = const AssetImage('assets/images/percentage.png');
 
   //
   @override
@@ -203,7 +230,7 @@ class _IRRScreenState extends State<IRRScreen> {
       body: SingleChildScrollView(
         child: Center(
             child: Container(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(10),
           child: Column(
             children: [
               if (_isShowDefault == true)
@@ -211,173 +238,233 @@ class _IRRScreenState extends State<IRRScreen> {
                     // context,
                     key: _fbKeyShowDefault,
                     child: Column(children: [
-                      SizedBox(height: 15),
+                      SizedBox(height: 5),
                       Container(
-                        padding: EdgeInsets.only(left: 5),
-                        color: Colors.grey[300],
-                        child: FormBuilderDropdown(
-                          attribute: "Currency",
-                          decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)
-                                      .translate('usd') ??
+                        child: GroupFromBuilder(
+                          colors: Colors.grey[300],
+                          icons: Icons.check,
+                          keys: currenciesKey,
+                          childs: Container(
+                            child: FormBuilderDropdown(
+                                attribute: 'name',
+                                decoration: InputDecoration(
+                                  labelText: AppLocalizations.of(context)
+                                          .translate('currencies') ??
+                                      "Currencies",
+                                  border: InputBorder.none,
+                                ),
+                                validators: [
+                                  FormBuilderValidators.required(
+                                      errorText: AppLocalizations.of(context)
+                                              .translate(
+                                                  'currencies_required') ??
+                                          "Currencies Required(*)"),
+                                ],
+                                hint: Text(
                                   "USD",
-                              labelStyle: TextStyle(color: Colors.grey)),
+                                ),
+                                items: ["USD"]
+                                    .map((e) => DropdownMenuItem(
+                                          value: e.toString(),
+                                          child: Text("${e}"),
+                                        ))
+                                    .toList()),
+                          ),
                         ),
                       ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "gross_disbursement_amount_default",
-                        keyboardType: TextInputType.number,
-                        key: amountDefaultGlobalKey,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,100}')),
-                          // WhitelistingTextInputFormatter.digitsOnly,
-                        ],
-                        controller: grossAmountDefaultController,
-                        decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                    .translate('gross_disbursement_amount') ??
-                                "Gross Disbursement Amount"),
-                        onChanged: (v) {
-                          dynamic amountDocble = double.parse(v);
-
-                          MoneyFormatterOutput fo =
-                              FlutterMoneyFormatter(amount: amountDocble)
-                                  .output;
-                          convertCurrency(v);
-                          var amountInt = int.parse(v);
-                          paresAmountNumberDefault = int.parse(v);
-                          storeAmount = amountInt as int;
-                          if (mounted)
-                            setState(() {
-                              currencyAmountDouble = fo.symbolOnLeft;
-                              amountDefault = v;
-                            });
-                        },
-                        onFieldSubmitted: (v) {
-                          paresAmountNumberDefault = int.parse(v);
-                          if (mounted) {
-                            if (grossAmountDefaultController.text.length > 1) {
-                              dynamic amountDocble = double.parse(v);
-                              MoneyFormatterOutput fo =
-                                  FlutterMoneyFormatter(amount: amountDocble)
-                                      .output;
-                              FocusScope.of(context)
-                                  .requestFocus(loanAmountDefaultFocus);
-                              storeAmount = v as int;
-                              setState(() {
-                                currencyAmountDouble = fo.symbolOnLeft;
-                                grossAmountDefaultController.text =
-                                    fo.symbolOnLeft.toString();
-                                amountDefault = v;
-                              });
-                            }
-                          }
-                        },
-                        validators: [
-                          FormBuilderValidators.numeric(
-                              errorText: "requeiure."),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "irrDefault",
-                        keyboardType: TextInputType.number,
-                        focusNode: loanAmountDefaultFocus,
-                        key: irrDefaultGlobalKey,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,2}')),
-                        ],
-                        controller: iRRDefaultController,
-                        decoration: InputDecoration(labelText: "IRR"),
-                        onChanged: (v) {
-                          var numberFormat =
-                              new NumberFormat("#,###.00", "en_US");
-
-                          if (mounted) {
-                            var amount = int.parse(amountDefault);
-                            var irrParse = double.parse(v);
-                            var subFirstIncome = amount * irrParse;
-                            var subSecoundString =
-                                subFirstIncome.toString().substring(0, 4);
-                            parsedIncome = int.parse(subSecoundString);
-                            var secondIncomeDefault = subFirstIncome / 100;
-                            var finalIncome =
-                                numberFormat.format(secondIncomeDefault);
-                            setState(() {
-                              incomeIRR = finalIncome;
-                              incomeDefaultController.text = finalIncome;
-                              storeIncome = secondIncomeDefault.round();
-                            });
-                          }
-                        },
-                        onFieldSubmitted: (v) {
-                          var numberFormat =
-                              new NumberFormat("#,###.00", "en_US");
-
-                          if (mounted) {
-                            var amount = int.parse(amountDefault);
-                            var irrParse = double.parse(v);
-                            var subFirstIncome = amount * irrParse;
-                            var subSecoundString =
-                                subFirstIncome.toString().substring(0, 4);
-                            parsedIncome = int.parse(subSecoundString);
-                            var secondIncomeDefault = subFirstIncome / 100;
-                            logger().e(
-                                "secondIncomeDefault: ${secondIncomeDefault}");
-                            var finalIncome =
-                                numberFormat.format(secondIncomeDefault);
-                            setState(() {
-                              incomeIRR = finalIncome;
-                              incomeDefaultController.text = finalIncome;
-                              storeIncome = secondIncomeDefault as int;
-                            });
-                          }
-                        },
-                        validators: [
-                          FormBuilderValidators.numeric(
-                              errorText: "requeiure."),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      Container(
-                        color: Colors.grey[300],
-                        padding: EdgeInsets.only(left: 5),
-                        child: FormBuilderTextField(
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        colors: Colors.grey[300],
+                        icons: Icons.attach_money,
+                        keys: incomeDefaultKey,
+                        childs: FormBuilderTextField(
                           readOnly: true,
                           attribute: "incomeDefault",
+                          textInputAction: TextInputAction.next,
                           controller: incomeDefaultController,
                           validators: [
                             FormBuilderValidators.numeric(
                                 errorText: "requeiure."),
                           ],
                           decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)
-                                      .translate('income') ??
-                                  "Income"),
+                            labelText: AppLocalizations.of(context)
+                                    .translate('income') ??
+                                "Income",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          keyboardType: TextInputType.text,
                         ),
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        icons: Icons.attach_money,
+                        keys: amountDefaultGlobalKey,
+                        childs: FormBuilderTextField(
+                          attribute: 'number',
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,100}')),
+                          ],
+                          controller: grossAmountDefaultController,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('gross_disbursement_amount') ??
+                                "Gross Disbursement Amount",
+                            border: InputBorder.none,
+                          ),
+                          onFieldSubmitted: (v) {
+                            FocusScope.of(context)
+                                .requestFocus(loanAmountDefaultFocus);
+                          },
+                          onChanged: (v) {
+                            if (mounted) {
+                              dynamic amountDocble = double.parse(v);
+
+                              MoneyFormatterOutput fo =
+                                  FlutterMoneyFormatter(amount: amountDocble)
+                                      .output;
+                              convertCurrency(v);
+                              var amountInt = int.parse(v);
+                              paresAmountNumberDefault = int.parse(v);
+                              storeAmount = amountInt as int;
+                              if (mounted)
+                                setState(() {
+                                  currencyAmountDouble = fo.symbolOnLeft;
+                                  amountDefault = v;
+                                });
+                            }
+                          },
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validators: [
+                            FormBuilderValidators.min(1),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('loan_amount_required') ??
+                                    "Loan amount Required(*)"),
+                            FormBuilderValidators.numeric(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('number_only') ??
+                                    'Number only')
+                          ],
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        imageIcon: percentages,
+                        keys: irrDefaultGlobalKey,
+                        childs: FormBuilderTextField(
+                          controller: iRRDefaultController,
+                          attribute: 'number',
+                          focusNode: loanAmountDefaultFocus,
+                          decoration: InputDecoration(
+                            labelText: 'IRR',
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          keyboardType: TextInputType.number,
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('irr_required') ??
+                                    "IRR required(*)"),
+                          ],
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                          ],
+                          onChanged: (v) {
+                            var numberFormat =
+                                new NumberFormat("#,###.00", "en_US");
+
+                            if (mounted) {
+                              var amount = int.parse(amountDefault);
+                              var irrParse = double.parse(v);
+                              var subFirstIncome = amount * irrParse;
+                              var subSecoundString =
+                                  subFirstIncome.toString().substring(0, 4);
+                              parsedIncome = int.parse(subSecoundString);
+                              var secondIncomeDefault = subFirstIncome / 100;
+                              var finalIncome =
+                                  numberFormat.format(secondIncomeDefault);
+                              setState(() {
+                                incomeIRR = finalIncome;
+                                incomeDefaultController.text = finalIncome;
+                                storeIncome = secondIncomeDefault.round();
+                              });
+                            }
+                          },
+                          onFieldSubmitted: (v) {
+                            var numberFormat =
+                                new NumberFormat("#,###.00", "en_US");
+
+                            if (mounted) {
+                              var amount = int.parse(amountDefault);
+                              var irrParse = double.parse(v);
+                              var subFirstIncome = amount * irrParse;
+                              var subSecoundString =
+                                  subFirstIncome.toString().substring(0, 4);
+                              parsedIncome = int.parse(subSecoundString);
+                              var secondIncomeDefault = subFirstIncome / 100;
+
+                              var finalIncome =
+                                  numberFormat.format(secondIncomeDefault);
+                              setState(() {
+                                incomeIRR = finalIncome;
+                                incomeDefaultController.text = finalIncome;
+                                storeIncome = secondIncomeDefault as int;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(''),
                           RaisedButton(
                             color: logolightGreen,
-                            child: Text(
-                              AppLocalizations.of(context).translate('add') ??
-                                  "Add",
-                              style: TextStyle(color: Colors.white),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
+                            child: Container(
+                              width: 110,
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  Padding(padding: EdgeInsets.all(3)),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                            .translate('add') ??
+                                        "Add",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
                             ),
                             onPressed: () {
                               setState(() {
                                 _isLoading = true;
                               });
-                              if (grossAmountDefaultController.text != "" &&
+                              if (amountDefault != "" &&
+                                  amountDefault != null &&
                                   iRRDefaultController.text != "" &&
                                   incomeDefaultController.text != "") {
                                 setState(() {
@@ -419,6 +506,8 @@ class _IRRScreenState extends State<IRRScreen> {
                                     grossAmountDefaultController.text = "";
                                     iRRDefaultController.text = "";
                                     incomeDefaultController.text = "";
+                                    FocusScope.of(context)
+                                        .unfocus(disposition: disposition);
                                   });
                                   showInSnackBar(
                                       AppLocalizations.of(context)
@@ -431,30 +520,16 @@ class _IRRScreenState extends State<IRRScreen> {
                                   });
                                 }
                               } else {
-                                if (grossAmountDefaultController.text == "") {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  showInSnackBar(
-                                      AppLocalizations.of(context)
-                                              .translate('') ??
-                                          'Gross Amount Required',
-                                      Colors.red);
-                                }
-                                if (iRRDefaultController.text == "") {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                  showInSnackBar(
-                                      AppLocalizations.of(context)
-                                              .translate('') ??
-                                          'iRR Required',
-                                      Colors.red);
-                                }
+                                setState(() {
+                                  _isLoading = false;
+                                });
                               }
                             },
                           ),
                           RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
                             color: Colors.red,
                             onPressed: () {
                               setState(() {
@@ -465,62 +540,80 @@ class _IRRScreenState extends State<IRRScreen> {
                                 grossAmountDefaultController.text = "";
                                 iRRDefaultController.text = "";
                                 incomeDefaultController.text = "";
+                                FocusScope.of(context)
+                                    .unfocus(disposition: disposition);
                               });
                               showInSnackBar(
                                   AppLocalizations.of(context).translate('') ??
                                       'Clear Form Successfully',
                                   logolightGreen);
                             },
-                            child: Text(
-                                AppLocalizations.of(context)
-                                        .translate('clear_form') ??
-                                    "Clear Form",
-                                style: TextStyle(color: Colors.white)),
+                            child: Container(
+                              width: 110,
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.clear,
+                                    color: Colors.white,
+                                  ),
+                                  Padding(padding: EdgeInsets.all(3)),
+                                  Text(
+                                      AppLocalizations.of(context)
+                                              .translate('clear_form') ??
+                                          "Clear Form",
+                                      style: TextStyle(color: Colors.white)),
+                                ],
+                              ),
+                            ),
                           ),
                           Text(''),
                         ],
                       ),
                     ])),
               if (_isShowDefault == false)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(AppLocalizations.of(context)
-                                .translate('exchange_rate') ??
-                            'Exchange Rate:'),
-                        Padding(padding: EdgeInsets.only(right: 20)),
-                        Container(
-                          width: 150,
-                          height: 30,
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            controller: exchangeRateController,
-                            inputFormatters: [
-                              // ignore: deprecated_member_use
-                              WhitelistingTextInputFormatter.digitsOnly,
-                            ],
-                            onChanged: (value) {
-                              if (mounted)
-                                setState(() {
-                                  exchangeRate = value;
-                                });
-                            },
-                            decoration: InputDecoration(
-                                // border: InputBorder.none,
-                                border: new UnderlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: logolightGreen)),
-                                hintStyle: TextStyle(fontSize: 15),
-                                hintText: AppLocalizations.of(context)
-                                        .translate('exchange_rate') ??
-                                    'Exchange Rate:'),
-                          ),
-                        )
-                      ],
+                Padding(padding: EdgeInsets.only(top: 5)),
+              if (_isShowDefault == false)
+                GroupFromBuilder(
+                  icons: Icons.money_off,
+                  keys: irrDefaultGlobalKey,
+                  childs: FormBuilderTextField(
+                    controller: exchangeRateController,
+                    attribute: 'exchange',
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)
+                              .translate('exchange_rate') ??
+                          'Exchange Rate:',
+                      border: InputBorder.none,
                     ),
-                  ],
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    keyboardType: TextInputType.number,
+                    validators: [
+                      FormBuilderValidators.required(
+                          errorText: AppLocalizations.of(context)
+                                  .translate('exchange_rate') ??
+                              "Exchange Rate:"),
+                    ],
+                    inputFormatters: [
+                      // ignore: deprecated_member_use
+                      WhitelistingTextInputFormatter.digitsOnly,
+                    ],
+                    onChanged: (value) {
+                      if (mounted)
+                        setState(() {
+                          exchangeRate = value;
+                        });
+                    },
+                    onFieldSubmitted: (v) {
+                      if (mounted)
+                        setState(() {
+                          exchangeRate = v;
+                        });
+                    },
+                  ),
                 ),
               if (_isShowDefault == false) SizedBox(height: 10),
               if (_isShowDefault == false)
@@ -529,299 +622,396 @@ class _IRRScreenState extends State<IRRScreen> {
                   key: _fbKeyIRR,
                   child: Column(
                     children: [
-                      // SizedBox(height: 5),
-                      FormBuilderDropdown(
-                        attribute: "Currency",
-                        decoration: InputDecoration(
-                            labelText: (AppLocalizations.of(context)
-                                .translate('select_currency'))),
-                        onChanged: (v) {
-                          if (mounted) {
-                            setState(() {
-                              onSelectedCurrency = v;
-                              loanAmountInUSAController.text = "";
-                              grossAmountController.text = "";
-                            });
-                          }
-                          logger().e("currency: ${onSelectedCurrency}");
-                        },
-                        hint: Text(
-                          AppLocalizations.of(context)
-                              .translate('select_currency'),
-                          style: TextStyle(color: Colors.black),
+                      Container(
+                        child: GroupFromBuilder(
+                          icons: Icons.check,
+                          childs: Container(
+                            child: FormBuilderDropdown(
+                              attribute: 'name',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)
+                                        .translate('currencies') ??
+                                    "Currencies",
+                                border: InputBorder.none,
+                              ),
+                              validators: [
+                                FormBuilderValidators.required(
+                                    errorText: AppLocalizations.of(context)
+                                            .translate('currencies_required') ??
+                                        "Currencies Required(*)"),
+                              ],
+                              onChanged: (v) {
+                                if (mounted) {
+                                  setState(() {
+                                    onSelectedCurrency = v;
+                                    loanAmountInUSAController.text = "";
+                                    grossAmountController.text = "";
+                                  });
+                                }
+                                logger().e("currency: ${onSelectedCurrency}");
+                              },
+                              hint: Text(
+                                "USD",
+                              ),
+                              items: ['USD', 'KHR']
+                                  .map((gender) => DropdownMenuItem(
+                                      value: gender, child: Text("$gender")))
+                                  .toList(),
+                            ),
+                          ),
                         ),
-                        items: ['USD', 'KHR']
-                            .map((gender) => DropdownMenuItem(
-                                value: gender, child: Text("$gender")))
-                            .toList(),
                       ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "gross_disbursement_amount",
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,100}')),
-                          // CurrencyInputFormatter(12),
-                        ],
-                        controller: grossAmountController,
-                        decoration: InputDecoration(
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        icons: Icons.monetization_on_sharp,
+                        keys: grossDisbursementAmounttGlobalKey,
+                        childs: FormBuilderTextField(
+                          controller: grossAmountController,
+                          attribute: 'gross_disbursement_amount',
+                          decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
                                     .translate('gross_disbursement_amount') ??
-                                "Gross Disbursement Amount"),
-                        onChanged: (v) {
-                          logger().e("v1: ${v}");
+                                "Gross Disbursement Amount",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate(
+                                            'gross_disbursement_amount') ??
+                                    "Gross Disbursement Amount"),
+                          ],
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,100}')),
+                            // CurrencyInputFormatter(12),
+                          ],
+                          onChanged: (v) {
+                            logger().e("v1: ${v}");
 
-                          logger().e("v: ${onSelectedCurrency}");
-                          var ranksDouble = double.parse(v);
-                          var ranksRoundUp = ranksDouble.round();
-                          var rankInt = int.parse(ranksRoundUp.toString());
-                          if (onSelectedCurrency == "KHR") {
-                            logger().e("KHR: ${onSelectedCurrency}");
-                            var exChangeRateDouble = int.parse(exchangeRate);
-                            var ranksKHR = rankInt / exChangeRateDouble;
-                            var ranksKHRRound = ranksKHR.round();
-                            var rankIntKHR =
-                                int.parse(ranksKHRRound.toString());
-                            convertCurrency(v);
-                            setState(() {
-                              grossAmount = rankInt / exChangeRateDouble;
-                              loanAmountInUSAController.text = numFormat
-                                  .format(rankInt / exChangeRateDouble)
-                                  .toString();
-                              storeAmountInput = rankIntKHR;
-                            });
-                            iRRCalculation();
-                          } else {
-                            logger().e("USD: ${onSelectedCurrency}");
-                            convertCurrency(v);
-                            setState(() {
-                              loanAmountInUSAController.text =
-                                  showValueAmountDefault;
-                              grossAmount = rankInt;
-                              storeAmountInput = rankInt;
-                            });
-                            iRRCalculation();
-                          }
-                        },
-                        onFieldSubmitted: (v) {
-                          var ranksDouble = double.parse(v);
-                          var ranksRoundUp = ranksDouble.round();
-                          var rankInt = int.parse(ranksRoundUp.toString());
-                          if (onSelectedCurrency == "USD") {
-                            logger().e("USD: ${onSelectedCurrency}");
+                            logger().e("v: ${onSelectedCurrency}");
+                            var ranksDouble = double.parse(v);
+                            var ranksRoundUp = ranksDouble.round();
+                            var rankInt = int.parse(ranksRoundUp.toString());
+                            if (onSelectedCurrency == "KHR") {
+                              logger().e("KHR: ${onSelectedCurrency}");
+                              var exChangeRateDouble = int.parse(exchangeRate);
+                              var ranksKHR = rankInt / exChangeRateDouble;
+                              var ranksKHRRound = ranksKHR.round();
+                              var rankIntKHR =
+                                  int.parse(ranksKHRRound.toString());
+                              convertCurrency(v);
+                              setState(() {
+                                grossAmount = rankInt / exChangeRateDouble;
+                                loanAmountInUSAController.text = numFormat
+                                    .format(rankInt / exChangeRateDouble)
+                                    .toString();
+                                storeAmountInput = rankIntKHR;
+                              });
+                              iRRCalculation();
+                            } else {
+                              logger().e("USD: ${onSelectedCurrency}");
+                              convertCurrency(v);
+                              setState(() {
+                                loanAmountInUSAController.text =
+                                    showValueAmountDefault;
+                                grossAmount = rankInt;
+                                storeAmountInput = rankInt;
+                              });
+                              iRRCalculation();
+                            }
+                          },
+                          onFieldSubmitted: (v) {
+                            var ranksDouble = double.parse(v);
+                            var ranksRoundUp = ranksDouble.round();
+                            var rankInt = int.parse(ranksRoundUp.toString());
+                            if (onSelectedCurrency == "USD") {
+                              logger().e("USD: ${onSelectedCurrency}");
 
-                            convertCurrency(v);
-                            setState(() {
-                              loanAmountInUSAController.text =
-                                  showValueAmountDefault;
-                              grossAmount = rankInt;
-                              storeAmountInput = rankInt;
-                            });
-                            iRRCalculation();
-                          } else {
-                            logger().e("KHR: ${onSelectedCurrency}");
+                              convertCurrency(v);
+                              setState(() {
+                                loanAmountInUSAController.text =
+                                    showValueAmountDefault;
+                                grossAmount = rankInt;
+                                storeAmountInput = rankInt;
+                              });
+                              iRRCalculation();
+                            } else {
+                              logger().e("KHR: ${onSelectedCurrency}");
 
-                            var exChangeRateDouble = int.parse(exchangeRate);
-                            var ranksKHR = rankInt / exChangeRateDouble;
-                            var ranksKHRRound = ranksKHR.round();
-                            var rankIntKHR =
-                                int.parse(ranksKHRRound.toString());
-                            setState(() {
-                              grossAmount = rankInt / exChangeRateDouble;
-                              loanAmountInUSAController.text = numFormat
-                                  .format(rankInt / exChangeRateDouble)
-                                  .toString();
-                              storeAmountInput = rankIntKHR;
-                            });
-                          }
-                          iRRCalculation();
-                        },
-                        validators: [
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(
-                              errorText: "requeiure."),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      Container(
-                        color: Colors.grey[300],
-                        padding: EdgeInsets.only(left: 5),
-                        child: FormBuilderTextField(
-                          readOnly: true,
-                          attribute: "loana_amount_in_USD",
-                          controller: loanAmountInUSAController,
-                          decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)
-                                      .translate('loana_amount_in_USD') ??
-                                  "Loan Amount in USD"),
+                              var exChangeRateDouble = int.parse(exchangeRate);
+                              var ranksKHR = rankInt / exChangeRateDouble;
+                              var ranksKHRRound = ranksKHR.round();
+                              var rankIntKHR =
+                                  int.parse(ranksKHRRound.toString());
+                              setState(() {
+                                grossAmount = rankInt / exChangeRateDouble;
+                                loanAmountInUSAController.text = numFormat
+                                    .format(rankInt / exChangeRateDouble)
+                                    .toString();
+                                storeAmountInput = rankIntKHR;
+                              });
+                            }
+                            iRRCalculation();
+                          },
                         ),
                       ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "loan_term",
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,2}')),
-                        ],
-                        controller: loanTermController,
-                        decoration: InputDecoration(
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        colors: Colors.grey[300],
+                        icons: Icons.monetization_on_sharp,
+                        keys: loanaAmountInUSDGlobalKey,
+                        childs: FormBuilderTextField(
+                          readOnly: true,
+                          controller: loanAmountInUSAController,
+                          attribute: 'loana_amount_in_USD',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('loana_amount_in_USD') ??
+                                "Loan Amount in USD",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('loana_amount_in_USD') ??
+                                    "Loan Amount in USD"),
+                          ],
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        icons: Icons.branding_watermark,
+                        keys: loanTermInUSDGlobalKey,
+                        childs: FormBuilderTextField(
+                          controller: loanTermController,
+                          attribute: "loan_term",
+                          onChanged: (v) {
+                            setState(() {
+                              loanTerm = v;
+                            });
+                            iRRCalculation();
+                          },
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
                             labelText: AppLocalizations.of(context)
                                     .translate('loan_term') ??
-                                "Loan Term"),
-                        onChanged: (v) {
-                          setState(() {
-                            loanTerm = v;
-                          });
-                          iRRCalculation();
-                        },
-                        onFieldSubmitted: (v) {},
-                        validators: [
-                          FormBuilderValidators.required(
-                              errorText: AppLocalizations.of(context)
-                                      .translate('number_of_term_required') ??
-                                  "Number of term Required(*)"),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "monthly_interest",
-                        keyboardType: TextInputType.number,
-                        key: monthlyInterestGlobalKey,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,2}')),
-                        ],
-                        controller: monthlyInterestController,
-                        decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                    .translate('monthly_interest') ??
-                                "Monthly Interest"),
-                        onChanged: (v) {
-                          if (mounted) {
-                            setState(() {
-                              monthlyInterest = v;
-                            });
-                            iRRCalculation();
-                          }
-                        },
-                        onFieldSubmitted: (v) {},
-                        validators: [
-                          FormBuilderValidators.min(0.1),
-                          FormBuilderValidators.max(1.5),
-                          FormBuilderValidators.required(
-                              errorText: AppLocalizations.of(context).translate(
-                                      'monthly_interest_rate_required') ??
-                                  "Monthly interest rate required(*)"),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "monthly_fee_rate",
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,2}')),
-                        ],
-                        controller: monthlyFeeRateController,
-                        decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                    .translate('monthly_fee_rate') ??
-                                "Monthly Fee Rate"),
-                        onChanged: (v) {
-                          if (mounted) {
-                            setState(() {
-                              monthlyFeeRate = v;
-                            });
-                            iRRCalculation();
-                          }
-                        },
-                        onFieldSubmitted: (v) {
-                          if (mounted)
-                            setState(() {
-                              monthlyFeeRate = v;
-                            });
-                        },
-                        validators: [
-                          FormBuilderValidators.required(),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      FormBuilderTextField(
-                        attribute: "admin_fee_rate",
-                        key: monthlyAdminFeeGlobalKey,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          // ignore: deprecated_member_use
-                          WhitelistingTextInputFormatter(
-                              RegExp(r'^(\d+)?\.?\d{0,2}')),
-                        ],
-                        validators: [
-                          FormBuilderValidators.max(2),
-                          FormBuilderValidators.required(
-                              errorText: AppLocalizations.of(context)
-                                      .translate('admin_fee_required') ??
-                                  "Admin fee required(*)"),
-                        ],
-                        controller: adminFeeRateController,
-                        decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
-                                    .translate('admin_fee_rate') ??
-                                "Admin Fee Rate"),
-                        onChanged: (v) {
-                          if (mounted) {
-                            setState(() {
-                              adminFeeRate = v;
-                            });
-                            iRRCalculation();
-                          }
-                        },
-                        onFieldSubmitted: (v) {
-                          if (mounted)
-                            setState(() {
-                              adminFeeRate = v;
-                            });
-                        },
-                      ),
-                      SizedBox(height: 15),
-                      Container(
-                        color: Colors.grey[300],
-                        padding: EdgeInsets.only(left: 5),
-                        child: FormBuilderTextField(
-                          readOnly: true,
-                          attribute: "irr",
-                          controller: iRRController,
-                          decoration: InputDecoration(
-                              hintText: "IRR",
-                              labelStyle: TextStyle(
-                                  color:
-                                      valueIRR != null ? Colors.black : null),
-                              labelText: valueIRR != null
-                                  ? valueIRR.toString()
-                                  : "IRR"),
+                                "Loan Term",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                          ],
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('loan_term') ??
+                                    "Loan Term"),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 15),
-                      Container(
-                        color: Colors.grey[300],
-                        padding: EdgeInsets.only(left: 5),
-                        child: FormBuilderTextField(
-                          readOnly: true,
-                          attribute: "income",
-                          controller: incomeController,
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        imageIcon: percentages,
+                        keys: monthlyInterestGlobalKey,
+                        childs: FormBuilderTextField(
+                          attribute: "monthly_interest",
+                          keyboardType: TextInputType.number,
+                          controller: monthlyInterestController,
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                          ],
+                          onChanged: (v) {
+                            if (mounted) {
+                              setState(() {
+                                monthlyInterest = v;
+                              });
+                              iRRCalculation();
+                            }
+                          },
                           decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('monthly_interest') ??
+                                "Monthly Interest",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validators: [
+                            FormBuilderValidators.min(0.1),
+                            FormBuilderValidators.max(1.5),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate(
+                                            'monthly_interest_rate_required') ??
+                                    "Monthly interest rate required(*)"),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        imageIcon: percentages,
+                        keys: monthlyFeeGlobalKey,
+                        childs: FormBuilderTextField(
+                          attribute: "monthly_fee_rate",
+                          keyboardType: TextInputType.number,
+                          controller: monthlyFeeRateController,
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                          ],
+                          onChanged: (v) {
+                            if (mounted) {
+                              setState(() {
+                                monthlyFeeRate = v;
+                              });
+                              iRRCalculation();
+                            }
+                          },
+                          onFieldSubmitted: (v) {
+                            if (mounted)
+                              setState(() {
+                                monthlyFeeRate = v;
+                              });
+                          },
+                          validators: [
+                            FormBuilderValidators.max(2),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('admin_fee_required') ??
+                                    "Admin fee required(*)"),
+                          ],
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('monthly_fee_rate') ??
+                                "Monthly Fee Rate",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        imageIcon: percentages,
+                        keys: monthlyAdminFeeGlobalKey,
+                        childs: FormBuilderTextField(
+                          attribute: "admin_fee_rate",
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            // ignore: deprecated_member_use
+                            WhitelistingTextInputFormatter(
+                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                          ],
+                          validators: [
+                            FormBuilderValidators.max(2),
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('admin_fee_required') ??
+                                    "Admin fee required(*)"),
+                          ],
+                          controller: adminFeeRateController,
+                          onChanged: (v) {
+                            if (mounted) {
+                              setState(() {
+                                adminFeeRate = v;
+                              });
+                              iRRCalculation();
+                            }
+                          },
+                          onFieldSubmitted: (v) {
+                            if (mounted)
+                              setState(() {
+                                adminFeeRate = v;
+                              });
+                          },
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)
+                                    .translate('admin_fee_rate') ??
+                                "Admin Fee Rate",
+                            border: InputBorder.none,
+                          ),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        colors: Colors.grey[300],
+                        imageIcon: percentages,
+                        keys: iRRGlobalKey,
+                        childs: FormBuilderTextField(
+                          readOnly: true,
+                          controller: iRRController,
+                          attribute: 'irr',
+                          decoration: InputDecoration(
+                              labelText: valueIRR != null && valueIRR != ""
+                                  ? valueIRR.toString()
+                                  : "IRR",
+                              border: InputBorder.none,
                               labelStyle: TextStyle(
-                                  color: income != null ? Colors.black : null),
-                              labelText: income != null
-                                  ? inComeInputText.toString()
+                                  color: valueIRR != null && valueIRR != ""
+                                      ? Colors.black
+                                      : Colors.grey)),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validators: [
+                            FormBuilderValidators.required(errorText: "IRR"),
+                          ],
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      GroupFromBuilder(
+                        colors: Colors.grey[300],
+                        imageIcon: percentages,
+                        keys: inComeGlobalKey,
+                        childs: FormBuilderTextField(
+                          readOnly: true,
+                          controller: incomeController,
+                          attribute: 'income',
+                          decoration: InputDecoration(
+                              labelText: income != null && income != ""
+                                  ? income.toString()
                                   : AppLocalizations.of(context)
                                           .translate('income') ??
-                                      " Income"),
+                                      " Income",
+                              border: InputBorder.none,
+                              labelStyle: TextStyle(
+                                  color: valueIRR != null && valueIRR != ""
+                                      ? Colors.black
+                                      : Colors.grey)),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validators: [
+                            FormBuilderValidators.required(
+                                errorText: AppLocalizations.of(context)
+                                        .translate('income') ??
+                                    " Income"),
+                          ],
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       SizedBox(height: 15),
@@ -830,35 +1020,42 @@ class _IRRScreenState extends State<IRRScreen> {
                         children: <Widget>[
                           RaisedButton(
                             color: logolightGreen,
-                            child: Text(
-                              AppLocalizations.of(context).translate('add') ??
-                                  "Add",
-                              style: TextStyle(color: Colors.white),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
+                            child: Container(
+                              width: 80,
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  Padding(padding: EdgeInsets.all(3)),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                            .translate('add') ??
+                                        "Add",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
                             ),
                             onPressed: () {
                               setState(() {
                                 _isLoading = true;
                               });
-                              // _fbKeyIRR
-
                               if (_fbKeyIRR.currentState.saveAndValidate() &&
+                                  monthlyInterestGlobalKey.currentState
+                                      .saveAndValidate() &&
+                                  monthlyFeeGlobalKey.currentState
+                                      .saveAndValidate() &&
+                                  monthlyAdminFeeGlobalKey.currentState
+                                      .saveAndValidate() &&
                                   onSelectedCurrency != null) {
-                                // if (monthlyInterestGlobalKey.currentState
-                                //         .saveAndValidate() &&
-                                //     monthlyAdminFeeGlobalKey.currentState
-                                //         .saveAndValidate()) {
-                                //   setState(() {
-                                //     _isLoading = false;
-                                //   });
-                                //   logger().e(
-                                //       "monthlyInterestGlobalKey.currentState: ${monthlyInterestGlobalKey.currentState.value}");
-                                //   logger().e(
-                                //       "monthlyInterestGlobalKey.currentState: ${monthlyAdminFeeGlobalKey.currentState.value}");
-                                // } else {
-                                //   setState(() {
-                                //     _isLoading = false;
-                                //   });
-                                // }
                                 setState(() {
                                   _isLoading = false;
                                 });
@@ -970,16 +1167,19 @@ class _IRRScreenState extends State<IRRScreen> {
                                     setState(() {
                                       _isLoading = false;
                                       _isShowDefault = false;
+                                      incomeController.text = "";
+                                      iRRController.text = "";
+                                      income = null;
+                                      valueIRR = null;
+                                      adminFeeRateController.text = "";
+                                      monthlyFeeRateController.text = "";
+                                      monthlyInterestController.text = "";
+                                      loanTermController.text = "";
+                                      loanAmountInUSAController.text = "";
                                       grossAmountController.text = "";
                                       loanAmountInUSAController.text = "";
-                                      loanTermController.text = "";
-                                      monthlyInterestController.text = "";
-                                      monthlyFeeRateController.text = "";
-                                      adminFeeRateController.text = "";
-                                      iRRController.text = "";
-                                      incomeController.text = "";
-                                      valueIRR = "";
-                                      inComeInputText = "";
+                                      FocusScope.of(context)
+                                          .unfocus(disposition: disposition);
                                     });
                                   }
                                 }
@@ -996,9 +1196,27 @@ class _IRRScreenState extends State<IRRScreen> {
                             },
                           ),
                           RaisedButton(
-                            child: Text(AppLocalizations.of(context)
-                                    .translate('reset_irr') ??
-                                "Reset"),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
+                            child: Container(
+                              width: 80,
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.restore,
+                                    color: Colors.black,
+                                    size: 18,
+                                  ),
+                                  Padding(padding: EdgeInsets.all(3)),
+                                  Text(AppLocalizations.of(context)
+                                          .translate('reset_irr') ??
+                                      "Reset"),
+                                ],
+                              ),
+                            ),
                             onPressed: () {
                               setState(() {
                                 incomeController.text = "";
@@ -1023,6 +1241,10 @@ class _IRRScreenState extends State<IRRScreen> {
                             },
                           ),
                           RaisedButton(
+                            color: Colors.red,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
                             padding: EdgeInsets.all(0),
                             onPressed: () {
                               setState(() {
@@ -1031,6 +1253,29 @@ class _IRRScreenState extends State<IRRScreen> {
                                 sumIncome = [];
                                 _isShowDefault = true;
                                 finalSumIRR = null;
+
+                                incomeController.text = "";
+                                iRRController.text = "";
+                                income = null;
+                                valueIRR = null;
+                                adminFeeRateController.text = "";
+                                monthlyFeeRateController.text = "";
+                                monthlyInterestController.text = "";
+                                loanTermController.text = "";
+                                grossAmountController.text = "";
+
+                                //
+                                loanAmountInUSAController.text = "";
+                                amountDefault = "";
+                                incomeIRR = "";
+                                incomeDefault = "";
+                                grossAmountDefaultController.text = "";
+                                iRRDefaultController.text = "";
+                                incomeDefaultController.text = "";
+                                exchangeRateController.text = "";
+                                //
+                                FocusScope.of(context)
+                                    .unfocus(disposition: disposition);
                                 FocusScope.of(context)
                                     .unfocus(disposition: disposition);
                                 showInSnackBar(
@@ -1041,11 +1286,24 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                             },
                             child: Container(
-                              height: 15,
-                              child: Text(
-                                AppLocalizations.of(context)
-                                        .translate('clear_list') ??
-                                    "Clear List",
+                              width: 110,
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.clear,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                  Padding(padding: EdgeInsets.all(3)),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                            .translate('clear_list') ??
+                                        "Clear List",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -1054,31 +1312,34 @@ class _IRRScreenState extends State<IRRScreen> {
                     ],
                   ),
                 ),
-              Container(
-                  padding: EdgeInsets.only(top: 10),
-                  alignment: Alignment.centerLeft,
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                        text: "IRR:",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: ' ',
-                            style: TextStyle(color: Colors.black, fontSize: 15),
-                          ),
-                          TextSpan(
-                            text: '${finalSumIRR != null ? finalSumIRR : ""}' +
-                                "${finalSumIRR != null ? '%' : ""}",
-                            style:
-                                TextStyle(color: logolightGreen, fontSize: 20),
-                          ),
-                        ]),
-                  )),
+              if (_isShowDefault == false) SizedBox(height: 15),
+              if (_isShowDefault == false)
+                GroupFromBuilder(
+                  colors: logolightGreen,
+                  imageIcon: percentages,
+                  imageColor: Colors.white,
+                  keys: irrFinalGlobalKey,
+                  childs: FormBuilderTextField(
+                    readOnly: true,
+                    controller: irrFinalController,
+                    attribute: 'irr:',
+                    decoration: InputDecoration(
+                        labelText: finalSumIRR != null && finalSumIRR != ""
+                            ? finalSumIRR.toString()
+                            : "IRR: ",
+                        border: InputBorder.none,
+                        labelStyle: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: fontWeight800,
+                            color: finalSumIRR != null && finalSumIRR != ""
+                                ? Colors.white
+                                : Colors.white)),
+                    valueTransformer: (text) {
+                      return text == null ? null : text;
+                    },
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
               _isLoading
                   ? CircularProgressIndicator()
                   : Container(
@@ -1138,37 +1399,6 @@ class _IRRScreenState extends State<IRRScreen> {
                                             "Income",
                                         style: TextStyle(fontSize: fontSizeXxs),
                                       )),
-                                  // Expanded(
-                                  //     flex: 1,
-                                  //     child: RaisedButton(
-                                  //       padding: EdgeInsets.all(0),
-                                  //       onPressed: () {
-                                  //         setState(() {
-                                  //           data = [];
-                                  //           sumAmount = [];
-                                  //           sumIncome = [];
-                                  //           _isShowDefault = true;
-                                  //           finalSumIRR = null;
-                                  //           FocusScope.of(context).unfocus(
-                                  //               disposition: disposition);
-                                  //           showInSnackBar(
-                                  //               AppLocalizations.of(context)
-                                  //                       .translate(
-                                  //                           'clear_successfully') ??
-                                  //                   'Clear Successfully',
-                                  //               logolightGreen);
-                                  //         });
-                                  //       },
-                                  //       child: Container(
-                                  //         height: 15,
-                                  //         child: Text(
-                                  //           AppLocalizations.of(context)
-                                  //                   .translate('clear_list') ??
-                                  //               "Clear List",
-                                  //           style: TextStyle(fontSize: 11),
-                                  //         ),
-                                  //       ),
-                                  //     )),
                                 ],
                               ),
                             ),
@@ -1205,7 +1435,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                         Expanded(
                                             flex: 2,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 53),
+                                              margin: EdgeInsets.only(left: 58),
                                               child: Text(
                                                 data[index]["Amount"],
                                                 style: TextStyle(
@@ -1215,7 +1445,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                         Expanded(
                                             flex: 1,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 3),
+                                              margin: EdgeInsets.only(left: 4),
                                               child: Text(
                                                 data[index]["IRR"],
                                                 style: TextStyle(
@@ -1226,20 +1456,13 @@ class _IRRScreenState extends State<IRRScreen> {
                                             flex: 1,
                                             child: Container(
                                               width: 200,
-                                              margin: EdgeInsets.only(left: 0),
+                                              margin: EdgeInsets.only(left: 2),
                                               child: Text(
                                                 data[index]["Income"],
                                                 style: TextStyle(
                                                     fontSize: fontSizeXxs),
                                               ),
                                             )),
-                                        // Expanded(
-                                        //     flex: 1,
-                                        //     child: Text(
-                                        //       "",
-                                        //       style: TextStyle(
-                                        //           fontSize: fontSizeXxs),
-                                        //     )),
                                       ],
                                     ),
                                   ),
