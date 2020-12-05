@@ -485,11 +485,14 @@ class _IRRScreenState extends State<IRRScreen> {
                                       index = 1;
                                     });
                                   }
+                                  var irrDobule =
+                                      double.parse(iRRDefaultController.text)
+                                          .toStringAsFixed(2);
                                   var listArray = {
                                     "Id": index,
                                     "Currency": "USD",
                                     "Amount": "$showValueAmountDefault",
-                                    "IRR": "${iRRDefaultController.text}",
+                                    "IRR": "${irrDobule.toString()}",
                                     "Income": "${incomeDefaultController.text}",
                                   };
                                   data.addAll([listArray]);
@@ -1148,7 +1151,8 @@ class _IRRScreenState extends State<IRRScreen> {
                                       "Currency": "$onSelectedCurrency",
                                       "Amount":
                                           "${loanAmountInUSAController.text}",
-                                      "IRR": "${valueIRR}",
+                                      "IRR":
+                                          "${valueIRR.toStringAsPrecision(4)}",
                                       "Income": "${inComeInputText.toString()}",
                                       "total": "$finalSumIRR"
                                     };
@@ -1314,30 +1318,21 @@ class _IRRScreenState extends State<IRRScreen> {
                 ),
               if (_isShowDefault == false) SizedBox(height: 15),
               if (_isShowDefault == false)
-                GroupFromBuilder(
-                  colors: logolightGreen,
-                  imageIcon: percentages,
-                  imageColor: Colors.white,
-                  keys: irrFinalGlobalKey,
-                  childs: FormBuilderTextField(
-                    readOnly: true,
-                    controller: irrFinalController,
-                    attribute: 'irr:',
-                    decoration: InputDecoration(
-                        labelText: finalSumIRR != null && finalSumIRR != ""
-                            ? finalSumIRR.toString()
-                            : "IRR: ",
-                        border: InputBorder.none,
-                        labelStyle: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: fontWeight800,
-                            color: finalSumIRR != null && finalSumIRR != ""
-                                ? Colors.white
-                                : Colors.white)),
-                    valueTransformer: (text) {
-                      return text == null ? null : text;
-                    },
-                    keyboardType: TextInputType.number,
+                Container(
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: 65,
+                  child: Card(
+                    color: logolightGreen,
+                    child: Container(
+                        padding: EdgeInsets.only(left: 10),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "IRR: ${finalSumIRR != null && finalSumIRR != "" ? finalSumIRR + ' %' : ""}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: fontWeight800,
+                              fontSize: 19),
+                        )),
                   ),
                 ),
               _isLoading
@@ -1375,30 +1370,36 @@ class _IRRScreenState extends State<IRRScreen> {
                                             "Currency",
                                         style: TextStyle(fontSize: fontSizeXxs),
                                       )),
+                                  SizedBox(
+                                    width: 30,
+                                  ),
                                   Expanded(
-                                      flex: 2,
+                                      // flex: 2,
                                       child: Container(
                                           child: Center(
                                               child: Text(
-                                        AppLocalizations.of(context)
-                                                .translate('amount_USD') ??
-                                            "Amount USD",
-                                        style: TextStyle(fontSize: fontSizeXxs),
-                                      )))),
+                                    AppLocalizations.of(context)
+                                            .translate('amount_USD') ??
+                                        "Amount USD",
+                                    style: TextStyle(fontSize: fontSizeXxs),
+                                  )))),
+                                  SizedBox(
+                                    width: 50,
+                                  ),
                                   Expanded(
-                                      flex: 1,
+                                      // flex: 1,
                                       child: Text(
-                                        "IRR",
-                                        style: TextStyle(fontSize: fontSizeXxs),
-                                      )),
+                                    "IRR",
+                                    style: TextStyle(fontSize: fontSizeXxs),
+                                  )),
                                   Expanded(
-                                      flex: 1,
+                                      // flex: 1,
                                       child: Text(
-                                        AppLocalizations.of(context)
-                                                .translate('income') ??
-                                            "Income",
-                                        style: TextStyle(fontSize: fontSizeXxs),
-                                      )),
+                                    AppLocalizations.of(context)
+                                            .translate('income') ??
+                                        "Income",
+                                    style: TextStyle(fontSize: fontSizeXxs),
+                                  )),
                                 ],
                               ),
                             ),
@@ -1412,11 +1413,14 @@ class _IRRScreenState extends State<IRRScreen> {
                                     contentPadding: EdgeInsets.all(4),
                                     title: Row(
                                       children: <Widget>[
+                                        SizedBox(
+                                          width: 5,
+                                        ),
                                         Expanded(
                                             flex: 0,
                                             child: Container(
                                                 margin:
-                                                    EdgeInsets.only(right: 25),
+                                                    EdgeInsets.only(right: 21),
                                                 child: Text(
                                                   data[index]["Id"].toString(),
                                                   style: TextStyle(
@@ -1427,42 +1431,56 @@ class _IRRScreenState extends State<IRRScreen> {
                                             child: Container(
                                                 margin:
                                                     EdgeInsets.only(left: 5),
-                                                child: Text(
-                                                  data[index]["Currency"],
-                                                  style: TextStyle(
-                                                      fontSize: fontSizeXxs),
+                                                child: Center(
+                                                  child: Text(
+                                                    data[index]["Currency"],
+                                                    style: TextStyle(
+                                                        fontSize: fontSizeXxs),
+                                                  ),
                                                 ))),
+                                        SizedBox(
+                                          width: 38,
+                                        ),
                                         Expanded(
-                                            flex: 2,
+                                            // flex: 1,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 58),
-                                              child: Text(
-                                                data[index]["Amount"],
-                                                style: TextStyle(
-                                                    fontSize: fontSizeXxs),
-                                              ),
-                                            )),
+                                          // margin: EdgeInsets.only(left: 58),
+                                          child: Center(
+                                            child: Text(
+                                              data[index]["Amount"],
+                                              style: TextStyle(
+                                                  fontSize: fontSizeXxs),
+                                            ),
+                                          ),
+                                        )),
+                                        SizedBox(
+                                          width: 6,
+                                        ),
                                         Expanded(
-                                            flex: 1,
+                                            // flex: 1,
                                             child: Container(
-                                              margin: EdgeInsets.only(left: 4),
-                                              child: Text(
-                                                data[index]["IRR"],
-                                                style: TextStyle(
-                                                    fontSize: fontSizeXxs),
-                                              ),
-                                            )),
+                                          // margin: EdgeInsets.only(left: 10),
+                                          child: Center(
+                                            child: Text(
+                                              data[index]["IRR"],
+                                              style: TextStyle(
+                                                  fontSize: fontSizeXxs),
+                                            ),
+                                          ),
+                                        )),
                                         Expanded(
-                                            flex: 1,
+                                            // flex: 1,
                                             child: Container(
-                                              width: 200,
-                                              margin: EdgeInsets.only(left: 2),
-                                              child: Text(
-                                                data[index]["Income"],
-                                                style: TextStyle(
-                                                    fontSize: fontSizeXxs),
-                                              ),
-                                            )),
+                                          // width: 200,
+                                          // margin: EdgeInsets.only(left: 2),
+                                          child: Center(
+                                            child: Text(
+                                              data[index]["Income"],
+                                              style: TextStyle(
+                                                  fontSize: fontSizeXxs),
+                                            ),
+                                          ),
+                                        )),
                                       ],
                                     ),
                                   ),
