@@ -161,6 +161,8 @@ PODS:
   - multi_image_picker (4.6.7):
     - BSImagePicker (~> 2.10.3)
     - Flutter
+  - multi_select_item (0.0.1):
+    - Flutter
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
     - nanopb/encode (= 1.30906.0)
@@ -222,6 +224,7 @@ DEPENDENCIES:
   - image_picker_for_web (from `.symlinks/plugins/image_picker_for_web/ios`)
   - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
+  - multi_select_item (from `.symlinks/plugins/multi_select_item/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_linux (from `.symlinks/plugins/path_provider_linux/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
@@ -305,6 +308,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/location_permissions/ios"
   multi_image_picker:
     :path: ".symlinks/plugins/multi_image_picker/ios"
+  multi_select_item:
+    :path: ".symlinks/plugins/multi_select_item/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   path_provider_linux:
@@ -373,6 +378,7 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   location_permissions: 7e0f9aa0f60deb8ff93ddf0e2a164c7e8197bc94
   multi_image_picker: 7968ace12b658a9ee51be6514473f5ee5501ea80
+  multi_select_item: b70b78aac4d208141e5d7de8640655570fb40e90
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   path_provider_linux: 4d630dc393e1f20364f3e3b4a2ff41d9674a84e4

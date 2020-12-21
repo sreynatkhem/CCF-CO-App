@@ -179,8 +179,6 @@ class _IRRScreenState extends State<IRRScreen> {
 
   UnfocusDisposition disposition = UnfocusDisposition.scope;
   //
-
-  //
   final GlobalKey<ScaffoldState> _scaffoldKeyIRR =
       new GlobalKey<ScaffoldState>();
   void showInSnackBar(String value, colorsBackground) {
