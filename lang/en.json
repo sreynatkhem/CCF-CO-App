@@ -178,6 +178,24 @@
   "amount_USD" : "Amount USD",
   "clear_successfully": "Clear Successfully",
   "usd": "USD",
-  "group_loan": "Group Loan"
+  "group_loan": "Group Loan",
+  "create_group_loan": "Create a group loan",
+  "create_group_name": "Create a group name",
+  "create": "Create",
+  "select_group_loan": "Select a group loan",
+  "group_name": "A Group name",
+  "limit_select_a_group_loan_only": "Limit select a group loan only 5 memeber!",
+  "detail_group_loan": "Detail a group loan",
+  "leader": "Leader",
+  "group_loan_approve": "Group loan approve",
+  "please_select_team_leader": "Plase select team leader",
+  "team_leader_limit_1_only": "Team leader limit 1 only",
+  "please_select_team_member": "Please select team member",
+  "member_group_loan_limit_5": "Member group loan limit 5 only or more than 2",
+  "please_input_group_name": "Please input the group name!",
+  "select_leader":"Select Leader",
+  "select_member":"Select Member"
+
+
 
 }

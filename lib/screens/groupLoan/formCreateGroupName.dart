@@ -2,7 +2,7 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-class GroupFromBuilder extends StatelessWidget {
+class FormGroupFromBuilder extends StatelessWidget {
   var icons;
   var keys;
   var childs;
@@ -11,7 +11,7 @@ class GroupFromBuilder extends StatelessWidget {
   var shapes;
   var imageColor;
   var elevations;
-  GroupFromBuilder(
+  FormGroupFromBuilder(
       {this.icons,
       this.childs,
       this.keys,
@@ -42,12 +42,13 @@ class GroupFromBuilder extends StatelessWidget {
               ),
             if (imageIcon == null)
               Container(
-                padding: EdgeInsets.only(left: 5),
+                padding: EdgeInsets.only(left: 20),
                 child: Icon(
                   icons,
                   color: Colors.grey,
                 ),
               ),
+            Padding(padding: EdgeInsets.only(left: 20)),
             FormBuilder(
                 key: keys,
                 initialValue: {
@@ -59,7 +60,7 @@ class GroupFromBuilder extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        width: 300,
+                        width: 290,
                         child: childs,
                       ),
                     ])),

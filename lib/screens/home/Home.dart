@@ -12,6 +12,8 @@ import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
+import 'package:chokchey_finance/screens/groupLoan/index.dart';
+import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
@@ -220,7 +222,20 @@ class _HomeState extends State<Home> {
         ModalRoute.withName(""));
   }
 
-  onListGroupLoan() {}
+  onListGroupLoan() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => GroupLoan()),
+        ModalRoute.withName(""));
+  }
+
+  onListGroupLoanApprove() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => GroupLoanApprove()),
+        ModalRoute.withName(""));
+  }
+
   onListLoanRegistration() async {
     Navigator.pushAndRemoveUntil(
         context,
@@ -278,7 +293,7 @@ class _HomeState extends State<Home> {
   _drawerList(context) {
     return Drawer(
       child: Container(
-        color: logolightGreen,
+        color: Colors.white,
         child: Column(
           children: <Widget>[
             DrawerHeader(
@@ -346,13 +361,20 @@ class _HomeState extends State<Home> {
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
-                      // CustomListTile(
-                      //     Icons.group_add,
-                      //     AppLocalizations.of(context)
-                      //             .translate('group_loan') ??
-                      //         'Group Loan',
-                      //     () => {onListGroupLoan()},
-                      //     null),
+                      CustomListTile(
+                          Icons.group_add,
+                          AppLocalizations.of(context)
+                                  .translate('create_group_loan') ??
+                              'Group Loan',
+                          () => {onListGroupLoan()},
+                          null),
+                      CustomListTile(
+                          Icons.group,
+                          AppLocalizations.of(context)
+                                  .translate('group_loan_approve') ??
+                              'Group loan approve',
+                          () => {onListGroupLoanApprove()},
+                          null),
                       CustomListTile(
                           Icons.insert_chart,
                           AppLocalizations.of(context)
@@ -448,25 +470,6 @@ class _HomeState extends State<Home> {
         btnOkColor: logolightGreen,
         btnOkText: AppLocalizations.of(context).translate('yes') ?? 'Yes')
       ..show();
-    // return showDialog(
-    //       context: context,
-    //       builder: (context) => new AlertDialog(
-    //         title: new Text('Are you sure?'),
-    //         content: new Text('Do you want to exit an App'),
-    //         actions: <Widget>[
-    //           new GestureDetector(
-    //             onTap: () => Navigator.of(context).pop(false),
-    //             child: Text("NO"),
-    //           ),
-    //           SizedBox(height: 16),
-    //           new GestureDetector(
-    //             onTap: () => Navigator.of(context).pop(true),
-    //             child: Text("YES"),
-    //           ),
-    //         ],
-    //       ),
-    //     ) ??
-    //     false;
   }
 
   Future<void> _launched;

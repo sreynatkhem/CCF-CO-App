@@ -177,6 +177,26 @@
   "amount_USD" : "ចំនួនដុល្លារ",
   "clear_successfully": "ជម្រះដោយជោគជ័យ",
   "usd": "ដុល្លារ​អាមេរិក",
-  "group_loan": "ក្រុមឥណទាន"
+  "group_loan": "ក្រុមឥណទាន",
+  "create_group_loan": "បង្កើតប្រាក់កម្ចីជាក្រុម",
+  "create_group_name": "បង្កើតឈ្មោះក្រុម",
+  "create": "បង្កើត",
+  "select_group_loan": "ជ្រើសរើសប្រាក់កម្ចីជាក្រុម",
+  "group_name": "ឈ្មោះក្រុម",
+  "limit_select_a_group_loan_only": "កំនត់ជ្រើសរើសកំចីជាក្រុមមានសមាជិកតែ ៥ នាក់ប៉ុណ្ណោះ!",
+  "detail_group_loan": "ផ្តល់ជូនប្រាក់កម្ចីជាក្រុម",
+  "leader": "អ្នកដឹកនាំ",
+  "group_loan_approve": "ប្រាក់កម្ចីជាក្រុមយល់ព្រម",
+  "please_select_team_leader": "សូមជ្រើសរើសប្រធានក្រុម",
+  "team_leader_limit_1_only": "កំរិតដឹកនាំក្រុមមានតែ ១ ប៉ុណ្ណោះ",
+  "please_select_team_member": "សូមជ្រើសរើសសមាជិកក្រុម",
+  "member_group_loan_limit_5": "កំចីកំចីជាសមាជិកមានតែ ៥ រឺលើសពី ២ ប៉ុណ្ណោះ",
+  "please_input_group_name": "សូមបញ្ចូលឈ្មោះក្រុម!",
+  "select_leader":"ជ្រើសរើសអ្នកដឹកនាំ",
+  "select_member":"ជ្រើសរើសសមាជិក"
+
+
+
+
 
 }
