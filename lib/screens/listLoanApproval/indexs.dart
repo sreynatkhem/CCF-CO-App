@@ -417,7 +417,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                             var status = statusApproval(
                                 parsed != null ? parsed[index]['rstatus'] : '');
                             return Container(
-                              height: isIphoneX(context) ? 120 : 110,
+                              height: 120,
                               padding:
                                   EdgeInsets.only(left: 5, right: 5, top: 3),
                               child: Card(

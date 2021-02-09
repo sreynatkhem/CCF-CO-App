@@ -354,9 +354,11 @@ class _NotificationState extends State<NotificationScreen> {
                                                       //   height: 50,
                                                       // ),
                                                       Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 15)),
+                                                          padding: EdgeInsets.only(
+                                                              right: isIphoneX(
+                                                                      context)
+                                                                  ? 8
+                                                                  : 5)),
                                                       Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -366,7 +368,10 @@ class _NotificationState extends State<NotificationScreen> {
                                                                 .center,
                                                         children: <Widget>[
                                                           Container(
-                                                              width: 250,
+                                                              width: isIphoneX(
+                                                                      context)
+                                                                  ? 250
+                                                                  : 200,
                                                               child: Text(
                                                                 listMessages[
                                                                         index]
@@ -376,7 +381,10 @@ class _NotificationState extends State<NotificationScreen> {
                                                                 maxLines: 1,
                                                               )),
                                                           Container(
-                                                            width: 260,
+                                                            width: isIphoneX(
+                                                                    context)
+                                                                ? 260
+                                                                : 230,
                                                             child: Text(
                                                               '${listMessages[index]['body']}',
                                                               maxLines: 3,

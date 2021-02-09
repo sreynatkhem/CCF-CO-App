@@ -361,20 +361,20 @@ class _HomeState extends State<Home> {
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
-                      CustomListTile(
-                          Icons.group_add,
-                          AppLocalizations.of(context)
-                                  .translate('create_group_loan') ??
-                              'Group Loan',
-                          () => {onListGroupLoan()},
-                          null),
-                      CustomListTile(
-                          Icons.group,
-                          AppLocalizations.of(context)
-                                  .translate('group_loan_approve') ??
-                              'Group loan approve',
-                          () => {onListGroupLoanApprove()},
-                          null),
+                      // CustomListTile(
+                      //     Icons.group_add,
+                      //     AppLocalizations.of(context)
+                      //             .translate('create_group_loan') ??
+                      //         'Group Loan',
+                      //     () => {onListGroupLoan()},
+                      //     null),
+                      // CustomListTile(
+                      //     Icons.group,
+                      //     AppLocalizations.of(context)
+                      //             .translate('group_loan_approve') ??
+                      //         'Group loan approve',
+                      //     () => {onListGroupLoanApprove()},
+                      //     null),
                       CustomListTile(
                           Icons.insert_chart,
                           AppLocalizations.of(context)
@@ -738,18 +738,18 @@ class _HomeState extends State<Home> {
                 icon: Icon(Icons.calculate),
                 textAlign: TextAlign.center,
                 activeColor: logolightGreen),
-            BottomNavyBarItem(
-                title: Text(AppLocalizations.of(context).translate('search') ??
-                    'Search'),
-                icon: Icon(Icons.search),
-                textAlign: TextAlign.center,
-                activeColor: logolightGreen),
-            BottomNavyBarItem(
-                title: Text(AppLocalizations.of(context).translate('setting') ??
-                    'Setting'),
-                icon: Icon(Icons.settings),
-                textAlign: TextAlign.center,
-                activeColor: logolightGreen),
+            // BottomNavyBarItem(
+            //     title: Text(AppLocalizations.of(context).translate('search') ??
+            //         'Search'),
+            //     icon: Icon(Icons.search),
+            //     textAlign: TextAlign.center,
+            //     activeColor: logolightGreen),
+            // BottomNavyBarItem(
+            //     title: Text(AppLocalizations.of(context).translate('setting') ??
+            //         'Setting'),
+            //     icon: Icon(Icons.settings),
+            //     textAlign: TextAlign.center,
+            //     activeColor: logolightGreen),
           ],
         ),
       ),

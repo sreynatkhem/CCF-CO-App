@@ -313,7 +313,7 @@ class _ReturnSummaryState extends State<ReturnSummary> {
                                           child: Column(
                                         children: [
                                           Container(
-                                            height: 90,
+                                            height: 100,
                                             child: Card(
                                                 shape: RoundedRectangleBorder(
                                                   side: BorderSide(

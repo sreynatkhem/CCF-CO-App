@@ -27,6 +27,7 @@ class ApprovelistProvider with ChangeNotifier {
       );
       final parsed = jsonDecode(response.body);
       final list = parsed['body']['approvalList'];
+      logger().e('List: $list');
       data.add(list);
       _isFetching = false;
       notifyListeners();
