@@ -115,6 +115,8 @@ class _LoginState extends State<Login> {
                     await storage.write(
                         key: "isapprover",
                         value: value[0].isapprover.toString()),
+                    await storage.write(
+                        key: "roles", value: value[0].roles.toString()),
                     setState(() {
                       _isLoading = false;
                     }),

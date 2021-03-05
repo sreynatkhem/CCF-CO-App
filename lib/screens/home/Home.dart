@@ -361,20 +361,20 @@ class _HomeState extends State<Home> {
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
-                      // CustomListTile(
-                      //     Icons.group_add,
-                      //     AppLocalizations.of(context)
-                      //             .translate('create_group_loan') ??
-                      //         'Group Loan',
-                      //     () => {onListGroupLoan()},
-                      //     null),
-                      // CustomListTile(
-                      //     Icons.group,
-                      //     AppLocalizations.of(context)
-                      //             .translate('group_loan_approve') ??
-                      //         'Group loan approve',
-                      //     () => {onListGroupLoanApprove()},
-                      //     null),
+                      CustomListTile(
+                          Icons.group_add,
+                          AppLocalizations.of(context)
+                                  .translate('create_group_loan') ??
+                              'Group Loan',
+                          () => {onListGroupLoan()},
+                          null),
+                      CustomListTile(
+                          Icons.group,
+                          AppLocalizations.of(context)
+                                  .translate('group_loan_approve') ??
+                              'Group loan approve',
+                          () => {onListGroupLoanApprove()},
+                          null),
                       CustomListTile(
                           Icons.insert_chart,
                           AppLocalizations.of(context)
@@ -701,11 +701,16 @@ class _HomeState extends State<Home> {
                                 }) // List View
                                 ),
                           ),
-                          CardMessage(
-                              title: AppLocalizations.of(context)
-                                      .translate('message_from_ceo') ??
-                                  'Message from CEO',
-                              textMessage: listMessageFromCEO)
+                          listMessageFromCEO != null && listMessageFromCEO != ""
+                              ? CardMessage(
+                                  title: AppLocalizations.of(context)
+                                          .translate('message_from_ceo') ??
+                                      'Message from CEO',
+                                  textMessage: listMessageFromCEO != null &&
+                                          listMessageFromCEO != ""
+                                      ? listMessageFromCEO
+                                      : "")
+                              : Text("")
                         ],
                       ),
                     ),
