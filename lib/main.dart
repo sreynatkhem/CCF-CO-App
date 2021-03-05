@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:chokchey_finance/models/requestLoanApproval.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
+import 'package:chokchey_finance/providers/groupLoan/index.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
 import 'package:chokchey_finance/providers/loan/createLoan.dart';
 import 'package:chokchey_finance/providers/loan/loanApproval.dart';
@@ -78,6 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider<LoanInternal>(create: (_) => LoanInternal()),
         Provider<LoanApproval>(create: (_) => LoanApproval()),
         Provider<NotificationProvider>(create: (_) => NotificationProvider()),
+        Provider<GroupLoanProvider>(create: (_) => GroupLoanProvider()),
       ],
       child: MaterialApp(
         locale: _locale,

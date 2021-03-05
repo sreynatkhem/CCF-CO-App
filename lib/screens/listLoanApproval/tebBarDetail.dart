@@ -42,8 +42,8 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   void didChangeDependencies() {
     futureLoanApproval = Provider.of<LoanApproval>(context)
         .getLoanApproval(20, 1, '', '', '', '', '');
-    var test = storage.read(key: 'roles');
-    test.then(
+    var listUserRoles = storage.read(key: 'roles');
+    listUserRoles.then(
       (value) => setState(() {
         userRoles = jsonDecode(value);
       }),

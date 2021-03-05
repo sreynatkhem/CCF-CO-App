@@ -194,7 +194,8 @@
   "member_group_loan_limit_5": "Member group loan limit 5 only or more than 2",
   "please_input_group_name": "Please input the group name!",
   "select_leader":"Select Leader",
-  "select_member":"Select Member"
+  "select_member":"Select Member",
+  "please_select_member_correctly":"Please select member correctly"
 
 
 

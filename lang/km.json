@@ -193,7 +193,9 @@
   "member_group_loan_limit_5": "កំចីកំចីជាសមាជិកមានតែ ៥ រឺលើសពី ២ ប៉ុណ្ណោះ",
   "please_input_group_name": "សូមបញ្ចូលឈ្មោះក្រុម!",
   "select_leader":"ជ្រើសរើសអ្នកដឹកនាំ",
-  "select_member":"ជ្រើសរើសសមាជិក"
+  "select_member":"ជ្រើសរើសសមាជិក",
+  "please_select_member_correctly":"សូមជ្រើសរើសសមាជិកអោយបានត្រឹមត្រូវ"
+
 
 
 
