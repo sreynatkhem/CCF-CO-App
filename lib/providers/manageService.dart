@@ -13,4 +13,4 @@ final baseUrl = 'https://10.168.30.7:10410/ONLWeb/HTT/OpnInHttSysApi/';
 // UAT INTERNAL
 
 // final baseURLInternal = 'http://119.82.252.42:2020/api/';
-final baseURLInternal = 'https://localhost:5001/api/';
+final baseURLInternal = 'https://192.168.111.92:5001/api/';

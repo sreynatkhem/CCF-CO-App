@@ -1,20 +1,8 @@
-import 'dart:convert';
-
-import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
-import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/screens/groupLoan/index.dart';
-import 'package:chokchey_finance/screens/groupLoan/selectGroupLoan.dart';
-import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:multi_select_item/multi_select_item.dart';
-import 'package:select_dialog/select_dialog.dart';
 
 class GroupLoanDetail extends StatefulWidget {
   var groupName;

@@ -195,8 +195,7 @@
   "please_input_group_name": "Please input the group name!",
   "select_leader":"Select Leader",
   "select_member":"Select Member",
-  "please_select_member_correctly":"Please select member correctly"
-
-
+  "please_select_member_correctly":"Please select member correctly",
+  "next": "Next"
 
 }

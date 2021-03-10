@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
+import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/tebBarDetail.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -57,6 +58,7 @@ class _NotificationState extends State<NotificationScreen> {
         _isLoading = false;
       });
       for (var item in parsed) {
+        logger().e("item: ${item}");
         setState(() {
           totalMessage = item['totalMessage'];
           totalUnread = item['totalUnread'];
@@ -277,6 +279,23 @@ class _NotificationState extends State<NotificationScreen> {
     });
   }
 
+  navigatorGroupLoan(values) async {
+    await NotificationProvider()
+        .postNotificationRead(values['id'])
+        .then((value) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => GroupLoanApprove(
+            isRefresh: true,
+          ),
+        ),
+      );
+    }).catchError((onError) {
+      logger().e('onError: ${onError}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return NotificationListener(
@@ -328,7 +347,16 @@ class _NotificationState extends State<NotificationScreen> {
                                                 Colors.blue.withAlpha(30),
                                             onTap: () {
                                               // var value = listMessages[index];
-                                              if (listMessages[index]['data'] ==
+                                              var subString =
+                                                  listMessages[index]['rcode'];
+                                              var rcodeGroup =
+                                                  subString.substring(0, 1);
+                                              var groupLoanCode = '6';
+                                              if (groupLoanCode == rcodeGroup) {
+                                                navigatorGroupLoan(
+                                                    listMessages[index]);
+                                              } else if (listMessages[index]
+                                                      ['data'] ==
                                                   "announcement") {
                                                 onTapsAnnouncement(
                                                     listMessages[index]);

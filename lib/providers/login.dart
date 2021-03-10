@@ -15,6 +15,9 @@ class LoginProvider with ChangeNotifier {
     _isFetching = true;
     final bodyRow =
         "{\n    \"uid\": \"$id\",\n    \"upassword\": \"$password\"\n}";
+    logger().e("body: $bodyRow");
+    logger().e("baseURLInternal: ${baseURLInternal + 'token'}");
+
     try {
       _isFetching = false;
       final response = await api().post(
@@ -25,11 +28,14 @@ class LoginProvider with ChangeNotifier {
         body: bodyRow,
       );
       final parsed = jsonDecode(response.body);
+      logger().e("parsed: ${parsed}");
+
       notifyListeners();
       return parsed
           .map<LoginModels>((json) => LoginModels.fromJson(json))
           .toList();
     } catch (error) {
+      logger().e("error: $error");
       _isFetching = false;
     }
   }
