@@ -17,17 +17,78 @@ class GroupLoanProvider with ChangeNotifier {
   var successfully = false;
   var listData = [];
   //
+  var _isError = false;
+  var _isLoadingFetchLoan = false;
+  var listGroupLoan = [];
+
+  Future fetchLoan(
+      _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
+    final storage = new FlutterSecureStorage();
+    _isLoadingFetchLoan = true;
+    try {
+      var token = await storage.read(key: 'user_token');
+      var user_ucode = await storage.read(key: "user_ucode");
+      var branch = await storage.read(key: "branch");
+      var level = await storage.read(key: "level");
+      var bodyRow;
+      var sdates = sdate != null ? sdate : '';
+      var edates = edate != null ? edate : '';
+      var codes = code != null ? code : '';
+      var statuses = status != null ? status : '';
+      var btlcode = status != null ? status : '';
+      var bcodes;
+      var ucode;
+      if (level == '3') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = '';
+        ucode = codes != null && codes != "" ? codes : "";
+      }
+
+      if (level == '2') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = user_ucode;
+        ucode = code != null && code != "" ? code : '';
+      }
+
+      if (level == '1') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        ucode = user_ucode;
+        btlcode = '';
+      }
+
+      if (level == '4' || level == '5' || level == '6') {
+        bcodes = bcode != null && bcode != "" ? bcode : '';
+        btlcode = '';
+        ucode = code != null && code != "" ? code : '';
+      }
+      bodyRow =
+          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+      final response = await api().post(baseURLInternal + 'loanRequests/all',
+          headers: headers, body: bodyRow);
+      if (response.statusCode == 200) {
+        var listLoan = jsonDecode(response.body);
+        _isLoadingFetchLoan = false;
+        notifyListeners();
+        return listLoan;
+      } else {
+        _isLoadingFetchLoan = false;
+      }
+    } catch (error) {
+      _isError = false;
+    }
+  }
 
   Future postGroupLoan(gname, groupLoanDetail) async {
     final storage = new FlutterSecureStorage();
     String user_id = await storage.read(key: 'user_id');
     var token = await storage.read(key: 'user_token');
     var branch = await storage.read(key: 'branch');
-
     final boyrow =
         "{\n    \"ucode\": \"$user_id\",\n  \"bcode\": \"$branch\",\n \"gname\": \"$gname\",\n \"groupLoanDetail\": $groupLoanDetail,\n    }";
-    logger().i('boyrow: ${boyrow}');
-
     try {
       final response = await api().post(
           baseURLInternal + 'GroupLoan/creategrouploan',
@@ -36,8 +97,6 @@ class GroupLoanProvider with ChangeNotifier {
             "Authorization": "Bearer " + token
           },
           body: boyrow);
-      logger().i(baseURLInternal + 'GroupLoan/creategrouploan');
-
       final list = jsonDecode(response.body);
       notifyListeners();
       return list;
@@ -186,17 +245,12 @@ class GroupLoanProvider with ChangeNotifier {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      logger().e("bodyRow: ${bodyRow}");
-
       final response = await api().post(baseURLInternal + 'GroupLoan/all',
           headers: headers, body: bodyRow);
       notifyListeners();
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
-
         listData.addAll(listLoan);
-        logger().e("listLoan: ${listLoan}");
-
         return listLoan;
       }
     } catch (error) {

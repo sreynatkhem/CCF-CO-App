@@ -588,6 +588,7 @@ class _CustomerRegister extends State {
                         },
                         keyboardType: TextInputType.text,
                         inputFormatters: [
+                          // ignore: deprecated_member_use
                           new WhitelistingTextInputFormatter(
                               RegExp("[a-z A-Z]")),
                         ],

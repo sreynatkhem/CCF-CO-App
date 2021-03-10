@@ -98,7 +98,10 @@ class _LoginState extends State<Login> {
     setState(() {
       _isLoading = true;
     });
+
     try {
+      logger().e("user_id: $user_id");
+      logger().e("valuePassword: $valuePassword");
       await Provider.of<LoginProvider>(context, listen: false)
           .fetchLogin(user_id, valuePassword)
           .then((value) async => {
