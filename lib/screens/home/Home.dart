@@ -14,6 +14,7 @@ import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart'
 import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
+import 'package:chokchey_finance/screens/historyApsara/index.dart';
 import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
@@ -250,6 +251,13 @@ class _HomeState extends State<Home> {
         ModalRoute.withName(""));
   }
 
+  onListApprovalApsaraHistory() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HistoryApsara()),
+        ModalRoute.withName(""));
+  }
+
   onListApprovalSummary() async {
     Navigator.pushAndRemoveUntil(
         context,
@@ -409,6 +417,13 @@ class _HomeState extends State<Home> {
                                   .translate('report_summary') ??
                               'Report Summary',
                           () => {onListApprovalHistory()},
+                          null),
+                      CustomListTile(
+                          Icons.insert_chart,
+                          AppLocalizations.of(context)
+                                  .translate('loan_approval_history') ??
+                              "Loan Approval History",
+                          () => {onListApprovalApsaraHistory()},
                           null),
                       CustomListTile(
                         null,
@@ -715,12 +730,10 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     IRRScreen(),
-                    Container(
-                      color: Colors.white,
-                    ),
-                    Container(
-                      color: Colors.white,
-                    ),
+                    // HistoryApsara(),
+                    // Container(
+                    //   color: Colors.white,
+                    // ),
                   ],
                 ),
               ),

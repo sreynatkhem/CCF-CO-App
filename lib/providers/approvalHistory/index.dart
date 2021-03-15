@@ -83,7 +83,6 @@ class ApprovalHistoryProvider {
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
-
         return list;
       } else {
         logger().e('response.statusCode != 200 :: ${response.statusCode}');
@@ -105,6 +104,31 @@ class ApprovalHistoryProvider {
       };
       final response = await api().get(
         baseURLInternal + 'valuelists/users/co/' + user_ucode + '/' + nameCO,
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        var list = jsonDecode(response.body);
+        return list;
+      } else {
+        logger().e('response.statusCode != 200 :: ${response.statusCode}');
+      }
+    } catch (error) {
+      logger().e('error :: ${error}');
+    }
+  }
+
+  //Request list CO and search
+  Future getHistoryAPSARACO() async {
+    try {
+      var token = await storage.read(key: 'user_token');
+      var user_ucode = await storage.read(key: "user_ucode");
+
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+      final response = await api().get(
+        baseURLInternal + 'ValueLists/Users/CO/' + user_ucode,
         headers: headers,
       );
       if (response.statusCode == 200) {
