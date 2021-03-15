@@ -88,6 +88,13 @@ getDateTimeYMD(time) {
   return dateTime;
 }
 
+getYYMMDD(time) {
+  logger().e("time: ${time}");
+  DateTime dateTimeApproved = DateTime.parse(time);
+  String dateTime = DateFormat("yyyyMMdd").format(dateTimeApproved);
+  return dateTime;
+}
+
 Future<String> readResponse(HttpClientResponse response) {
   final completer = Completer<String>();
   final contents = StringBuffer();

@@ -1,4 +1,5 @@
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabGroupLoanApprove.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
@@ -119,7 +120,12 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Text('Group name: '),
+                                                        Text(AppLocalizations.of(
+                                                                        context)
+                                                                    .translate(
+                                                                        'group_loan') +
+                                                                ": " ??
+                                                            'Group name: '),
                                                         Text(
                                                           '${newDataList[index]['gname']}',
                                                           style: TextStyle(
@@ -131,8 +137,18 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.all(2)),
-                                                    Text(
-                                                        'Create by: ${newDataList[index]['user']['uname']}'),
+                                                    Row(
+                                                      children: [
+                                                        Text(AppLocalizations.of(
+                                                                        context)
+                                                                    .translate(
+                                                                        'create_by') +
+                                                                ": " ??
+                                                            'Create by: '),
+                                                        Text(
+                                                            ' ${newDataList[index]['user']['uname']}'),
+                                                      ],
+                                                    ),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.all(2)),

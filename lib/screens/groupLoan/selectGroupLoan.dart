@@ -34,14 +34,13 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
   final GlobalKey<ScaffoldState> _scaffoldKeySelectedGroupLoan =
       new GlobalKey<ScaffoldState>();
 
-  //
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     if (mounted) {
       getListLoan(20, 1, '', '', '', '', '');
     }
-    super.didChangeDependencies();
   }
 
   var _isLoading = false;
@@ -104,6 +103,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           headers: headers, body: bodyRow);
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
+        logger().e("list loan: ${listLoan}");
         if (mounted)
           setState(() {
             _isLoading = false;
@@ -249,312 +249,300 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           icon: new Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        bodys: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  Container(
-                    child: SmartSelect.multiple(
-                        title: AppLocalizations.of(context)
-                            .translate('select_member'),
-                        value: [],
-                        // choiceItems: newDataList,
-                        choiceType: S2ChoiceType.checkboxes,
-                        modalFilter: true,
-                        modalFilterAuto: true,
-                        choiceItems: newDataList,
-                        //  selected.valueTitle
-                        onChange: (selected) {
-                          if (mounted)
-                            setState(() {
-                              list = [];
-                              _selectedMember = [];
-                            });
-                          if (selected != null && selected.valueTitle != null) {
-                            for (var item in selected.valueTitle) {
-                              // loop id member rcode and lcode
-                              var subStringCode = item.substring(0, 15);
-                              var rcodeMember = subStringCode.substring(0, 6);
-                              setState(() {
-                                _selectedMember = selected.valueTitle;
-                                list.addAll([
-                                  S2Choice<int>(
-                                    value: int.parse(rcodeMember),
-                                    title: item,
-                                  )
-                                ]);
-                              });
-                            }
-                          }
-                        },
-                        // setState(() => list = selected.valueTitle),
-                        modalHeaderStyle: S2ModalHeaderStyle(
-                            actionsIconTheme:
-                                IconThemeData(color: Colors.white),
-                            iconTheme: IconThemeData(color: Colors.white),
-                            backgroundColor: logolightGreen,
-                            textStyle: TextStyle(color: Colors.white)),
-                        choiceConfig: const S2ChoiceConfig(
-                          useDivider: true,
-                        ),
-                        modalType: S2ModalType.fullPage,
-                        modalDividerBuilder: (context, state) {
-                          return const Divider(height: 1);
-                        },
-                        tileBuilder: (context, stateMember) {
-                          return Card(
-                            elevation: 2,
-                            margin: const EdgeInsets.symmetric(
-                              vertical: 7,
-                              horizontal: 15,
-                            ),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
-                              child: S2Tile.fromState(
-                                stateMember,
-                                hideValue: true,
-                                isLoading: _isLoading,
-                                leading: CircleAvatar(
-                                  backgroundColor: logolightGreen,
-                                  child: Text('5',
-                                      style: TextStyle(color: Colors.white)),
-                                ),
-                                body: S2TileChips(
-                                  chipLength: stateMember.valueObject.length,
-                                  chipLabelBuilder: (context, i) {
-                                    return Text(
-                                        stateMember.valueObject[i].title);
-                                  },
-                                  chipColor: logolightGreen,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        modalFooterBuilder: (context, stateMember) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 7.0,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                const Spacer(),
-                                FlatButton(
-                                  color: Colors.red,
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('cancel'),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () =>
-                                      stateMember.closeModal(confirmed: false),
-                                ),
-                                const SizedBox(width: 5),
-                                FlatButton(
-                                  child: Text(AppLocalizations.of(context)
-                                      .translate('okay')),
-                                  color: logolightGreen,
-                                  textColor: Colors.white,
-                                  onPressed: stateMember.changes.valid
-                                      ? () => stateMember.closeModal(
-                                          confirmed: true)
-                                      : null,
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
+        bodys: Column(
+          children: [
+            Container(
+              child: SmartSelect.multiple(
+                  title:
+                      AppLocalizations.of(context).translate('select_member'),
+                  value: [],
+                  // choiceItems: newDataList,
+                  choiceType: S2ChoiceType.checkboxes,
+                  modalFilter: true,
+                  modalFilterAuto: true,
+                  choiceItems: newDataList,
+                  //  selected.valueTitle
+                  onChange: (selected) {
+                    if (mounted)
+                      setState(() {
+                        list = [];
+                        _selectedMember = [];
+                      });
+
+                    if (selected != null && selected.valueTitle != null) {
+                      _selectedMember = selected.valueTitle;
+                      for (var item in selected.valueTitle) {
+                        // loop id member rcode and lcode
+                        var subStringCode = item.substring(0, 15);
+                        var rcodeMember = subStringCode.substring(0, 6);
+                        setState(() {
+                          list.addAll([
+                            S2Choice<int>(
+                              value: int.parse(rcodeMember),
+                              title: item,
+                            )
+                          ]);
+                        });
+                      }
+                    }
+                  },
+                  // setState(() => list = selected.valueTitle),
+                  modalHeaderStyle: S2ModalHeaderStyle(
+                      actionsIconTheme: IconThemeData(color: Colors.white),
+                      iconTheme: IconThemeData(color: Colors.white),
+                      backgroundColor: logolightGreen,
+                      textStyle: TextStyle(color: Colors.white)),
+                  choiceConfig: const S2ChoiceConfig(
+                    useDivider: true,
                   ),
-                  //validate group member
-                  if (list.length > 5 || list.length < 2)
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      padding: EdgeInsets.all(10),
+                  modalType: S2ModalType.fullPage,
+                  modalDividerBuilder: (context, state) {
+                    return const Divider(height: 1);
+                  },
+                  tileBuilder: (context, stateMember) {
+                    return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 7,
+                        horizontal: 15,
+                      ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
+                        child: S2Tile.fromState(
+                          stateMember,
+                          hideValue: true,
+                          isLoading: _isLoading,
+                          leading: CircleAvatar(
+                            backgroundColor: logolightGreen,
+                            child: Text('5',
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                          body: S2TileChips(
+                            chipLength: stateMember.valueObject.length,
+                            chipLabelBuilder: (context, i) {
+                              return Text(stateMember.valueObject[i].title);
+                            },
+                            chipColor: logolightGreen,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  modalFooterBuilder: (context, stateMember) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 7.0,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          const Spacer(),
+                          FlatButton(
+                            color: Colors.red,
+                            child: Text(
+                              AppLocalizations.of(context).translate('cancel'),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () =>
+                                stateMember.closeModal(confirmed: false),
+                          ),
+                          const SizedBox(width: 5),
+                          FlatButton(
+                            child: Text(
+                                AppLocalizations.of(context).translate('okay')),
+                            color: logolightGreen,
+                            textColor: Colors.white,
+                            onPressed: stateMember.changes.valid
+                                ? () => stateMember.closeModal(confirmed: true)
+                                : null,
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+            ),
+            //validate group member
+            if (list.length > 5 || list.length < 2)
+              Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                padding: EdgeInsets.all(10),
+                child: Center(
+                  child: Text(
+                    AppLocalizations.of(context)
+                            .translate('member_group_loan_have_to') ??
+                        "Member Group Loan have to 2 or least then 5 or equal 5.",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+
+            //select leader
+            if (list != [])
+              Container(
+                child: SmartSelect.single(
+                    title:
+                        AppLocalizations.of(context).translate('select_leader'),
+                    value: list,
+                    choiceItems: list,
+                    choiceType: S2ChoiceType.radios,
+                    modalFilter: true,
+                    modalFilterAuto: true,
+                    onChange: (stateLeader) {
+                      setState(() {
+                        _selectedLeader = [];
+                      });
+                      if (stateLeader.valueTitle != "" &&
+                          stateLeader.valueTitle != null) {
+                        setState(() {
+                          _selectedLeader = [stateLeader.valueTitle];
+                        });
+                      }
+                    },
+                    modalHeaderStyle: S2ModalHeaderStyle(
+                        actionsIconTheme: IconThemeData(color: Colors.white),
+                        iconTheme: IconThemeData(color: Colors.white),
+                        backgroundColor: logolightGreen,
+                        textStyle: TextStyle(color: Colors.white)),
+                    choiceConfig: const S2ChoiceConfig(
+                      useDivider: true,
+                    ),
+                    modalType: S2ModalType.fullPage,
+                    modalDividerBuilder: (context, state) {
+                      return const Divider(height: 1);
+                    },
+                    tileBuilder: (context, stateLeader) {
+                      return Card(
+                        elevation: 2,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 7,
+                          horizontal: 15,
+                        ),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
+                          child: S2Tile.fromState(
+                            stateLeader,
+                            hideValue: true,
+                            value: stateLeader.toString(),
+                            leading: CircleAvatar(
+                              backgroundColor: logolightGreen,
+                              child: Text('1',
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                            body: Container(
+                              margin: EdgeInsets.only(left: 15, right: 15),
+                              child: stateLeader.valueTitle != null
+                                  ? Card(
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: logolightGreen, width: 0.2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Container(
+                                        padding: EdgeInsets.all(7),
+                                        margin: EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          stateLeader.valueTitle != null
+                                              ? "${stateLeader.valueTitle}"
+                                              : "",
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              color: logolightGreen,
+                                              fontSize: fontSizeXxs),
+                                        ),
+                                      ))
+                                  : Center(),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    modalFooterBuilder: (context, stateLeader) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 7.0,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            const Spacer(),
+                            FlatButton(
+                                color: Colors.red,
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('cancel'),
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: () {
+                                  stateLeader.closeModal(confirmed: false);
+                                }),
+                            const SizedBox(width: 5),
+                            FlatButton(
+                              child: Text(AppLocalizations.of(context)
+                                  .translate('okay')),
+                              color: logolightGreen,
+                              textColor: Colors.white,
+                              onPressed: stateLeader.changes.valid
+                                  ? () {
+                                      stateLeader.closeModal(confirmed: true);
+                                    }
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+            Container(
+              padding: EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RaisedButton(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: logolightGreen, width: 1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    color: logolightGreen,
+                    onPressed: () {
+                      submitGroupLoan();
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * isIphonex,
+                      height: MediaQuery.of(context).size.width * 0.11,
                       child: Center(
-                        child: Text(
-                          "Member Group Loan have to 2 or least then 5 or equal 5.",
-                          style: TextStyle(color: Colors.red),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                                AppLocalizations.of(context)
+                                        .translate("submit") ??
+                                    "Submit",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17.0)),
+                          ],
                         ),
                       ),
                     ),
-
-                  //select leader
-                  if (list != [])
-                    Container(
-                      child: SmartSelect.single(
-                          title: AppLocalizations.of(context)
-                              .translate('select_leader'),
-                          value: list,
-                          choiceItems: list,
-                          choiceType: S2ChoiceType.radios,
-                          modalFilter: true,
-                          modalFilterAuto: true,
-                          onChange: (stateLeader) {
-                            setState(() {
-                              _selectedLeader = [];
-                            });
-                            if (stateLeader.valueTitle != "" &&
-                                stateLeader.valueTitle != null) {
-                              setState(() {
-                                _selectedLeader = [stateLeader.valueTitle];
-                              });
-                            }
-                          },
-                          modalHeaderStyle: S2ModalHeaderStyle(
-                              actionsIconTheme:
-                                  IconThemeData(color: Colors.white),
-                              iconTheme: IconThemeData(color: Colors.white),
-                              backgroundColor: logolightGreen,
-                              textStyle: TextStyle(color: Colors.white)),
-                          choiceConfig: const S2ChoiceConfig(
-                            useDivider: true,
-                          ),
-                          modalType: S2ModalType.fullPage,
-                          modalDividerBuilder: (context, state) {
-                            return const Divider(height: 1);
-                          },
-                          tileBuilder: (context, stateLeader) {
-                            return Card(
-                              elevation: 2,
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 7,
-                                horizontal: 15,
-                              ),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
-                                child: S2Tile.fromState(
-                                  stateLeader,
-                                  hideValue: true,
-                                  value: stateLeader.toString(),
-                                  leading: CircleAvatar(
-                                    backgroundColor: logolightGreen,
-                                    child: Text('1',
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                                  body: Container(
-                                    margin:
-                                        EdgeInsets.only(left: 15, right: 15),
-                                    child: stateLeader.valueTitle != null
-                                        ? Card(
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                  color: logolightGreen,
-                                                  width: 0.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(7),
-                                              margin: EdgeInsets.only(left: 5),
-                                              child: Text(
-                                                stateLeader.valueTitle != null
-                                                    ? "${stateLeader.valueTitle}"
-                                                    : "",
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    color: logolightGreen,
-                                                    fontSize: fontSizeXxs),
-                                              ),
-                                            ))
-                                        : Center(),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          modalFooterBuilder: (context, stateLeader) {
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 7.0,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  const Spacer(),
-                                  FlatButton(
-                                      color: Colors.red,
-                                      child: Text(
-                                        AppLocalizations.of(context)
-                                            .translate('cancel'),
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      onPressed: () {
-                                        stateLeader.closeModal(
-                                            confirmed: false);
-                                      }),
-                                  const SizedBox(width: 5),
-                                  FlatButton(
-                                    child: Text(AppLocalizations.of(context)
-                                        .translate('okay')),
-                                    color: logolightGreen,
-                                    textColor: Colors.white,
-                                    onPressed: stateLeader.changes.valid
-                                        ? () {
-                                            stateLeader.closeModal(
-                                                confirmed: true);
-                                          }
-                                        : null,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                    ),
-                  Container(
-                    padding: EdgeInsets.all(15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        RaisedButton(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: logolightGreen, width: 1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          color: logolightGreen,
-                          onPressed: () {
-                            submitGroupLoan();
-                          },
-                          child: Container(
-                            width:
-                                MediaQuery.of(context).size.width * isIphonex,
-                            height: MediaQuery.of(context).size.width * 0.11,
-                            child: Center(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                      AppLocalizations.of(context)
-                                              .translate("submit") ??
-                                          "Submit",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 17.0)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
                   )
                 ],
-              ));
+              ),
+            )
+          ],
+        ));
   }
 }

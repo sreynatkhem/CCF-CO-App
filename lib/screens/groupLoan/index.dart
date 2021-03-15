@@ -20,7 +20,8 @@ class _GroupLoanState extends State<GroupLoan> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: logolightGreen,
-        title: Text("Group Loan"),
+        title: Text(AppLocalizations.of(context).translate('group_loan') ??
+            "Group Loan"),
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back),
           onPressed: () => Navigator.pushAndRemoveUntil(
@@ -48,7 +49,9 @@ class _GroupLoanState extends State<GroupLoan> {
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: logolightGreen),
                     ),
-                    labelText: 'Group Name:',
+                    labelText:
+                        AppLocalizations.of(context).translate('group_loan') ??
+                            'Group Name:',
                   ),
                 )),
 
@@ -67,19 +70,13 @@ class _GroupLoanState extends State<GroupLoan> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     color: logolightGreen,
-                    onPressed: () {
-                      if (createGroupLoanDefaultController.text != "") {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => GroupLoanSelect(
-                                      controller:
-                                          createGroupLoanDefaultController.text,
-                                    )));
-                      } else {
-                        return null;
-                      }
-                    },
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GroupLoanSelect(
+                                  controller:
+                                      createGroupLoanDefaultController.text,
+                                ))),
                     child: Container(
                       width: MediaQuery.of(context).size.width * isIphonex,
                       height: MediaQuery.of(context).size.width * 0.11,

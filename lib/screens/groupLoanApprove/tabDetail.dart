@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/widgetDetail.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -13,24 +14,24 @@ class DetailScreen extends StatelessWidget {
         children: [
           DetailWidget(
                   context: context,
-                  title: "Group name",
+                  title: "group_loan",
                   subTitle: list['gname'])
               .getTextDetail(),
           Padding(padding: EdgeInsets.all(2)),
           DetailWidget(
                   context: context,
-                  title: "Create date ",
+                  title: "create_by",
                   subTitle: getDateTimeYMD(list['datecreate']))
               .getTextDetail(),
           Padding(padding: EdgeInsets.all(2)),
           DetailWidget(
                   context: context,
-                  title: "Status ",
+                  title: "status",
                   subTitle: list['status'] == "R" ? "Request" : "")
               .getTextDetail(),
           Padding(padding: EdgeInsets.all(2)),
           DetailWidget(
-                  context: context, title: "Member Group Loan", subTitle: "")
+                  context: context, title: "member_group_Loan", subTitle: "")
               .getTextDetail(),
           Expanded(
             flex: 4,
@@ -46,14 +47,16 @@ class DetailScreen extends StatelessWidget {
                             children: [
                               DetailWidget(
                                       context: context,
-                                      title: "Customer name ",
+                                      title: AppLocalizations.of(context)
+                                              .translate('customer_name') +
+                                          " ",
                                       subTitle: list['groupLoanDetail'][index]
                                           ['loan']['customer'])
                                   .getTextDetail(),
                               Padding(padding: EdgeInsets.all(2)),
                               DetailWidget(
                                       context: context,
-                                      title: "Team Lead ",
+                                      title: "team_lead" + " ",
                                       subTitle: list['groupLoanDetail'][index]
                                           ['loan']['customer'])
                                   .getTextDetail(),
