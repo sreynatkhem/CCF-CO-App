@@ -118,7 +118,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            AppLocalizations.of(context).translate('loan_information') ??
+            AppLocalizations.of(context)!.translate('loan_information') ??
                 'Loan Information'),
         backgroundColor: logolightGreen,
       ),
@@ -136,7 +136,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                     child: TabBar(indicatorColor: Colors.white, tabs: [
                       Tab(
                         text:
-                            AppLocalizations.of(context).translate('detail') ??
+                            AppLocalizations.of(context)!.translate('detail') ??
                                 "Detail",
                         icon: Icon(
                           Icons.details,
@@ -150,7 +150,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             size: 20,
                           ),
                           iconMargin: EdgeInsets.all(0),
-                          text: AppLocalizations.of(context)
+                          text: AppLocalizations.of(context)!
                                   .translate('approved') ??
                               "Approved"),
                       Tab(
@@ -159,7 +159,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             size: 20,
                           ),
                           iconMargin: EdgeInsets.all(0),
-                          text: AppLocalizations.of(context)
+                          text: AppLocalizations.of(context)!
                                   .translate('comments') ??
                               "Comments"),
                     ]),
@@ -202,7 +202,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             reject(context);
                           },
                           color: Colors.red,
-                          text: AppLocalizations.of(context)
+                          text: AppLocalizations.of(context)!
                                   .translate('reject') ??
                               'Reject'),
                       Padding(padding: EdgeInsets.only(right: 5)),
@@ -214,7 +214,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             returnFuc(context);
                           },
                           color: Colors.grey,
-                          text: AppLocalizations.of(context)
+                          text: AppLocalizations.of(context)!
                                   .translate('return') ??
                               'Return'),
                       Padding(padding: EdgeInsets.only(right: 5)),
@@ -226,7 +226,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             authrize(context);
                           },
                           color: logolightGreen,
-                          text: AppLocalizations.of(context)
+                          text: AppLocalizations.of(context)!
                                   .translate('authrize') ??
                               'Authrize'),
                     ],

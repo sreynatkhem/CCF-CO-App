@@ -171,7 +171,7 @@ class _NotificationState extends State<NotificationScreen> {
               else
                 {
                   showInSnackBar(
-                      AppLocalizations.of(context).translate('failed') ??
+                      AppLocalizations.of(context)!.translate('failed') ??
                           'Failed',
                       Colors.redAccent)
                 }
@@ -185,7 +185,7 @@ class _NotificationState extends State<NotificationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeys.currentState.showSnackBar(new SnackBar(
+    _scaffoldKeys.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -204,7 +204,7 @@ class _NotificationState extends State<NotificationScreen> {
     //     _additems();
     //   }
     // }
-    // return true;
+    return true;
   }
 
   bool isLoading = false;
@@ -308,6 +308,7 @@ class _NotificationState extends State<NotificationScreen> {
           });
           loadMore(_pageSize, _pageNumber);
         }
+        return false;
       },
       child: isLoading
           ? Center(

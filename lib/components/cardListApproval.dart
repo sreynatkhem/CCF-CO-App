@@ -8,10 +8,10 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class ApprovalListCard extends StatelessWidget {
-  final List<Approval> approvalList;
+  final List<Approval>? approvalList;
 
   final images = const AssetImage('assets/images/request.png');
-  ApprovalListCard({Key key, this.approvalList}) : super(key: key);
+  ApprovalListCard({required this.approvalList});
 
   onClickCard(value, context) {
     final loanApprovalApplicationNo = value.loanApprovalApplicationNo;
@@ -25,18 +25,18 @@ class ApprovalListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (approvalList == null ||
-        approvalList.length == 0 ||
-        approvalList.length <= 0) {
+        approvalList!.length == 0 ||
+        approvalList!.length <= 0) {
       return Center(
         child: Text(
-          AppLocalizations.of(context).translate('no_approval_list') ??
+          AppLocalizations.of(context)!.translate('no_approval_list') ??
               'No approval list',
           style: mainTitleBlack,
         ),
       );
     } else {
       return ListView.builder(
-          itemCount: approvalList.length,
+          itemCount: approvalList!.length,
           padding: const EdgeInsets.only(top: 20.0),
           itemBuilder: (context, index) {
             return Container(
@@ -50,7 +50,7 @@ class ApprovalListCard extends StatelessWidget {
                   child: InkWell(
                       splashColor: Colors.blue.withAlpha(30),
                       onTap: () {
-                        onClickCard(approvalList[index], context);
+                        onClickCard(approvalList![index], context);
                       },
                       child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -66,22 +66,22 @@ class ApprovalListCard extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                     child: Text(
-                                  approvalList[index].standardCodeDomainName2,
+                                  approvalList![index].standardCodeDomainName2!,
                                   style: mainTitleBlack,
                                 )),
                                 Padding(padding: EdgeInsets.only(bottom: 2)),
                                 Text(
-                                  'Application No: ${approvalList[index].loanApprovalApplicationNo}',
+                                  'Application No: ${approvalList![index].loanApprovalApplicationNo}',
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 Padding(padding: EdgeInsets.only(bottom: 2)),
                                 Text(
-                                  '${approvalList[index].authorizationRequestEmpNo}-${approvalList[index].authorizationRequestEmpName}[${approvalList[index].branchName}]',
+                                  '${approvalList![index].authorizationRequestEmpNo}-${approvalList![index].authorizationRequestEmpName}[${approvalList![index].branchName}]',
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 Padding(padding: EdgeInsets.only(bottom: 2)),
                                 Text(
-                                  '${approvalList[index].authorizationRequestDate} ${approvalList[index].authorizationRequestTime}',
+                                  '${approvalList![index].authorizationRequestDate} ${approvalList![index].authorizationRequestTime}',
                                   style: TextStyle(fontSize: 12),
                                 )
                               ],

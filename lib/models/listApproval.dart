@@ -1,5 +1,5 @@
 class ListApproval {
-  final double applicationAmount;
+  final double? applicationAmount;
   final dynamic customerNo;
   final dynamic customerName;
   final dynamic applicationDate;
@@ -7,7 +7,7 @@ class ListApproval {
   final dynamic creditRiskRatingGrade;
   final dynamic currencyCode;
   //
-  final double cbcFee;
+  final double? cbcFee;
   final dynamic loanTermTypeCode;
   final dynamic firstInterestPaymentDate;
   final dynamic collateralLoanRatio;

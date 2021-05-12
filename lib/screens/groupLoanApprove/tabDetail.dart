@@ -47,11 +47,11 @@ class DetailScreen extends StatelessWidget {
                             children: [
                               DetailWidget(
                                       context: context,
-                                      title: AppLocalizations.of(context)
-                                              .translate('customer_name') +
-                                          " ",
-                                      subTitle: list['groupLoanDetail'][index]
-                                          ['loan']['customer'])
+                                      title: AppLocalizations.of(context)!
+                                          .translate('customer_name'),
+                                      subTitle: ": " +
+                                          list['groupLoanDetail'][index]['loan']
+                                              ['customer'])
                                   .getTextDetail(),
                               Padding(padding: EdgeInsets.all(2)),
                               DetailWidget(

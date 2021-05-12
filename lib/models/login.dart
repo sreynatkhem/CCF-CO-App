@@ -1,6 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
-@JsonSerializable()
 class LoginModels {
   LoginModels(
       {this.branch,
@@ -13,16 +10,16 @@ class LoginModels {
       this.roles,
       this.isapprover});
 
-  String ucode;
-  String uid;
-  String token;
-  num level;
-  String branch;
-  String uname;
-  String isapprover;
+  String? ucode;
+  String? uid;
+  String? token;
+  num? level;
+  String? branch;
+  String? uname;
+  String? isapprover;
 
-  List<dynamic> roles;
-  String changePassword;
+  List<dynamic>? roles;
+  String? changePassword;
 
   factory LoginModels.fromJson(Map<String, dynamic> json) {
     return LoginModels(

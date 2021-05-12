@@ -19,7 +19,7 @@ class ApproverScreen extends StatelessWidget {
       case 'R':
         {
           return Text(
-              AppLocalizations.of(context).translate('request') ?? 'Request',
+              AppLocalizations.of(context)!.translate('request') ?? 'Request',
               style: mainTitleBlack);
         }
         break;
@@ -27,7 +27,7 @@ class ApproverScreen extends StatelessWidget {
       case 'A':
         {
           return Text(
-              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              AppLocalizations.of(context)!.translate('approved') ?? 'Approved',
               style: mainTitleBlack);
         }
         break;
@@ -35,7 +35,7 @@ class ApproverScreen extends StatelessWidget {
       case 'D':
         {
           return Text(
-              AppLocalizations.of(context).translate('disapprove') ??
+              AppLocalizations.of(context)!.translate('disapprove') ??
                   'Disapprove',
               style: mainTitleBlack);
         }
@@ -44,7 +44,7 @@ class ApproverScreen extends StatelessWidget {
       case 'T':
         {
           return Text(
-              AppLocalizations.of(context).translate('return') ?? 'Return',
+              AppLocalizations.of(context)!.translate('return') ?? 'Return',
               style: mainTitleBlack);
         }
         break;

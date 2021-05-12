@@ -27,7 +27,7 @@ class Button extends StatelessWidget {
         color: Colors.grey,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[500],
+            color: Colors.grey,
             offset: Offset(0, 3),
             blurRadius: 5,
           ),

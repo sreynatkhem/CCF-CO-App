@@ -2,6 +2,7 @@ import 'package:chokchey_finance/models/login.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -11,36 +12,36 @@ class LoginProvider with ChangeNotifier {
   bool _isFetching = false;
   final storage = new FlutterSecureStorage();
 
-  Future<List<LoginModels>> fetchLogin(id, password) async {
+  // Future<List<LoginModels>> fetchLogin(id, password) async {
+  Future fetchLogin(id, password) async {
     _isFetching = true;
-    final bodyRow =
-        "{\n    \"uid\": \"$id\",\n    \"upassword\": \"$password\"\n}";
-    logger().e("body: $bodyRow");
-    logger().e("baseURLInternal: ${baseURLInternal + 'token'}");
-
+    final Map<String, dynamic> bodyRow = {
+      "uid": "$id",
+      "upassword": "$password"
+    };
     try {
       _isFetching = false;
-      final response = await api().post(
-        baseURLInternal + 'token',
+      final Response response = await api().post(
+        Uri.parse(baseURLInternal + 'token'),
         headers: {
-          "Content-Type": "application/json",
+          "content-type": "application/json",
         },
-        body: bodyRow,
+        body: json.encode(bodyRow),
       );
       final parsed = jsonDecode(response.body);
-      logger().e("parsed: ${parsed}");
-
       notifyListeners();
-      return parsed
-          .map<LoginModels>((json) => LoginModels.fromJson(json))
-          .toList();
+      // return parsed
+      //     .map<LoginModels>((json) => LoginModels.fromJson(json))
+      //     .toList();
+      return parsed;
     } catch (error) {
       logger().e("error: $error");
       _isFetching = false;
     }
   }
 
-  Future<List<LoginModels>> postLoginChangePassword(upassword) async {
+  // Future<List<LoginModels>> postLoginChangePassword(upassword) async {
+  Future postLoginChangePassword(upassword) async {
     _isFetching = true;
     var user_ucode = await storage.read(key: 'user_ucode');
     var token = await storage.read(key: 'user_token');
@@ -57,9 +58,10 @@ class LoginProvider with ChangeNotifier {
           body: bodyRow,
         );
         final parsed = jsonDecode(response.body);
-        return parsed
-            .map<LoginModels>((json) => LoginModels.fromJson(json))
-            .toList();
+        // return parsed
+        //     .map<LoginModels>((json) => LoginModels.fromJson(json))
+        //     .toList();
+        return parsed;
       } else {
         print('error:');
       }

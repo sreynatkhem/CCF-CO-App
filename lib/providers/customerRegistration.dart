@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 class CustomerRegistrationProvider with ChangeNotifier {
   bool _isFetching = false;
@@ -15,7 +16,8 @@ class CustomerRegistrationProvider with ChangeNotifier {
   final storage = new FlutterSecureStorage();
   var listCustomerByID = [];
   bool isOkay = false;
-  Future<List<CustomerRegistration>> postCustomerRegistration(
+  // Future<List<CustomerRegistration>> postCustomerRegistration(
+  Future postCustomerRegistration(
       valueKhmerName,
       valueEnglishName,
       valueDatehofBrith,
@@ -52,14 +54,34 @@ class CustomerRegistrationProvider with ChangeNotifier {
     isOkay = false;
     try {
       _isFetching = false;
-      final boyrow =
-          "{\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$englishName\",\n    \"dob\": \"$dateOfBirth\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$phoneNumber2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAdd\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"$ntype\",\n    \"nid\": \"$nationIdentification\",\n    \"ndate\": \"$ndate\",\n    \"pro\": \"$prospective\",\n    \"cstatus\": \"$gurantorCustomer\"\n}";
-      final response = await api().post(baseURLInternal + 'Customers',
+      final Map<String, dynamic> boyrow = {
+        "ucode": "$user_ucode",
+        "bcode": "$branch",
+        "namekhr": "$valueKhmerName",
+        "nameeng": "$englishName",
+        "dob": "$dateOfBirth",
+        "gender": "$gender",
+        "phone1": "$valuePhone1",
+        "phone2": "$phoneNumber2",
+        "procode": "$selectedValueProvince",
+        "discode": "$selectedValueDistrict",
+        "comcode": "$selectedValueCommune",
+        "vilcode": "$idVillage",
+        "goglocation": "$currentAdd",
+        "occupation": "$valueOccupationOfCustomer",
+        "ntype": "$ntype",
+        "nid": "$nationIdentification",
+        "ndate": "$ndate",
+        "pro": "$prospective",
+        "cstatus": "$gurantorCustomer"
+      };
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'Customers'),
           headers: {
-            "Content-Type": "application/json",
+            "content-type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: boyrow);
+          body: json.encode(boyrow));
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 201) {
         isOkay = true;
@@ -73,7 +95,8 @@ class CustomerRegistrationProvider with ChangeNotifier {
   }
 
   //request dropdown Nation ID Famliy and Passport
-  Future<List<ListNationID>> getDropdownNationIDList() async {
+  // Future<List<ListNationID>> getDropdownNationIDList() async {
+  Future getDropdownNationIDList() async {
     _isFetching = true;
     try {
       _isFetching = false;
@@ -88,9 +111,10 @@ class CustomerRegistrationProvider with ChangeNotifier {
       final parsed = jsonDecode(response.body);
       data.add(parsed);
       notifyListeners();
-      return parsed
-          .map<ListNationID>((json) => ListNationID.fromJson(json))
-          .toList();
+      // return parsed
+      //     .map<ListNationID>((json) => ListNationID.fromJson(json))
+      //     .toList();
+      return parsed;
     } catch (error) {
       _isFetching = false;
     }

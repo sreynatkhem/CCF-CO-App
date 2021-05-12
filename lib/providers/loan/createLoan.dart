@@ -19,73 +19,74 @@ class LoanInternal with ChangeNotifier {
   var totalLoans = '';
   var dataRegistration = [];
 
-  Future<List<ValueListCustomers>> fetchCustomerByUserLogin() async {
-    _isFetching = true;
-    var user_ucode = await storage.read(key: 'user_ucode');
-    var token = await storage.read(key: 'user_token');
-    try {
-      _isFetching = false;
-      final response = await api().get(
-        baseURLInternal + 'valuelists/customers/' + user_ucode,
-        headers: {
-          "contentType": "application/json",
-          "Authorization": "Bearer " + token
-        },
-      );
-      final list = jsonDecode(response.body);
-      data.add(list);
-      notifyListeners();
-      return list
-          .map<ValueListCustomers>((json) => ValueListCustomers.fromJson(json))
-          .toList();
-    } catch (error) {
-      _isFetching = false;
-    }
-  }
+  // Future<List<ValueListCustomers>> fetchCustomerByUserLogin() async {
+  //   _isFetching = true;
+  //   var user_ucode = await storage.read(key: 'user_ucode');
+  //   var token = await storage.read(key: 'user_token');
+  //   try {
+  //     _isFetching = false;
+  //     final response = await api().get(
+  //       baseURLInternal + 'valuelists/customers/' + user_ucode,
+  //       headers: {
+  //         "contentType": "application/json",
+  //         "Authorization": "Bearer " + token
+  //       },
+  //     );
+  //     final list = jsonDecode(response.body);
+  //     data.add(list);
+  //     notifyListeners();
+  //     return list
+  //         .map<ValueListCustomers>((json) => ValueListCustomers.fromJson(json))
+  //         .toList();
+  //   } catch (error) {
+  //     _isFetching = false;
+  //   }
+  // }
 
-  Future<List<CreateLoan>> postLoanRegistration(
-      idCcode,
-      valueAmount,
-      curcode,
-      pcode,
-      valueNumberofTerm,
-      valueInterest,
-      valueAdminFee,
-      valueMaintenanceFee,
-      valueRepaymentMethod,
-      valueMaturityDate,
-      valueFirstRepaymentDate,
-      valueGenerateGracePeriodNumber,
-      valueLoanPurpose,
-      valueLTV,
-      valueDscr,
-      valueORARD,
-      valueReferByWho) async {
-    _isFetching = true;
-    var user_ucode = await storage.read(key: 'user_ucode');
-    var branch = await storage.read(key: 'branch');
-    var token = await storage.read(key: 'user_token');
-    try {
-      _isFetching = false;
-      final boyrow =
-          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
-      final response = await api().post(baseURLInternal + 'loans',
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: boyrow);
-      final parsed = jsonDecode(response.body);
-      dataRegistration.addAll(parsed);
-      notifyListeners();
-    } catch (error) {
-      print('error: $error');
-      _isFetching = false;
-    }
-  }
+  // Future<List<CreateLoan>> postLoanRegistration(
+  //     idCcode,
+  //     valueAmount,
+  //     curcode,
+  //     pcode,
+  //     valueNumberofTerm,
+  //     valueInterest,
+  //     valueAdminFee,
+  //     valueMaintenanceFee,
+  //     valueRepaymentMethod,
+  //     valueMaturityDate,
+  //     valueFirstRepaymentDate,
+  //     valueGenerateGracePeriodNumber,
+  //     valueLoanPurpose,
+  //     valueLTV,
+  //     valueDscr,
+  //     valueORARD,
+  //     valueReferByWho) async {
+  //   _isFetching = true;
+  //   var user_ucode = await storage.read(key: 'user_ucode');
+  //   var branch = await storage.read(key: 'branch');
+  //   var token = await storage.read(key: 'user_token');
+  //   try {
+  //     _isFetching = false;
+  //     final boyrow =
+  //         "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curcode\",\n\t\"pcode\": \"$pcode\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"\",\n\t\"mdate\": \"$valueMaturityDate\",\n\t\"firdate\": \"$valueFirstRepaymentDate\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
+  //     final response = await api().post(baseURLInternal + 'loans',
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Authorization": "Bearer " + token
+  //         },
+  //         body: boyrow);
+  //     final parsed = jsonDecode(response.body);
+  //     dataRegistration.addAll(parsed);
+  //     notifyListeners();
+  //   } catch (error) {
+  //     print('error: $error');
+  //     _isFetching = false;
+  //   }
+  // }
 
   //Request list loan
-  Future<List<ListLoanNew>> getListLoan(
+  // Future<List<ListLoanNew>> getListLoan(
+  Future getListLoan(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     _isFetching = true;
     try {
@@ -154,7 +155,8 @@ class LoanInternal with ChangeNotifier {
   }
 
   // get loan by id
-  Future<List<CreateLoan>> getLoanByID(loansID) async {
+  // Future<List<CreateLoan>> getLoanByID(loansID) async {
+  Future getLoanByID(loansID) async {
     _isFetching = true;
     try {
       _isFetching = false;
@@ -170,14 +172,17 @@ class LoanInternal with ChangeNotifier {
       dynamic data = [];
       data.add(parsed);
       notifyListeners();
-      return data.map<CreateLoan>((json) => CreateLoan.fromJson(json)).toList();
+      return data;
+      // return data.map<CreateLoan>((json) => CreateLoan.fromJson(json)).toList();
+
     } catch (error) {
       print("error $error");
       _isFetching = false;
     }
   }
 
-  Future<List<CreateLoan>> eidtLoanRegistration(
+  // Future<List<CreateLoan>> eidtLoanRegistration(
+  Future eidtLoanRegistration(
       lcode,
       idCcode,
       valueAmount,

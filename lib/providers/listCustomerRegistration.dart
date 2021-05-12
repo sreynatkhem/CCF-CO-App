@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 class ListCustomerRegistrationProvider with ChangeNotifier {
   bool _isFetching = false;
@@ -13,7 +14,8 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   var totalCustomer = '';
   bool statusCode = false;
   final storage = new FlutterSecureStorage();
-  Future<List<Customers>> fetchListCustomerRegistration(
+  // Future<List<Customers>> fetchListCustomerRegistration(
+  Future fetchListCustomerRegistration(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     _isFetching = true;
     try {
@@ -83,7 +85,8 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
     }
   }
 
-  Future<List<CustomerRegistration>> editCustomerRegistration(
+  // Future<List<CustomerRegistration>> editCustomerRegistration(
+  Future editCustomerRegistration(
       ccode,
       acode,
       rdate,
@@ -133,26 +136,23 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   }
 
 //request customer by id
-  Future<List<CustomerRegistration>> getCustomerByID(customerID) async {
+  // Future<List<CustomerRegistration>> getCustomerByID(customerID) async {
+  Future getCustomerByID(customerID) async {
     _isFetching = true;
     try {
       _isFetching = false;
       var token = await storage.read(key: 'user_token');
-      final response = await api().get(
-        baseURLInternal + 'customers/' + customerID,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'customers/' + customerID),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
         },
       );
       final parsed = jsonDecode(response.body);
-      dynamic data = [];
-      data.add(parsed);
+      logger().e(parsed);
       notifyListeners();
-      return data
-          .map<CustomerRegistration>(
-              (json) => CustomerRegistration.fromJson(json))
-          .toList();
+      return parsed;
     } catch (error) {
       _isFetching = false;
     }

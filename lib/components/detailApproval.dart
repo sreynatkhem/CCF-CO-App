@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DetailApprovalListCard extends StatelessWidget {
-  final List<DetailApproval> approvalListDetail;
+  final List<DetailApproval>? approvalListDetail;
   final images = const AssetImage('assets/images/request.png');
   final _imagesList = const AssetImage('assets/images/list.png');
   final _imagesFindApproval =
@@ -14,7 +14,7 @@ class DetailApprovalListCard extends StatelessWidget {
   final _imageReturn = const AssetImage('assets/images/return.png');
   final _imageReject = const AssetImage('assets/images/reject.png');
 
-  DetailApprovalListCard({Key key, this.approvalListDetail}) : super(key: key);
+  DetailApprovalListCard({this.approvalListDetail});
 
   onClickCard(value, context) {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => Detail(value.)));
@@ -25,35 +25,36 @@ class DetailApprovalListCard extends StatelessWidget {
       case '10':
         {
           return Text(
-              AppLocalizations.of(context).translate('request') ?? 'Request');
+              AppLocalizations.of(context)!.translate('request') ?? 'Request');
         }
         break;
 
       case '20':
         {
-          return Text(
-              AppLocalizations.of(context).translate('approved') ?? 'Approved');
+          return Text(AppLocalizations.of(context)!.translate('approved') ??
+              'Approved');
         }
         break;
 
       case '30':
         {
-          return Text(AppLocalizations.of(context).translate('final_approve') ??
-              'Final Approve');
+          return Text(
+              AppLocalizations.of(context)!.translate('final_approve') ??
+                  'Final Approve');
         }
         break;
 
       case '80':
         {
           return Text(
-              AppLocalizations.of(context).translate('return') ?? 'Return');
+              AppLocalizations.of(context)!.translate('return') ?? 'Return');
         }
         break;
 
       case '90':
         {
           return Text(
-              AppLocalizations.of(context).translate('reject') ?? 'Reject');
+              AppLocalizations.of(context)!.translate('reject') ?? 'Reject');
         }
         break;
       case '':
@@ -124,18 +125,19 @@ class DetailApprovalListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: approvalListDetail.length,
+        itemCount: approvalListDetail!.length,
         itemBuilder: (context, index) {
           DateTime dateTimeParseCreated =
-              DateTime.parse(approvalListDetail[index].applicationDate);
+              DateTime.parse(approvalListDetail![index].applicationDate!);
           String dateTimeCreated =
               DateFormat("yyyy-MM-dd").format(dateTimeParseCreated);
           var status = statusApproval(
-              approvalListDetail[index].evaluateStatusCode, context);
-          var imageStatus = approvalListDetail[index].evaluateStatusCode != null
-              ? statusApprovalImage(
-                  approvalListDetail[index].evaluateStatusCode, context)
-              : _imagesList;
+              approvalListDetail![index].evaluateStatusCode, context);
+          var imageStatus =
+              approvalListDetail![index].evaluateStatusCode != null
+                  ? statusApprovalImage(
+                      approvalListDetail![index].evaluateStatusCode, context)
+                  : _imagesList;
 
           return Container(
             height: 110,
@@ -168,12 +170,13 @@ class DetailApprovalListCard extends StatelessWidget {
                                 children: <Widget>[
                                   Container(
                                       child: Text(
-                                    approvalListDetail[index].authorizerEmpName,
+                                    approvalListDetail![index]
+                                        .authorizerEmpName!,
                                     style: mainTitleBlack,
                                   )),
                                   Padding(padding: EdgeInsets.only(bottom: 2)),
                                   Text(
-                                      '${approvalListDetail[index].authorizerEmployeeNo} / ${approvalListDetail[index].authorizationBranchCode}'),
+                                      '${approvalListDetail![index].authorizerEmployeeNo} / ${approvalListDetail![index].authorizationBranchCode}'),
                                   Padding(padding: EdgeInsets.only(bottom: 2)),
                                   Text('$dateTimeCreated'),
                                   Padding(padding: EdgeInsets.only(bottom: 2)),
@@ -186,9 +189,10 @@ class DetailApprovalListCard extends StatelessWidget {
                             children: <Widget>[
                               status,
                               Padding(padding: EdgeInsets.only(bottom: 2)),
-                              if (approvalListDetail[index].authorizationDate !=
+                              if (approvalListDetail![index]
+                                      .authorizationDate !=
                                   '')
-                                getDateTimeApprove(approvalListDetail[index]
+                                getDateTimeApprove(approvalListDetail![index]
                                     .authorizationDate),
                               Text(''),
                               Padding(padding: EdgeInsets.only(right: 100))

@@ -11,7 +11,8 @@ class ApprovelistProvider with ChangeNotifier {
   bool _isFetching = false;
   final data = [];
 
-  Future<List<Approval>> fetchApprovals() async {
+  // Future<List<Approval>> fetchApprovals() async {
+  Future fetchApprovals() async {
     _isFetching = true;
     final storage = new FlutterSecureStorage();
     String user_id = await storage.read(key: 'user_id');

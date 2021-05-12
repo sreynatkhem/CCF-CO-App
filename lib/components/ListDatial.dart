@@ -23,7 +23,7 @@ class ListDetail extends StatelessWidget {
               Container(
                   padding: EdgeInsets.only(left: 10, top: 10),
                   child: Text(
-                    AppLocalizations.of(context).translate(name.toString()) ??
+                    AppLocalizations.of(context)!.translate(name.toString()) ??
                         '${name.toString()}:',
                   )),
             ],

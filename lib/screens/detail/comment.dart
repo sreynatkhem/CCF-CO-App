@@ -24,7 +24,7 @@ class _CommentsState extends State<Comments> {
         controller: controller,
         decoration: InputDecoration(
           hintText:
-              AppLocalizations.of(context).translate('please_enter_comment') ??
+              AppLocalizations.of(context)!.translate('please_enter_comment') ??
                   "Please enter comment...",
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(4)),

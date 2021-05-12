@@ -108,7 +108,7 @@ class _RequestSummaryState extends State<RequestSummary> {
       case 'R':
         {
           return Text(
-              AppLocalizations.of(context).translate('request') ?? 'Request',
+              AppLocalizations.of(context)!.translate('request') ?? 'Request',
               style: mainTitleBlack);
         }
         break;
@@ -116,7 +116,7 @@ class _RequestSummaryState extends State<RequestSummary> {
       case 'A':
         {
           return Text(
-              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              AppLocalizations.of(context)!.translate('approved') ?? 'Approved',
               style: mainTitleBlack);
         }
         break;
@@ -124,7 +124,7 @@ class _RequestSummaryState extends State<RequestSummary> {
       case 'D':
         {
           return Text(
-              AppLocalizations.of(context).translate('request') ?? 'request',
+              AppLocalizations.of(context)!.translate('request') ?? 'request',
               style: mainTitleBlack);
         }
         break;
@@ -132,13 +132,13 @@ class _RequestSummaryState extends State<RequestSummary> {
       case 'T':
         {
           return Text(
-              AppLocalizations.of(context).translate('return') ?? 'Return',
+              AppLocalizations.of(context)!.translate('return') ?? 'Return',
               style: mainTitleBlack);
         }
         break;
       case 'O':
         {
-          return Text(AppLocalizations.of(context).translate('open') ?? 'Open',
+          return Text(AppLocalizations.of(context)!.translate('open') ?? 'Open',
               style: mainTitleBlack);
         }
         break;
@@ -261,11 +261,12 @@ class _RequestSummaryState extends State<RequestSummary> {
     Navigator.of(context).pop();
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Home()),
         ModalRoute.withName("/Home"));
+    return false;
   }
 
   @override
@@ -276,7 +277,7 @@ class _RequestSummaryState extends State<RequestSummary> {
       child: NotificationListener(
         onNotification: onNotification,
         child: Header(
-          headerTexts: 'report_request' ?? 'Report Request',
+          headerTexts: 'report_request',
           actionsNotification: [
             Builder(
               builder: (context) => IconButton(
@@ -307,11 +308,20 @@ class _RequestSummaryState extends State<RequestSummary> {
                           width: MediaQuery.of(context).size.width * 1,
                           color: logolightGreen,
                           child: Center(
-                              child: Text(
-                            AppLocalizations.of(context)
-                                    .translate('total_request') +
+                              child: Row(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .translate('total_request')!,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                              Text(
                                 ': ${listTotal['total'].toString()}',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                            ],
                           ))),
                     ),
                     listApproval.length > 0
@@ -446,8 +456,8 @@ class _RequestSummaryState extends State<RequestSummary> {
                             flex: 1,
                             child: Center(
                                 child: Container(
-                                    child: Text(AppLocalizations.of(context)
-                                        .translate('no_data'))))),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .translate('no_data')!)))),
                   ],
                 ),
           endDrawer: Drawer(
@@ -477,7 +487,8 @@ class _RequestSummaryState extends State<RequestSummary> {
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        AppLocalizations.of(context).translate('list_branch') ??
+                        AppLocalizations.of(context)!
+                                .translate('list_branch') ??
                             'List Branch',
                         style: TextStyle(
                           fontWeight: fontWeight700,
@@ -520,7 +531,7 @@ class _RequestSummaryState extends State<RequestSummary> {
                     Container(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: FormBuilderDateTimePicker(
-                        attribute: 'date',
+                        name: 'date',
                         controller: controllerStartDate,
                         inputType: InputType.date,
                         onChanged: (v) {
@@ -533,7 +544,7 @@ class _RequestSummaryState extends State<RequestSummary> {
                         initialValue: DateTime(now.year, now.month, 1),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                                   .translate('start_date') ??
                               "Start date",
                         ),
@@ -543,7 +554,7 @@ class _RequestSummaryState extends State<RequestSummary> {
                     Container(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: FormBuilderDateTimePicker(
-                        attribute: 'date',
+                        name: 'date',
                         controller: controllerEndDate,
                         inputType: InputType.date,
                         onChanged: (v) {
@@ -554,7 +565,7 @@ class _RequestSummaryState extends State<RequestSummary> {
                         initialValue: DateTime.now(),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                                   .translate('end_date') ??
                               "End date",
                         ),
@@ -569,7 +580,7 @@ class _RequestSummaryState extends State<RequestSummary> {
                         children: [
                           RaisedButton(
                             onPressed: _closeEndDrawer,
-                            child: Text(AppLocalizations.of(context)
+                            child: Text(AppLocalizations.of(context)!
                                     .translate('reset') ??
                                 "Reset"),
                           ),
@@ -577,7 +588,8 @@ class _RequestSummaryState extends State<RequestSummary> {
                             color: logolightGreen,
                             onPressed: _applyEndDrawer,
                             child: Text(
-                              AppLocalizations.of(context).translate('apply') ??
+                              AppLocalizations.of(context)!
+                                      .translate('apply') ??
                                   "Apply",
                               style: TextStyle(color: Colors.white),
                             ),

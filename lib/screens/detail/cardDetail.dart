@@ -24,8 +24,8 @@ class CardDetailWidget extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           if (snapshot.data == null ||
-              snapshot.data.length == 0 ||
-              snapshot.data.length <= 0) {
+              snapshot.data!.length == 0 ||
+              snapshot.data!.length <= 0) {
             return Center(
               child: Text(
                 'No Details',
@@ -34,10 +34,10 @@ class CardDetailWidget extends StatelessWidget {
             );
           } else {
             return ListView.builder(
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data!.length,
                 padding: const EdgeInsets.only(top: 20.0),
                 itemBuilder: (context, index) {
-                  var list = snapshot.data[index];
+                  var list = snapshot.data![index];
                   return CardDetail(
                     images: images,
                     applyInterestRate: list.applyInterestRate,

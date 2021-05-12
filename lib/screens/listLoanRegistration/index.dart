@@ -228,11 +228,12 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
     });
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Home()),
         ModalRoute.withName("/Home"));
+    return false;
   }
 
   statusApproval(value) {
@@ -240,7 +241,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       case 'R':
         {
           return Text(
-              AppLocalizations.of(context).translate('request') ?? 'Request',
+              AppLocalizations.of(context)!.translate('request') ?? 'Request',
               style: mainTitleBlack);
         }
         break;
@@ -248,7 +249,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       case 'A':
         {
           return Text(
-              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              AppLocalizations.of(context)!.translate('approved') ?? 'Approved',
               style: mainTitleBlack);
         }
         break;
@@ -256,7 +257,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       case 'D':
         {
           return Text(
-              AppLocalizations.of(context).translate('disapprove') ??
+              AppLocalizations.of(context)!.translate('disapprove') ??
                   'Disapprove',
               style: mainTitleBlack);
         }
@@ -265,7 +266,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       case 'T':
         {
           return Text(
-              AppLocalizations.of(context).translate('return') ?? 'Return',
+              AppLocalizations.of(context)!.translate('return') ?? 'Return',
               style: mainTitleBlack);
         }
         break;
@@ -291,11 +292,12 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
             });
             getListLoanRegitster(_pageSize, _pageNumber, '', '', '', '', '');
           }
+          return false;
         },
         child: Scaffold(
           appBar: new AppBar(
             title: new Text(
-                AppLocalizations.of(context).translate('loan_register_list') ??
+                AppLocalizations.of(context)!.translate('loan_register_list') ??
                     "Loan Register List"),
             backgroundColor: logolightGreen,
             leading: new IconButton(
@@ -394,11 +396,16 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                                         padding:
                                                             EdgeInsets.only(
                                                                 bottom: 2)),
-                                                    Text(AppLocalizations.of(
-                                                                context)
+                                                    Row(
+                                                      children: [
+                                                        Text(AppLocalizations
+                                                                .of(context)!
                                                             .translate(
-                                                                'interest') +
-                                                        '${parsed[index]['intrate']}%/m, IRR ${irr}%'),
+                                                                'interest')!),
+                                                        Text(
+                                                            '${parsed[index]['intrate']}%/m, IRR ${irr}%'),
+                                                      ],
+                                                    ),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.only(
@@ -442,8 +449,8 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                     )
                   : Center(
                       child: Container(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('no_data')))),
+                          child: Text(AppLocalizations.of(context)!
+                              .translate('no_data')!))),
           endDrawer: Drawer(
             child: SingleChildScrollView(
               child: Container(
@@ -471,7 +478,8 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        AppLocalizations.of(context).translate('list_branch') ??
+                        AppLocalizations.of(context)!
+                                .translate('list_branch') ??
                             'List Branch',
                         style: TextStyle(
                           fontWeight: fontWeight700,
@@ -514,7 +522,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                     Container(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: FormBuilderDateTimePicker(
-                        attribute: 'date',
+                        name: 'date',
                         controller: controllerStartDate,
                         inputType: InputType.date,
                         onChanged: (v) {
@@ -527,7 +535,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                         initialValue: DateTime(now.year, now.month, 1),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                                   .translate('start_date') ??
                               "Start date",
                         ),
@@ -537,7 +545,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                     Container(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: FormBuilderDateTimePicker(
-                        attribute: 'date',
+                        name: 'date',
                         controller: controllerEndDate,
                         inputType: InputType.date,
                         onChanged: (v) {
@@ -548,7 +556,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                         initialValue: DateTime.now(),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                                   .translate('end_date') ??
                               "End date",
                         ),
@@ -563,7 +571,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                         children: [
                           RaisedButton(
                             onPressed: _closeEndDrawer,
-                            child: Text(AppLocalizations.of(context)
+                            child: Text(AppLocalizations.of(context)!
                                     .translate('reset') ??
                                 "Reset"),
                           ),
@@ -571,7 +579,8 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                             color: logolightGreen,
                             onPressed: _applyEndDrawer,
                             child: Text(
-                              AppLocalizations.of(context).translate('apply') ??
+                              AppLocalizations.of(context)!
+                                      .translate('apply') ??
                                   "Apply",
                               style: TextStyle(color: Colors.white),
                             ),

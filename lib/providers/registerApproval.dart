@@ -6,8 +6,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-Future<List<Approval>> registerApproval(http.Client client,
-    loanApprovalApplicationNo, evaluateStatusCode, comments) async {
+// Future<List<Approval>> registerApproval(http.Client client,
+Future registerApproval(http.Client client, loanApprovalApplicationNo,
+    evaluateStatusCode, comments) async {
   final storage = new FlutterSecureStorage();
   String user_id = await storage.read(key: 'user_id');
   String user_name = await storage.read(key: 'user_name');

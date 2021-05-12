@@ -27,13 +27,13 @@ class DateTimePickers extends StatelessWidget {
             },
             child: Column(
               children: <Widget>[
-                FormBuilderDateTimePicker(
-                  attribute: "date",
-                  inputType: InputType.date,
-                  format: DateFormat("yyyy-MM-dd"),
-                  onChanged: onChanged,
-                  decoration: InputDecoration(labelText: "Appointment Time"),
-                ),
+                // FormBuilderDateTimePicker(
+                //   attribute: "date",
+                //   inputType: InputType.date,
+                //   format: DateFormat("yyyy-MM-dd"),
+                //   onChanged: onChanged,
+                //   decoration: InputDecoration(labelText: "Appointment Time"),
+                // ),
               ],
             ),
           ),

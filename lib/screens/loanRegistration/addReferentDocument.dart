@@ -21,18 +21,14 @@ import 'package:path_provider/path_provider.dart';
 
 class AddReferentDocument extends StatefulWidget {
   AddReferentDocument(this.listLoan, this.editLoan);
-  dynamic listLoan;
-  String editLoan;
+  dynamic? listLoan;
+  String? editLoan;
 
   @override
-  _GridHeaderState createState() =>
-      _GridHeaderState(this.listLoan, this.editLoan);
+  _GridHeaderState createState() => _GridHeaderState();
 }
 
 class _GridHeaderState extends State<AddReferentDocument> {
-  _GridHeaderState(this.listLoan, this.editLoan);
-  dynamic listLoan;
-  String editLoan = '';
   var _isLoading = false;
   @override
   void didChangeDependencies() {
@@ -125,7 +121,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
   var storeListImage;
 
   Future getImageDocument() async {
-    var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
+    var loanCode =
+        widget.listLoan != null ? widget.listLoan['lcode'] : widget.editLoan;
     var url = baseURLInternal + 'loanDocuments/byloan/' + loanCode;
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
@@ -467,236 +464,237 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // multipart that takes file
     if (_imageNation != null &&
-        _imageNation.path != null &&
-        _imageNation.path.isNotEmpty) {
+        _imageNation!.path != null &&
+        _imageNation!.path.isNotEmpty) {
       var stream =
-          new http.ByteStream(DelegatingStream.typed(_imageNation.openRead()));
-      var length = await _imageNation.length();
+          new http.ByteStream(DelegatingStream.typed(_imageNation!.openRead()));
+      var length = await _imageNation!.length();
       request.files.add(new http.MultipartFile('kyc[101]', stream, length,
-          filename: basename(_imageNation.path)));
+          filename: basename(_imageNation!.path)));
     }
 
     // FamilyBook
     if (_imageFamily != null &&
-        _imageFamily.path != null &&
-        _imageFamily.path.isNotEmpty) {
+        _imageFamily!.path != null &&
+        _imageFamily!.path.isNotEmpty) {
       var stream =
-          new http.ByteStream(DelegatingStream.typed(_imageFamily.openRead()));
-      var length = await _imageFamily.length();
+          new http.ByteStream(DelegatingStream.typed(_imageFamily!.openRead()));
+      var length = await _imageFamily!.length();
       request.files.add(new http.MultipartFile('kyc[102]', stream, length,
-          filename: basename(_imageFamily.path)));
+          filename: basename(_imageFamily!.path)));
     }
 
     // Resident
     if (_imageResident != null &&
-        _imageResident.path != null &&
-        _imageResident.path.isNotEmpty) {
+        _imageResident!.path != null &&
+        _imageResident!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageResident.openRead()));
-      var length = await _imageResident.length();
+          DelegatingStream.typed(_imageResident!.openRead()));
+      var length = await _imageResident!.length();
       request.files.add(new http.MultipartFile('kyc[103]', stream, length,
-          filename: basename(_imageResident.path)));
+          filename: basename(_imageResident!.path)));
     }
 
     // Kyc Other
     if (_imageOther != null &&
-        _imageOther.path != null &&
-        _imageOther.path.isNotEmpty) {
+        _imageOther!.path != null &&
+        _imageOther!.path.isNotEmpty) {
       var stream =
-          new http.ByteStream(DelegatingStream.typed(_imageOther.openRead()));
-      var length = await _imageOther.length();
+          new http.ByteStream(DelegatingStream.typed(_imageOther!.openRead()));
+      var length = await _imageOther!.length();
       request.files.add(new http.MultipartFile('kyc[104]', stream, length,
-          filename: basename(_imageOther.path)));
+          filename: basename(_imageOther!.path)));
     }
 
     // Employee Salary Slip
     if (_imageSalarySlip != null &&
-        _imageSalarySlip.path != null &&
-        _imageSalarySlip.path.isNotEmpty) {
+        _imageSalarySlip!.path != null &&
+        _imageSalarySlip!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageSalarySlip.openRead()));
-      var length = await _imageSalarySlip.length();
+          DelegatingStream.typed(_imageSalarySlip!.openRead()));
+      var length = await _imageSalarySlip!.length();
       request.files.add(new http.MultipartFile('employee[211]', stream, length,
-          filename: basename(_imageSalarySlip.path)));
+          filename: basename(_imageSalarySlip!.path)));
     }
 
     // Employee Bank Statement
     if (_imageBankStatement != null &&
-        _imageBankStatement.path != null &&
-        _imageBankStatement.path.isNotEmpty) {
+        _imageBankStatement!.path != null &&
+        _imageBankStatement!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageBankStatement.openRead()));
-      var length = await _imageBankStatement.length();
+          DelegatingStream.typed(_imageBankStatement!.openRead()));
+      var length = await _imageBankStatement!.length();
       request.files.add(new http.MultipartFile('employee[212]', stream, length,
-          filename: basename(_imageBankStatement.path)));
+          filename: basename(_imageBankStatement!.path)));
     }
 
     // Employee SalaryVerify
     if (_imageSalaryVerify != null &&
-        _imageSalaryVerify.path != null &&
-        _imageSalaryVerify.path.isNotEmpty) {
+        _imageSalaryVerify!.path != null &&
+        _imageSalaryVerify!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageSalaryVerify.openRead()));
-      var length = await _imageSalaryVerify.length();
+          DelegatingStream.typed(_imageSalaryVerify!.openRead()));
+      var length = await _imageSalaryVerify!.length();
       request.files.add(new http.MultipartFile('employee[213]', stream, length,
-          filename: basename(_imageSalaryVerify.path)));
+          filename: basename(_imageSalaryVerify!.path)));
     }
 
     // Employee Employee Contrat
     if (_imageEmployeeContrat != null &&
-        _imageEmployeeContrat.path != null &&
-        _imageEmployeeContrat.path.isNotEmpty) {
+        _imageEmployeeContrat!.path != null &&
+        _imageEmployeeContrat!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageEmployeeContrat.openRead()));
-      var length = await _imageEmployeeContrat.length();
+          DelegatingStream.typed(_imageEmployeeContrat!.openRead()));
+      var length = await _imageEmployeeContrat!.length();
       request.files.add(new http.MultipartFile('employee[214]', stream, length,
-          filename: basename(_imageEmployeeContrat.path)));
+          filename: basename(_imageEmployeeContrat!.path)));
     }
 
     // Employee Employee ID
     if (_imageEmployeeID != null &&
-        _imageEmployeeID.path != null &&
-        _imageEmployeeID.path.isNotEmpty) {
+        _imageEmployeeID!.path != null &&
+        _imageEmployeeID!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageEmployeeID.openRead()));
-      var length = await _imageEmployeeID.length();
+          DelegatingStream.typed(_imageEmployeeID!.openRead()));
+      var length = await _imageEmployeeID!.length();
       request.files.add(new http.MultipartFile('employee[215]', stream, length,
-          filename: basename(_imageEmployeeID.path)));
+          filename: basename(_imageEmployeeID!.path)));
     }
     // Employee Employee ID
     if (_imageEmployeeOther != null &&
-        _imageEmployeeOther.path != null &&
-        _imageEmployeeOther.path.isNotEmpty) {
+        _imageEmployeeOther!.path != null &&
+        _imageEmployeeOther!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageEmployeeOther.openRead()));
-      var length = await _imageEmployeeOther.length();
+          DelegatingStream.typed(_imageEmployeeOther!.openRead()));
+      var length = await _imageEmployeeOther!.length();
       request.files.add(new http.MultipartFile('employee[216]', stream, length,
-          filename: basename(_imageEmployeeOther.path)));
+          filename: basename(_imageEmployeeOther!.path)));
     }
 
     // Business Photo of Service
     if (_imagePhotoOfService != null &&
-        _imagePhotoOfService.path != null &&
-        _imagePhotoOfService.path.isNotEmpty) {
+        _imagePhotoOfService!.path != null &&
+        _imagePhotoOfService!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imagePhotoOfService.openRead()));
-      var length = await _imagePhotoOfService.length();
+          DelegatingStream.typed(_imagePhotoOfService!.openRead()));
+      var length = await _imagePhotoOfService!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[221]', stream, length,
-          filename: basename(_imagePhotoOfService.path)));
+          filename: basename(_imagePhotoOfService!.path)));
     }
 
     // Business
     if (_imageBusinessPermit != null &&
-        _imageBusinessPermit.path != null &&
-        _imageBusinessPermit.path.isNotEmpty) {
+        _imageBusinessPermit!.path != null &&
+        _imageBusinessPermit!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageBusinessPermit.openRead()));
-      var length = await _imageBusinessPermit.length();
+          DelegatingStream.typed(_imageBusinessPermit!.openRead()));
+      var length = await _imageBusinessPermit!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[222]', stream, length,
-          filename: basename(_imageBusinessPermit.path)));
+          filename: basename(_imageBusinessPermit!.path)));
     }
 
     // Business
     if (_imageIncomeStatementBank != null &&
-        _imageIncomeStatementBank.path != null &&
-        _imageIncomeStatementBank.path.isNotEmpty) {
+        _imageIncomeStatementBank!.path != null &&
+        _imageIncomeStatementBank!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageIncomeStatementBank.openRead()));
-      var length = await _imageIncomeStatementBank.length();
+          DelegatingStream.typed(_imageIncomeStatementBank!.openRead()));
+      var length = await _imageIncomeStatementBank!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[224]', stream, length,
-          filename: basename(_imageIncomeStatementBank.path)));
+          filename: basename(_imageIncomeStatementBank!.path)));
     }
 
     // Business
     if (_imagePatent != null &&
-        _imagePatent.path != null &&
-        _imagePatent.path.isNotEmpty) {
+        _imagePatent!.path != null &&
+        _imagePatent!.path.isNotEmpty) {
       var stream =
-          new http.ByteStream(DelegatingStream.typed(_imagePatent.openRead()));
-      var length = await _imagePatent.length();
+          new http.ByteStream(DelegatingStream.typed(_imagePatent!.openRead()));
+      var length = await _imagePatent!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[225]', stream, length,
-          filename: basename(_imagePatent.path)));
+          filename: basename(_imagePatent!.path)));
     }
 
     // Business
     if (_imageRentalContract != null &&
-        _imageRentalContract.path != null &&
-        _imageRentalContract.path.isNotEmpty) {
+        _imageRentalContract!.path != null &&
+        _imageRentalContract!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageRentalContract.openRead()));
-      var length = await _imageRentalContract.length();
+          DelegatingStream.typed(_imageRentalContract!.openRead()));
+      var length = await _imageRentalContract!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[226]', stream, length,
-          filename: basename(_imageRentalContract.path)));
+          filename: basename(_imageRentalContract!.path)));
     }
 
     // _imageBusinessLocationtitleDedd
     if (_imageBusinessLocationtitle != null &&
-        _imageBusinessLocationtitle.path != null &&
-        _imageBusinessLocationtitle.path.isNotEmpty) {
+        _imageBusinessLocationtitle!.path != null &&
+        _imageBusinessLocationtitle!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageBusinessLocationtitle.openRead()));
-      var length = await _imageBusinessLocationtitle.length();
+          DelegatingStream.typed(_imageBusinessLocationtitle!.openRead()));
+      var length = await _imageBusinessLocationtitle!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[223]', stream, length,
-          filename: basename(_imageBusinessLocationtitle.path)));
+          filename: basename(_imageBusinessLocationtitle!.path)));
     }
     // Business
     if (_imageSaleAndPurchase != null &&
-        _imageSaleAndPurchase.path != null &&
-        _imageSaleAndPurchase.path.isNotEmpty) {
+        _imageSaleAndPurchase!.path != null &&
+        _imageSaleAndPurchase!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageSaleAndPurchase.openRead()));
-      var length = await _imageSaleAndPurchase.length();
+          DelegatingStream.typed(_imageSaleAndPurchase!.openRead()));
+      var length = await _imageSaleAndPurchase!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[227]', stream, length,
-          filename: basename(_imageSaleAndPurchase.path)));
+          filename: basename(_imageSaleAndPurchase!.path)));
     }
     // Business
     if (_imageBusinessOther != null &&
-        _imageBusinessOther.path != null &&
-        _imageBusinessOther.path.isNotEmpty) {
+        _imageBusinessOther!.path != null &&
+        _imageBusinessOther!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageBusinessOther.openRead()));
-      var length = await _imageBusinessOther.length();
+          DelegatingStream.typed(_imageBusinessOther!.openRead()));
+      var length = await _imageBusinessOther!.length();
       request.files.add(new http.MultipartFile(
           'businessOwnerShip[228]', stream, length,
-          filename: basename(_imageBusinessOther.path)));
+          filename: basename(_imageBusinessOther!.path)));
     }
 
     // Collateral
     if (_imageCollateralCertificate != null &&
-        _imageCollateralCertificate.path != null &&
-        _imageCollateralCertificate.path.isNotEmpty) {
+        _imageCollateralCertificate!.path != null &&
+        _imageCollateralCertificate!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageCollateralCertificate.openRead()));
-      var length = await _imageCollateralCertificate.length();
+          DelegatingStream.typed(_imageCollateralCertificate!.openRead()));
+      var length = await _imageCollateralCertificate!.length();
       request.files.add(new http.MultipartFile(
           'collateral[301]', stream, length,
-          filename: basename(_imageCollateralCertificate.path)));
+          filename: basename(_imageCollateralCertificate!.path)));
     }
 
     // Collateral
     if (_imageCollateralPicture != null &&
-        _imageCollateralPicture.path != null &&
-        _imageCollateralPicture.path.isNotEmpty) {
+        _imageCollateralPicture!.path != null &&
+        _imageCollateralPicture!.path.isNotEmpty) {
       var stream = new http.ByteStream(
-          DelegatingStream.typed(_imageCollateralPicture.openRead()));
-      var length = await _imageCollateralPicture.length();
+          DelegatingStream.typed(_imageCollateralPicture!.openRead()));
+      var length = await _imageCollateralPicture!.length();
       request.files.add(new http.MultipartFile(
           'collateral[302]', stream, length,
-          filename: basename(_imageCollateralPicture.path)));
+          filename: basename(_imageCollateralPicture!.path)));
     }
 
     // add headers
     request.headers.addAll(headers);
 
     // adding params
-    var loanCode = listLoan != null ? listLoan['lcode'] : editLoan;
+    var loanCode =
+        widget.listLoan != null ? widget.listLoan['lcode'] : widget.editLoan;
     request.fields['lcode'] = loanCode;
     request.fields['bcode'] = branch;
     request.fields['ucode'] = user_ucode;
@@ -714,7 +712,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
       if (response.statusCode == 200) {
         showInSnackBar(
-            AppLocalizations.of(context).translate('successfully') ??
+            AppLocalizations.of(context)!.translate('successfully') ??
                 'Successfully',
             Colors.redAccent);
         Navigator.push(
@@ -735,7 +733,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _isLoading = false;
       });
       showInSnackBar(
-          AppLocalizations.of(context).translate('please_select_document') ??
+          AppLocalizations.of(context)!.translate('please_select_document') ??
               'Please select document',
           Colors.redAccent);
     }
@@ -745,7 +743,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeyAddDocument.currentState.showSnackBar(new SnackBar(
+    _scaffoldKeyAddDocument.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -757,20 +755,20 @@ class _GridHeaderState extends State<AddReferentDocument> {
         // animType: AnimType.LEFTSLIDE,
         headerAnimationLoop: false,
         dialogType: DialogType.SUCCES,
-        title: AppLocalizations.of(context).translate('information') ??
+        title: AppLocalizations.of(context)!.translate('information') ??
             'Information',
-        desc: AppLocalizations.of(context).translate('do_you_want') ??
+        desc: AppLocalizations.of(context)!.translate('do_you_want') ??
             'Do you want to upload document and submit request?',
         btnOkOnPress: () async {
           if (value != null && value != '')
             onDelete(value, imageClear1, imageClear2);
         },
-        btnCancelText: AppLocalizations.of(context).translate('no') ?? "No",
+        btnCancelText: AppLocalizations.of(context)!.translate('no') ?? "No",
         btnCancelOnPress: () async {},
         btnCancelIcon: Icons.close,
         btnOkIcon: Icons.check_circle,
         btnOkColor: logolightGreen,
-        btnOkText: AppLocalizations.of(context).translate('yes') ?? 'Yes')
+        btnOkText: AppLocalizations.of(context)!.translate('yes') ?? 'Yes')
       ..show();
   }
 
@@ -843,32 +841,32 @@ class _GridHeaderState extends State<AddReferentDocument> {
   }
 
 //
-  File _imageNation;
-  File _imageFamily;
-  File _imageResident;
-  File _imageOther;
+  File? _imageNation;
+  File? _imageFamily;
+  File? _imageResident;
+  File? _imageOther;
 
   //
-  File _imageSalarySlip;
-  File _imageBankStatement;
-  File _imageSalaryVerify;
-  File _imageEmployeeContrat;
-  File _imageEmployeeID;
-  File _imageEmployeeOther;
+  File? _imageSalarySlip;
+  File? _imageBankStatement;
+  File? _imageSalaryVerify;
+  File? _imageEmployeeContrat;
+  File? _imageEmployeeID;
+  File? _imageEmployeeOther;
   //
 
-  File _imagePhotoOfService;
-  File _imageBusinessPermit;
-  File _imageBusinessLocationtitle;
-  File _imageIncomeStatementBank;
-  File _imagePatent;
-  File _imageRentalContract;
-  File _imageSaleAndPurchase;
-  File _imageBusinessOther;
+  File? _imagePhotoOfService;
+  File? _imageBusinessPermit;
+  File? _imageBusinessLocationtitle;
+  File? _imageIncomeStatementBank;
+  File? _imagePatent;
+  File? _imageRentalContract;
+  File? _imageSaleAndPurchase;
+  File? _imageBusinessOther;
   //
 
-  File _imageCollateralCertificate;
-  File _imageCollateralPicture;
+  File? _imageCollateralCertificate;
+  File? _imageCollateralPicture;
   //
 
   // getImage

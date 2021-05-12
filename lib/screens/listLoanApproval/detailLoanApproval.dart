@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:pdf_flutter/pdf_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:path_provider/path_provider.dart';
@@ -31,17 +30,14 @@ class CardDetailLoanRegitration extends StatefulWidget {
 
   @override
   _CardDetailLoanRegitrationState createState() =>
-      _CardDetailLoanRegitrationState(this.lists);
+      _CardDetailLoanRegitrationState();
 }
 
 class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
-  final dynamic lists;
   var list;
   var _isloading = false;
-  PhotoViewController controller;
-  _CardDetailLoanRegitrationState(
-    this.lists,
-  );
+  PhotoViewController? controller;
+
   getDateTimeApprove(time) {
     DateTime dateTimeApproved = DateTime.parse(time);
     String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
@@ -54,8 +50,8 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     return dateTime;
   }
 
-  List<Asset> images = List<Asset>();
-  List<File> fileName;
+  List<Asset> images = <Asset>[];
+  List<File>? fileName;
   var onEditData;
 
   onEdit(value) {}
@@ -65,7 +61,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
   @override
   void didChangeDependencies() {
     getImageDocument();
-    var locode = lists;
+    var locode = widget.lists;
     detiaLoan = Provider.of<LoanInternal>(
       context,
     ).getLoanByID(locode['lcode']);
@@ -86,7 +82,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     // setState(() {
     //   _imageDocument = null;
     // });
@@ -100,7 +96,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     setState(() {
       _isloading = true;
     });
-    var locode = lists;
+    var locode = widget.lists;
     var url = baseURLInternal + 'loanDocuments/byloan/' + locode['lcode'];
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
@@ -135,7 +131,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     var convert = convertImagePath(image);
   }
 
-  File imageFile;
+  File? imageFile;
   convertImagePath(image) async {
     switch (image['type']) {
       case '101':
@@ -157,7 +153,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                       backgroundDecoration: BoxDecoration(color: Colors.white),
                       imageProvider: _imageDocument != null
                           ? AssetImage(file.path)
-                          : AssetImage(imageFile.path),
+                          : AssetImage(imageFile!.path),
                     ),
                   ),
                 ));
@@ -340,7 +336,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     }
   }
 
-  double scaleCopy;
+  double? scaleCopy;
   @override
   Widget build(BuildContext context) {
     return _isloading
@@ -354,7 +350,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
               var f = new NumberFormat("#,###.00", "en_US");
               return snapshot.hasData
                   ? ListView.builder(
-                      itemCount: snapshot.data.length,
+                      itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         return SingleChildScrollView(
                           child: Container(
@@ -377,94 +373,94 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               ListDetail(
                                                 name: 'customer_khmer_name',
                                                 value:
-                                                    '${snapshot.data[index].customer}',
+                                                    '${snapshot.data![index].customer}',
                                               ),
 
                                               // //
                                               ListDetail(
                                                 name: 'customer_id',
                                                 value:
-                                                    '${snapshot.data[index].ccode}',
+                                                    '${snapshot.data![index].ccode}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'loan_id',
                                                 value:
-                                                    '${snapshot.data[index].lcode}',
+                                                    '${snapshot.data![index].lcode}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'loan_amount',
                                                 value:
-                                                    '\$ ${f.format(snapshot.data[index].lamt)}',
+                                                    '\$ ${f.format(snapshot.data![index].lamt)}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'currencies',
                                                 value:
-                                                    '${snapshot.data[index].currency}',
+                                                    '${snapshot.data![index].currency}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'loan_product',
                                                 value:
-                                                    '${snapshot.data[index].loanProduct}',
+                                                    '${snapshot.data![index].loanProduct}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'number_of_term',
                                                 value:
-                                                    '${snapshot.data[index].ints.toInt()}',
+                                                    '${snapshot.data![index].ints!.toInt()}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'interest_rate',
                                                 value:
-                                                    '${snapshot.data[index].intrate}%',
+                                                    '${snapshot.data![index].intrate}%',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'maintenance_fee',
                                                 value:
-                                                    '${snapshot.data[index].mfee}%',
+                                                    '${snapshot.data![index].mfee}%',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'admin_fee',
                                                 value:
-                                                    '${snapshot.data[index].afee}%',
+                                                    '${snapshot.data![index].afee}%',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'irr',
                                                 value:
-                                                    '${numFormat.format(snapshot.data[index].irr).toString()}%',
+                                                    '${numFormat.format(snapshot.data![index].irr).toString()}%',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'repayment_method',
                                                 value:
-                                                    '${snapshot.data[index].rmode}',
+                                                    '${snapshot.data![index].rmode}',
                                               ),
                                               // //
                                               ListDetail(
                                                 name: 'open_date',
                                                 value: getDateTimeYMD(snapshot
-                                                        .data[index].odate ??
+                                                        .data![index].odate ??
                                                     DateTime.now().toString()),
                                               ),
 
                                               ListDetail(
                                                 name: 'maturity_date',
                                                 value: getDateTimeYMD(snapshot
-                                                        .data[index].mdate ??
+                                                        .data![index].mdate ??
                                                     DateTime.now().toString()),
                                               ),
 
                                               ListDetail(
                                                 name: 'first_repayment_date',
                                                 value: getDateTimeYMD(snapshot
-                                                        .data[index].firdate ??
+                                                        .data![index].firdate ??
                                                     DateTime.now().toString()),
                                               ),
 
@@ -472,37 +468,37 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                 name:
                                                     'generate_grace_period_number',
                                                 value:
-                                                    '${snapshot.data[index].graperiod}',
+                                                    '${snapshot.data![index].graperiod}',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'loan_purpose',
                                                 value:
-                                                    '${snapshot.data[index].lpourpose}',
+                                                    '${snapshot.data![index].lpourpose}',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'LTV',
                                                 value:
-                                                    '${snapshot.data[index].ltv}',
+                                                    '${snapshot.data![index].ltv}',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'Dscr',
                                                 value:
-                                                    '${snapshot.data[index].dscr}',
+                                                    '${snapshot.data![index].dscr}',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'refer_by_who',
                                                 value:
-                                                    '${snapshot.data[index].refby}',
+                                                    '${snapshot.data![index].refby}',
                                               ),
                                               //
                                               ListDetail(
                                                 name: 'status',
                                                 value:
-                                                    '${snapshot.data[index].lstatus}',
+                                                    '${snapshot.data![index].lstatus}',
                                               ),
                                               if (_imageDocument != null)
                                                 Container(

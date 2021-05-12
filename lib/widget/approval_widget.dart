@@ -24,7 +24,9 @@ class _Approval_widgetState extends State<Approval_widget> {
     return FutureBuilder<List<Approval>>(
       future: futureApprovalList,
       builder: (context, snapshot) {
-        return ApprovalListCard(approvalList: snapshot.data);
+        return ApprovalListCard(
+          approvalList: snapshot.data,
+        );
       },
     );
   }

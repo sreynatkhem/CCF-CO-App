@@ -20,7 +20,7 @@ class _GroupLoanState extends State<GroupLoan> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: logolightGreen,
-        title: Text(AppLocalizations.of(context).translate('group_loan') ??
+        title: Text(AppLocalizations.of(context)!.translate('group_loan') ??
             "Group Loan"),
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back),
@@ -50,7 +50,7 @@ class _GroupLoanState extends State<GroupLoan> {
                       borderSide: BorderSide(color: logolightGreen),
                     ),
                     labelText:
-                        AppLocalizations.of(context).translate('group_loan') ??
+                        AppLocalizations.of(context)!.translate('group_loan') ??
                             'Group Name:',
                   ),
                 )),
@@ -93,7 +93,7 @@ class _GroupLoanState extends State<GroupLoan> {
                               width: 5,
                             ),
                             Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate("next") ??
                                     "Next",
                                 style: TextStyle(

@@ -12,26 +12,23 @@ import 'package:provider/provider.dart';
 import 'editCustomerRegistration.dart';
 
 class CardDetailCustomer extends StatefulWidget {
-  final dynamic list;
-  var isRefresh;
+  dynamic? list;
   CardDetailCustomer({
     this.list,
   });
 
   @override
-  _CardDetailCustomerState createState() => _CardDetailCustomerState(
-        list: list,
-      );
+  _CardDetailCustomerState createState() => _CardDetailCustomerState();
 }
 
 class _CardDetailCustomerState extends State<CardDetailCustomer> {
-  final dynamic list;
-  var detialCusotmer;
+  // final dynamic list;
+  dynamic? detialCusotmer;
   var onEditData;
 
-  _CardDetailCustomerState({
-    this.list,
-  });
+  // _CardDetailCustomerState({
+  //   this.list,
+  // });
   getDateTimeApprove(time) {
     DateTime dateTimeApproved = DateTime.parse(time);
     String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
@@ -44,33 +41,39 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
     return dateTime;
   }
 
-  onEdit(value) async {
-    var ccode = list;
-    detialCusotmer = await Provider.of<ListCustomerRegistrationProvider>(
-            context,
-            listen: false)
-        .getCustomerByID(ccode)
-        .then((value) => {
-              Navigator.of(context).push(new MaterialPageRoute<Null>(
-                  builder: (BuildContext context) {
-                    return new EditCustomerRegister(
-                      list: value[0],
-                    );
-                  },
-                  fullscreenDialog: true)),
-              setState(() {
-                onEditData = value[0];
-              }),
-            });
+  onEdit() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditCustomerRegister(
+                  list: detialCusotmer,
+                )));
   }
 
+  bool _isLoading = false;
   @override
   void didChangeDependencies() {
-    var ccode = list;
-    detialCusotmer = Provider.of<ListCustomerRegistrationProvider>(
-      context,
-    ).getCustomerByID(ccode);
     super.didChangeDependencies();
+    fetch();
+  }
+
+  fetch() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var ccode = widget.list;
+    await Provider.of<ListCustomerRegistrationProvider>(
+      context,
+    ).getCustomerByID(ccode).then((value) {
+      setState(() {
+        detialCusotmer = value;
+        _isLoading = false;
+      });
+    }).onError((error, stackTrace) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   void onLoading() async {
@@ -79,19 +82,9 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
 
   @override
   Widget build(BuildContext context) {
-    var ccode = list;
-    detialCusotmer =
-        Provider.of<ListCustomerRegistrationProvider>(context, listen: false)
-            .getCustomerByID(ccode);
-
     return Header(
         leading: BackButton(
-          onPressed: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => ListCustomerRegistrations(),
-              ),
-              ModalRoute.withName('/')),
+          onPressed: () => Navigator.pop(context),
         ),
         headerTexts: 'detail_customer_registration',
         actionsNotification: <Widget>[
@@ -104,138 +97,110 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
                     size: 25,
                   ),
                   onPressed: () {
-                    onEdit(list);
+                    onEdit();
                   }),
             ],
           ),
         ],
-        bodys: FutureBuilder<List<CustomerRegistration>>(
-          future: detialCusotmer,
-          builder: (context, snapshot) {
-            return snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return SingleChildScrollView(
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          // padding: EdgeInsets.only(top: 10, bottom: 15),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                side:
-                                    BorderSide(color: logolightGreen, width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: InkWell(
-                                  splashColor: Colors.blue.withAlpha(30),
-                                  child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            ListDetail(
-                                              name: 'full_khmer_name',
-                                              value:
-                                                  '${snapshot.data[index].namekhr}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'full_english_name',
-                                              value:
-                                                  '${snapshot.data[index].nameeng}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'id',
-                                              value:
-                                                  '${snapshot.data[index].ucode}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'gender',
-                                              value:
-                                                  '${snapshot.data[index].gender}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'phone_number_1',
-                                              value:
-                                                  '${snapshot.data[index].phone1}',
-                                            ),
-                                            //
-                                            if (snapshot.data[index].phone2 !=
-                                                    null &&
-                                                snapshot.data[index].phone2 !=
-                                                    '')
-                                              ListDetail(
-                                                name: 'phone_number_2',
-                                                value:
-                                                    '${snapshot.data[index].phone2}',
-                                              ),
-                                            //
-                                            ListDetail(
-                                              name: 'occupation_of_customer',
-                                              value:
-                                                  '${snapshot.data[index].occupation}',
-                                            ),
-                                            //
-                                            if (snapshot.data[index].ndate !=
-                                                null)
-                                              ListDetail(
-                                                name: 'next_visit_date',
-                                                value: getDateTimeYMD(snapshot
-                                                        .data[index].ndate ??
-                                                    DateTime.now().toString()),
-                                              ),
-                                            //
+        bodys: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  padding: EdgeInsets.only(top: 10, bottom: 15),
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: logolightGreen, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: InkWell(
+                          splashColor: Colors.blue.withAlpha(30),
+                          child: Row(mainAxisSize: MainAxisSize.max, children: <
+                              Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                ListDetail(
+                                  name: 'full_khmer_name',
+                                  value: '${detialCusotmer['namekhr']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'full_english_name',
+                                  value: '${detialCusotmer['nameeng']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'id',
+                                  value: '${detialCusotmer['ucode']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'gender',
+                                  value: '${detialCusotmer['gender']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'phone_number_1',
+                                  value: '${detialCusotmer['phone1']}',
+                                ),
+                                //
+                                if (detialCusotmer['phone2'] != null &&
+                                    detialCusotmer['phone2'] != '')
+                                  ListDetail(
+                                    name: 'phone_number_2',
+                                    value: '${detialCusotmer['phone2']}',
+                                  ),
+                                //
+                                ListDetail(
+                                  name: 'occupation_of_customer',
+                                  value: '${detialCusotmer['occupation']}',
+                                ),
+                                //
+                                if (detialCusotmer['ndate'] != null)
+                                  ListDetail(
+                                    name: 'next_visit_date',
+                                    value: getDateTimeYMD(
+                                        detialCusotmer['ndate'] ??
+                                            DateTime.now().toString()),
+                                  ),
+                                //
 
-                                            ListDetail(
-                                              name: 'prospective',
-                                              value:
-                                                  '${snapshot.data[index].pro}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'province_code',
-                                              value:
-                                                  '${snapshot.data[index].provinceName}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'district_code',
-                                              value:
-                                                  '${snapshot.data[index].districtName}',
-                                            ),
-                                            //
-                                            ListDetail(
-                                              name: 'commune_code',
-                                              value:
-                                                  '${snapshot.data[index].communeName}',
-                                            ),
-                                            ListDetail(
-                                              name: 'village_code',
-                                              value:
-                                                  '${snapshot.data[index].villageName}',
-                                            ),
-                                            ListDetail(
-                                              name: 'current_location',
-                                              value:
-                                                  '${snapshot.data[index].goglocation}',
-                                            ),
-                                            Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 5)),
-                                          ],
-                                        ),
-                                      ]))),
-                        ),
-                      );
-                    })
-                : Center(child: CircularProgressIndicator());
-          },
-        )
+                                ListDetail(
+                                  name: 'prospective',
+                                  value: '${detialCusotmer['pro']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'province_code',
+                                  value: '${detialCusotmer['provinceName']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'district_code',
+                                  value: '${detialCusotmer['districtName']}',
+                                ),
+                                //
+                                ListDetail(
+                                  name: 'commune_code',
+                                  value: '${detialCusotmer['communeName']}',
+                                ),
+                                ListDetail(
+                                  name: 'village_code',
+                                  value: '${detialCusotmer['villageName']}',
+                                ),
+                                ListDetail(
+                                  name: 'current_location',
+                                  value: '${detialCusotmer['goglocation']}',
+                                ),
+                                Padding(padding: EdgeInsets.only(bottom: 5)),
+                              ],
+                            ),
+                          ]))),
+                ),
+              )
 
         ///
         );

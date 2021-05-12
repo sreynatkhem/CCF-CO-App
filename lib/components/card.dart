@@ -50,13 +50,13 @@ class CardState extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       if (texts != null)
-                        Text(AppLocalizations.of(context).translate(texts) ??
+                        Text(AppLocalizations.of(context)!.translate(texts) ??
                             texts.toString()),
                       if (textTwo != '') Text(textTwo),
-                      if (id != null) Text(id.toString() ?? ""),
-                      if (createdAt != null) Text(createdAt.toString() ?? ""),
-                      if (email != null) Text(email.toString() ?? ""),
-                      if (phone != null) Text(phone.toString() ?? ""),
+                      if (id != null) Text(id.toString()),
+                      if (createdAt != null) Text(createdAt.toString()),
+                      if (email != null) Text(email.toString()),
+                      if (phone != null) Text(phone.toString()),
                     ],
                   ),
                 ])),

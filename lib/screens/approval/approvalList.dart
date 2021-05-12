@@ -10,20 +10,20 @@ import 'package:provider/provider.dart';
 
 class ApprovalLists extends StatefulWidget {
   static const routeName = '/ApprovalLists';
-  var isRefresh = false;
+  dynamic? isRefresh = false;
   ApprovalLists({this.isRefresh});
   @override
-  _ApprovalListsState createState() => new _ApprovalListsState(this.isRefresh);
+  _ApprovalListsState createState() => new _ApprovalListsState();
 }
 
 class _ApprovalListsState extends State<ApprovalLists>
     with SingleTickerProviderStateMixin {
-  _ApprovalListsState(this.isRefresh);
+  // _ApprovalListsState(this.isRefresh);
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
-  TextEditingController _searchQuery;
+  TextEditingController? _searchQuery;
   var isRefresh = false;
   bool _isSearching = false;
   bool _isLoading = false;
@@ -44,7 +44,7 @@ class _ApprovalListsState extends State<ApprovalLists>
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
+    ModalRoute.of(context)!
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
 
     setState(() {
@@ -62,7 +62,7 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   void _clearSearchQuery() {
     setState(() {
-      _searchQuery.clear();
+      _searchQuery!.clear();
       updateSearchQuery("Search query");
     });
   }
@@ -71,7 +71,7 @@ class _ApprovalListsState extends State<ApprovalLists>
     var horizontalTitleAlignment =
         Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
     return new InkWell(
-      onTap: () => scaffoldKey.currentState.openDrawer(),
+      onTap: () => scaffoldKey.currentState!.openDrawer(),
       child: new Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: new Column(
@@ -79,7 +79,7 @@ class _ApprovalListsState extends State<ApprovalLists>
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).translate('approval_lists') ??
+              AppLocalizations.of(context)!.translate('approval_lists') ??
                   'Approval Lists',
               style: mainTitleStyle,
             ),
@@ -119,7 +119,7 @@ class _ApprovalListsState extends State<ApprovalLists>
         new IconButton(
           icon: const Icon(Icons.clear),
           onPressed: () {
-            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+            if (_searchQuery == null || _searchQuery!.text.isEmpty) {
               Navigator.pop(context);
               return;
             }

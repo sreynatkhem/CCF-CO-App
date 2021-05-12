@@ -1,14 +1,14 @@
 class Approval {
-  final String standardCodeDomainName2;
-  final String authorizationRequestBranchCode;
-  final String standardCodeDomainName1;
-  final String authorizationRequestEmpNo;
-  final String authorizationRequestDate;
-  final String authorizationRequestTime;
-  final String branchName;
-  final String authorizationRequestEmpName;
-  final String loanApprovalApplicationNo;
-  final String authorizationOpinionContents;
+  final String? standardCodeDomainName2;
+  final String? authorizationRequestBranchCode;
+  final String? standardCodeDomainName1;
+  final String? authorizationRequestEmpNo;
+  final String? authorizationRequestDate;
+  final String? authorizationRequestTime;
+  final String? branchName;
+  final String? authorizationRequestEmpName;
+  final String? loanApprovalApplicationNo;
+  final String? authorizationOpinionContents;
 
   Approval({
     this.standardCodeDomainName2,
@@ -23,21 +23,21 @@ class Approval {
     this.authorizationOpinionContents,
   });
 
-  factory Approval.fromJson(Map<String, dynamic> json) {
+  factory Approval.fromJson(Map<String?, dynamic> json) {
     return Approval(
-      standardCodeDomainName2: json['standardCodeDomainName2'] as String,
+      standardCodeDomainName2: json['standardCodeDomainName2'] as String?,
       authorizationRequestBranchCode:
-          json['authorizationRequestBranchCode'] as String,
-      standardCodeDomainName1: json['standardCodeDomainName1'] as String,
-      authorizationRequestEmpNo: json['authorizationRequestEmpNo'] as String,
-      authorizationRequestDate: json['authorizationRequestDate'] as String,
-      authorizationRequestTime: json['authorizationRequestTime'] as String,
-      branchName: json['branchName'] as String,
+          json['authorizationRequestBranchCode'] as String?,
+      standardCodeDomainName1: json['standardCodeDomainName1'] as String?,
+      authorizationRequestEmpNo: json['authorizationRequestEmpNo'] as String?,
+      authorizationRequestDate: json['authorizationRequestDate'] as String?,
+      authorizationRequestTime: json['authorizationRequestTime'] as String?,
+      branchName: json['branchName'] as String?,
       authorizationRequestEmpName:
-          json['authorizationRequestEmpName'] as String,
-      loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String,
+          json['authorizationRequestEmpName'] as String?,
+      loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String?,
       authorizationOpinionContents:
-          json['authorizationOpinionContents'] as String,
+          json['authorizationOpinionContents'] as String?,
     );
   }
 }

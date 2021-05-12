@@ -25,7 +25,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
 
   // snack bar
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeySelectedGroupLoan.currentState.showSnackBar(new SnackBar(
+    _scaffoldKeySelectedGroupLoan.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -50,7 +50,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
   var _selectedLeader;
   var _selectedMember;
 
-  var items = List<String>();
+  var items = <String>[];
   //
   getListLoan(_pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     final storage = new FlutterSecureStorage();
@@ -140,20 +140,21 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
     var objectGroupLoanDetail = [];
     if (controller == "") {
       showInSnackBar(
-          AppLocalizations.of(context).translate('please_input_group_name') ??
+          AppLocalizations.of(context)!.translate('please_input_group_name') ??
               'Please input group name!',
           Colors.red);
     } else if (list == null ||
         _selectedMember.length > 5 ||
         _selectedMember.length < 2) {
       showInSnackBar(
-          AppLocalizations.of(context)
+          AppLocalizations.of(context)!
                   .translate('please_select_member_correctly') ??
               'Please select member correctly',
           Colors.red);
     } else if (_selectedLeader == null || _selectedLeader.length > 2) {
       showInSnackBar(
-          AppLocalizations.of(context).translate('please_select_team_leader') ??
+          AppLocalizations.of(context)!
+                  .translate('please_select_team_leader') ??
               'Please select team leader',
           Colors.red);
     } else if (controller != '' ||
@@ -216,7 +217,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           // newDate = [];
         });
         showInSnackBar(
-            AppLocalizations.of(context).translate('successfully') ??
+            AppLocalizations.of(context)!.translate('successfully') ??
                 'Successfully',
             logolightGreen);
         Navigator.pushAndRemoveUntil(
@@ -232,7 +233,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           _isLoadingPostToServer = false;
         });
         showInSnackBar(
-            AppLocalizations.of(context).translate('failed') ?? 'Failed',
+            AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
             Colors.redAccent);
       });
     }
@@ -254,7 +255,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
             Container(
               child: SmartSelect.multiple(
                   title:
-                      AppLocalizations.of(context).translate('select_member'),
+                      AppLocalizations.of(context)!.translate('select_member'),
                   value: [],
                   // choiceItems: newDataList,
                   choiceType: S2ChoiceType.checkboxes,
@@ -343,7 +344,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                           FlatButton(
                             color: Colors.red,
                             child: Text(
-                              AppLocalizations.of(context).translate('cancel'),
+                              AppLocalizations.of(context)!
+                                      .translate('cancel') ??
+                                  "",
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () =>
@@ -351,8 +354,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                           ),
                           const SizedBox(width: 5),
                           FlatButton(
-                            child: Text(
-                                AppLocalizations.of(context).translate('okay')),
+                            child: Text(AppLocalizations.of(context)!
+                                    .translate('okay') ??
+                                ""),
                             color: logolightGreen,
                             textColor: Colors.white,
                             onPressed: stateMember.changes.valid
@@ -371,7 +375,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                 padding: EdgeInsets.all(10),
                 child: Center(
                   child: Text(
-                    AppLocalizations.of(context)
+                    AppLocalizations.of(context)!
                             .translate('member_group_loan_have_to') ??
                         "Member Group Loan have to 2 or least then 5 or equal 5.",
                     style: TextStyle(color: Colors.red),
@@ -383,8 +387,8 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
             if (list != [])
               Container(
                 child: SmartSelect.single(
-                    title:
-                        AppLocalizations.of(context).translate('select_leader'),
+                    title: AppLocalizations.of(context)!
+                        .translate('select_leader'),
                     value: list,
                     choiceItems: list,
                     choiceType: S2ChoiceType.radios,
@@ -474,8 +478,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                             FlatButton(
                                 color: Colors.red,
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('cancel'),
+                                  AppLocalizations.of(context)!
+                                          .translate('cancel') ??
+                                      "",
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {
@@ -483,8 +488,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                                 }),
                             const SizedBox(width: 5),
                             FlatButton(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate('okay')),
+                              child: Text(AppLocalizations.of(context)!
+                                      .translate('okay') ??
+                                  ""),
                               color: logolightGreen,
                               textColor: Colors.white,
                               onPressed: stateLeader.changes.valid
@@ -529,7 +535,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                               width: 5,
                             ),
                             Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate("submit") ??
                                     "Submit",
                                 style: TextStyle(

@@ -16,25 +16,15 @@ class Approve extends StatefulWidget {
     this.futureListApprove,
   );
   @override
-  _ApproveState createState() => new _ApproveState(
-        loanApprovalApplicationNo,
-        futureListApprove,
-      );
+  _ApproveState createState() => new _ApproveState();
 }
 
 class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
-  final futureListApprove;
-
-  _ApproveState(
-    this.loanApprovalApplicationNo,
-    this.futureListApprove,
-  );
-
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
-  TextEditingController _searchQuery;
-  final loanApprovalApplicationNo;
+  TextEditingController? _searchQuery;
+  dynamic? loanApprovalApplicationNo;
   bool _isSearching = false;
   String searchQuery = "Search query";
 
@@ -45,27 +35,27 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 180),
     );
 
-    _animation = new CurvedAnimation(
-      parent: _controller,
-      curve: new Interval(0.0, 1.0, curve: Curves.linear),
-    );
+    // _animation = new CurvedAnimation(
+    //   parent: _controller,
+    //   curve: new Interval(0.0, 1.0, curve: Curves.linear),
+    // );
 
-    _animation2 = new CurvedAnimation(
-      parent: _controller,
-      curve: new Interval(0.5, 1.0, curve: Curves.linear),
-    );
+    // _animation2 = new CurvedAnimation(
+    //   (parent: _controller)!,
+    //   curve: new Interval(0.5, 1.0, curve: Curves.linear),
+    // );
 
-    _animation3 = new CurvedAnimation(
-      parent: _controller,
-      curve: new Interval(0.8, 1.0, curve: Curves.linear),
-    );
-    _controller.reverse();
+    // _animation3 = new CurvedAnimation(
+    //   (parent: _controller)!,
+    //   curve: new Interval(0.8, 1.0, curve: Curves.linear),
+    // );
+    // _controller!.reverse();
     super.initState();
     _searchQuery = new TextEditingController();
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
+    ModalRoute.of(context)!
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
 
     setState(() {
@@ -83,7 +73,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
 
   void _clearSearchQuery() {
     setState(() {
-      _searchQuery.clear();
+      _searchQuery!.clear();
       updateSearchQuery("Search query");
     });
   }
@@ -93,7 +83,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
         Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
 
     return new InkWell(
-      onTap: () => scaffoldKey.currentState.openDrawer(),
+      onTap: () => scaffoldKey.currentState!.openDrawer(),
       child: new Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: new Column(
@@ -101,7 +91,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).translate('approval_lists') ??
+              AppLocalizations.of(context)!.translate('approval_lists') ??
                   'Approval Lists',
               style: mainTitleStyle,
             ),
@@ -117,7 +107,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
       autofocus: true,
       decoration: InputDecoration(
         hintText:
-            AppLocalizations.of(context).translate('search') ?? 'Search...',
+            AppLocalizations.of(context)!.translate('search') ?? 'Search...',
         border: InputBorder.none,
         hintStyle: const TextStyle(
             color: Colors.white30,
@@ -142,7 +132,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
         new IconButton(
           icon: const Icon(Icons.clear),
           onPressed: () {
-            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+            if (_searchQuery == null || _searchQuery!.text.isEmpty) {
               Navigator.pop(context);
               return;
             }
@@ -165,20 +155,20 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
   int _angle = 90;
   bool _isRotated = true;
 
-  AnimationController _controller;
-  Animation<double> _animation;
-  Animation<double> _animation2;
-  Animation<double> _animation3;
+  AnimationController? _controller;
+  Animation<double>? _animation;
+  Animation<double>? _animation2;
+  Animation<double>? _animation3;
   void _rotate() {
     setState(() {
       if (_isRotated) {
         _angle = 45;
         _isRotated = false;
-        _controller.forward();
+        _controller!.forward();
       } else {
         _angle = 90;
         _isRotated = true;
-        _controller.reverse();
+        _controller!.reverse();
       }
     });
   }
@@ -199,7 +189,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
               Expanded(
                 flex: 4,
                 child: FutureBuilder<List<DetailApproval>>(
-                  future: futureListApprove,
+                  future: widget.futureListApprove,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) print(snapshot.error);
                     return snapshot.hasData

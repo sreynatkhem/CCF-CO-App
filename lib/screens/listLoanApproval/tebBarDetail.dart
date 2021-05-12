@@ -139,12 +139,12 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
             .isFetchingSuccessfully;
     if (isFetchingSuccessfully == true) {
       showInSnackBar(
-          AppLocalizations.of(context).translate('successfully') ??
+          AppLocalizations.of(context)!.translate('successfully') ??
               'Successfully',
           logolightGreen);
     } else {
       showInSnackBar(
-          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
           Colors.redAccent);
     }
     setState(() {
@@ -191,12 +191,12 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
             .isFetchingSuccessfullyReturn;
     if (isFetchingSuccessfullReturn == true) {
       showInSnackBar(
-          AppLocalizations.of(context).translate('successfully') ??
+          AppLocalizations.of(context)!.translate('successfully') ??
               'Successfully',
           logolightGreen);
     } else {
       showInSnackBar(
-          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
           Colors.redAccent);
     }
   }
@@ -245,12 +245,12 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
             .isFetchingSuccessfullyReject;
     if (isFetchingSuccessfullReject == true) {
       showInSnackBar(
-          AppLocalizations.of(context).translate('successfully') ??
+          AppLocalizations.of(context)!.translate('successfully') ??
               'Successfully',
           logolightGreen);
     } else {
       showInSnackBar(
-          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
           Colors.redAccent);
     }
   }
@@ -260,7 +260,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+    _scaffoldKey.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -276,7 +276,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-            AppLocalizations.of(context).translate('loan_information') ??
+            AppLocalizations.of(context)!.translate('loan_information') ??
                 'Loan Information'),
         backgroundColor: logolightGreen,
       ),
@@ -299,7 +299,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                           constraints: BoxConstraints.expand(height: 55),
                           child: TabBar(indicatorColor: Colors.white, tabs: [
                             Tab(
-                              text: AppLocalizations.of(context)
+                              text: AppLocalizations.of(context)!
                                       .translate('detail') ??
                                   "Detail",
                               icon: Icon(
@@ -314,7 +314,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                   size: 20,
                                 ),
                                 iconMargin: EdgeInsets.all(0),
-                                text: AppLocalizations.of(context)
+                                text: AppLocalizations.of(context)!
                                         .translate('approved') ??
                                     "Approved"),
                             Tab(
@@ -323,7 +323,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                   size: 20,
                                 ),
                                 iconMargin: EdgeInsets.all(0),
-                                text: AppLocalizations.of(context)
+                                text: AppLocalizations.of(context)!
                                         .translate('comments') ??
                                     "Comments"),
                           ]),
@@ -370,18 +370,18 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                           // animType: AnimType.LEFTSLIDE,
                                           headerAnimationLoop: false,
                                           dialogType: DialogType.INFO,
-                                          title: AppLocalizations.of(context)
+                                          title: AppLocalizations.of(context)!
                                                   .translate('reject') ??
                                               'Reject',
                                           desc:
-                                              // AppLocalizations.of(context)
+                                              // AppLocalizations.of(context)!
                                               //         .translate('thank_you') ??
                                               'Would you like to Reject?',
                                           btnOkOnPress: () async {
                                             reject(list, context);
                                           },
                                           btnCancelText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .translate('cancel') ??
                                                   "Cancel",
                                           btnCancelOnPress: () async {},
@@ -389,13 +389,13 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                           btnOkIcon: Icons.check_circle,
                                           btnOkColor: logolightGreen,
                                           btnOkText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .translate('okay') ??
                                                   'Okay')
                                         ..show();
                                     },
                                     color: Colors.red,
-                                    text: AppLocalizations.of(context)
+                                    text: AppLocalizations.of(context)!
                                             .translate('reject') ??
                                         'Reject'),
                                 Padding(padding: EdgeInsets.only(right: 5)),
@@ -409,18 +409,18 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                           // animType: AnimType.LEFTSLIDE,
                                           headerAnimationLoop: false,
                                           dialogType: DialogType.INFO,
-                                          title: AppLocalizations.of(context)
+                                          title: AppLocalizations.of(context)!
                                                   .translate('return') ??
                                               'Return',
                                           desc:
-                                              // AppLocalizations.of(context)
+                                              // AppLocalizations.of(context)!
                                               //         .translate('thank_you') ??
                                               'Would you like to Return?',
                                           btnOkOnPress: () async {
                                             returnFuc(list, context);
                                           },
                                           btnCancelText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .translate('cancel') ??
                                                   "Cancel",
                                           btnCancelOnPress: () async {},
@@ -428,13 +428,13 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                           btnOkIcon: Icons.check_circle,
                                           btnOkColor: logolightGreen,
                                           btnOkText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .translate('okay') ??
                                                   'Okay')
                                         ..show();
                                     },
                                     color: Colors.grey,
-                                    text: AppLocalizations.of(context)
+                                    text: AppLocalizations.of(context)!
                                             .translate('return') ??
                                         'Return'),
                                 Padding(padding: EdgeInsets.only(right: 5)),
@@ -448,18 +448,18 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                           // animType: AnimType.LEFTSLIDE,
                                           headerAnimationLoop: false,
                                           dialogType: DialogType.INFO,
-                                          title: AppLocalizations.of(context)
+                                          title: AppLocalizations.of(context)!
                                                   .translate('authrize') ??
                                               'Authrize',
                                           desc:
-                                              // AppLocalizations.of(context)
+                                              // AppLocalizations.of(context)!
                                               //         .translate('thank_you') ??
                                               'Would you like to authrize?',
                                           btnOkOnPress: () async {
                                             authrize(list, context);
                                           },
                                           btnCancelText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .translate('cancel') ??
                                                   "Cancel",
                                           btnCancelOnPress: () async {},
@@ -467,7 +467,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                           btnOkIcon: Icons.check_circle,
                                           btnOkColor: logolightGreen,
                                           btnOkText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                       .translate('okay') ??
                                                   'Okay')
                                         ..show();
@@ -475,7 +475,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                                     color: logolightGreen,
                                     text: _isLoading
                                         ? 'loading'
-                                        : AppLocalizations.of(context)
+                                        : AppLocalizations.of(context)!
                                                 .translate('authrize') ??
                                             'Authrize'),
                               ],

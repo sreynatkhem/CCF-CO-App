@@ -14,7 +14,8 @@ class LoanApproval with ChangeNotifier {
   var isLoading = false;
 
 //Request list loan
-  Future<List<RequestLoanApproval>> getLoanApproval(
+  // Future<List<RequestLoanApproval>> getLoanApproval(
+  Future getLoanApproval(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     isLoading = true;
 
@@ -67,10 +68,11 @@ class LoanApproval with ChangeNotifier {
         parsed.addAll(jsonDecode(response.body));
         isLoading = false;
         notifyListeners();
-        return jsonDecode(response.body)
-            .map<RequestLoanApproval>(
-                (json) => RequestLoanApproval.fromJson(json))
-            .toList();
+        // return jsonDecode(response.body)
+        //     .map<RequestLoanApproval>(
+        //         (json) => RequestLoanApproval.fromJson(json))
+        //     .toList();
+        return jsonDecode(response.body);
       } else {
         print('statusCode::: ${response.statusCode}');
         isLoading = false;
@@ -81,7 +83,9 @@ class LoanApproval with ChangeNotifier {
     }
   }
 
-  Future<List<RequestDetailLoan>> getLoanApprovalDetail(rcode) async {
+  // Future<List<RequestDetailLoan>> getLoanApprovalDetail(rcode) async {
+
+  Future getLoanApprovalDetail(rcode) async {
     try {
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
@@ -100,9 +104,10 @@ class LoanApproval with ChangeNotifier {
         final dynamic parsed = [];
         parsed.add(jsonDecode(response.body));
         notifyListeners();
-        return parsed
-            .map<RequestDetailLoan>((json) => RequestDetailLoan.fromJson(json))
-            .toList();
+        // return parsed
+        //     .map<RequestDetailLoan>((json) => RequestDetailLoan.fromJson(json))
+        //     .toList();
+        return parsed;
       } else {
         print('statusCode::: ${response.statusCode}');
       }

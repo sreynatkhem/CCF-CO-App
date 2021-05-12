@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'dart:async';
 
 import 'package:provider/provider.dart';
@@ -18,11 +21,10 @@ class StepTwoLogin extends StatefulWidget {
 
   final ImageProvider chokchey;
   StepTwoLogin({
-    Key key,
     this.storeUser,
     this.valuePassword,
     this.chokchey = const AssetImage('assets/images/chokchey.png'),
-  }) : super(key: key);
+  });
   _LoginState createState() =>
       _LoginState(storeUser: storeUser, valuePassword: valuePassword);
 }
@@ -33,7 +35,7 @@ class _LoginState extends State<StepTwoLogin> {
   _LoginState({this.storeUser, this.valuePassword});
   final storage = new FlutterSecureStorage();
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   final TextEditingController id = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -85,30 +87,27 @@ class _LoginState extends State<StepTwoLogin> {
       await Provider.of<LoginProvider>(context, listen: false)
           .postLoginChangePassword(firstLogin.text)
           .then((value) async => {
-                if (value[0].changePassword == 'Y')
+                if (value[0]['changePassword'] == 'Y')
                   {
                     await storage.write(
-                        key: "user_id", value: storeUser[0].uid),
+                        key: "user_id", value: storeUser[0]['uid']),
                     await storage.write(key: "password", value: valuePassword),
                     await storage.write(
-                        key: "user_name", value: storeUser[0].uname),
+                        key: "user_name", value: storeUser[0]['uname']),
                     await storage.write(
-                        key: "user_token", value: storeUser[0].token),
+                        key: "user_token", value: storeUser[0]['token']),
                     await storage.write(
-                        key: "user_ucode", value: storeUser[0].ucode),
+                        key: "user_ucode", value: storeUser[0]['ucode']),
                     await storage.write(
-                        key: "branch", value: storeUser[0].branch),
+                        key: "branch", value: storeUser[0]['branch']),
                     await storage.write(
-                        key: "level", value: value[0].level.toString()),
+                        key: "level", value: value[0]['level'].toString()),
                     await storage.write(
                         key: "isapprover",
-                        value: value[0].isapprover.toString()),
+                        value: value[0]['isapprover'].toString()),
                     // navigator to home screen
-                    _firebaseMessaging.getToken().then((String token) {
+                    FirebaseMessaging.instance.getToken().then((String? token) {
                       assert(token != null);
-                      // setState(() {
-                      //   _homeScreenText = "Push Messaging token: $token";
-                      // });
                       postTokenPushNotification(token);
                     }),
                     Navigator.pushAndRemoveUntil(
@@ -134,12 +133,12 @@ class _LoginState extends State<StepTwoLogin> {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
-    var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+    final Map<String, dynamic> bodyRow = {"mtoken": "$tokens"};
     try {
-      final response = await api().post(
-          baseURLInternal + 'users/' + user_ucode + '/mtoken',
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'users/' + user_ucode + '/mtoken'),
           headers: headers,
-          body: bodyRow);
+          body: json.encode(bodyRow));
     } catch (error) {
       print('error:: ${error}');
     }

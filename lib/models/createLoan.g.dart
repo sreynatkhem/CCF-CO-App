@@ -14,12 +14,12 @@ CreateLoan _$CreateLoanFromJson(Map<String, dynamic> json) {
     ..ccode = json['ccode'] as String
     ..curcode = json['curcode'] as String
     ..pcode = json['pcode'] as String
-    ..lamt = (json['lamt'] as num)?.toDouble()
-    ..ints = (json['ints'] as num)?.toDouble()
-    ..intrate = (json['intrate'] as num)?.toDouble()
-    ..mfee = (json['mfee'] as num)?.toDouble()
-    ..afee = (json['afee'] as num)?.toDouble()
-    ..irr = (json['irr'] as num)?.toDouble()
+    ..lamt = (json['lamt'] as num).toDouble()
+    ..ints = (json['ints'] as num).toDouble()
+    ..intrate = (json['intrate'] as num).toDouble()
+    ..mfee = (json['mfee'] as num).toDouble()
+    ..afee = (json['afee'] as num).toDouble()
+    ..irr = (json['irr'] as num).toDouble()
     ..rmode = json['rmode'] as String
     ..expdate = json['expdate'] as String
     ..odate = json['odate'] as String
@@ -27,8 +27,8 @@ CreateLoan _$CreateLoanFromJson(Map<String, dynamic> json) {
     ..firdate = json['firdate'] as String
     ..graperiod = json['graperiod'] as num
     ..lpourpose = json['lpourpose'] as String
-    ..ltv = (json['ltv'] as num)?.toDouble()
-    ..dscr = (json['dscr'] as num)?.toDouble()
+    ..ltv = (json['ltv'] as num).toDouble()
+    ..dscr = (json['dscr'] as num).toDouble()
     ..refby = json['refby'] as String
     ..lstatus = json['lstatus'] as String
     ..u1 = json['u1'] as String
@@ -40,10 +40,10 @@ CreateLoan _$CreateLoanFromJson(Map<String, dynamic> json) {
     ..customer = json['customer'] as String
     ..user = json['user'] as String
     ..loanProduct = json['loanProduct'] as String
-    ..currency = json['currency'] as String
-    ..loanRequest = json['loanRequest'] == null
-        ? null
-        : LoanRequest.fromJson(json['loanRequest'] as Map<String, dynamic>);
+    ..currency = json['currency'] as String;
+  // ..loanRequest = (json['loanRequest'] == null
+  //     ? null
+  //     : LoanRequest.fromJson(json['loanRequest'] as Map<String, dynamic>))!;
 }
 
 Map<String, dynamic> _$CreateLoanToJson(CreateLoan instance) =>

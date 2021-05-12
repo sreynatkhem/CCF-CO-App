@@ -7,7 +7,7 @@ class CardReport extends StatelessWidget {
   var icons;
   var iconSizes;
   var onTap;
-  String value;
+  String? value;
 
   CardReport(
       {this.backgroundColors,
@@ -43,7 +43,7 @@ class CardReport extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    AppLocalizations.of(context).translate(text) ?? text,
+                    AppLocalizations.of(context)!.translate(text) ?? text,
                     style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),

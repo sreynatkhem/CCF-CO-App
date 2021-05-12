@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 class ApprovalHistoryProvider {
   final storage = new FlutterSecureStorage();
@@ -77,8 +78,8 @@ class ApprovalHistoryProvider {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().get(
-        baseURLInternal + 'valuelists/branches/byuser/' + user_ucode,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/branches/byuser/' + user_ucode),
         headers: headers,
       );
       if (response.statusCode == 200) {

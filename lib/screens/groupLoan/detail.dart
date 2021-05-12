@@ -31,8 +31,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
   Widget build(BuildContext context) {
     return Header(
         headerTexts:
-            AppLocalizations.of(context).translate('detail_group_loan') ??
-                'Detail a group loan',
+            AppLocalizations.of(context)!.translate('detail_group_loan'),
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -52,16 +51,15 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                             Icon(Icons.group_add),
                             Padding(padding: EdgeInsets.only(right: 10)),
                             Text(
-                              AppLocalizations.of(context)
-                                          .translate('group_name') +
-                                      ":" ??
+                              AppLocalizations.of(context)!
+                                      .translate('group_name') ??
                                   "Group name:",
                               style: TextStyle(
                                 fontSize: fontSizeXs,
                               ),
                             ),
                             Text(
-                              " ${groupNameParam}",
+                              "៖ ${groupNameParam}",
                               style: TextStyle(
                                   fontSize: fontSizeXs,
                                   fontWeight: FontWeight.w700),
@@ -86,7 +84,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                             Container(
                               padding: EdgeInsets.only(top: 3),
                               child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('leader') ??
                                     "Leader:",
                                 style: TextStyle(
@@ -162,7 +160,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                               ),
                               Padding(padding: EdgeInsets.all(3)),
                               Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('submit') ??
                                     "Submit",
                                 style: TextStyle(color: Colors.white),
@@ -176,7 +174,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                           //         leaderGroupLoan == "" &&
                           //         leaderGroupLoan == null) {
                           //   showInSnackBar(
-                          //       AppLocalizations.of(context).translate(
+                          //       AppLocalizations.of(context)!.translate(
                           //           'limit_select_a_group_loan_only'),
                           //       Colors.red);
                           // } else {
@@ -210,7 +208,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                               ),
                               Padding(padding: EdgeInsets.all(3)),
                               Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('cancel') ??
                                     "Cancel",
                                 style: TextStyle(color: Colors.white),
