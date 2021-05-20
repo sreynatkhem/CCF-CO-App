@@ -1,6 +1,3 @@
-import 'package:chokchey_finance/models/customerRegistration.dart';
-import 'package:chokchey_finance/models/index.dart';
-import 'package:chokchey_finance/models/listNationID.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -101,8 +98,8 @@ class CustomerRegistrationProvider with ChangeNotifier {
     try {
       _isFetching = false;
       var token = await storage.read(key: 'user_token');
-      final response = await api().get(
-        baseURLInternal + 'valuelists/idtypes',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/idtypes'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token

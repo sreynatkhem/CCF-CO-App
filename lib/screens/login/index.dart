@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/defaultLogin.dart';
-import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
 import 'package:chokchey_finance/screens/login/stepTwoLogin.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -11,7 +10,6 @@ import 'package:chokchey_finance/providers/login.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'dart:async';

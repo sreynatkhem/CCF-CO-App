@@ -1,19 +1,11 @@
 import 'dart:convert';
-
-import 'package:chokchey_finance/components/ListDatial.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/models/detialApproval.dart';
-import 'package:chokchey_finance/models/requestDetailLoan.dart';
-import 'package:chokchey_finance/models/requestLoanApproval.dart';
-import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:intl/intl.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart';
 
 class ApprovalListCard extends StatefulWidget {
   final dynamic lists;
@@ -27,19 +19,9 @@ class ApprovalListCard extends StatefulWidget {
 }
 
 class _ApprovalListCardState extends State<ApprovalListCard> {
-  final images = const AssetImage('assets/images/request.png');
-
   final _imagesList = const AssetImage('assets/images/list.png');
-
   final _imagesFindApproval =
       const AssetImage('assets/images/findApproval.png');
-
-  final _imageReturn = const AssetImage('assets/images/return.png');
-
-  final _imageReject = const AssetImage('assets/images/reject.png');
-
-  onClickCard(value, context) {}
-
   statusApproval(value) {
     switch (value) {
       case 'R':
@@ -82,53 +64,15 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
     }
   }
 
-  var futureLoanApproval;
-  var parsed = [];
-  var dataListLoanApproval = [];
-
   @override
   void didChangeDependencies() {
     if (mounted) {
-      futureLoanApproval = Provider.of<LoanApproval>(context)
-          .getLoanApproval(20, 1, '', '', '', '', '');
-      getListLoan(20, 1);
       getDetail();
-      if (this.futureLoanApproval != futureLoanApproval) {
-        this.futureLoanApproval = futureLoanApproval;
-        Future.microtask(() => futureLoanApproval.doSomeHttpCall());
-      }
     }
     super.didChangeDependencies();
   }
 
-  Future getListLoan(_pageSize, _pageNumber) async {
-    final storage = new FlutterSecureStorage();
-    try {
-      var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
-      var branch = await storage.read(key: "branch");
-      var bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      };
-      final response = await api().post(baseURLInternal + 'loanRequests/byuser',
-          headers: headers, body: bodyRow);
-      if (response.statusCode == 200) {
-        var listLoan = jsonDecode(response.body);
-        setState(() {
-          parsed = listLoan[0]['listLoanRequests'];
-          dataListLoanApproval = listLoan[0];
-        });
-      } else {
-        print('statusCode::: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('error in fuction::: ${error}');
-    }
-  }
-
+  dynamic? status = Text('');
   var list;
   var getListDetail = [];
   var _isloading = false;
@@ -143,8 +87,10 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().get(
-        baseURLInternal + 'loanRequests/Applications/' + widget.lists['rcode'],
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal +
+            'loanRequests/Applications/' +
+            widget.lists['rcode']),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -154,8 +100,8 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
           list = listData;
           _isloading = false;
         });
+        statusApproval(list['rstatus']);
       } else {
-        print('statusCode::: ${response.statusCode}');
         setState(() {
           _isloading = false;
         });
@@ -167,10 +113,8 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
     }
   }
 
-  var futureLoanApprovalDetail;
   @override
   Widget build(BuildContext context) {
-    var status = _isloading ? Text('') : statusApproval(list['rstatus']);
     return _isloading
         ? Center(
             child: Container(
@@ -315,22 +259,6 @@ class _ApprovalListCardState extends State<ApprovalListCard> {
                                                               style:
                                                                   mainTitleBlack,
                                                             )),
-                                                            // Text(
-                                                            //     '${getListDetail[index]['branchName']}'),
-                                                            // Padding(
-                                                            //     padding: EdgeInsets
-                                                            //         .only(
-                                                            //             bottom:
-                                                            //                 2)),
-                                                            // Text(
-                                                            //     '${list['loan']['currency']} ${getListDetail[index]['lamt']}'),
-                                                            // Padding(
-                                                            //     padding: EdgeInsets
-                                                            //         .only(
-                                                            //             bottom:
-                                                            //                 2)),
-                                                            // Text(
-                                                            //     '${getDateTimeYMD(getListDetail[index]['adate'])}'),
                                                             Padding(
                                                                 padding: EdgeInsets
                                                                     .only(

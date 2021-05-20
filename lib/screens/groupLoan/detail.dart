@@ -143,6 +143,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
+                      // ignore: deprecated_member_use
                       RaisedButton(
                         color: logolightGreen,
                         shape: RoundedRectangleBorder(

@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-// import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:select_dialog/select_dialog.dart';
 
@@ -39,48 +39,52 @@ class _EditLoanRegister extends State<EditLoanRegister> {
     getCurrencies();
     getLoanProducts();
     setState(() {
-      idCcode = widget.list.ccode;
-      selectedValueCustmerName = widget.list.customer;
-      selectedCustomerID.text = widget.list.lcode;
-      lcode = widget.list.lcode;
-      loanController.text = widget.list.lamt.toString();
-      valueAmount = widget.list.lamt.toString();
-      valueNumberofTerm = widget.list.ints.toString();
-      valueInterest = widget.list.intrate.toString();
-      valueMaintenanceFee = widget.list.mfee.toString();
-      valueAdminFee = widget.list.afee.toString();
-      curcode = widget.list.currency;
-      selectedValueCurrencies = widget.list.curcode;
-      pcode = widget.list.loanProduct;
-      selectedValueLoanProduct = widget.list.pcode;
-      numberOfTermController.text = widget.list.ints.toString();
-      interestRateController.text = widget.list.intrate.toString();
-      maintenanceFeeController.text = widget.list.mfee.toString();
-      adminFeeController.text = widget.list.afee.toString();
-      iRRControllers.text = widget.list.irr.toString();
-      repaymentController.text = widget.list.rmode.toString();
-      valueRepaymentMethod = widget.list.rmode.toString();
-      openDataController.text = getDateTimeYMD(widget.list.odate.toString());
-      valueOpenDate = widget.list.odate;
-      datehMaturityDateController.text =
-          getDateTimeYMD(widget.list.mdate.toString());
-      valueMaturityDate = widget.list.mdate;
-      expectedDateController.text =
-          getDateTimeYMD(widget.list.expdate.toString());
-      valueFirstRepaymentDate = widget.list.firdate;
+      idCcode = widget.list['ccode'];
+      selectedValueCustmerName = widget.list['customer'];
+      selectedCustomerID.text = widget.list['lcode'];
+      lcode = widget.list['lcode'];
+      loanController.text = widget.list['lamt'].toString();
+      valueAmount = widget.list['lamt'].toString();
+      valueNumberofTerm = widget.list['ints'].toString();
+      valueInterest = widget.list['intrate'].toString();
+      valueMaintenanceFee = widget.list['mfee'].toString();
+      valueAdminFee = widget.list['afee'].toString();
+      curcode = widget.list['currency'];
+      selectedValueCurrencies = widget.list['curcode'];
+      pcode = widget.list['loanProduct'];
+      selectedValueLoanProduct = widget.list['pcode'];
+      numberOfTermController.text = widget.list['ints'].toString();
+      interestRateController.text = widget.list['intrate'].toString();
+      maintenanceFeeController.text = widget.list['mfee'].toString();
+      adminFeeController.text = widget.list['afee'].toString();
+      iRRControllers.text = widget.list['irr'].toString();
+      repaymentController.text = widget.list['rmode'].toString();
+      valueRepaymentMethod = widget.list['rmode'].toString();
+      if (widget.list['odate'] != null)
+        openDataController.text =
+            getDateTimeYMD(widget.list['odate'].toString());
+      valueOpenDate = widget.list['odate'];
+      if (widget.list['mdate'] != null)
+        datehMaturityDateController.text =
+            getDateTimeYMD(widget.list['mdate'].toString());
+      valueMaturityDate = widget.list['mdate'];
+      if (widget.list['expdate'] != null)
+        expectedDateController.text =
+            getDateTimeYMD(widget.list['expdate'].toString());
+      valueFirstRepaymentDate = widget.list['firdate'];
       generateGracePeriodNumberController.text =
-          widget.list.graperiod.toString();
-      valueGenerateGracePeriodNumber = widget.list.graperiod;
-      loanPurposeController.text = widget.list.lpourpose.toString();
-      referByWhoController.text = widget.list.refby.toString();
-      valueReferByWho = widget.list.refby.toString();
-      valueORARD = widget.list.lstatus;
-      dscrController.text = widget.list.dscr.toString();
-      lTVController.text = widget.list.ltv.toString();
-      valueLoanPurpose = widget.list.lpourpose.toString();
-      valueDscr = widget.list.dscr.toString();
-      valueLTV = widget.list.ltv.toString();
-      valueRepaymentMethod = widget.list.rmode;
+          widget.list['graperiod'].toString();
+      valueGenerateGracePeriodNumber = widget.list['graperiod'];
+      loanPurposeController.text = widget.list['lpourpose'].toString();
+      referByWhoController.text = widget.list['refby'].toString();
+      valueReferByWho = widget.list['refby'].toString();
+      valueORARD = widget.list['lstatus'];
+      dscrController.text = widget.list['dscr'].toString();
+      lTVController.text = widget.list['ltv'].toString();
+      valueLoanPurpose = widget.list['lpourpose'].toString();
+      valueDscr = widget.list['dscr'].toString();
+      valueLTV = widget.list['ltv'].toString();
+      valueRepaymentMethod = widget.list['rmode'];
       // valueORARD = widget.list.loanRequest;
     });
     super.initState();
@@ -276,9 +280,9 @@ class _EditLoanRegister extends State<EditLoanRegister> {
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
     var irr =
-        iRRControllers.text != null ? iRRControllers.text : widget.list.irr;
+        iRRControllers.text != null ? iRRControllers.text : widget.list['irr'];
     // var irrInt = double.parse(irr);
-    var irrInt = widget.list.irr;
+    var irrInt = widget.list['irr'];
 
     var referByWho = valueReferByWho != 'null' ? valueReferByWho : '';
     var curCode =
@@ -286,15 +290,40 @@ class _EditLoanRegister extends State<EditLoanRegister> {
     var expdate = expdateDay != null ? expdateDay : DateTime.now();
 
     try {
-      final boyrow =
-          "{\n\t\"ucode\": \"$user_ucode\",\n\t\"lcode\": \"${widget.list.lcode}\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curCode\",\n\t\"irr\": $irrInt,\n\t\"expdate\": \"$expdate\",\n\t\"pcode\": \"$selectedValueLoanProduct\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"${widget.list.odate}\",\n\t\"mdate\": \"\",\n\t\"firdate\": \"\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$referByWho\"}";
-      final response = await api().put(
-          baseURLInternal + 'loans/' + widget.list.lcode,
+      // final boyrow =
+      //     "{\n\t\"ucode\": \"$user_ucode\",\n\t\"lcode\": \"${widget.list['lcode']}\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",\n\t\"curcode\": \"$curCode\",\n\t\"irr\": $irrInt,\n\t\"expdate\": \"$expdate\",\n\t\"pcode\": \"$selectedValueLoanProduct\",\n\t\"lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"${widget.list['odate']}\",\n\t\"mdate\": \"\",\n\t\"firdate\": \"\",\n\t\"graperiod\": $valueGenerateGracePeriodNumber,\n\t\"lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\"dscr\": $valueDscr,\n\t\"refby\": \"$referByWho\"}";
+
+      final Map<String, dynamic> boyrow = {
+        "ucode": "$user_ucode",
+        "lcode": "${widget.list['lcode']}",
+        "bcode": "$branch",
+        "ccode": "$idCcode",
+        "curcode": "$curCode",
+        "irr": "$irrInt",
+        "expdate": "$expdate",
+        "pcode": "$selectedValueLoanProduct",
+        "lamt": "$valueAmount",
+        "ints": "$valueNumberofTerm",
+        "intrate": "$valueInterest",
+        "mfee": "$valueMaintenanceFee",
+        "afee": "$valueAdminFee",
+        "rmode": "$valueRepaymentMethod",
+        "odate": "${widget.list['odate']}",
+        "mdate": "",
+        "firdate": "",
+        "graperiod": "$valueGenerateGracePeriodNumber",
+        "lpourpose": "$valueLoanPurpose",
+        "ltv": "$valueLTV",
+        "dscr": "$valueDscr",
+        "refby": "$referByWho"
+      };
+      final Response response = await api().put(
+          Uri.parse(baseURLInternal + 'loans/' + widget.list['lcode']),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: boyrow);
+          body: json.encode(boyrow));
       final parsed = jsonDecode(response.body);
       setState(() {
         loanCode = parsed;
@@ -357,8 +386,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/currencies',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/currencies'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -377,8 +406,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/loanproducts',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/loanproducts'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -398,8 +427,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/customers/' + user_ucode,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/customers/' + user_ucode),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -1018,9 +1047,9 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     // ),
                     format: DateFormat("yyyy-MM-dd"),
                     decoration: InputDecoration(
-                      labelText: widget.list.expdate != null &&
-                              widget.list.expdate != ''
-                          ? getDateTimeYMD(widget.list.expdate)
+                      labelText: widget.list['expdate'] != null &&
+                              widget.list['expdate'] != ''
+                          ? getDateTimeYMD(widget.list['expdate'])
                           : AppLocalizations.of(context)!
                                   .translate('expected_date') ??
                               "Expected date(*)",

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:chokchey_finance/components/card.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -250,10 +249,7 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
           backgroundColor: logolightGreen,
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-                ModalRoute.withName("/Home")),
+            onPressed: () => Navigator.pop(context),
           ),
           actions: [
             Builder(
@@ -279,8 +275,6 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                         itemCount: parsed.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
-                            // height: widthView(context, 0.34),
-
                             padding: EdgeInsets.only(left: 5, right: 5, top: 3),
                             child: Card(
                                 shape: RoundedRectangleBorder(

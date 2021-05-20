@@ -1,12 +1,10 @@
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
-import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-// import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 
 class IRRScreen extends StatefulWidget {
@@ -15,6 +13,19 @@ class IRRScreen extends StatefulWidget {
 }
 
 class _IRRScreenState extends State<IRRScreen> {
+  void initState() {
+    super.initState();
+    grossAmountDefaultController.text = '';
+    iRRDefaultController.text = '';
+  }
+
+  @override
+  void dispose() {
+    grossAmountDefaultController.dispose();
+    iRRDefaultController.dispose();
+    super.dispose();
+  }
+
   var exchangeRate;
   var grossAmount;
   var loanAmountInUSA;
@@ -64,10 +75,10 @@ class _IRRScreenState extends State<IRRScreen> {
   int? parsedIncome;
   int? paresAmountNumberDefault;
   // Store Default
-  int? storeAmount;
-  int? storeIncome;
+  int storeAmount = 0;
+  int storeIncome = 0;
   // Store Input
-  int? storeAmountInput;
+  int storeAmountInput = 0;
   int? storeIncomeInput;
 
   var loanAmountDefaultFocus = FocusNode();
@@ -116,8 +127,8 @@ class _IRRScreenState extends State<IRRScreen> {
     });
   }
 
-  int? finalSumAmount;
-  int? finalSumIncome;
+  int finalSumAmount = 0;
+  int finalSumIncome = 0;
   var finalSumIRR;
 
   sumFinalIRR() {
@@ -127,8 +138,6 @@ class _IRRScreenState extends State<IRRScreen> {
     setState(() {
       finalSumAmount = sum;
     });
-    logger().e("sumAmount : ${sumAmount}");
-    logger().e("sum : ${sum}");
   }
 
   sumFinalIncome() {
@@ -138,14 +147,12 @@ class _IRRScreenState extends State<IRRScreen> {
     setState(() {
       finalSumIncome = sum;
     });
-    logger().e("sumIncome : ${sumIncome}");
-    logger().e("sum : ${sum}");
   }
 
   calculeFinalIRR() {
     setState(() {
       finalSumIRR =
-          ((finalSumIncome! / finalSumAmount!) * 100).toStringAsPrecision(4);
+          ((finalSumIncome / finalSumAmount) * 100).toStringAsPrecision(4);
     });
   }
 
@@ -157,16 +164,16 @@ class _IRRScreenState extends State<IRRScreen> {
   var data = [];
 
   var currencyAmountDouble;
-  String? showValueAmountDefault;
+  String showValueAmountDefault = "";
   convertCurrency(amountDocble) {
     if (amountDocble.length > 1) {
       var value = double.parse(amountDocble);
       // MoneyFormatterOutput fo = FlutterMoneyFormatter(amount: value).output;
       // var test = fo.nonSymbol.toString();
-      // setState(() {
-      //   showValueAmountDefault = test;
-      //   loanAmountInUSAController.text = test;
-      // });
+      setState(() {
+        showValueAmountDefault = value.toString();
+        // loanAmountInUSAController.text = test;
+      });
     } else {
       setState(() {
         showValueAmountDefault = "";
@@ -175,7 +182,7 @@ class _IRRScreenState extends State<IRRScreen> {
     }
   }
 
-  int? calc_ranks(ranks) {}
+  // int calc_ranks(ranks) {}
 
   UnfocusDisposition disposition = UnfocusDisposition.scope;
   //
@@ -319,20 +326,22 @@ class _IRRScreenState extends State<IRRScreen> {
                             FocusScope.of(context)
                                 .requestFocus(loanAmountDefaultFocus);
                           },
-                          onChanged: (v) {
+                          onChanged: (String v) {
                             if (mounted) {
-                              dynamic amountDocble = double.parse(v);
+                              dynamic amountDocble = double.tryParse(v);
 
                               // MoneyFormatterOutput fo =
                               //     FlutterMoneyFormatter(amount: amountDocble)
                               //         .output;
+
                               convertCurrency(v);
-                              var amountInt = int.parse(v);
-                              paresAmountNumberDefault = int.parse(v);
-                              storeAmount = amountInt as int;
+                              var amountInt = int.tryParse(v);
+                              paresAmountNumberDefault = int.tryParse(v);
                               if (mounted)
                                 setState(() {
-                                  // currencyAmountDouble = fo.symbolOnLeft;
+                                  currencyAmountDouble = double.tryParse(v);
+                                  storeAmount = int.tryParse(v)!;
+
                                   amountDefault = v;
                                 });
                             }
@@ -483,6 +492,8 @@ class _IRRScreenState extends State<IRRScreen> {
                                       index = 1;
                                     });
                                   }
+                                  logger().e(
+                                      "showValueAmountDefault: null ${showValueAmountDefault}");
                                   var irrDobule =
                                       double.parse(iRRDefaultController.text)
                                           .toStringAsFixed(2);
@@ -494,9 +505,8 @@ class _IRRScreenState extends State<IRRScreen> {
                                     "Income": "${incomeDefaultController.text}",
                                   };
                                   data.addAll([listArray]);
-                                  sumAmount.addAll([storeAmount!]);
-                                  sumIncome.addAll([storeIncome!]);
-                                  logger().e("sumIncome: ${sumIncome}");
+                                  sumAmount.addAll([storeAmount]);
+                                  sumIncome.addAll([storeIncome]);
                                   setState(() {
                                     _isLoading = false;
                                     _isShowDefault = false;
@@ -628,13 +638,19 @@ class _IRRScreenState extends State<IRRScreen> {
                           icons: Icons.check,
                           childs: Container(
                             child: FormBuilderDropdown(
-                              hint: Text(
-                                "USD",
+                              name: 'name',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                        .translate('currencies') ??
+                                    "Currencies",
+                                border: InputBorder.none,
                               ),
-                              items: ['USD', 'KHR']
-                                  .map((gender) => DropdownMenuItem(
-                                      value: gender, child: Text("$gender")))
-                                  .toList(),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context,
+                                    errorText: AppLocalizations.of(context)!
+                                            .translate('currencies_required') ??
+                                        "Currencies Required(*)"),
+                              ]),
                               onChanged: (v) {
                                 if (mounted) {
                                   setState(() {
@@ -643,24 +659,14 @@ class _IRRScreenState extends State<IRRScreen> {
                                     grossAmountController.text = "";
                                   });
                                 }
-                                logger().e("currency: ${onSelectedCurrency}");
                               },
-                              name: 'name',
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!
-                                        .translate('currencies') ??
-                                    "Currencies",
-                                border: InputBorder.none,
+                              hint: Text(
+                                "USD",
                               ),
-                              validator: FormBuilderValidators.compose(
-                                [
-                                  FormBuilderValidators.required(context,
-                                      errorText: AppLocalizations.of(context)!
-                                              .translate(
-                                                  'currencies_required') ??
-                                          "Currencies Required(*)"),
-                                ],
-                              ),
+                              items: ['USD', 'KHR']
+                                  .map((gender) => DropdownMenuItem(
+                                      value: gender, child: Text("$gender")))
+                                  .toList(),
                             ),
                           ),
                         ),
@@ -696,15 +702,12 @@ class _IRRScreenState extends State<IRRScreen> {
                             // CurrencyInputFormatter(12),
                           ],
                           onChanged: (v) {
-                            logger().e("v1: ${v}");
-
-                            logger().e("v: ${onSelectedCurrency}");
                             var ranksDouble = double.parse(v);
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "KHR") {
-                              logger().e("KHR: ${onSelectedCurrency}");
-                              var exChangeRateDouble = int.parse(exchangeRate);
+                              var exChangeRateDouble =
+                                  int.parse(exchangeRateController.text);
                               var ranksKHR = rankInt / exChangeRateDouble;
                               var ranksKHRRound = ranksKHR.round();
                               var rankIntKHR =
@@ -719,11 +722,10 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                               iRRCalculation();
                             } else {
-                              logger().e("USD: ${onSelectedCurrency}");
                               convertCurrency(v);
                               setState(() {
                                 loanAmountInUSAController.text =
-                                    showValueAmountDefault!;
+                                    showValueAmountDefault;
                                 grossAmount = rankInt;
                                 storeAmountInput = rankInt;
                               });
@@ -735,19 +737,15 @@ class _IRRScreenState extends State<IRRScreen> {
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "USD") {
-                              logger().e("USD: ${onSelectedCurrency}");
-
                               convertCurrency(v);
                               setState(() {
                                 loanAmountInUSAController.text =
-                                    showValueAmountDefault!;
+                                    showValueAmountDefault;
                                 grossAmount = rankInt;
                                 storeAmountInput = rankInt;
                               });
                               iRRCalculation();
                             } else {
-                              logger().e("KHR: ${onSelectedCurrency}");
-
                               var exChangeRateDouble = int.parse(exchangeRate);
                               var ranksKHR = rankInt / exChangeRateDouble;
                               var ranksKHRRound = ranksKHR.round();
@@ -1145,7 +1143,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                         index = 1;
                                       });
                                     }
-                                    sumAmount.addAll([storeAmountInput!]);
+                                    sumAmount.addAll([storeAmountInput]);
                                     sumIncome
                                         .addAll([inputArreyIncomeNoFormat]);
                                     var listArray = {
@@ -1190,7 +1188,6 @@ class _IRRScreenState extends State<IRRScreen> {
                                   }
                                 }
                               } else {
-                                logger().e("hello world else: else");
                                 showInSnackBar(
                                     'Please select currency!', Colors.red);
                                 setState(() {

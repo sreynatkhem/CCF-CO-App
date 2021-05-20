@@ -9,6 +9,7 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 import 'detailLoadRegistration.dart';
@@ -66,7 +67,6 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -97,14 +97,25 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "status": "$sdates",
+        "edate": "$edates",
+      };
+
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loans/all/mobile',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loans/all/mobile'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         setState(() {
@@ -122,14 +133,11 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
       const AssetImage('assets/images/profile_create.jpg');
 
   onTapsDetail(value) async {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return new CardDetailLoanRegitration(
-            list: value['lcode'],
-            statusLoan: value['lstatus'],
-          );
-        },
-        fullscreenDialog: true));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CardDetailLoanRegitration(
+                list: value['lcode'], statusLoan: value['lstatus'])));
   }
 
   Future<void> _getData() async {
@@ -302,10 +310,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
             backgroundColor: logolightGreen,
             leading: new IconButton(
               icon: new Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home()),
-                  ModalRoute.withName("/Home")),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
               Builder(
@@ -341,7 +346,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                             var status = statusApproval(
                                 parsed != null ? parsed[index]['lstatus'] : '');
                             return Container(
-                              height: 130,
+                              // height: 130,
                               padding:
                                   EdgeInsets.only(left: 5, right: 5, top: 3),
                               child: Card(
@@ -350,100 +355,112 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                         color: logolightGreen, width: 1),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: InkWell(
-                                      splashColor: Colors.blue.withAlpha(30),
-                                      onTap: () {
-                                        onTapsDetail(parsed[index]);
-                                      },
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 5)),
-                                                Image(
-                                                  image: _imagesFindApproval,
-                                                  width: 50,
-                                                  height: 50,
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 15)),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Container(
-                                                        width: 200,
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    child: InkWell(
+                                        splashColor: Colors.blue.withAlpha(30),
+                                        onTap: () {
+                                          onTapsDetail(parsed[index]);
+                                        },
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Row(
+                                                children: <Widget>[
+                                                  // Padding(
+                                                  //     padding: EdgeInsets.only(
+                                                  //         left: 5)),
+                                                  Image(
+                                                    image: _imagesFindApproval,
+                                                    width: 50,
+                                                    height: 50,
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 15)),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          width: 200,
+                                                          child: Text(
+                                                            '${parsed[index]['customer']}',
+                                                            style:
+                                                                mainTitleBlack,
+                                                          )),
+                                                      Text(
+                                                          '${parsed[index]['purpose']}'),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Text(
+                                                          '${numFormat.format(parsed[index]['lamt'])} (${parsed[index]['currency']})'),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Row(
+                                                        children: [
+                                                          Text(AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  'interest')!),
+                                                          Text(
+                                                              '${parsed[index]['intrate']}%/m, IRR ${irr}%'),
+                                                        ],
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Container(
+                                                        width: widthView(
+                                                            context, 0.5),
                                                         child: Text(
-                                                          '${parsed[index]['customer']}',
-                                                          style: mainTitleBlack,
-                                                        )),
-                                                    Text(
-                                                        '${parsed[index]['purpose']}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Text(
-                                                        '${numFormat.format(parsed[index]['lamt'])} (${parsed[index]['currency']})'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Row(
-                                                      children: [
-                                                        Text(AppLocalizations
-                                                                .of(context)!
-                                                            .translate(
-                                                                'interest')!),
-                                                        Text(
-                                                            '${parsed[index]['intrate']}%/m, IRR ${irr}%'),
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Text(
-                                                        '${parsed[index]['user'].substring(9)} - ${parsed[index]['branch']}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 2)),
-                                                status,
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                  top: 5,
-                                                )),
-                                                Text(
-                                                    '#${parsed[index]['lcode']}'),
-                                                Text(''),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                  right: 100,
-                                                ))
-                                              ],
-                                            ),
-                                            // if (isLoading == true)
-                                            //   Center(child: CircularProgressIndicator())
-                                          ]))),
+                                                          '${parsed[index]['user'].substring(9)} - ${parsed[index]['branch']}',
+                                                          maxLines: 3,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2)),
+                                                  status,
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                    top: 5,
+                                                  )),
+                                                  Text(
+                                                      '#${parsed[index]['lcode']}'),
+                                                  Text(''),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                    right: 100,
+                                                  ))
+                                                ],
+                                              ),
+                                              // if (isLoading == true)
+                                              //   Center(child: CircularProgressIndicator())
+                                            ])),
+                                  )),
                             );
                           }),
                     )

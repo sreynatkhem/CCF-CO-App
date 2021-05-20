@@ -1,8 +1,6 @@
 import 'package:chokchey_finance/components/ListDatial.dart';
 import 'package:chokchey_finance/components/header.dart';
-import 'package:chokchey_finance/models/customerRegistration.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
-import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +51,8 @@ class _CardDetailCustomerState extends State<CardDetailCustomer> {
   bool _isLoading = false;
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     fetch();
+    super.didChangeDependencies();
   }
 
   fetch() async {

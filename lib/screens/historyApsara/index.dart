@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
-import 'package:chokchey_finance/providers/approvalList.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -8,8 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class HistoryApsara extends StatefulWidget {
   @override
@@ -31,10 +32,14 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     // TODO: implement didChangeDependencies
     if (mounted) {
       var startDate = DateTime(now.year, now.month, now.day - 7);
+      var endDate = DateTime.now();
+
       setState(() {
         startDateTimeDidMounted = DateFormat("yyyy-MM-dd").format(startDate);
         endDateTimeDidMounted = DateFormat("yyyy-MM-dd").format(DateTime.now());
         status = "2";
+        startDateTime = DateFormat("yyyyMMdd").format(startDate);
+        endDateTime = DateFormat("yyyyMMdd").format(endDate);
       });
       fetchHistory();
       getListCO();
@@ -56,11 +61,8 @@ class _HistoryApsaraState extends State<HistoryApsara> {
   fetchHistory() async {
     DateTime now = DateTime.now();
 
-    var startDate =
-        sdate != null ? sdate : DateTime(now.year, now.month, now.day - 7);
-    var endDate = edate != null ? edate : DateTime.now();
-    String? startDateTime = DateFormat("yyyyMMdd").format(startDate);
-    String? endDateTime = DateFormat("yyyyMMdd").format(endDate);
+    // var endDate = edate != null ? edate : DateTime.now();
+    // String? endDateTime = DateFormat("yyyyMMdd").format(endDate);
     String? selectedStatus;
     String? selectedBranch;
     setState(() {
@@ -91,19 +93,47 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     userIDLogin = await storage.read(key: 'user_id');
     levelConvert = await storage.read(key: 'level');
     level = int.parse(levelConvert!);
-    await Provider.of<ApprovelistProvider>(context, listen: false)
-        // ignore: unnecessary_brace_in_string_interps
-        .fetchHistoryAPSARA("${selectedBranch}", "", "${userIDLogin}",
-            "${startDateTime}", "${endDateTime}", "${selectedStatus}")
-        .then((value) => setState(() {
-              listHistory = value;
-              _isLoading = false;
-            }))
-        .catchError((onError) {
+    // await Provider.of<ApprovelistProvider>(context, listen: false)
+    //     // ignore: unnecessary_brace_in_string_interps
+    //     .fetchHistoryAPSARA("${selectedBranch}", "", "${userIDLogin}",
+    //         "${startDateTime}", "${endDateTime}", "${selectedStatus}")
+    //     .then((value) => setState(() {
+    //           listHistory = value;
+    //           _isLoading = false;
+    //         }))
+    //     .catchError((onError) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    // });
+    try {
+      final storage = new FlutterSecureStorage();
+      String user_id = await storage.read(key: 'user_id');
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
+      request.body =
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"${selectedBranch}\",\n    \"customerNo\": \"\",\n    \"authorizerEmployeeNo\" :\"$user_id\",\n   \"inquiryFromDate\": \"${startDateTime}\",\n   \"inquiryToDate\": \"${endDateTime}\",\n   \"loanApprovalApplicationStatusCode\": \"${selectedStatus}\"\n    }\n}\n";
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        final respStr = await response.stream.bytesToString();
+        var json = jsonDecode(respStr);
+        setState(() {
+          _isLoading = false;
+          listHistory = json['body'];
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (error) {
       setState(() {
         _isLoading = false;
       });
-    });
+      logger().e("error: ${error}");
+    }
   }
 
   var sdate;
@@ -114,7 +144,8 @@ class _HistoryApsaraState extends State<HistoryApsara> {
   String? status;
   TextEditingController controllerStartDate = new TextEditingController();
   TextEditingController controllerEndDate = new TextEditingController();
-
+  String? startDateTime = "";
+  String? endDateTime = "";
   void _closeEndDrawer() {
     setState(() {
       controllerEndDate.text = '';
@@ -128,6 +159,10 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       _isStatuSelectedReject = false;
       _isStatuSelectedReturn = false;
     });
+    var startDate = DateTime(now.year, now.month, now.day - 7);
+    startDateTime = DateFormat("yyyyMMdd").format(startDate);
+    var endDate = DateTime.now();
+    endDateTime = DateFormat("yyyyMMdd").format(endDate);
     fetchHistory();
     Navigator.of(context).pop();
   }
@@ -181,20 +216,34 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       startDateTimeDidMounted = startDateTimeShow;
       endDateTimeDidMounted = endDateTimeShow;
     });
-    await Provider.of<ApprovelistProvider>(context, listen: false)
-        // ignore: unnecessary_brace_in_string_interps
-        .fetchHistoryAPSARA("${selectedBranch}", "", "${selectedUserID}",
-            "${startDateTime}", "${endDateTime}", "${selectedStatus}")
-        .then((value) => setState(() {
-              listHistory = value;
-              _isLoading = false;
-              selectedBranch = "";
-            }))
-        .catchError((onError) {
+
+    try {
+      final storage = new FlutterSecureStorage();
+      String user_id = await storage.read(key: 'user_id');
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
+      request.body =
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"${selectedBranch}\",\n    \"customerNo\": \"${selectedUserID}\",\n    \"authorizerEmployeeNo\" :\"$user_id\",\n   \"inquiryFromDate\": \"${startDateTime}\",\n   \"inquiryToDate\": \"${endDateTime}\",\n   \"loanApprovalApplicationStatusCode\": \"${selectedStatus}\"\n    }\n}\n";
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        final respStr = await response.stream.bytesToString();
+        var json = jsonDecode(respStr);
+        setState(() {
+          _isLoading = false;
+          listHistory = json['body'];
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (error) {
       setState(() {
         _isLoading = false;
       });
-    });
+      logger().e("error: ${error}");
+    }
   }
 
   String valueStringStatus = "";

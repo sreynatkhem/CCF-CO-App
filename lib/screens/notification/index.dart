@@ -11,7 +11,7 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 import 'messageFromCEO.dart';
@@ -35,7 +35,7 @@ class _NotificationState extends State<NotificationScreen> {
   }
 
   var _isLoading = false;
-  Future getNotificationLock(_pageSize, _pageNumber) async {
+  Future getNotificationLock(_pageSizeParam, _pageNumberParam) async {
     setState(() {
       _isLoading = true;
     });
@@ -48,17 +48,21 @@ class _NotificationState extends State<NotificationScreen> {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
-    var bodyRow =
-        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n}";
+    final Map<String, dynamic> bodyRow = {
+      "pageSize": "$_pageSizeParam",
+      "pageNumber": "$_pageNumberParam",
+      "ucode": "$user_ucode"
+    };
     try {
-      final response = await api().post(baseURLInternal + 'messages/byuser',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'messages/byuser'),
+          headers: headers,
+          body: json.encode(bodyRow));
       var parsed = jsonDecode(response.body);
       setState(() {
         _isLoading = false;
       });
       for (var item in parsed) {
-        logger().e("item: ${item}");
         setState(() {
           totalMessage = item['totalMessage'];
           totalUnread = item['totalUnread'];
@@ -246,8 +250,10 @@ class _NotificationState extends State<NotificationScreen> {
     var bodyRow =
         "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n}";
     try {
-      final response = await api().post(baseURLInternal + 'messages/byuser',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'messages/byuser'),
+          headers: headers,
+          body: bodyRow);
       var parsed = jsonDecode(response.body);
       for (var item in parsed) {
         setState(() {

@@ -186,7 +186,6 @@ class _LoanRegister extends State {
 
   onSubmit(context) async {
     final storage = new FlutterSecureStorage();
-
     var user_ucode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
@@ -194,19 +193,6 @@ class _LoanRegister extends State {
     var irrInt = double.parse(irr);
     var expdate = expdateDay != null ? expdateDay : DateTime.now();
     try {
-      // final boyrow =
-      //     "{\n\t\"ucode\": \"$user_ucode\",\n\t\"bcode\": \"$branch\",\n\t\"ccode\": \"$idCcode\",
-
-      //     \n\t\"curcode\": \"$curcode\",\n\t\"irr\": $irrInt,\n\t\
-      //     "expdate\": \"$expdate\",\n\t\"pcode\": \"$pcode\",\n\t\"
-      //     lamt\": $valueAmount,\n\t\"ints\": $valueNumberofTerm,\n\t\"
-      //     intrate\": $valueInterest,\n\t\"mfee\": $valueMaintenanceFee,\n\t\"
-      //     afee\": $valueAdminFee,\n\t\"rmode\": \"$valueRepaymentMethod\",\n\t\"odate\": \"\",\n\t\
-      //     "mdate\": \"\",\n\t\"firdate\": \"\",\n\t\
-      //     "graperiod\": $valueGenerateGracePeriodNumber,\n\t\
-      //     "lpourpose\": \"$valueLoanPurpose\",\n\t\"ltv\": $valueLTV,\n\t\
-      //     "dscr\": $valueDscr,\n\t\"refby\": \"$valueReferByWho\"}";
-
       final Map<String, dynamic> boyrow = {
         "ucode": "$user_ucode",
         "bcode": "$branch",
@@ -340,8 +326,8 @@ class _LoanRegister extends State {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/customers/' + user_ucode,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/customers/' + user_ucode),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -365,8 +351,8 @@ class _LoanRegister extends State {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/currencies',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/currencies'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -385,8 +371,8 @@ class _LoanRegister extends State {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/loanproducts',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/loanproducts'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token

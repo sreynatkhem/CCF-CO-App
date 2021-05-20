@@ -61,6 +61,7 @@ dependencies:
   slide_popup_dialog: ^0.0.2
   multi_select_item: ^1.0.3
   # flutter_money_formatter: ^0.8.3
+  flutter_multi_formatter: ^2.1.0
   smart_select: ^4.3.2
   group_list_view: ^1.0.6
 

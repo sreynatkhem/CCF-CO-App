@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 class ApprovalSummaryProvider {
   final storage = new FlutterSecureStorage();
@@ -14,11 +15,11 @@ class ApprovalSummaryProvider {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
-      var statuses = status != null ? status : '';
+      var statuses =
+          statusRequest != null && statusRequest != "" ? statusRequest : '';
       var btlcode = status != null ? status : '';
       var bcodes;
       var ucode;
@@ -45,21 +46,31 @@ class ApprovalSummaryProvider {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "$statuses",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(
-          baseURLInternal + 'reports/loanrequest/' + statusRequest,
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'reports/loanrequest/' + statusRequest),
           headers: headers,
-          body: bodyRow);
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');

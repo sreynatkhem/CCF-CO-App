@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:chokchey_finance/models/approvalList.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:http/http.dart' as http;
 import 'manageService.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// Future<List<Approval>> returnFunction(http.Client client,
 Future returnFunction(http.Client client, loanApprovalApplicationNo,
     evaluateStatusCode, comments) async {
   final storage = new FlutterSecureStorage();

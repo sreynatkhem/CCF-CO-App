@@ -16,7 +16,6 @@ class ApprovalHistoryProvider {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -49,19 +48,31 @@ class ApprovalHistoryProvider {
         ucode = code != null && code != "" ? code : '';
       }
 
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "$statuses",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'reports/summary',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'reports/summary'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');
@@ -85,8 +96,6 @@ class ApprovalHistoryProvider {
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');
@@ -103,15 +112,17 @@ class ApprovalHistoryProvider {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().get(
-        baseURLInternal + 'valuelists/users/co/' + user_ucode + '/' + nameCO,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal +
+            'valuelists/users/co/' +
+            user_ucode +
+            '/' +
+            nameCO),
         headers: headers,
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');
@@ -128,15 +139,13 @@ class ApprovalHistoryProvider {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().get(
-        baseURLInternal + 'ValueLists/Users/CO/' + user_ucode,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'ValueLists/Users/CO/' + user_ucode),
         headers: headers,
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');
@@ -150,7 +159,6 @@ class ApprovalHistoryProvider {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -181,21 +189,31 @@ class ApprovalHistoryProvider {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(
-          baseURLInternal + 'reports/loanapproval',
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'reports/loanapproval'),
           headers: headers,
-          body: bodyRow);
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');

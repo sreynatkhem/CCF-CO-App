@@ -1,18 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/approvalSummary/index.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/approvalHistory/cardReport.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'summaryDetail.dart';
 
@@ -37,14 +39,14 @@ class _ReturnSummaryState extends State<ReturnSummary> {
     }
   }
 
-  Future getReportApprovalSummary(_pageSize, _pageNumber, status, code, bcode,
-      sdate, edate, statusRequest) async {
+  Future getReportApprovalSummary(_pageSizeParam, _pageNumberParam, statusParam,
+      codeParam, bcodeParam, sdateParam, edateParam, statusRequestParam) async {
     setState(() {
       isLoading = true;
     });
     await ApprovalSummaryProvider()
-        .getApprovalSummary(
-            _pageSize, _pageNumber, status, code, bcode, sdate, edate, 'Return')
+        .getApprovalSummary(_pageSizeParam, _pageNumberParam, statusParam,
+            codeParam, bcodeParam, sdateParam, edateParam, 'Return')
         .then((value) => {
               value.forEach((v) => {
                     setState(() {
@@ -254,13 +256,95 @@ class _ReturnSummaryState extends State<ReturnSummary> {
     return false;
   }
 
+  loadMore(_pageSize, _pageNumber, status) async {
+    try {
+      var token = await storage.read(key: 'user_token');
+      var user_ucode = await storage.read(key: "user_ucode");
+      var branch = await storage.read(key: "branch");
+      var level = await storage.read(key: "level");
+      var sdates = sdate != null ? sdate : '';
+      var edates = edate != null ? edate : '';
+      var codes = code != null ? code : '';
+      var statuses = status != null && status != "" ? status : '';
+      var btlcode = status != null ? status : '';
+      var bcodes;
+      var ucode;
+      if (level == '3') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = '';
+        ucode = codes != null && codes != "" ? codes : "";
+      }
+
+      if (level == '2') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = user_ucode;
+        ucode = code != null && code != "" ? code : '';
+      }
+
+      if (level == '1') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        ucode = user_ucode;
+        btlcode = '';
+      }
+
+      if (level == '4' || level == '5' || level == '6') {
+        bcodes = bcode != null && bcode != "" ? bcode : '';
+        btlcode = '';
+        ucode = code != null && code != "" ? code : '';
+      }
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "$statuses",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'reports/loanrequest/' + statuses),
+          headers: headers,
+          body: json.encode(bodyRow));
+      if (response.statusCode == 200) {
+        var list = jsonDecode(response.body);
+        list.forEach((v) => {
+              setState(() {
+                isLoading = false;
+                listTotal = v;
+                listApproval = v['listLoanRequests'];
+              }),
+            });
+      }
+    } catch (error) {
+      logger().e('error :: ${error}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: NotificationListener(
-        onNotification: onNotification,
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            // start loading data
+            setState(() {
+              _pageSize += 10;
+            });
+            loadMore(_pageSize, _pageNumber, "Return");
+          }
+          return false;
+        },
         child: Header(
           headerTexts: 'report_return',
           actionsNotification: [

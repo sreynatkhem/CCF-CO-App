@@ -1,18 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/approvalSummary/index.dart';
-import 'package:chokchey_finance/screens/approvalHistory/cardReport.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'summaryDetail.dart';
 
@@ -30,21 +32,20 @@ class _RequestSummaryState extends State<RequestSummary> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (mounted) {
-      getReportApprovalSummary(
-          _pageSize, _pageNumber, '', '', '', '', '', 'Request');
+      getReportApprovalSummary(1, 1, '', '', '', '', '', 'Request');
       getListBranches();
       getListCO('');
     }
   }
 
-  Future getReportApprovalSummary(_pageSize, _pageNumber, status, code, bcode,
-      sdate, edate, statusRequest) async {
+  Future getReportApprovalSummary(_pageSizeParam, _pageNumberParam, statusParam,
+      codeParam, bcodeParam, sdateParam, edateParam, statusRequestParam) async {
     setState(() {
       isLoading = true;
     });
     await ApprovalSummaryProvider()
-        .getApprovalSummary(_pageSize, _pageNumber, status, code, bcode, sdate,
-            edate, 'Request')
+        .getApprovalSummary(_pageSizeParam, _pageNumberParam, statusParam,
+            codeParam, bcodeParam, sdateParam, edateParam, 'Request')
         .then((value) => {
               value.forEach((v) => {
                     setState(() {
@@ -66,32 +67,106 @@ class _RequestSummaryState extends State<RequestSummary> {
   StreamController _streamController = StreamController();
   StreamSink get itemsSink => _streamController.sink;
 
-  bool onNotification(ScrollNotification notification) {
-    if (notification is ScrollUpdateNotification) {
-      if (_scrollController.position.maxScrollExtent >=
-              _scrollController.offset &&
-          _scrollController.position.maxScrollExtent -
-                  _scrollController.offset <=
-              1) {
-        _additems();
+  // bool onNotification(ScrollNotification notification) {
+  //   if (notification is ScrollUpdateNotification) {
+  //     if (_scrollController.position.maxScrollExtent >=
+  //             _scrollController.offset &&
+  //         _scrollController.position.maxScrollExtent -
+  //                 _scrollController.offset <=
+  //             1) {
+  //       _additems();
+  //     }
+  //   }
+  //   return true;
+  // }
+
+  loadMore(_pageSize, _pageNumber, status) async {
+    final storage = new FlutterSecureStorage();
+
+    try {
+      var token = await storage.read(key: 'user_token');
+      var user_ucode = await storage.read(key: "user_ucode");
+      var branch = await storage.read(key: "branch");
+      var level = await storage.read(key: "level");
+      var sdates = sdate != null ? sdate : '';
+      var edates = edate != null ? edate : '';
+      var codes = code != null ? code : '';
+      var statuses = status != null ? status : '';
+      var btlcode = status != null ? status : '';
+      var bcodes;
+      var ucode;
+      if (level == '3') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = '';
+        ucode = codes != null && codes != "" ? codes : "";
       }
+
+      if (level == '2') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = user_ucode;
+        ucode = code != null && code != "" ? code : '';
+      }
+
+      if (level == '1') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        ucode = user_ucode;
+        btlcode = '';
+      }
+
+      if (level == '4' || level == '5' || level == '6') {
+        bcodes = bcode != null && bcode != "" ? bcode : '';
+        btlcode = '';
+        ucode = code != null && code != "" ? code : '';
+      }
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "$statuses",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'reports/loanrequest/' + 'Request'),
+          headers: headers,
+          body: json.encode(bodyRow));
+      if (response.statusCode == 200) {
+        var list = jsonDecode(response.body);
+        list.forEach((v) => {
+              setState(() {
+                isLoading = false;
+                listTotal = v;
+                listApproval = v['listLoanRequests'];
+              }),
+            });
+      }
+    } catch (error) {
+      logger().e('error :: ${error}');
     }
-    return true;
   }
 
   int _pageSize = 20;
   int _pageNumber = 1;
 
-  Future _additems() async {
+  Future _additems(_pageSizeParam) async {
     setState(() {
       isLoading = true;
     });
     try {
-      _pageSize += 10;
+      // _pageSize += 10;
       // Fetch newItems with http
       await Provider.of<ApprovalSummaryProvider>(context, listen: false)
-          .getApprovalSummary(
-              _pageSize, _pageNumber, '', '', '', '', '', 'Request');
+          .getApprovalSummary(_pageSizeParam, 1, '', '', '', '', '', 'Request');
       setState(() {
         isLoading = false;
       });
@@ -272,10 +347,21 @@ class _RequestSummaryState extends State<RequestSummary> {
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
+
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: NotificationListener(
-        onNotification: onNotification,
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            // start loading data
+            setState(() {
+              _pageSize += 10;
+            });
+            loadMore(_pageSize, _pageNumber, "Request");
+          }
+          return false;
+        },
+        // onNotification,
         child: Header(
           headerTexts: 'report_request',
           actionsNotification: [
@@ -333,12 +419,14 @@ class _RequestSummaryState extends State<RequestSummary> {
                                   itemCount: listApproval.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
+                                    //
+
                                     if (listApproval.length > 0) {
                                       return Center(
                                           child: Column(
                                         children: [
                                           Container(
-                                            height: 90,
+                                            height: widthView(context, 0.25),
                                             child: Card(
                                                 shape: RoundedRectangleBorder(
                                                   side: BorderSide(

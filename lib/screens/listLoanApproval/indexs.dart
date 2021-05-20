@@ -10,6 +10,7 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 class ListLoanApprovals extends StatefulWidget {
@@ -54,7 +55,6 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -85,14 +85,24 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates"
+      };
       Map<String, String> headers = {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/all',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
         setState(() {
@@ -230,8 +240,9 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().get(
-        baseURLInternal + 'valuelists/users/co/' + user_ucode + '/' + '',
+      final Response response = await api().get(
+        Uri.parse(
+            baseURLInternal + 'valuelists/users/co/' + user_ucode + '/' + ''),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -240,8 +251,6 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
           listCO = list;
         });
         return list;
-      } else {
-        logger().e('response.statusCode != 200 :: ${response.statusCode}');
       }
     } catch (error) {
       logger().e('error :: ${error}');
@@ -265,53 +274,64 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
     });
   }
 
-  Future loadMore(
-      _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
+  Future loadMore(_pageSizeParam, _pageNumberParam, statusParam, codeParam,
+      bcodeParam, sdateParam, edateParam) async {
     final storage = new FlutterSecureStorage();
     try {
       var token = await storage.read(key: 'user_token');
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
-      var sdates = sdate != null ? sdate : '';
-      var edates = edate != null ? edate : '';
-      var codes = code != null ? code : '';
-      var statuses = status != null ? status : '';
-      var btlcode = status != null ? status : '';
+      var sdates = sdateParam != null ? sdateParam : '';
+      var edates = edateParam != null ? edateParam : '';
+      var codes = codeParam != null ? codeParam : '';
+      var statuses = statusParam != null ? statusParam : '';
+      var btlcode = statusParam != null ? statusParam : '';
       var bcodes;
       var ucode;
       if (level == '3') {
-        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        bcodes =
+            bcodeParam != null && bcodeParam != "" ? bcodeParam : bcodeParam;
         btlcode = '';
         ucode = codes != null && codes != "" ? codes : "";
       }
 
       if (level == '2') {
-        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        bcodes = bcodeParam != null && bcodeParam != "" ? bcodeParam : branch;
         btlcode = user_ucode;
-        ucode = code != null && code != "" ? code : '';
+        ucode = codeParam != null && codeParam != "" ? codeParam : '';
       }
 
       if (level == '1') {
-        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        bcodes = bcodeParam != null && bcodeParam != "" ? bcodeParam : branch;
         ucode = user_ucode;
         btlcode = '';
       }
 
       if (level == '4' || level == '5' || level == '6') {
-        bcodes = bcode != null && bcode != "" ? bcode : '';
+        bcodes = bcodeParam != null && bcodeParam != "" ? bcodeParam : '';
         btlcode = '';
-        ucode = code != null && code != "" ? code : '';
+        ucode = codeParam != null && codeParam != "" ? codeParam : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/all',
-          headers: headers, body: bodyRow);
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSizeParam",
+        "pageNumber": "$_pageNumberParam",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates",
+      };
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
         setState(() {
@@ -387,10 +407,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
             backgroundColor: logolightGreen,
             leading: new IconButton(
               icon: new Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home()),
-                  ModalRoute.withName("/Home")),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
               Builder(
@@ -419,107 +436,120 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                             var status = statusApproval(
                                 parsed != null ? parsed[index]['rstatus'] : '');
                             return Container(
-                              height: 120,
-                              padding:
-                                  EdgeInsets.only(left: 5, right: 5, top: 3),
+                              // height: 120,
+                              padding: EdgeInsets.only(
+                                  left: 5, right: 5, top: 5, bottom: 5),
                               child: Card(
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
                                         color: logolightGreen, width: 1),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: InkWell(
-                                      splashColor: Colors.blue.withAlpha(30),
-                                      onTap: () {
-                                        var value = parsed[index];
-                                        onTapsDetail(value, context);
-                                      },
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 5)),
-                                                Image(
-                                                  image: _imagesFindApproval,
-                                                  width: 50,
-                                                  height: 50,
-                                                ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 15)),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Container(
-                                                        width: 200,
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    child: InkWell(
+                                        splashColor: Colors.blue.withAlpha(30),
+                                        onTap: () {
+                                          var value = parsed[index];
+                                          onTapsDetail(value, context);
+                                        },
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Row(
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 5)),
+                                                  Image(
+                                                    image: _imagesFindApproval,
+                                                    width: 50,
+                                                    height: 50,
+                                                  ),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          right: 15)),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      Container(
+                                                          width: widthView(
+                                                              context, 0.5),
+                                                          child: Text(
+                                                            parsed[index]
+                                                                    ['loan']
+                                                                ['customer'],
+                                                            style:
+                                                                mainTitleBlack,
+                                                          )),
+                                                      Text(
+                                                          '${parsed[index]['rcode']}'),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Text(
+                                                          '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Text(
+                                                          '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                      Container(
+                                                        width: widthView(
+                                                            context, 0.5),
                                                         child: Text(
-                                                          parsed[index]['loan']
-                                                              ['customer'],
-                                                          style: mainTitleBlack,
-                                                        )),
-                                                    Text(
-                                                        '${parsed[index]['rcode']}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Text(
-                                                        '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Text(
-                                                        '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Text(
-                                                        '${parsed[index]['loan']['user'].substring(9)} - ${parsed[index]['loan']['branch']}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 2)),
-                                                status,
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                  top: 5,
-                                                )),
-                                                if (parsed[index]['rdate'] !=
-                                                    '')
-                                                  Text(getDateTimeYMD(
-                                                      parsed[index]['rdate'])),
-                                                Text(''),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                  right: 100,
-                                                ))
-                                              ],
-                                            ),
-                                          ]))),
+                                                            '${parsed[index]['loan']['user'].substring(9)} - ${parsed[index]['loan']['branch']}'),
+                                                      ),
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 2)),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 2)),
+                                                  status,
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                    top: 5,
+                                                  )),
+                                                  if (parsed[index]['rdate'] !=
+                                                      '')
+                                                    Text(getDateTimeYMD(
+                                                        parsed[index]
+                                                            ['rdate'])),
+                                                  Text(''),
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                    right: 100,
+                                                  ))
+                                                ],
+                                              ),
+                                            ])),
+                                  )),
                             );
                           }),
                     )

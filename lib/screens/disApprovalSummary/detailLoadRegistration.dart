@@ -14,6 +14,7 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
@@ -92,11 +93,12 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
 
   //fetch image referent document loan
   Future getImageDocument() async {
-    var url = baseURLInternal + 'loanDocuments/byloan/' + widget.list;
+    var url =
+        Uri.parse(baseURLInternal + 'loanDocuments/byloan/' + widget.list);
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     try {
-      final response = await api().get(url, headers: {
+      final Response response = await api().get(url, headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
       });

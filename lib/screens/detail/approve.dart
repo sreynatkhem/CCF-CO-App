@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:chokchey_finance/components/detailApproval.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/models/detialApproval.dart';
-import 'package:chokchey_finance/providers/detialJson.dart';
+import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class Approve extends StatefulWidget {
   final loanApprovalApplicationNo;
@@ -174,7 +172,115 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
   }
 
   _refreshDetail(context) async {
-    await fetchDetail(http.Client(), loanApprovalApplicationNo);
+    // await fetchDetail(http.Client(), loanApprovalApplicationNo);
+  }
+
+  final _imagesList = const AssetImage('assets/images/list.png');
+  final images = const AssetImage('assets/images/request.png');
+  final _imagesFindApproval =
+      const AssetImage('assets/images/findApproval.png');
+  final _imageReturn = const AssetImage('assets/images/return.png');
+  final _imageReject = const AssetImage('assets/images/reject.png');
+  statusApproval(value, context) {
+    switch (value) {
+      case '10':
+        {
+          return Text(
+              AppLocalizations.of(context)!.translate('request') ?? 'Request');
+        }
+        break;
+
+      case '20':
+        {
+          return Text(AppLocalizations.of(context)!.translate('approved') ??
+              'Approved');
+        }
+        break;
+
+      case '30':
+        {
+          return Text(
+              AppLocalizations.of(context)!.translate('final_approve') ??
+                  'Final Approve');
+        }
+        break;
+
+      case '80':
+        {
+          return Text(
+              AppLocalizations.of(context)!.translate('return') ?? 'Return');
+        }
+        break;
+
+      case '90':
+        {
+          return Text(
+              AppLocalizations.of(context)!.translate('reject') ?? 'Reject');
+        }
+        break;
+      case '':
+        {
+          return Text('');
+        }
+        break;
+
+      default:
+        {
+          return Text('');
+        }
+        break;
+    }
+  }
+
+  statusApprovalImage(value, context) {
+    switch (value) {
+      case '10':
+        {
+          return _imagesFindApproval;
+        }
+        break;
+
+      case '20':
+        {
+          return _imagesList;
+        }
+        break;
+
+      case '30':
+        {
+          return _imagesFindApproval;
+        }
+        break;
+
+      case '80':
+        {
+          return _imageReturn;
+        }
+        break;
+
+      case '90':
+        {
+          _imageReject;
+        }
+        break;
+      case '':
+        {
+          _imagesFindApproval;
+        }
+        break;
+
+      default:
+        {
+          _imagesFindApproval;
+        }
+        break;
+    }
+  }
+
+  getDateTimeApprove(time) {
+    DateTime dateTimeApproved = DateTime.parse(time);
+    String dateTime = DateFormat("yyyy-MM-dd").format(dateTimeApproved);
+    return Text(dateTime);
   }
 
   @override
@@ -187,18 +293,108 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
           child: Column(
             children: <Widget>[
               Expanded(
-                flex: 4,
-                child: FutureBuilder<List<DetailApproval>>(
-                  future: widget.futureListApprove,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) print(snapshot.error);
-                    return snapshot.hasData
-                        ? DetailApprovalListCard(
-                            approvalListDetail: snapshot.data,
-                          )
-                        : Center(child: CircularProgressIndicator());
-                  },
-                ),
+                flex: 1,
+                child: ListView.builder(
+                    itemCount: widget.futureListApprove.length,
+                    itemBuilder: (context, index) {
+                      DateTime dateTimeParseCreated = DateTime.parse(
+                          widget.futureListApprove![index]['applicationDate']);
+                      String dateTimeCreated =
+                          DateFormat("yyyy-MM-dd").format(dateTimeParseCreated);
+                      var status = statusApproval(
+                          widget.futureListApprove![index]
+                              ['evaluateStatusCode'],
+                          context);
+                      var imageStatus = widget.futureListApprove![index]
+                                  ['evaluateStatusCode'] !=
+                              null
+                          ? statusApprovalImage(
+                              widget.futureListApprove![index]
+                                  ['evaluateStatusCode'],
+                              context)
+                          : _imagesList;
+
+                      return Container(
+                        height: 110,
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: logolightGreen, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: InkWell(
+                                splashColor: Colors.blue.withAlpha(30),
+                                onTap: () {},
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 5)),
+                                          Image(
+                                            image: imageStatus != null
+                                                ? imageStatus
+                                                : _imagesFindApproval,
+                                            width: 45,
+                                            height: 45,
+                                          ),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 15)),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Container(
+                                                  child: Text(
+                                                widget.futureListApprove![index]
+                                                    ['authorizerEmpName'],
+                                                style: mainTitleBlack,
+                                              )),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 2)),
+                                              Text(
+                                                  '${widget.futureListApprove![index]['authorizerEmployeeNo']} / ${widget.futureListApprove![index]['authorizationBranchCode']}'),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 2)),
+                                              Text('$dateTimeCreated'),
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 2)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          status,
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 2)),
+                                          if (widget.futureListApprove![index]
+                                                  ['authorizationDate'] !=
+                                              '')
+                                            getDateTimeApprove(
+                                                widget.futureListApprove![index]
+                                                    ['authorizationDate']),
+                                          Text(''),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 100))
+                                        ],
+                                      ),
+                                    ]))),
+                      );
+                    }),
               ),
             ],
           ),

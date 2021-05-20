@@ -254,8 +254,8 @@ class _CustomerRegister extends State {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'valuelists/idtypes',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'valuelists/idtypes'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -278,8 +278,8 @@ class _CustomerRegister extends State {
     var token = await storage.read(key: 'user_token');
 
     try {
-      final response = await api().get(
-        baseURLInternal + 'addresses/provinces',
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'addresses/provinces'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token

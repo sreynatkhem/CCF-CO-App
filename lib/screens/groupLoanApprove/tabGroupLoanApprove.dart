@@ -5,16 +5,12 @@ import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/groupLoan/index.dart';
-import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/screens/detail/comment.dart';
-import 'package:chokchey_finance/screens/groupLoan/index.dart';
-import 'package:chokchey_finance/screens/groupLoan/selectGroupLoan.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabApproved.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabApproved.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabDetail.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +76,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
       _isLoading = true;
     });
     await GroupLoanProvider()
-        .fetchGroupLoanByID(groupLoanID['gcode'], "", "", "", "", "", "", "")
+        .fetchGroupLoanByID(groupLoanID['gcode'], 20, 1, "", "", "", "", "")
         .then((value) {
       if (value['groupLoanDetail'][0]['loan']['lstatus'] == 'G') {
         setState(() {

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -89,7 +90,6 @@ getDateTimeYMD(time) {
 }
 
 getYYMMDD(time) {
-  logger().e("time: ${time}");
   DateTime dateTimeApproved = DateTime.parse(time);
   String dateTime = DateFormat("yyyyMMdd").format(dateTimeApproved);
   return dateTime;
@@ -115,6 +115,11 @@ var numFormat = new NumberFormat("#,###.00", "en_US");
 // const width = MediaQuery.of(context).size.width * 1;
 // const height = MediaQuery.of(context).size.width * 0.12;
 
+final formatCurrency = new NumberFormat("#,##0.00", "en_US");
+//
+final storage = new FlutterSecureStorage();
+bool isInteger(num value) => value is int || value == value.roundToDouble();
+//
 widthView(context, value) {
   var widthValue = value != null ? value : 1.9;
   var width = MediaQuery.of(context).size.width * widthValue;

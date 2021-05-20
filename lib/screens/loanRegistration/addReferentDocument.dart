@@ -5,12 +5,13 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/components/header.dart';
-import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
+import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/loanRegistration/widgetCardAddReferent.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
@@ -123,11 +124,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
   Future getImageDocument() async {
     var loanCode =
         widget.listLoan != null ? widget.listLoan['lcode'] : widget.editLoan;
-    var url = baseURLInternal + 'loanDocuments/byloan/' + loanCode;
+    var url = Uri.parse(baseURLInternal + 'loanDocuments/byloan/' + loanCode);
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     try {
-      final response = await api().get(url, headers: {
+      final Response response = await api().get(url, headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
       });
@@ -715,10 +716,13 @@ class _GridHeaderState extends State<AddReferentDocument> {
             AppLocalizations.of(context)!.translate('successfully') ??
                 'Successfully',
             Colors.redAccent);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ListLoanApprovals()),
-        );
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+            ModalRoute.withName("/Home"));
+        //   context,
+        //   MaterialPageRoute(builder: (context) => ListLoanApprovals()),
+        // );
       } else {
         logger.i('response.statusCode::::: ${response.statusCode}');
       }
@@ -727,8 +731,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
         logger.i('message::::: ${value}');
       });
     } catch (e) {
-      print('e::: $e');
-
       setState(() {
         _isLoading = false;
       });
@@ -777,8 +779,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
   Future onDelete(value, imageClear1, imageClear2) async {
     var token = await storage.read(key: 'user_token');
     try {
-      final response = await api().post(
-        baseURLInternal + 'loandocuments/' + value + '/delete',
+      final Response response = await api().post(
+        Uri.parse(baseURLInternal + 'loandocuments/' + value + '/delete'),
         headers: {
           "contentType": "application/json",
           "Authorization": "Bearer " + token
@@ -879,9 +881,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageNation = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -895,9 +895,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageFamily = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -911,9 +909,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageResident = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -927,9 +923,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageOther = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -943,9 +937,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageSalarySlip = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -959,9 +951,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageBankStatement = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -975,9 +965,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageSalaryVerify = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -992,9 +980,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _imageEmployeeContrat =
             File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1008,9 +994,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageEmployeeID = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1024,9 +1008,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageEmployeeOther = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1041,9 +1023,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _imageBusinessLocationtitle =
             File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1057,9 +1037,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageBusinessOther = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1073,9 +1051,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageRentalContract = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1090,9 +1066,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _imageSaleAndPurchase =
             File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1106,9 +1080,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imagePatent = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1122,9 +1094,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imageBusinessPermit = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1139,9 +1109,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _imageIncomeStatementBank =
             File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1155,9 +1123,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       setState(() {
         _imagePhotoOfService = File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1172,9 +1138,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _imageCollateralCertificate =
             File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1189,9 +1153,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         _imageCollateralPicture =
             File(pickedFile.path); // Exception occurred here
       });
-    } else {
-      print('PickedFile: is null');
-    }
+    } else {}
     return null;
   }
 
@@ -1226,11 +1188,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (nationID != null) {
                         try {
                           var token = await storage.read(key: 'user_token');
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 nationID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1267,11 +1229,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (familyID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 familyID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1319,11 +1281,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (residentID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 residentID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1360,11 +1322,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (kYCOtherID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 kYCOtherID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1425,11 +1387,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (employeeSalaySlipID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 employeeSalaySlipID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1474,11 +1436,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (employeeBankStatementID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 employeeBankStatementID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1529,11 +1491,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (employeeSalaryVerifyID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 employeeSalaryVerifyID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1574,11 +1536,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (employeeEmployeeID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 employeeEmployeeID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1630,11 +1592,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (employeeContractID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 employeeContractID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1676,11 +1638,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (employeeOtherID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 employeeOtherID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1738,11 +1700,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessPhotosServiceID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessPhotosServiceID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1779,11 +1741,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessPermitID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessPermitID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1835,11 +1797,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessIncomeStatementID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessIncomeStatementID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1880,11 +1842,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessPatenID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessPatenID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1935,11 +1897,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessSalePurchaseID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessSalePurchaseID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -1980,11 +1942,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessRentalID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessRentalID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -2035,11 +1997,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessLocationID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessLocationID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -2080,11 +2042,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessOtherID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessOtherID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -2142,11 +2104,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (collateralCertificateID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 collateralCertificateID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token
@@ -2183,11 +2145,11 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (collateralPictureID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final response = await api().post(
-                            baseURLInternal +
+                          final Response response = await api().post(
+                            Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 collateralPictureID +
-                                '/delete',
+                                '/delete'),
                             headers: {
                               "contentType": "application/json",
                               "Authorization": "Bearer " + token

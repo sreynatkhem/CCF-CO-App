@@ -1,4 +1,3 @@
-import 'package:chokchey_finance/models/customerRegistration.dart';
 import 'package:chokchey_finance/models/customers.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -14,7 +13,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   var totalCustomer = '';
   bool statusCode = false;
   final storage = new FlutterSecureStorage();
-  // Future<List<Customers>> fetchListCustomerRegistration(
   Future fetchListCustomerRegistration(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     _isFetching = true;
@@ -24,7 +22,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -55,14 +52,26 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "",
+        "status": "",
+        "code": "",
+        "sdate": "",
+        "edate": ""
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      var uri = baseURLInternal + 'customers/all';
-      final response = await api().post(uri, headers: headers, body: bodyRow);
+      var uri = Uri.parse(baseURLInternal + 'customers/all');
+      final Response response =
+          await api().post(uri, headers: headers, body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.addAll(jsonDecode(response.body));
@@ -76,8 +85,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
         } else {
           return [].map<Customers>((json) => Customers.fromJson(json)).toList();
         }
-      } else {
-        print('statusCode::: ${response.statusCode}');
       }
     } catch (error) {
       print('error: $error');
@@ -85,7 +92,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
     }
   }
 
-  // Future<List<CustomerRegistration>> editCustomerRegistration(
   Future editCustomerRegistration(
       ccode,
       acode,
@@ -113,15 +119,38 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
     try {
       _isFetching = false;
 
-      final boyrow =
-          "{\n    \"ccode\": \"$ccode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"acode\": \"$acode\",\n    \"rdate\": \"$rdate\",\n    \"namekhr\": \"$valueKhmerName\",\n    \"nameeng\": \"$valueEnglishName\",\n    \"dob\": \"\",\n    \"gender\": \"$gender\",\n    \"phone1\": \"$valuePhone1\",\n    \"phone2\": \"$valuePhone2\",\n    \"procode\": \"$selectedValueProvince\",\n    \"discode\": \"$selectedValueDistrict\",\n    \"comcode\": \"$selectedValueCommune\",\n    \"vilcode\": \"$idVillage\",\n    \"goglocation\": \"$currentAddress\",\n    \"occupation\": \"$valueOccupationOfCustomer\",\n    \"ntype\": \"\",\n    \"nid\": \"\",\n    \"ndate\": \"$nextDate\",\n    \"pro\": \"$valueProspective\",\n    \"cstatus\": \"\"\n}";
-      final response = await api().put(
-          baseURLInternal + 'Customers/' + '$ccode',
+      final Map<String, dynamic> boyrow = {
+        "ccode": "$ccode",
+        "ucode": "$user_ucode",
+        "bcode": "$branch",
+        "acode": "$acode",
+        "rdate": "$rdate",
+        "namekhr": "$valueKhmerName",
+        "nameeng": "$valueEnglishName",
+        "dob": "",
+        "gender": "$gender",
+        "phone1": "$valuePhone1",
+        "phone2": "$valuePhone2",
+        "procode": "$selectedValueProvince",
+        "discode": "$selectedValueDistrict",
+        "comcode": "$selectedValueCommune",
+        "vilcode": "$idVillage",
+        "goglocation": "$currentAddress",
+        "occupation": "$valueOccupationOfCustomer",
+        "ntype": "",
+        "nid": "",
+        "ndate": "$nextDate",
+        "pro": "$valueProspective",
+        "cstatus": ""
+      };
+
+      final Response response = await api().put(
+          Uri.parse(baseURLInternal + 'Customers/' + '$ccode'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: boyrow);
+          body: json.encode(boyrow));
       if (response.statusCode == 201) {
         statusCode = true;
         final parsed = jsonDecode(response.body);
@@ -136,7 +165,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   }
 
 //request customer by id
-  // Future<List<CustomerRegistration>> getCustomerByID(customerID) async {
   Future getCustomerByID(customerID) async {
     _isFetching = true;
     try {
@@ -150,7 +178,6 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
         },
       );
       final parsed = jsonDecode(response.body);
-      logger().e(parsed);
       notifyListeners();
       return parsed;
     } catch (error) {

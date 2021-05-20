@@ -9,6 +9,7 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'approve.dart';
 import 'detailLoanApproval.dart';
@@ -34,18 +35,19 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   var _isInit = false;
   var _isLoading = false;
   var response = [];
-  var futureLoanApproval;
+  // var futureLoanApproval;
   final storage = new FlutterSecureStorage();
   var _isApprover;
-
+  dynamic arrayRoles = [];
   @override
   void didChangeDependencies() {
-    futureLoanApproval = Provider.of<LoanApproval>(context)
-        .getLoanApproval(20, 1, '', '', '', '', '');
+    // futureLoanApproval = Provider.of<LoanApproval>(context)
+    //     .getLoanApproval(20, 1, '', '', '', '', '');
     var listUserRoles = storage.read(key: 'roles');
     listUserRoles.then(
       (value) => setState(() {
         userRoles = jsonDecode(value);
+        arrayRoles = userRoles;
       }),
     );
     super.didChangeDependencies();
@@ -64,8 +66,8 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   var listDetail;
   Future getDetail() async {
     var token = await storage.read(key: 'user_token');
-    final response = await api().get(
-      baseURLInternal + 'loanRequests/Applications/' + list['rcode'],
+    final Response response = await api().get(
+      Uri.parse(baseURLInternal + 'loanRequests/Applications/' + list['rcode']),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
@@ -105,11 +107,13 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var bcode = branch;
     var lcode = value['lcode'];
     var rdate = '';
-    var roleList = userRoles;
+    var roleList = arrayRoles;
 
     setState(() {
-      _isLoading = true;
+      // _isLoading = true;
     });
+    // logger().e(rcode, ucode, bcode, lcode, rdate, comments);
+
     await Provider.of<LoanApproval>(context, listen: false)
         .approval(rcode, ucode, bcode, lcode, rdate, roleList, comments)
         .then((value) => {
@@ -268,8 +272,8 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   @override
   Widget build(BuildContext context) {
-    futureLoanApproval = Provider.of<LoanApproval>(context)
-        .getLoanApproval(20, 1, '', '', '', '', '');
+    // futureLoanApproval = Provider.of<LoanApproval>(context)
+    //     .getLoanApproval(20, 1, '', '', '', '', '');
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(

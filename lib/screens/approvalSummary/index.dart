@@ -4,7 +4,6 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/approvalSummary/index.dart';
-import 'package:chokchey_finance/screens/approvalHistory/cardReport.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -12,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'detailLoadRegistration.dart';
 
@@ -25,26 +23,27 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
   var isLoading = false;
   var listTotal;
   var listApproval;
+  int _pageSize = 20;
+  int _pageNumber = 1;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (mounted) {
-      getReportApprovalSummary(
-          _pageSize, _pageNumber, '', '', '', '', '', 'Approve');
+      getReportApprovalSummary(20, 1, '', '', '', '', '', 'Approve');
       getListBranches();
       getListCO('');
     }
   }
 
-  Future getReportApprovalSummary(_pageSize, _pageNumber, status, code, bcode,
-      sdate, edate, statusRequest) async {
+  Future getReportApprovalSummary(_pageSizeParam, _pageNumberParam, statusParam,
+      codeParam, bcodeParam, sdateParam, edateParam, statusRequestParam) async {
     setState(() {
       isLoading = true;
     });
     await ApprovalSummaryProvider()
-        .getApprovalSummary(_pageSize, _pageNumber, status, code, bcode, sdate,
-            edate, 'Approve')
+        .getApprovalSummary(_pageSizeParam, _pageNumberParam, statusParam,
+            codeParam, bcodeParam, sdateParam, edateParam, 'Approve')
         .then((value) => {
               value.forEach((v) => {
                     setState(() {
@@ -79,9 +78,6 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     return true;
   }
 
-  int _pageSize = 20;
-  int _pageNumber = 1;
-
   Future _additems() async {
     setState(() {
       isLoading = true;
@@ -103,53 +99,53 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
     }
   }
 
-  statusApproval(value) {
-    switch (value) {
-      case 'R':
-        {
-          return Text(
-              AppLocalizations.of(context)!.translate('request') ?? 'Request',
-              style: mainTitleBlack);
-        }
-        break;
+  // statusApproval(value) {
+  //   switch (value) {
+  //     case 'R':
+  //       {
+  //         return Text(
+  //             AppLocalizations.of(context)!.translate('request') ?? 'Request',
+  //             style: mainTitleBlack);
+  //       }
+  //       break;
 
-      case 'A':
-        {
-          return Text(
-              AppLocalizations.of(context)!.translate('approved') ?? 'Approved',
-              style: mainTitleBlack);
-        }
-        break;
+  //     case 'A':
+  //       {
+  //         return Text(
+  //             AppLocalizations.of(context)!.translate('approved') ?? 'Approved',
+  //             style: mainTitleBlack);
+  //       }
+  //       break;
 
-      case 'D':
-        {
-          return Text(
-              AppLocalizations.of(context)!.translate('disapprove') ??
-                  'Disapprove',
-              style: mainTitleBlack);
-        }
-        break;
+  //     case 'D':
+  //       {
+  //         return Text(
+  //             AppLocalizations.of(context)!.translate('disapprove') ??
+  //                 'Disapprove',
+  //             style: mainTitleBlack);
+  //       }
+  //       break;
 
-      case 'T':
-        {
-          return Text(
-              AppLocalizations.of(context)!.translate('return') ?? 'Return',
-              style: mainTitleBlack);
-        }
-        break;
-      case 'O':
-        {
-          return Text(AppLocalizations.of(context)!.translate('open') ?? 'Open',
-              style: mainTitleBlack);
-        }
-        break;
-      default:
-        {
-          return Text('', style: mainTitleBlack);
-        }
-        break;
-    }
-  }
+  //     case 'T':
+  //       {
+  //         return Text(
+  //             AppLocalizations.of(context)!.translate('return') ?? 'Return',
+  //             style: mainTitleBlack);
+  //       }
+  //       break;
+  //     case 'O':
+  //       {
+  //         return Text(AppLocalizations.of(context)!.translate('open') ?? 'Open',
+  //             style: mainTitleBlack);
+  //       }
+  //       break;
+  //     default:
+  //       {
+  //         return Text('', style: mainTitleBlack);
+  //       }
+  //       break;
+  //   }
+  // }
 
   final _imagesFindApproval =
       const AssetImage('assets/images/profile_create.jpg');
@@ -286,10 +282,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
           ],
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-                ModalRoute.withName("/Home")),
+            onPressed: () => Navigator.pop(context),
           ),
           bodys: isLoading
               ? Center(

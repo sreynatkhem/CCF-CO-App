@@ -9,6 +9,7 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:smart_select/smart_select.dart';
 
 class GroupLoanSelect extends StatefulWidget {
@@ -62,7 +63,6 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -93,17 +93,29 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/all',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
-        logger().e("list loan: ${listLoan}");
         if (mounted)
           setState(() {
             _isLoading = false;

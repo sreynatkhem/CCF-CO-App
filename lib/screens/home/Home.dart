@@ -5,7 +5,6 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
@@ -26,7 +25,6 @@ import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/screens/requestSummary/index.dart';
 import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -122,7 +120,6 @@ class _HomeState extends State<Home> {
       AndroidNotification? android = message.notification?.android;
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
       Navigator.pushNamed(context, '/message', arguments: NotificationScreen());
     });
 
@@ -172,80 +169,80 @@ class _HomeState extends State<Home> {
   }
 
   onListLoanApproval() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ListLoanApprovals()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListLoanApprovals()),
+    );
   }
 
   onListCustomerRegistration() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ListCustomerRegistrations()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListCustomerRegistrations()),
+    );
   }
 
   onListGroupLoan() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => GroupLoan()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GroupLoan()),
+    );
   }
 
   onListGroupLoanApprove() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => GroupLoanApprove()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GroupLoanApprove()),
+    );
   }
 
   onListLoanRegistration() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ListLoanRegistrations()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListLoanRegistrations()),
+    );
   }
 
   onListApprovalHistory() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ApprovalHistory()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ApprovalHistory()),
+    );
   }
 
   onListApprovalApsaraHistory() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HistoryApsara()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HistoryApsara()),
+    );
   }
 
   onListApprovalSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ApprovalSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ApprovalSummary()),
+    );
   }
 
   onListDisApprovalSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => DisApprovalSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DisApprovalSummary()),
+    );
   }
 
   onListRequestSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => RequestSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RequestSummary()),
+    );
   }
 
   onListReturnSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ReturnSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ReturnSummary()),
+    );
   }
 
   englishLanguage() {
@@ -330,20 +327,20 @@ class _HomeState extends State<Home> {
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
-                      // CustomListTile(
-                      //     Icons.group_add,
-                      //     AppLocalizations.of(context)!
-                      //             .translate('create_group_loan') ??
-                      //         'Group Loan',
-                      //     () => {onListGroupLoan()},
-                      //     null),
-                      // CustomListTile(
-                      //     Icons.group,
-                      //     AppLocalizations.of(context)!
-                      //             .translate('group_loan_approve') ??
-                      //         'Group loan approve',
-                      //     () => {onListGroupLoanApprove()},
-                      //     null),
+                      CustomListTile(
+                          Icons.group_add,
+                          AppLocalizations.of(context)!
+                                  .translate('create_group_loan') ??
+                              'Group Loan',
+                          () => {onListGroupLoan()},
+                          null),
+                      CustomListTile(
+                          Icons.group,
+                          AppLocalizations.of(context)!
+                                  .translate('group_loan_approve') ??
+                              'Group loan approve',
+                          () => {onListGroupLoanApprove()},
+                          null),
                       CustomListTile(
                           Icons.insert_chart,
                           AppLocalizations.of(context)!

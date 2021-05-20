@@ -1,7 +1,3 @@
-import 'package:chokchey_finance/models/createLoan.dart';
-import 'package:chokchey_finance/models/index.dart';
-import 'package:chokchey_finance/models/listLoan.dart';
-import 'package:chokchey_finance/models/valueListCustomers.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 class GroupLoanProvider with ChangeNotifier {
   final storage = new FlutterSecureStorage();
@@ -30,7 +27,6 @@ class GroupLoanProvider with ChangeNotifier {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -61,14 +57,27 @@ class GroupLoanProvider with ChangeNotifier {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/all',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
         _isLoadingFetchLoan = false;
@@ -87,16 +96,22 @@ class GroupLoanProvider with ChangeNotifier {
     String user_id = await storage.read(key: 'user_id');
     var token = await storage.read(key: 'user_token');
     var branch = await storage.read(key: 'branch');
-    final boyrow =
-        "{\n    \"ucode\": \"$user_id\",\n  \"bcode\": \"$branch\",\n \"gname\": \"$gname\",\n \"groupLoanDetail\": $groupLoanDetail,\n    }";
+    // final boyrow =
+    //     "{\n    \"ucode\": \"$user_id\",\n  \"bcode\": \"$branch\",\n \"gname\": \"$gname\",\n \"groupLoanDetail\": $groupLoanDetail,\n    }";
+    final Map<String, dynamic> bodyRow = {
+      "ucode": "$user_id",
+      "bcode": "$branch",
+      "gname": "$gname",
+      "groupLoanDetail": groupLoanDetail
+    };
     try {
-      final response = await api().post(
-          baseURLInternal + 'GroupLoan/creategrouploan',
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'GroupLoan/creategrouploan'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: boyrow);
+          body: json.encode(bodyRow));
       final list = jsonDecode(response.body);
       notifyListeners();
       return list;
@@ -143,19 +158,29 @@ class GroupLoanProvider with ChangeNotifier {
       btlcode = '';
       ucode = code != null && code != "" ? code : '';
     }
-    var bodyRow =
-        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+    // var bodyRow =
+    //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+    final Map<String, dynamic> bodyRow = {
+      "pageSize": "$_pageSize",
+      "pageNumber": "$_pageNumber",
+      "ucode": "$ucode",
+      "bcode": "$bcodes",
+      "btlcode": "$btlcode",
+      "status": "",
+      "code": "",
+      "sdate": "$sdates",
+      "edate": "$edates"
+    };
     try {
       successfullyByID = true;
-
-      final response = await api().post(baseURLInternal + 'GroupLoan/' + gcode,
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'GroupLoan/' + gcode),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: bodyRow);
+          body: json.encode(bodyRow));
       final list = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
         successfullyByID = false;
       } else {
@@ -175,17 +200,23 @@ class GroupLoanProvider with ChangeNotifier {
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
     var branch = await storage.read(key: 'branch');
-    var bodyRow =
-        "{\n    \"gcode\": \"$gcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n  \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
-
+    // var bodyRow =
+    //     "{\n    \"gcode\": \"$gcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n  \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
+    final Map<String, dynamic> bodyRow = {
+      "gcode": "$gcode",
+      "ucode": "$user_ucode",
+      "bcode": "$branch",
+      "roleList": "$roleList",
+      "cmt": "$cmt"
+    };
     try {
-      final response = await api().post(
-          baseURLInternal + 'GroupLoan/Post/' + gcode + '/' + status,
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'GroupLoan/Post/' + gcode + '/' + status),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: bodyRow);
+          body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 201) {
         successfully = true;
@@ -208,7 +239,6 @@ class GroupLoanProvider with ChangeNotifier {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -239,14 +269,28 @@ class GroupLoanProvider with ChangeNotifier {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n     \"status\": \"\",\n       \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n     \"status\": \"\",\n       \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'GroupLoan/all',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'GroupLoan/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       notifyListeners();
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);

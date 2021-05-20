@@ -34,7 +34,6 @@ class _CustomerRegister extends State<EditCustomerRegister> {
   @override
   void initState() {
     // TODO: implement initState
-    logger().e("widget.list['ndate']: ${widget.list}");
     setState(() {
       _isLoading = true;
     });
@@ -269,7 +268,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
     });
     try {
       final Response response = await api().get(
-        baseURLInternal + 'addresses/districts/' + idProvince,
+        Uri.parse(baseURLInternal + 'addresses/districts/' + idProvince),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -297,7 +296,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
 
     try {
       final Response response = await api().get(
-        baseURLInternal + 'addresses/communes/' + idDistrict,
+        Uri.parse(baseURLInternal + 'addresses/communes/' + idDistrict),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -322,7 +321,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
     });
     try {
       final Response response = await api().get(
-        baseURLInternal + 'addresses/Villages/' + idCommune,
+        Uri.parse(baseURLInternal + 'addresses/Villages/' + idCommune),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -934,8 +933,8 @@ class _CustomerRegister extends State<EditCustomerRegister> {
                         var token = await storage.read(key: 'user_token');
                         var list;
                         try {
-                          final response = await api().get(
-                            baseURLInternal + 'addresses/provinces',
+                          final Response response = await api().get(
+                            Uri.parse(baseURLInternal + 'addresses/provinces'),
                             headers: {
                               "Content-Type": "application/json",
                               "Authorization": "Bearer " + token

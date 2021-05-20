@@ -1,4 +1,3 @@
-import 'package:chokchey_finance/models/login.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,7 +11,6 @@ class LoginProvider with ChangeNotifier {
   bool _isFetching = false;
   final storage = new FlutterSecureStorage();
 
-  // Future<List<LoginModels>> fetchLogin(id, password) async {
   Future fetchLogin(id, password) async {
     _isFetching = true;
     final Map<String, dynamic> bodyRow = {
@@ -49,8 +47,8 @@ class LoginProvider with ChangeNotifier {
       if (token != null) {
         _isFetching = false;
         final bodyRow = "{\n    \"upassword\": \"$upassword\"\n}\n";
-        final response = await api().post(
-          baseURLInternal + 'Users/ChangePassword/' + user_ucode,
+        final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'Users/ChangePassword/' + user_ucode),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
