@@ -142,6 +142,8 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - package_info (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - "permission_handler (5.1.0+2)":
@@ -168,6 +170,7 @@ DEPENDENCIES:
   - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - multi_image_picker (from `.symlinks/plugins/multi_image_picker/ios`)
   - multi_select_item (from `.symlinks/plugins/multi_select_item/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -223,6 +226,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/multi_image_picker/ios"
   multi_select_item:
     :path: ".symlinks/plugins/multi_select_item/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -262,6 +267,7 @@ SPEC CHECKSUMS:
   multi_image_picker: 6dfd22d7e6441a1cb06f6876fe8cc5f32f7f6610
   multi_select_item: b70b78aac4d208141e5d7de8640655570fb40e90
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97

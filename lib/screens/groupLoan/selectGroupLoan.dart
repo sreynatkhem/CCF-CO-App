@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:smart_select/smart_select.dart';
+import 'package:http/http.dart' as http;
 
 class GroupLoanSelect extends StatefulWidget {
   var controller;
@@ -218,9 +219,57 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
         _isLoadingPostToServer = true;
       });
       //   // post to server
-      await GroupLoanProvider()
-          .postGroupLoan(controller, objectGroupLoanDetail)
-          .then((value) {
+      // await GroupLoanProvider()
+      //     .postGroupLoan(controller, objectGroupLoanDetail)
+      //     .then((value) {
+      //   setState(() {
+      //     _isLoadingPostToServer = false;
+      //     _selectedMember = [];
+      //     _selectedLeader = null;
+      //     objectGroupLoanDetail = [];
+      //     // newDate = [];
+      //   });
+      //   showInSnackBar(
+      //       AppLocalizations.of(context)!.translate('successfully') ??
+      //           'Successfully',
+      //       logolightGreen);
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (BuildContext context) => GroupLoanApprove(
+      //           isRefresh: true,
+      //         ),
+      //       ),
+      //       ModalRoute.withName('/'));
+      // }).catchError((onError) {
+      //   setState(() {
+      //     _isLoadingPostToServer = false;
+      //   });
+      //   showInSnackBar(
+      //       AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
+      //       Colors.redAccent);
+      // });
+      var token = await storage.read(key: 'user_token');
+      String user_id = await storage.read(key: 'user_id');
+      var branch = await storage.read(key: 'branch');
+
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      };
+      var request = http.Request(
+          'POST', Uri.parse(baseURLInternal + 'GroupLoan/creategrouploan'));
+      request.body =
+          '''{\n    "ucode": "$user_id",\n    "bcode": "$branch",\n    "gname": "$controller",\n    "groupLoanDetail": $objectGroupLoanDetail\n}''';
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        // print(await response.stream.bytesToString());
+        var listes = jsonDecode(await response.stream.bytesToString());
+        logger().e("listes: $listes");
+
         setState(() {
           _isLoadingPostToServer = false;
           _selectedMember = [];
@@ -240,14 +289,15 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
               ),
             ),
             ModalRoute.withName('/'));
-      }).catchError((onError) {
+      } else {
+        logger().e("error: ");
         setState(() {
           _isLoadingPostToServer = false;
         });
         showInSnackBar(
             AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
             Colors.redAccent);
-      });
+      }
     }
   }
 

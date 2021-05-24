@@ -30,6 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
@@ -124,6 +125,18 @@ class _HomeState extends State<Home> {
     });
 
     getNotificationLock();
+    fetchVersionApp();
+  }
+
+  String version = "";
+  fetchVersionApp() async {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      version = packageInfo.version;
+
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String buildNumber = packageInfo.buildNumber;
+    });
   }
 
   var totalMessage;
@@ -161,7 +174,7 @@ class _HomeState extends State<Home> {
   }
 
   onLogOut() async {
-    await storage.delete(key: 'user_id');
+    await storage.deleteAll();
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Login()),
@@ -404,6 +417,10 @@ class _HomeState extends State<Home> {
                           () => {onLogOut()},
                           null),
                       Padding(padding: EdgeInsets.only(top: 10)),
+                      ListTile(
+                        title: Text("v" + '$version'),
+                        onTap: () {},
+                      ),
                     ],
                   ),
                 ),
