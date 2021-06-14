@@ -11,7 +11,8 @@ class DetailWidget {
   getTextDetail() {
     return Row(
       children: [
-        Text(AppLocalizations.of(context).translate(title.toString()) ?? title),
+        Text(
+            AppLocalizations.of(context)!.translate(title.toString()) ?? title),
         Text(
           ": " + subTitle,
           style: TextStyle(fontWeight: fontWeight700),

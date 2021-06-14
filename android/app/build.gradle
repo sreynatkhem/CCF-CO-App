@@ -47,7 +47,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
         applicationId "com.ccf.coapp"
         minSdkVersion 18
         targetSdkVersion 29
-        versionCode flutterVersionCode.toInteger()
+        versionCode 9
         versionName flutterVersionName
         multiDexEnabled true
         ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'

@@ -1,7 +1,3 @@
-import 'package:chokchey_finance/models/createLoan.dart';
-import 'package:chokchey_finance/models/index.dart';
-import 'package:chokchey_finance/models/listLoan.dart';
-import 'package:chokchey_finance/models/valueListCustomers.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 class NotificationProvider with ChangeNotifier {
   final storage = new FlutterSecureStorage();
@@ -17,8 +14,8 @@ class NotificationProvider with ChangeNotifier {
   Future postNotificationRead(number) async {
     var token = await storage.read(key: 'user_token');
     try {
-      final response = await api().post(
-        baseURLInternal + 'messages/read/' + number,
+      final Response response = await api().post(
+        Uri.parse(baseURLInternal + 'messages/read/' + number),
         headers: {
           "contentType": "application/json",
           "Authorization": "Bearer " + token
@@ -40,8 +37,8 @@ class NotificationProvider with ChangeNotifier {
   Future fetchNotificationAnnouncement(number) async {
     var token = await storage.read(key: 'user_token');
     try {
-      final response = await api().get(
-        baseURLInternal + 'announcements/' + number,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'announcements/' + number),
         headers: {
           "contentType": "application/json",
           "Authorization": "Bearer " + token
@@ -71,11 +68,16 @@ class NotificationProvider with ChangeNotifier {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
-    var bodyRow =
-        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n}";
+    final Map<String, dynamic> bodyRow = {
+      "pageSize": "$_pageSize",
+      "pageNumber": "$_pageNumber",
+      "ucode": "$user_ucode"
+    };
     try {
-      final response = await api().post(baseURLInternal + 'messages/byuser',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'messages/byuser'),
+          headers: headers,
+          body: json.encode(bodyRow));
       var parsed = jsonDecode(response.body);
       notifyListeners();
       return parsed;
@@ -85,8 +87,8 @@ class NotificationProvider with ChangeNotifier {
   }
 
   Future getNotificationProvider(
-    _pageSize,
-    _pageNumber,
+    _pageSizeParam,
+    _pageNumberParam,
   ) async {
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
@@ -95,11 +97,17 @@ class NotificationProvider with ChangeNotifier {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
-    var bodyRow =
-        "{\n    \"pageSize\": 20,\n    \"pageNumber\": 1,\n    \"ucode\": \"$user_ucode\",\n}";
+    final Map<String, dynamic> bodyRow = {
+      "pageSize": "$_pageSizeParam",
+      "pageNumber": "$_pageSizeParam",
+      "ucode": "$user_ucode"
+    };
+
     try {
-      final response = await api().post(baseURLInternal + 'messages/byuser',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'messages/byuser'),
+          headers: headers,
+          body: json.encode(bodyRow));
       var parsed = jsonDecode(response.body);
       notifyListeners();
       return parsed;
@@ -112,11 +120,12 @@ class NotificationProvider with ChangeNotifier {
     final storage = new FlutterSecureStorage();
     var token = await storage.read(key: 'user_token');
     try {
-      final response = await api()
-          .get(baseURLInternal + 'Announcements/CEOMessage', headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      });
+      final Response response = await api().get(
+          Uri.parse(baseURLInternal + 'Announcements/CEOMessage'),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          });
       final parsed = jsonDecode(response.body);
       return parsed;
     } catch (error) {

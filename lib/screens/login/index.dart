@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/defaultLogin.dart';
-import 'package:chokchey_finance/screens/login/firstChangePassword.dart';
 import 'package:chokchey_finance/screens/login/stepTwoLogin.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -11,8 +10,8 @@ import 'package:chokchey_finance/providers/login.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'dart:async';
 
 import 'package:provider/provider.dart';
@@ -20,16 +19,15 @@ import 'package:provider/provider.dart';
 class Login extends StatefulWidget {
   final ImageProvider chokchey;
   Login({
-    Key key,
     this.chokchey = const AssetImage('assets/images/chokchey.png'),
-  }) : super(key: key);
+  });
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
   final storage = new FlutterSecureStorage();
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   final TextEditingController id = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -85,7 +83,7 @@ class _LoginState extends State<Login> {
       new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeySignUp.currentState.showSnackBar(new SnackBar(
+    _scaffoldKeySignUp.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -100,38 +98,37 @@ class _LoginState extends State<Login> {
     });
 
     try {
-      logger().e("user_id: $user_id");
-      logger().e("valuePassword: $valuePassword");
       await Provider.of<LoginProvider>(context, listen: false)
           .fetchLogin(user_id, valuePassword)
           .then((value) async => {
-                if (value[0].token != null)
+                if (value[0]['token'] != null)
                   {
                     showInSnackBar('Welcome!', logolightGreen),
                     await storage.write(
-                        key: "user_ucode", value: value[0].ucode),
+                        key: "user_ucode", value: value[0]['ucode']),
                     await storage.write(
-                        key: "user_token", value: value[0].token),
-                    await storage.write(key: "branch", value: value[0].branch),
+                        key: "user_token", value: value[0]['token']),
                     await storage.write(
-                        key: "level", value: value[0].level.toString()),
+                        key: "branch", value: value[0]['branch']),
+                    await storage.write(
+                        key: "level", value: value[0]['level'].toString()),
                     await storage.write(
                         key: "isapprover",
-                        value: value[0].isapprover.toString()),
+                        value: value[0]['isapprover'].toString()),
                     await storage.write(
-                        key: "roles", value: value[0].roles.toString()),
+                        key: "roles", value: value[0]['roles'].toString()),
                     setState(() {
                       _isLoading = false;
                     }),
-                    if (value[0].roles != null)
+                    if (value[0]['roles'] != null)
                       {
-                        _roles = value[0].roles,
+                        _roles = value[0]['roles'],
                         await storage.write(
                             key: "roles", value: _roles.toString()),
                       },
-                    if (value[0].token != null &&
-                        (value[0].changePassword == null ||
-                            value[0].changePassword == 'N'))
+                    if (value[0]['token'] != null &&
+                        (value[0]['changePassword'] == null ||
+                            value[0]['changePassword'] == 'N'))
                       {
                         // user need to change password
                         Navigator.push(
@@ -145,28 +142,27 @@ class _LoginState extends State<Login> {
                     else
                       {
                         await storage.write(
-                            key: "user_id", value: value[0].uid),
+                            key: "user_id", value: value[0]['uid']),
                         await storage.write(
                             key: "password", value: valuePassword),
                         await storage.write(
-                            key: "user_token", value: value[0].token),
+                            key: "user_token", value: value[0]['token']),
                         await storage.write(
-                            key: "user_name", value: value[0].uname),
+                            key: "user_name", value: value[0]['uname']),
                         await storage.write(
-                            key: "user_ucode", value: value[0].ucode),
+                            key: "user_ucode", value: value[0]['ucode']),
                         await storage.write(
-                            key: "branch", value: value[0].branch),
+                            key: "branch", value: value[0]['branch']),
                         await storage.write(
-                            key: "level", value: value[0].level.toString()),
+                            key: "level", value: value[0]['level'].toString()),
                         await storage.write(
                             key: "isapprover",
-                            value: value[0].isapprover.toString()),
+                            value: value[0]['isapprover'].toString()),
 
-                        _firebaseMessaging.getToken().then((String token) {
+                        FirebaseMessaging.instance
+                            .getToken()
+                            .then((String? token) {
                           assert(token != null);
-                          // setState(() {
-                          //   _homeScreenText = "Push Messaging token: $token";
-                          // });
                           postTokenPushNotification(token);
                         }),
                         // already change password
@@ -202,13 +198,15 @@ class _LoginState extends State<Login> {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
-    var bodyRow = "{\n    \"mtoken\": \"$tokens\"\n}";
+    final Map<String, dynamic> bodyRow = {"mtoken": "$tokens"};
     try {
-      final response = await api().post(
-          baseURLInternal + 'users/' + user_ucode + '/mtoken',
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'users/' + user_ucode + '/mtoken'),
           headers: headers,
-          body: bodyRow);
-    } catch (error) {}
+          body: json.encode(bodyRow));
+    } catch (error) {
+      print('error:: ${error}');
+    }
   }
 
   @override

@@ -67,25 +67,25 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   List<charts.Series<OrdinalSales, String>> _createSampleData() {
     final data = [
       new OrdinalSales(
-          AppLocalizations.of(context).translate('customer') ?? 'Customer',
+          AppLocalizations.of(context)!.translate('customer') ?? 'Customer',
           totalCustomer),
       new OrdinalSales(
-          AppLocalizations.of(context).translate('approve') ?? 'Approve',
+          AppLocalizations.of(context)!.translate('approve') ?? 'Approve',
           totalApproved),
       new OrdinalSales(
-          AppLocalizations.of(context).translate('processing') ?? 'Processing',
+          AppLocalizations.of(context)!.translate('processing') ?? 'Processing',
           totalApproved),
       new OrdinalSales(
-          AppLocalizations.of(context).translate('return') ?? 'Return',
+          AppLocalizations.of(context)!.translate('return') ?? 'Return',
           totalReturned),
       new OrdinalSales(
-          AppLocalizations.of(context).translate('disapprove') ?? 'Disapprove',
+          AppLocalizations.of(context)!.translate('disapprove') ?? 'Disapprove',
           totalDisapproved),
       new OrdinalSales(
-          AppLocalizations.of(context).translate('request') ?? 'Request',
+          AppLocalizations.of(context)!.translate('request') ?? 'Request',
           totalRequested),
       new OrdinalSales(
-          AppLocalizations.of(context).translate('loan') ?? 'Loan', totalLoan),
+          AppLocalizations.of(context)!.translate('loan') ?? 'Loan', totalLoan),
     ];
 
     return [
@@ -179,7 +179,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   }
 
   final TextEditingController searchId = TextEditingController();
-  Future onClickApply(context) {}
+  Future onClickApply(context) async {}
 
   void _closeEndDrawer() {
     setState(() {
@@ -241,11 +241,12 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   TextEditingController controllerStartDate = new TextEditingController();
   TextEditingController controllerEndDate = new TextEditingController();
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Home()),
         ModalRoute.withName("/Home"));
+    return false;
   }
 
   @override
@@ -254,8 +255,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Header(
-        headerTexts: AppLocalizations.of(context).translate('report_summary') ??
-            'Report Summary',
+        headerTexts: AppLocalizations.of(context)!.translate('report_summary'),
         actionsNotification: [
           Builder(
             builder: (context) => IconButton(
@@ -445,7 +445,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                     alignment: Alignment.topLeft,
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
-                      AppLocalizations.of(context).translate('list_branch') ??
+                      AppLocalizations.of(context)!.translate('list_branch') ??
                           'List Branch',
                       style: TextStyle(
                         fontWeight: fontWeight700,
@@ -488,7 +488,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                   Container(
                     padding: EdgeInsets.only(left: 15, right: 15),
                     child: FormBuilderDateTimePicker(
-                      attribute: 'date',
+                      name: 'date',
                       controller: controllerStartDate,
                       inputType: InputType.date,
                       onChanged: (v) {
@@ -500,7 +500,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                       initialValue: DateTime(now.year, now.month, 1),
                       format: DateFormat("yyyy-MM-dd"),
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)
+                        labelText: AppLocalizations.of(context)!
                                 .translate('start_date') ??
                             "Start date",
                       ),
@@ -510,7 +510,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                   Container(
                     padding: EdgeInsets.only(left: 15, right: 15),
                     child: FormBuilderDateTimePicker(
-                      attribute: 'date',
+                      name: 'date',
                       controller: controllerEndDate,
                       inputType: InputType.date,
                       onChanged: (v) {
@@ -521,7 +521,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                       initialValue: DateTime.now(),
                       format: DateFormat("yyyy-MM-dd"),
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)
+                        labelText: AppLocalizations.of(context)!
                                 .translate('end_date') ??
                             "End date",
                       ),
@@ -536,15 +536,15 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                       children: [
                         RaisedButton(
                           onPressed: _closeEndDrawer,
-                          child: Text(
-                              AppLocalizations.of(context).translate('reset') ??
-                                  "Reset"),
+                          child: Text(AppLocalizations.of(context)!
+                                  .translate('reset') ??
+                              "Reset"),
                         ),
                         RaisedButton(
                           color: logolightGreen,
                           onPressed: _applyEndDrawer,
                           child: Text(
-                            AppLocalizations.of(context).translate('apply') ??
+                            AppLocalizations.of(context)!.translate('apply') ??
                                 "Apply",
                             style: TextStyle(color: Colors.white),
                           ),

@@ -1,12 +1,10 @@
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
-import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 
 class IRRScreen extends StatefulWidget {
@@ -15,6 +13,19 @@ class IRRScreen extends StatefulWidget {
 }
 
 class _IRRScreenState extends State<IRRScreen> {
+  void initState() {
+    super.initState();
+    grossAmountDefaultController.text = '';
+    iRRDefaultController.text = '';
+  }
+
+  @override
+  void dispose() {
+    grossAmountDefaultController.dispose();
+    iRRDefaultController.dispose();
+    super.dispose();
+  }
+
   var exchangeRate;
   var grossAmount;
   var loanAmountInUSA;
@@ -61,14 +72,14 @@ class _IRRScreenState extends State<IRRScreen> {
   //
   List<int> sumAmount = [];
   List<int> sumIncome = [];
-  int parsedIncome;
-  int paresAmountNumberDefault;
+  int? parsedIncome;
+  int? paresAmountNumberDefault;
   // Store Default
-  int storeAmount;
-  int storeIncome;
+  int storeAmount = 0;
+  int storeIncome = 0;
   // Store Input
-  int storeAmountInput;
-  int storeIncomeInput;
+  int storeAmountInput = 0;
+  int? storeIncomeInput;
 
   var loanAmountDefaultFocus = FocusNode();
   // var forParseIncome;
@@ -116,8 +127,8 @@ class _IRRScreenState extends State<IRRScreen> {
     });
   }
 
-  int finalSumAmount;
-  int finalSumIncome;
+  int finalSumAmount = 0;
+  int finalSumIncome = 0;
   var finalSumIRR;
 
   sumFinalIRR() {
@@ -127,8 +138,6 @@ class _IRRScreenState extends State<IRRScreen> {
     setState(() {
       finalSumAmount = sum;
     });
-    logger().e("sumAmount : ${sumAmount}");
-    logger().e("sum : ${sum}");
   }
 
   sumFinalIncome() {
@@ -138,8 +147,6 @@ class _IRRScreenState extends State<IRRScreen> {
     setState(() {
       finalSumIncome = sum;
     });
-    logger().e("sumIncome : ${sumIncome}");
-    logger().e("sum : ${sum}");
   }
 
   calculeFinalIRR() {
@@ -157,15 +164,15 @@ class _IRRScreenState extends State<IRRScreen> {
   var data = [];
 
   var currencyAmountDouble;
-  String showValueAmountDefault;
+  String showValueAmountDefault = "";
   convertCurrency(amountDocble) {
     if (amountDocble.length > 1) {
       var value = double.parse(amountDocble);
-      MoneyFormatterOutput fo = FlutterMoneyFormatter(amount: value).output;
-      var test = fo.nonSymbol.toString();
+      // MoneyFormatterOutput fo = FlutterMoneyFormatter(amount: value).output;
+      // var test = fo.nonSymbol.toString();
       setState(() {
-        showValueAmountDefault = test;
-        loanAmountInUSAController.text = test;
+        showValueAmountDefault = value.toString();
+        // loanAmountInUSAController.text = test;
       });
     } else {
       setState(() {
@@ -175,14 +182,14 @@ class _IRRScreenState extends State<IRRScreen> {
     }
   }
 
-  int calc_ranks(ranks) {}
+  // int calc_ranks(ranks) {}
 
   UnfocusDisposition disposition = UnfocusDisposition.scope;
   //
   final GlobalKey<ScaffoldState> _scaffoldKeyIRR =
       new GlobalKey<ScaffoldState>();
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeyIRR.currentState.showSnackBar(new SnackBar(
+    _scaffoldKeyIRR.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -244,20 +251,20 @@ class _IRRScreenState extends State<IRRScreen> {
                           keys: currenciesKey,
                           childs: Container(
                             child: FormBuilderDropdown(
-                                attribute: 'name',
+                                name: 'name',
                                 decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(context)
+                                  labelText: AppLocalizations.of(context)!
                                           .translate('currencies') ??
                                       "Currencies",
                                   border: InputBorder.none,
                                 ),
-                                validators: [
-                                  FormBuilderValidators.required(
-                                      errorText: AppLocalizations.of(context)
+                                validator: FormBuilderValidators.compose([
+                                  FormBuilderValidators.required(context,
+                                      errorText: AppLocalizations.of(context)!
                                               .translate(
                                                   'currencies_required') ??
                                           "Currencies Required(*)"),
-                                ],
+                                ]),
                                 hint: Text(
                                   "USD",
                                 ),
@@ -277,15 +284,15 @@ class _IRRScreenState extends State<IRRScreen> {
                         keys: incomeDefaultKey,
                         childs: FormBuilderTextField(
                           readOnly: true,
-                          attribute: "incomeDefault",
+                          name: "incomeDefault",
                           textInputAction: TextInputAction.next,
                           controller: incomeDefaultController,
-                          validators: [
-                            FormBuilderValidators.numeric(
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.numeric(context,
                                 errorText: "requeiure."),
-                          ],
+                          ]),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('income') ??
                                 "Income",
                             border: InputBorder.none,
@@ -301,7 +308,7 @@ class _IRRScreenState extends State<IRRScreen> {
                         icons: Icons.attach_money,
                         keys: amountDefaultGlobalKey,
                         childs: FormBuilderTextField(
-                          attribute: 'number',
+                          name: 'number',
                           inputFormatters: [
                             // ignore: deprecated_member_use
                             WhitelistingTextInputFormatter(
@@ -310,29 +317,31 @@ class _IRRScreenState extends State<IRRScreen> {
                           controller: grossAmountDefaultController,
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('gross_disbursement_amount') ??
                                 "Gross Disbursement Amount",
                             border: InputBorder.none,
                           ),
-                          onFieldSubmitted: (v) {
+                          onSubmitted: (v) {
                             FocusScope.of(context)
                                 .requestFocus(loanAmountDefaultFocus);
                           },
-                          onChanged: (v) {
+                          onChanged: (String v) {
                             if (mounted) {
-                              dynamic amountDocble = double.parse(v);
+                              dynamic amountDocble = double.tryParse(v);
 
-                              MoneyFormatterOutput fo =
-                                  FlutterMoneyFormatter(amount: amountDocble)
-                                      .output;
+                              // MoneyFormatterOutput fo =
+                              //     FlutterMoneyFormatter(amount: amountDocble)
+                              //         .output;
+
                               convertCurrency(v);
-                              var amountInt = int.parse(v);
-                              paresAmountNumberDefault = int.parse(v);
-                              storeAmount = amountInt as int;
+                              var amountInt = int.tryParse(v);
+                              paresAmountNumberDefault = int.tryParse(v);
                               if (mounted)
                                 setState(() {
-                                  currencyAmountDouble = fo.symbolOnLeft;
+                                  currencyAmountDouble = double.tryParse(v);
+                                  storeAmount = int.tryParse(v)!;
+
                                   amountDefault = v;
                                 });
                             }
@@ -340,17 +349,17 @@ class _IRRScreenState extends State<IRRScreen> {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          validators: [
-                            FormBuilderValidators.min(1),
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.min(context, 1),
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('loan_amount_required') ??
                                     "Loan amount Required(*)"),
-                            FormBuilderValidators.numeric(
-                                errorText: AppLocalizations.of(context)
+                            FormBuilderValidators.numeric(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('number_only') ??
                                     'Number only')
-                          ],
+                          ]),
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -360,7 +369,7 @@ class _IRRScreenState extends State<IRRScreen> {
                         keys: irrDefaultGlobalKey,
                         childs: FormBuilderTextField(
                           controller: iRRDefaultController,
-                          attribute: 'number',
+                          name: 'number',
                           focusNode: loanAmountDefaultFocus,
                           decoration: InputDecoration(
                             labelText: 'IRR',
@@ -370,12 +379,12 @@ class _IRRScreenState extends State<IRRScreen> {
                             return text == null ? null : text;
                           },
                           keyboardType: TextInputType.number,
-                          validators: [
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('irr_required') ??
                                     "IRR required(*)"),
-                          ],
+                          ]),
                           inputFormatters: [
                             // ignore: deprecated_member_use
                             WhitelistingTextInputFormatter(
@@ -402,7 +411,7 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                             }
                           },
-                          onFieldSubmitted: (v) {
+                          onSubmitted: (v) {
                             var numberFormat =
                                 new NumberFormat("#,###.00", "en_US");
 
@@ -449,7 +458,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                   ),
                                   Padding(padding: EdgeInsets.all(3)),
                                   Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('add') ??
                                         "Add",
                                     style: TextStyle(color: Colors.white),
@@ -483,6 +492,8 @@ class _IRRScreenState extends State<IRRScreen> {
                                       index = 1;
                                     });
                                   }
+                                  logger().e(
+                                      "showValueAmountDefault: null ${showValueAmountDefault}");
                                   var irrDobule =
                                       double.parse(iRRDefaultController.text)
                                           .toStringAsFixed(2);
@@ -496,7 +507,6 @@ class _IRRScreenState extends State<IRRScreen> {
                                   data.addAll([listArray]);
                                   sumAmount.addAll([storeAmount]);
                                   sumIncome.addAll([storeIncome]);
-                                  logger().e("sumIncome: ${sumIncome}");
                                   setState(() {
                                     _isLoading = false;
                                     _isShowDefault = false;
@@ -511,7 +521,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                         .unfocus(disposition: disposition);
                                   });
                                   showInSnackBar(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('') ??
                                           'Successfully',
                                       logolightGreen);
@@ -545,7 +555,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     .unfocus(disposition: disposition);
                               });
                               showInSnackBar(
-                                  AppLocalizations.of(context).translate('') ??
+                                  AppLocalizations.of(context)!.translate('') ??
                                       'Clear Form Successfully',
                                   logolightGreen);
                             },
@@ -561,7 +571,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                   ),
                                   Padding(padding: EdgeInsets.all(3)),
                                   Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('clear_form') ??
                                           "Clear Form",
                                       style: TextStyle(color: Colors.white)),
@@ -581,9 +591,9 @@ class _IRRScreenState extends State<IRRScreen> {
                   keys: irrDefaultGlobalKey,
                   childs: FormBuilderTextField(
                     controller: exchangeRateController,
-                    attribute: 'exchange',
+                    name: 'exchange',
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)
+                      labelText: AppLocalizations.of(context)!
                               .translate('exchange_rate') ??
                           'Exchange Rate:',
                       border: InputBorder.none,
@@ -592,12 +602,12 @@ class _IRRScreenState extends State<IRRScreen> {
                       return text == null ? null : text;
                     },
                     keyboardType: TextInputType.number,
-                    validators: [
-                      FormBuilderValidators.required(
-                          errorText: AppLocalizations.of(context)
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(context,
+                          errorText: AppLocalizations.of(context)!
                                   .translate('exchange_rate') ??
                               "Exchange Rate:"),
-                    ],
+                    ]),
                     inputFormatters: [
                       // ignore: deprecated_member_use
                       WhitelistingTextInputFormatter.digitsOnly,
@@ -608,7 +618,7 @@ class _IRRScreenState extends State<IRRScreen> {
                           exchangeRate = value;
                         });
                     },
-                    onFieldSubmitted: (v) {
+                    onSubmitted: (v) {
                       if (mounted)
                         setState(() {
                           exchangeRate = v;
@@ -628,19 +638,19 @@ class _IRRScreenState extends State<IRRScreen> {
                           icons: Icons.check,
                           childs: Container(
                             child: FormBuilderDropdown(
-                              attribute: 'name',
+                              name: 'name',
                               decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)
+                                labelText: AppLocalizations.of(context)!
                                         .translate('currencies') ??
                                     "Currencies",
                                 border: InputBorder.none,
                               ),
-                              validators: [
-                                FormBuilderValidators.required(
-                                    errorText: AppLocalizations.of(context)
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context,
+                                    errorText: AppLocalizations.of(context)!
                                             .translate('currencies_required') ??
                                         "Currencies Required(*)"),
-                              ],
+                              ]),
                               onChanged: (v) {
                                 if (mounted) {
                                   setState(() {
@@ -649,7 +659,6 @@ class _IRRScreenState extends State<IRRScreen> {
                                     grossAmountController.text = "";
                                   });
                                 }
-                                logger().e("currency: ${onSelectedCurrency}");
                               },
                               hint: Text(
                                 "USD",
@@ -668,9 +677,9 @@ class _IRRScreenState extends State<IRRScreen> {
                         keys: grossDisbursementAmounttGlobalKey,
                         childs: FormBuilderTextField(
                           controller: grossAmountController,
-                          attribute: 'gross_disbursement_amount',
+                          name: 'gross_disbursement_amount',
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('gross_disbursement_amount') ??
                                 "Gross Disbursement Amount",
                             border: InputBorder.none,
@@ -678,13 +687,13 @@ class _IRRScreenState extends State<IRRScreen> {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          validators: [
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate(
                                             'gross_disbursement_amount') ??
                                     "Gross Disbursement Amount"),
-                          ],
+                          ]),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             // ignore: deprecated_member_use
@@ -693,15 +702,12 @@ class _IRRScreenState extends State<IRRScreen> {
                             // CurrencyInputFormatter(12),
                           ],
                           onChanged: (v) {
-                            logger().e("v1: ${v}");
-
-                            logger().e("v: ${onSelectedCurrency}");
                             var ranksDouble = double.parse(v);
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "KHR") {
-                              logger().e("KHR: ${onSelectedCurrency}");
-                              var exChangeRateDouble = int.parse(exchangeRate);
+                              var exChangeRateDouble =
+                                  int.parse(exchangeRateController.text);
                               var ranksKHR = rankInt / exChangeRateDouble;
                               var ranksKHRRound = ranksKHR.round();
                               var rankIntKHR =
@@ -716,7 +722,6 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                               iRRCalculation();
                             } else {
-                              logger().e("USD: ${onSelectedCurrency}");
                               convertCurrency(v);
                               setState(() {
                                 loanAmountInUSAController.text =
@@ -727,13 +732,11 @@ class _IRRScreenState extends State<IRRScreen> {
                               iRRCalculation();
                             }
                           },
-                          onFieldSubmitted: (v) {
+                          onSubmitted: (v) {
                             var ranksDouble = double.parse(v);
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "USD") {
-                              logger().e("USD: ${onSelectedCurrency}");
-
                               convertCurrency(v);
                               setState(() {
                                 loanAmountInUSAController.text =
@@ -743,8 +746,6 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                               iRRCalculation();
                             } else {
-                              logger().e("KHR: ${onSelectedCurrency}");
-
                               var exChangeRateDouble = int.parse(exchangeRate);
                               var ranksKHR = rankInt / exChangeRateDouble;
                               var ranksKHRRound = ranksKHR.round();
@@ -770,9 +771,9 @@ class _IRRScreenState extends State<IRRScreen> {
                         childs: FormBuilderTextField(
                           readOnly: true,
                           controller: loanAmountInUSAController,
-                          attribute: 'loana_amount_in_USD',
+                          name: 'loana_amount_in_USD',
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('loana_amount_in_USD') ??
                                 "Loan Amount in USD",
                             border: InputBorder.none,
@@ -780,12 +781,12 @@ class _IRRScreenState extends State<IRRScreen> {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          validators: [
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('loana_amount_in_USD') ??
                                     "Loan Amount in USD"),
-                          ],
+                          ]),
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -795,7 +796,7 @@ class _IRRScreenState extends State<IRRScreen> {
                         keys: loanTermInUSDGlobalKey,
                         childs: FormBuilderTextField(
                           controller: loanTermController,
-                          attribute: "loan_term",
+                          name: "loan_term",
                           onChanged: (v) {
                             setState(() {
                               loanTerm = v;
@@ -804,7 +805,7 @@ class _IRRScreenState extends State<IRRScreen> {
                           },
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('loan_term') ??
                                 "Loan Term",
                             border: InputBorder.none,
@@ -817,12 +818,12 @@ class _IRRScreenState extends State<IRRScreen> {
                             WhitelistingTextInputFormatter(
                                 RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
-                          validators: [
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('loan_term') ??
                                     "Loan Term"),
-                          ],
+                          ]),
                         ),
                       ),
                       SizedBox(height: 5),
@@ -830,7 +831,7 @@ class _IRRScreenState extends State<IRRScreen> {
                         imageIcon: percentages,
                         keys: monthlyInterestGlobalKey,
                         childs: FormBuilderTextField(
-                          attribute: "monthly_interest",
+                          name: "monthly_interest",
                           keyboardType: TextInputType.number,
                           controller: monthlyInterestController,
                           inputFormatters: [
@@ -847,7 +848,7 @@ class _IRRScreenState extends State<IRRScreen> {
                             }
                           },
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('monthly_interest') ??
                                 "Monthly Interest",
                             border: InputBorder.none,
@@ -855,15 +856,15 @@ class _IRRScreenState extends State<IRRScreen> {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          validators: [
-                            FormBuilderValidators.min(0.1),
-                            FormBuilderValidators.max(1.5),
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.min(context, 0.1),
+                            FormBuilderValidators.max(context, 1.5),
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate(
                                             'monthly_interest_rate_required') ??
                                     "Monthly interest rate required(*)"),
-                          ],
+                          ]),
                         ),
                       ),
                       SizedBox(height: 5),
@@ -871,7 +872,7 @@ class _IRRScreenState extends State<IRRScreen> {
                         imageIcon: percentages,
                         keys: monthlyFeeGlobalKey,
                         childs: FormBuilderTextField(
-                          attribute: "monthly_fee_rate",
+                          name: "monthly_fee_rate",
                           keyboardType: TextInputType.number,
                           controller: monthlyFeeRateController,
                           inputFormatters: [
@@ -887,21 +888,21 @@ class _IRRScreenState extends State<IRRScreen> {
                               iRRCalculation();
                             }
                           },
-                          onFieldSubmitted: (v) {
+                          onSubmitted: (v) {
                             if (mounted)
                               setState(() {
                                 monthlyFeeRate = v;
                               });
                           },
-                          validators: [
-                            FormBuilderValidators.max(2),
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.max(context, 2),
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('admin_fee_required') ??
                                     "Admin fee required(*)"),
-                          ],
+                          ]),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('monthly_fee_rate') ??
                                 "Monthly Fee Rate",
                             border: InputBorder.none,
@@ -916,20 +917,20 @@ class _IRRScreenState extends State<IRRScreen> {
                         imageIcon: percentages,
                         keys: monthlyAdminFeeGlobalKey,
                         childs: FormBuilderTextField(
-                          attribute: "admin_fee_rate",
+                          name: "admin_fee_rate",
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             // ignore: deprecated_member_use
                             WhitelistingTextInputFormatter(
                                 RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
-                          validators: [
-                            FormBuilderValidators.max(2),
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.max(context, 2),
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('admin_fee_required') ??
                                     "Admin fee required(*)"),
-                          ],
+                          ]),
                           controller: adminFeeRateController,
                           onChanged: (v) {
                             if (mounted) {
@@ -939,14 +940,14 @@ class _IRRScreenState extends State<IRRScreen> {
                               iRRCalculation();
                             }
                           },
-                          onFieldSubmitted: (v) {
+                          onSubmitted: (v) {
                             if (mounted)
                               setState(() {
                                 adminFeeRate = v;
                               });
                           },
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('admin_fee_rate') ??
                                 "Admin Fee Rate",
                             border: InputBorder.none,
@@ -964,7 +965,7 @@ class _IRRScreenState extends State<IRRScreen> {
                         childs: FormBuilderTextField(
                           readOnly: true,
                           controller: iRRController,
-                          attribute: 'irr',
+                          name: 'irr',
                           decoration: InputDecoration(
                               labelText: valueIRR != null && valueIRR != ""
                                   ? valueIRR.toString()
@@ -977,9 +978,10 @@ class _IRRScreenState extends State<IRRScreen> {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          validators: [
-                            FormBuilderValidators.required(errorText: "IRR"),
-                          ],
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: "IRR"),
+                          ]),
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -991,11 +993,11 @@ class _IRRScreenState extends State<IRRScreen> {
                         childs: FormBuilderTextField(
                           readOnly: true,
                           controller: incomeController,
-                          attribute: 'income',
+                          name: 'income',
                           decoration: InputDecoration(
                               labelText: income != null && income != ""
                                   ? income.toString()
-                                  : AppLocalizations.of(context)
+                                  : AppLocalizations.of(context)!
                                           .translate('income') ??
                                       " Income",
                               border: InputBorder.none,
@@ -1006,12 +1008,12 @@ class _IRRScreenState extends State<IRRScreen> {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          validators: [
-                            FormBuilderValidators.required(
-                                errorText: AppLocalizations.of(context)
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
                                         .translate('income') ??
                                     " Income"),
-                          ],
+                          ]),
                           keyboardType: TextInputType.number,
                         ),
                       ),
@@ -1037,7 +1039,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                   ),
                                   Padding(padding: EdgeInsets.all(3)),
                                   Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('add') ??
                                         "Add",
                                     style: TextStyle(color: Colors.white),
@@ -1049,12 +1051,12 @@ class _IRRScreenState extends State<IRRScreen> {
                               setState(() {
                                 _isLoading = true;
                               });
-                              if (_fbKeyIRR.currentState.saveAndValidate() &&
-                                  monthlyInterestGlobalKey.currentState
+                              if (_fbKeyIRR.currentState!.saveAndValidate() &&
+                                  monthlyInterestGlobalKey.currentState!
                                       .saveAndValidate() &&
-                                  monthlyFeeGlobalKey.currentState
+                                  monthlyFeeGlobalKey.currentState!
                                       .saveAndValidate() &&
-                                  monthlyAdminFeeGlobalKey.currentState
+                                  monthlyAdminFeeGlobalKey.currentState!
                                       .saveAndValidate() &&
                                   onSelectedCurrency != null) {
                                 setState(() {
@@ -1067,7 +1069,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     _isLoading = false;
                                   });
                                   showInSnackBar(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('') ??
                                           'Gross Amount Required',
                                       Colors.red);
@@ -1077,7 +1079,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     _isLoading = false;
                                   });
                                   showInSnackBar(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('') ??
                                           'Loan Term Required',
                                       Colors.red);
@@ -1087,7 +1089,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     _isLoading = false;
                                   });
                                   showInSnackBar(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('') ??
                                           'Monthly Interest Required',
                                       Colors.red);
@@ -1097,7 +1099,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     _isLoading = false;
                                   });
                                   showInSnackBar(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('') ??
                                           'Monthly Fee Required',
                                       Colors.red);
@@ -1107,7 +1109,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     _isLoading = false;
                                   });
                                   showInSnackBar(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                               .translate('') ??
                                           'Admin Fee Required',
                                       Colors.red);
@@ -1122,7 +1124,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                       _isLoading = false;
                                     });
                                     showInSnackBar(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                                 .translate('') ??
                                             'Income Required',
                                         Colors.red);
@@ -1162,7 +1164,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     FocusScope.of(context)
                                         .unfocus(disposition: disposition);
                                     showInSnackBar(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                                 .translate('successfully') ??
                                             'Successfully',
                                         logolightGreen);
@@ -1186,7 +1188,6 @@ class _IRRScreenState extends State<IRRScreen> {
                                   }
                                 }
                               } else {
-                                logger().e("hello world else: else");
                                 showInSnackBar(
                                     'Please select currency!', Colors.red);
                                 setState(() {
@@ -1213,7 +1214,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     size: 18,
                                   ),
                                   Padding(padding: EdgeInsets.all(3)),
-                                  Text(AppLocalizations.of(context)
+                                  Text(AppLocalizations.of(context)!
                                           .translate('reset_irr') ??
                                       "Reset"),
                                 ],
@@ -1235,7 +1236,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                 FocusScope.of(context)
                                     .unfocus(disposition: disposition);
                                 showInSnackBar(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('') ??
                                         'Reset Successfully',
                                     logolightGreen);
@@ -1281,7 +1282,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                 FocusScope.of(context)
                                     .unfocus(disposition: disposition);
                                 showInSnackBar(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('clear_successfully') ??
                                         'Clear Successfully',
                                     logolightGreen);
@@ -1300,7 +1301,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                   ),
                                   Padding(padding: EdgeInsets.all(3)),
                                   Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('clear_list') ??
                                         "Clear List",
                                     style: TextStyle(color: Colors.white),
@@ -1352,7 +1353,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     child: Container(
                                         margin: EdgeInsets.only(right: 10),
                                         child: Text(
-                                          AppLocalizations.of(context)
+                                          AppLocalizations.of(context)!
                                                   .translate('no_irr') ??
                                               "No",
                                           style:
@@ -1363,7 +1364,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                   Expanded(
                                       flex: 0,
                                       child: Text(
-                                        AppLocalizations.of(context)
+                                        AppLocalizations.of(context)!
                                                 .translate('currency') ??
                                             "Currency",
                                         style: TextStyle(fontSize: fontSizeXxs),
@@ -1376,7 +1377,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                       child: Container(
                                           child: Center(
                                               child: Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('amount_USD') ??
                                         "Amount USD",
                                     style: TextStyle(fontSize: fontSizeXxs),
@@ -1393,7 +1394,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                   Expanded(
                                       // flex: 1,
                                       child: Text(
-                                    AppLocalizations.of(context)
+                                    AppLocalizations.of(context)!
                                             .translate('income') ??
                                         "Income",
                                     style: TextStyle(fontSize: fontSizeXxs),

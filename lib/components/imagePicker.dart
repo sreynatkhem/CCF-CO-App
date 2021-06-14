@@ -4,9 +4,9 @@ import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/container.dart';
 
 class ImagePickers extends StatelessWidget {
-  Function onPressed;
-  IconData icon;
-  String heroTag;
+  dynamic onPressed;
+  IconData? icon;
+  String? heroTag;
   var sizeIcons;
   var widths;
   var heights;
@@ -31,7 +31,7 @@ class ImagePickers extends StatelessWidget {
             height: heights,
             child: FloatingActionButton(
               heroTag: heroTag,
-              onPressed: onPressed,
+              onPressed: onPressed ? onPressed : null,
               backgroundColor: logolightGreen,
               tooltip: 'Pick Image',
               child: Icon(

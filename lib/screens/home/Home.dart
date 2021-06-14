@@ -20,33 +20,30 @@ import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/index.dart';
 import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart';
-import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
+import 'package:chokchey_finance/screens/login/index.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/screens/requestSummary/index.dart';
 import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
 class Home extends StatefulWidget {
-  Home({
-    Key key,
-  }) : super(key: key);
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
-  PageController _pageController;
+  PageController? _pageController;
   final storage = new FlutterSecureStorage();
 
   String userId = '';
@@ -62,7 +59,7 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController!.dispose();
     super.dispose();
   }
 
@@ -92,7 +89,7 @@ class _HomeState extends State<Home> {
               setState(() {
                 _isLoading = false;
               }),
-              langCode = AppLocalizations.of(context).locale.languageCode,
+              langCode = AppLocalizations.of(context)!.locale.languageCode,
               if (langCode == 'en')
                 {
                   setState(() {
@@ -113,50 +110,34 @@ class _HomeState extends State<Home> {
     });
   }
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-        // _showItemDialog(message);
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => NotificationScreen()),
-        //     ModalRoute.withName(""));
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // _navigateToItemDetail(message);
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => NotificationScreen()),
-        //     ModalRoute.withName(""));
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // _navigateToItemDetail(message);
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(builder: (context) => NotificationScreen()),
-        //     ModalRoute.withName(""));
-      },
-    );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
-    });
-    // _firebaseMessaging.getToken().then((String token) {
-    //   assert(token != null);
+    FirebaseMessaging.instance.getNotificationSettings();
+    FirebaseMessaging.instance.requestPermission();
 
-    //   postTokenPushNotification(token);
-    // });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = message.notification?.android;
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      Navigator.pushNamed(context, '/message', arguments: NotificationScreen());
+    });
+
     getNotificationLock();
+    fetchVersionApp();
+  }
+
+  String version = "";
+  fetchVersionApp() async {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      version = packageInfo.version;
+
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String buildNumber = packageInfo.buildNumber;
+    });
   }
 
   var totalMessage;
@@ -183,26 +164,18 @@ class _HomeState extends State<Home> {
   List<Object> userRoles = [];
 
   getStoreUser() async {
-    var langCode = AppLocalizations.of(context).locale.languageCode;
-    if (langCode == 'en') {
-      String user_id = await storage.read(key: 'user_id');
-      String user_name = await storage.read(key: 'user_name');
-      setState(() {
-        userName = user_name ?? '';
-        userId = user_id ?? '';
-      });
-    } else {
-      String user_id = await storage.read(key: 'user_id');
-      String user_name = await storage.read(key: 'user_name');
-      setState(() {
-        userName = user_name ?? '';
-        userId = user_id ?? '';
-      });
-    }
+    var langCode = AppLocalizations.of(context)!.locale.languageCode;
+
+    String userIds = await storage.read(key: 'user_id');
+    String userNames = await storage.read(key: 'user_name');
+    setState(() {
+      userName = userNames;
+      userId = userIds;
+    });
   }
 
   onLogOut() async {
-    await storage.delete(key: 'user_id');
+    await storage.deleteAll();
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Login()),
@@ -210,80 +183,80 @@ class _HomeState extends State<Home> {
   }
 
   onListLoanApproval() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ListLoanApprovals()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListLoanApprovals()),
+    );
   }
 
   onListCustomerRegistration() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ListCustomerRegistrations()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListCustomerRegistrations()),
+    );
   }
 
   onListGroupLoan() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => GroupLoan()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GroupLoan()),
+    );
   }
 
   onListGroupLoanApprove() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => GroupLoanApprove()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GroupLoanApprove()),
+    );
   }
 
   onListLoanRegistration() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ListLoanRegistrations()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ListLoanRegistrations()),
+    );
   }
 
   onListApprovalHistory() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ApprovalHistory()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ApprovalHistory()),
+    );
   }
 
   onListApprovalApsaraHistory() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HistoryApsara()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HistoryApsara()),
+    );
   }
 
   onListApprovalSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ApprovalSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ApprovalSummary()),
+    );
   }
 
   onListDisApprovalSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => DisApprovalSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DisApprovalSummary()),
+    );
   }
 
   onListRequestSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => RequestSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RequestSummary()),
+    );
   }
 
   onListReturnSummary() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => ReturnSummary()),
-        ModalRoute.withName(""));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ReturnSummary()),
+    );
   }
 
   englishLanguage() {
@@ -299,6 +272,8 @@ class _HomeState extends State<Home> {
   }
 
   _drawerList(context) {
+    String versionString =
+        baseURLInternal == "http://119.82.252.42:2020/api/" ? "v" : "version";
     return Drawer(
       child: Container(
         color: Colors.white,
@@ -321,7 +296,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   Text(
-                    userName ?? '',
+                    userName != "" ? userName : "",
                     style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w500,
@@ -329,8 +304,7 @@ class _HomeState extends State<Home> {
                   ),
                   Center(
                     child: Text(
-                      "${AppLocalizations.of(context).translate('your_id')} : ${userId}" ??
-                          'Your ID:  ${userId}',
+                      "${AppLocalizations.of(context)!.translate('your_id')} : ${userId}",
                       style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
@@ -350,84 +324,84 @@ class _HomeState extends State<Home> {
                     children: <Widget>[
                       CustomListTile(
                           Icons.monetization_on,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('approval_list') ??
                               'Approval List',
                           () => {onListLoanApproval()},
                           null),
                       CustomListTile(
                           Icons.face,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('customer_list') ??
                               'Customer List',
                           () => {onListCustomerRegistration()},
                           null),
                       CustomListTile(
                           Icons.payment,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('loan_register_list') ??
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
                       CustomListTile(
                           Icons.group_add,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('create_group_loan') ??
                               'Group Loan',
                           () => {onListGroupLoan()},
                           null),
                       CustomListTile(
                           Icons.group,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('group_loan_approve') ??
                               'Group loan approve',
                           () => {onListGroupLoanApprove()},
                           null),
                       CustomListTile(
                           Icons.insert_chart,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('report_approval') ??
                               'Report Approval',
                           () => {onListApprovalSummary()},
                           null),
                       CustomListTile(
                           Icons.insert_chart,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('report_disapproval') ??
                               'Report Disapproval',
                           () => {onListDisApprovalSummary()},
                           null),
                       CustomListTile(
                           Icons.insert_chart,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('report_request') ??
                               'Report Request',
                           () => {onListRequestSummary()},
                           null),
                       CustomListTile(
                           Icons.insert_chart,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('report_return') ??
                               'Report Return',
                           () => {onListReturnSummary()},
                           null),
                       CustomListTile(
                           Icons.insert_chart,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('report_summary') ??
                               'Report Summary',
                           () => {onListApprovalHistory()},
                           null),
                       CustomListTile(
                           Icons.insert_chart,
-                          AppLocalizations.of(context)
+                          AppLocalizations.of(context)!
                                   .translate('loan_approval_history') ??
                               "Loan Approval History",
                           () => {onListApprovalApsaraHistory()},
                           null),
                       CustomListTile(
                         null,
-                        AppLocalizations.of(context)
+                        AppLocalizations.of(context)!
                                 .translate('english_language') ??
                             'English',
                         () => {englishLanguage()},
@@ -441,11 +415,15 @@ class _HomeState extends State<Home> {
                       ),
                       CustomListTile(
                           Icons.lock,
-                          AppLocalizations.of(context).translate('log_out') ??
+                          AppLocalizations.of(context)!.translate('log_out') ??
                               'Log Out',
                           () => {onLogOut()},
                           null),
                       Padding(padding: EdgeInsets.only(top: 10)),
+                      ListTile(
+                        title: Text("$versionString" + '$version'),
+                        onTap: () {},
+                      ),
                     ],
                   ),
                 ),
@@ -463,31 +441,32 @@ class _HomeState extends State<Home> {
   final list = const AssetImage('assets/images/findApproval.png');
   final policy = const AssetImage('assets/images/policy.png');
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     AwesomeDialog(
         context: context,
         // animType: AnimType.LEFTSLIDE,
         headerAnimationLoop: false,
         dialogType: DialogType.INFO,
-        title: AppLocalizations.of(context).translate('information') ??
+        title: AppLocalizations.of(context)!.translate('information') ??
             'Information',
-        desc: AppLocalizations.of(context).translate('do_you_want_to_exit') ??
+        desc: AppLocalizations.of(context)!.translate('do_you_want_to_exit') ??
             'Do you want to exit?',
         btnOkOnPress: () async {
           Future.delayed(const Duration(milliseconds: 1000), () {
             SystemChannels.platform.invokeMethod('SystemNavigator.pop');
           });
         },
-        btnCancelText: AppLocalizations.of(context).translate('no') ?? "No",
+        btnCancelText: AppLocalizations.of(context)!.translate('no') ?? "No",
         btnCancelOnPress: () {},
         btnCancelIcon: Icons.close,
         btnOkIcon: Icons.check_circle,
         btnOkColor: logolightGreen,
-        btnOkText: AppLocalizations.of(context).translate('yes') ?? 'Yes')
+        btnOkText: AppLocalizations.of(context)!.translate('yes') ?? 'Yes')
       ..show();
+    return false;
   }
 
-  Future<void> _launched;
+  Future<void>? _launched;
 
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
@@ -511,7 +490,7 @@ class _HomeState extends State<Home> {
         'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
     const String guildeLine =
         'http://192.168.111.18:2020/policy/The%20Guidelines%20mobile%20application.pdf';
-    var langCode = AppLocalizations.of(context).locale.languageCode;
+    var langCode = AppLocalizations.of(context)!.locale.languageCode;
     var test = storage.read(key: 'roles');
     test.then(
       (value) => setState(() {
@@ -524,7 +503,7 @@ class _HomeState extends State<Home> {
         drawers: new Drawer(
           child: _drawerList(context),
         ),
-        headerTexts: AppLocalizations.of(context).translate('loans'),
+        headerTexts: AppLocalizations.of(context)!.translate('loans'),
         actionsNotification: <Widget>[
           IconButton(
               icon: Icon(
@@ -617,7 +596,7 @@ class _HomeState extends State<Home> {
                                       ),
                                       color: logolightGreen,
                                       imageNetwork: list,
-                                      text: AppLocalizations.of(context)
+                                      text: AppLocalizations.of(context)!
                                           .translate('list_loan_approval'),
                                     );
                                   }
@@ -638,11 +617,11 @@ class _HomeState extends State<Home> {
                                         ),
                                         color: logolightGreen,
                                         imageNetwork: register,
-                                        text: AppLocalizations.of(context)
+                                        text: AppLocalizations.of(context)!
                                                 .translate('customers') ??
                                             'Customer',
-                                        // AppLocalizations.of(context).locale.languageCode == 'en'
-                                        text2: AppLocalizations.of(context)
+                                        // AppLocalizations.of(context)!.locale.languageCode == 'en'
+                                        text2: AppLocalizations.of(context)!
                                                 .translate('registration') ??
                                             'Registration',
                                       );
@@ -656,7 +635,7 @@ class _HomeState extends State<Home> {
                                         ),
                                         color: logolightGreen,
                                         imageNetwork: register,
-                                        text: AppLocalizations.of(context)
+                                        text: AppLocalizations.of(context)!
                                                 .translate(
                                                     'customer_registration') ??
                                             'Customer',
@@ -678,7 +657,7 @@ class _HomeState extends State<Home> {
                                       ),
                                       color: logolightGreen,
                                       imageNetwork: loanRegistration,
-                                      text: AppLocalizations.of(context)
+                                      text: AppLocalizations.of(context)!
                                               .translate('loan_registration') ??
                                           'Loan Registration',
                                     );
@@ -701,7 +680,7 @@ class _HomeState extends State<Home> {
                                         ),
                                         color: logolightGreen,
                                         imageNetwork: policy,
-                                        text: AppLocalizations.of(context)
+                                        text: AppLocalizations.of(context)!
                                                 .translate('policy') ??
                                             'Policy',
                                       ),
@@ -713,12 +692,13 @@ class _HomeState extends State<Home> {
                                   if (userRoles[index].toString() == '100006') {
                                     return Text('');
                                   }
+                                  return Text("");
                                 }) // List View
                                 ),
                           ),
                           listMessageFromCEO != null && listMessageFromCEO != ""
                               ? CardMessage(
-                                  title: AppLocalizations.of(context)
+                                  title: AppLocalizations.of(context)!
                                           .translate('message_from_ceo') ??
                                       'Message from CEO',
                                   textMessage: listMessageFromCEO != null &&
@@ -741,29 +721,29 @@ class _HomeState extends State<Home> {
           selectedIndex: _currentIndex,
           onItemSelected: (index) {
             setState(() => _currentIndex = index);
-            _pageController.jumpToPage(index);
+            _pageController!.jumpToPage(index);
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
                 title: Text(
-                    AppLocalizations.of(context).translate('home') ?? 'Home'),
+                    AppLocalizations.of(context)!.translate('home') ?? 'Home'),
                 icon: Icon(Icons.home),
                 textAlign: TextAlign.center,
                 activeColor: logolightGreen),
             BottomNavyBarItem(
                 title: Text(
-                    AppLocalizations.of(context).translate('irr') ?? 'IRR'),
+                    AppLocalizations.of(context)!.translate('irr') ?? 'IRR'),
                 icon: Icon(Icons.calculate),
                 textAlign: TextAlign.center,
                 activeColor: logolightGreen),
             // BottomNavyBarItem(
-            //     title: Text(AppLocalizations.of(context).translate('search') ??
+            //     title: Text(AppLocalizations.of(context)!.translate('search') ??
             //         'Search'),
             //     icon: Icon(Icons.search),
             //     textAlign: TextAlign.center,
             //     activeColor: logolightGreen),
             // BottomNavyBarItem(
-            //     title: Text(AppLocalizations.of(context).translate('setting') ??
+            //     title: Text(AppLocalizations.of(context)!.translate('setting') ??
             //         'Setting'),
             //     icon: Icon(Icons.settings),
             //     textAlign: TextAlign.center,

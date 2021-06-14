@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:chokchey_finance/models/requestLoanApproval.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/groupLoan/index.dart';
 import 'package:chokchey_finance/providers/listCustomerRegistration.dart';
@@ -8,11 +7,12 @@ import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
-import 'package:chokchey_finance/screens/login/stepOneLogin.dart';
+import 'package:chokchey_finance/screens/login/index.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -21,13 +21,15 @@ import 'providers/login.dart';
 
 Future<void> main() async {
   Provider.debugCheckInvalidValueType = null;
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyHomePage());
 }
 
 class MyHomePage extends StatefulWidget {
   static void setLocale(BuildContext context, Locale locale) {
     _MyHomePageState state =
-        context.findAncestorStateOfType<_MyHomePageState>();
+        context.findAncestorStateOfType<_MyHomePageState>()!;
     state.setLocale(locale);
   }
 
@@ -38,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final storage = new FlutterSecureStorage();
   bool _isLogin = false;
-  Locale _locale;
+  Locale? _locale;
 
   void setLocale(Locale locale) {
     setState(() {
@@ -55,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> isLogin() async {
     String ids = await storage.read(key: 'user_id');
-    if (ids != null || ids == '') {
+    if (ids != '' && ids != null) {
       setState(() {
         _isLogin = true;
       });
@@ -100,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
         localeResolutionCallback: (locale, supportedLocales) {
           // Check if the current device locale is supported
           for (var supportedLocale in supportedLocales) {
-            if (supportedLocale.languageCode == locale.languageCode &&
+            if (supportedLocale.languageCode == locale!.languageCode &&
                 supportedLocale.countryCode == locale.countryCode) {
               return supportedLocale;
             }

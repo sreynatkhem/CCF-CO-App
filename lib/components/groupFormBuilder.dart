@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class GroupFromBuilder extends StatelessWidget {
-  var icons;
-  var keys;
-  var childs;
-  var imageIcon;
-  var colors;
-  var shapes;
-  var imageColor;
-  var elevations;
+  dynamic? icons;
+  dynamic? keys;
+  dynamic? childs;
+  dynamic? imageIcon;
+  dynamic? colors;
+  dynamic? shapes;
+  dynamic? imageColor;
+  dynamic? elevations;
   GroupFromBuilder(
       {this.icons,
-      this.childs,
       this.keys,
+      this.childs,
       this.imageIcon,
       this.colors,
       this.shapes,

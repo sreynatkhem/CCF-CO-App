@@ -9,20 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GroupLoanApprove extends StatefulWidget {
-  var isRefresh = false;
+  bool? isRefresh = false;
   GroupLoanApprove({this.isRefresh});
   @override
-  _GroupLoanApproveState createState() =>
-      _GroupLoanApproveState(isRefresh: this.isRefresh);
+  _GroupLoanApproveState createState() => _GroupLoanApproveState();
 }
 
 class _GroupLoanApproveState extends State<GroupLoanApprove> {
-  var isRefresh = false;
-  _GroupLoanApproveState({this.isRefresh});
   bool _isLoading = false;
   dynamic listGroupLoanApprove;
-  static List<String> items;
-  List<dynamic> newDataList;
+  // ignore: unused_field
+  static List<String>? items;
+  List<dynamic>? newDataList;
 
   getListLoan(_pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     setState(() {
@@ -55,14 +53,14 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
   void onLoading() async {
     await new Future.delayed(new Duration(seconds: 3), () {
       setState(() {
-        isRefresh = false;
+        widget.isRefresh = false;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isRefresh == true) {
+    if (widget.isRefresh == true) {
       onLoading();
     }
     return Provider<GroupLoanProvider>(
@@ -79,17 +77,17 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
         ),
         bodys: Container(
           padding: EdgeInsets.all(10),
-          child: isRefresh == true
+          child: widget.isRefresh == true
               ? Center(
                   child: CircularProgressIndicator(),
                 )
               : _isLoading
                   ? Center(child: CircularProgressIndicator())
-                  : newDataList != null && newDataList.length > 0
+                  : newDataList != null && newDataList!.length > 0
                       ? Column(children: [
                           Expanded(
                             child: ListView.builder(
-                                itemCount: newDataList.length,
+                                itemCount: newDataList!.length,
                                 padding: const EdgeInsets.only(top: 20.0),
                                 itemBuilder: (context, index) {
                                   return Container(
@@ -103,7 +101,7 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
                                                   builder: (context) =>
                                                       GroupLoanApproveDetail(
                                                         groupLoanID:
-                                                            newDataList[index],
+                                                            newDataList![index],
                                                       )),
                                             );
                                           },
@@ -121,13 +119,12 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
                                                     Row(
                                                       children: [
                                                         Text(AppLocalizations.of(
-                                                                        context)
-                                                                    .translate(
-                                                                        'group_loan') +
-                                                                ": " ??
+                                                                    context)!
+                                                                .translate(
+                                                                    'group_loan') ??
                                                             'Group name: '),
                                                         Text(
-                                                          '${newDataList[index]['gname']}',
+                                                          ': ${newDataList![index]['gname']}',
                                                           style: TextStyle(
                                                               fontWeight:
                                                                   fontWeight700),
@@ -140,26 +137,25 @@ class _GroupLoanApproveState extends State<GroupLoanApprove> {
                                                     Row(
                                                       children: [
                                                         Text(AppLocalizations.of(
-                                                                        context)
-                                                                    .translate(
-                                                                        'create_by') +
-                                                                ": " ??
+                                                                    context)!
+                                                                .translate(
+                                                                    'create_by') ??
                                                             'Create by: '),
                                                         Text(
-                                                            ' ${newDataList[index]['user']['uname']}'),
+                                                            ': ${newDataList![index]['user']['uname']}'),
                                                       ],
                                                     ),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.all(2)),
                                                     Text(
-                                                        '${getDateTimeYMD(newDataList[index]['datecreate'])}'),
+                                                        '${getDateTimeYMD(newDataList![index]['datecreate'])}'),
                                                   ],
                                                 ),
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      '${newDataList[index]['status'] == "R" ? "Request" : ""}',
+                                                      '${newDataList![index]['status'] == "R" ? "Request" : ""}',
                                                     ),
                                                     Icon(
                                                       Icons.arrow_forward_ios,

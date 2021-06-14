@@ -11,7 +11,7 @@ class PolicyScreen extends StatefulWidget {
 }
 
 class _PolicyScreenState extends State<PolicyScreen> {
-  Future<void> _launched;
+  Future<void>? _launched;
 
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
@@ -34,7 +34,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
         'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).translate('policy')),
+        title: Text(AppLocalizations.of(context)!.translate('policy')!),
         backgroundColor: logolightGreen,
       ),
       body: ListView(

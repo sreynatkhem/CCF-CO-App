@@ -1,18 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/approvalSummary/index.dart';
-import 'package:chokchey_finance/screens/approvalHistory/cardReport.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'detailLoadRegistration.dart';
 
@@ -108,7 +109,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
       case 'R':
         {
           return Text(
-              AppLocalizations.of(context).translate('request') ?? 'Request',
+              AppLocalizations.of(context)!.translate('request') ?? 'Request',
               style: mainTitleBlack);
         }
         break;
@@ -116,7 +117,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
       case 'A':
         {
           return Text(
-              AppLocalizations.of(context).translate('approved') ?? 'Approved',
+              AppLocalizations.of(context)!.translate('approved') ?? 'Approved',
               style: mainTitleBlack);
         }
         break;
@@ -124,7 +125,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
       case 'D':
         {
           return Text(
-              AppLocalizations.of(context).translate('disapprove') ??
+              AppLocalizations.of(context)!.translate('disapprove') ??
                   'Disapprove',
               style: mainTitleBlack);
         }
@@ -133,13 +134,13 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
       case 'T':
         {
           return Text(
-              AppLocalizations.of(context).translate('return') ?? 'Return',
+              AppLocalizations.of(context)!.translate('return') ?? 'Return',
               style: mainTitleBlack);
         }
         break;
       case 'O':
         {
-          return Text(AppLocalizations.of(context).translate('open') ?? 'Open',
+          return Text(AppLocalizations.of(context)!.translate('open') ?? 'Open',
               style: mainTitleBlack);
         }
         break;
@@ -259,22 +260,105 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
     Navigator.of(context).pop();
   }
 
-  Future<bool> _onBackPressed() {
+  Future<bool> _onBackPressed() async {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => Home()),
         ModalRoute.withName("/Home"));
+    return false;
   }
 
+  //
+  loadMore(_pageSizeParam, _pageNumberParam, statusParam) async {
+    try {
+      var token = await storage.read(key: 'user_token');
+      var user_ucode = await storage.read(key: "user_ucode");
+      var branch = await storage.read(key: "branch");
+      var level = await storage.read(key: "level");
+      var sdates = sdate != null ? sdate : '';
+      var edates = edate != null ? edate : '';
+      var codes = code != null ? code : '';
+      var statuses =
+          statusParam != null && statusParam != "" ? statusParam : '';
+      var btlcode = status != null ? status : '';
+      var bcodes;
+      var ucode;
+      if (level == '3') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = '';
+        ucode = codes != null && codes != "" ? codes : "";
+      }
+
+      if (level == '2') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        btlcode = user_ucode;
+        ucode = code != null && code != "" ? code : '';
+      }
+
+      if (level == '1') {
+        bcodes = bcode != null && bcode != "" ? bcode : branch;
+        ucode = user_ucode;
+        btlcode = '';
+      }
+
+      if (level == '4' || level == '5' || level == '6') {
+        bcodes = bcode != null && bcode != "" ? bcode : '';
+        btlcode = '';
+        ucode = code != null && code != "" ? code : '';
+      }
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSizeParam",
+        "pageNumber": "$_pageNumberParam",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "$statusParam",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'reports/loanrequest/' + statusParam),
+          headers: headers,
+          body: json.encode(bodyRow));
+      if (response.statusCode == 200) {
+        var list = jsonDecode(response.body);
+        list.forEach((v) => {
+              setState(() {
+                isLoading = false;
+                listTotal = v;
+                listApproval = v['listLoanRequests'];
+              }),
+            });
+      }
+    } catch (error) {
+      logger().e('error :: ${error}');
+    }
+  }
+
+  //
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: NotificationListener(
-        onNotification: onNotification,
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            // start loading data
+            setState(() {
+              _pageSize += 10;
+            });
+            loadMore(_pageSize, _pageNumber, "Disapproval");
+          }
+          return false;
+        },
         child: Header(
-          headerTexts: 'report_disapproval' ?? 'Report Disapproval',
+          headerTexts: 'report_disapproval',
           actionsNotification: [
             Builder(
               builder: (context) => IconButton(
@@ -305,11 +389,20 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                           width: MediaQuery.of(context).size.width * 1,
                           color: logolightGreen,
                           child: Center(
-                              child: Text(
-                            AppLocalizations.of(context)
-                                    .translate('total_disapprove') +
+                              child: Row(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .translate('total_disapprove')!,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                              Text(
                                 ': ${listTotal['total'].toString()}',
-                            style: TextStyle(color: Colors.white, fontSize: 15),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                            ],
                           ))),
                     ),
                     listApproval.length > 0
@@ -444,8 +537,8 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                             flex: 1,
                             child: Center(
                                 child: Container(
-                                    child: Text(AppLocalizations.of(context)
-                                        .translate('no_data'))))),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .translate('no_data')!)))),
                   ],
                 ),
           endDrawer: Drawer(
@@ -475,7 +568,8 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        AppLocalizations.of(context).translate('list_branch') ??
+                        AppLocalizations.of(context)!
+                                .translate('list_branch') ??
                             'List Branch',
                         style: TextStyle(
                           fontWeight: fontWeight700,
@@ -518,7 +612,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                     Container(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: FormBuilderDateTimePicker(
-                        attribute: 'date',
+                        name: 'date',
                         controller: controllerStartDate,
                         inputType: InputType.date,
                         onChanged: (v) {
@@ -531,7 +625,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                         initialValue: DateTime(now.year, now.month, 1),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                                   .translate('start_date') ??
                               "Start date",
                         ),
@@ -541,7 +635,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                     Container(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: FormBuilderDateTimePicker(
-                        attribute: 'date',
+                        name: 'date',
                         controller: controllerEndDate,
                         inputType: InputType.date,
                         onChanged: (v) {
@@ -552,7 +646,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                         initialValue: DateTime.now(),
                         format: DateFormat("yyyy-MM-dd"),
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)
+                          labelText: AppLocalizations.of(context)!
                                   .translate('end_date') ??
                               "End date",
                         ),
@@ -567,7 +661,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                         children: [
                           RaisedButton(
                             onPressed: _closeEndDrawer,
-                            child: Text(AppLocalizations.of(context)
+                            child: Text(AppLocalizations.of(context)!
                                     .translate('reset') ??
                                 "Reset"),
                           ),
@@ -575,7 +669,8 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                             color: logolightGreen,
                             onPressed: _applyEndDrawer,
                             child: Text(
-                              AppLocalizations.of(context).translate('apply') ??
+                              AppLocalizations.of(context)!
+                                      .translate('apply') ??
                                   "Apply",
                               style: TextStyle(color: Colors.white),
                             ),

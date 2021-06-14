@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:chokchey_finance/models/listLoan.dart';
-import 'package:chokchey_finance/models/requestDetailLoan.dart';
-import 'package:chokchey_finance/models/requestLoanApproval.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 
 import '../manageService.dart';
 
@@ -14,7 +12,7 @@ class LoanApproval with ChangeNotifier {
   var isLoading = false;
 
 //Request list loan
-  Future<List<RequestLoanApproval>> getLoanApproval(
+  Future getLoanApproval(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     isLoading = true;
 
@@ -23,7 +21,6 @@ class LoanApproval with ChangeNotifier {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -54,25 +51,35 @@ class LoanApproval with ChangeNotifier {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/all',
-          headers: headers, body: bodyRow);
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
+
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.addAll(jsonDecode(response.body));
         isLoading = false;
         notifyListeners();
-        return jsonDecode(response.body)
-            .map<RequestLoanApproval>(
-                (json) => RequestLoanApproval.fromJson(json))
-            .toList();
+        return jsonDecode(response.body);
       } else {
-        print('statusCode::: ${response.statusCode}');
         isLoading = false;
       }
     } catch (error) {
@@ -81,30 +88,26 @@ class LoanApproval with ChangeNotifier {
     }
   }
 
-  Future<List<RequestDetailLoan>> getLoanApprovalDetail(rcode) async {
+  Future getLoanApprovalDetail(rcode) async {
     try {
       var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
-      var branch = await storage.read(key: "branch");
+
       // var bodyRow =
       //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"sdate\": \"\",\n    \"edate\": \"\"\n}";
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().get(
-        baseURLInternal + 'loanRequests/Applications/' + rcode,
+      final Response response = await api().get(
+        Uri.parse(baseURLInternal + 'loanRequests/Applications/' + rcode),
         headers: headers,
       );
       if (response.statusCode == 200) {
         final dynamic parsed = [];
         parsed.add(jsonDecode(response.body));
         notifyListeners();
-        return parsed
-            .map<RequestDetailLoan>((json) => RequestDetailLoan.fromJson(json))
-            .toList();
-      } else {
-        print('statusCode::: ${response.statusCode}');
+
+        return parsed;
       }
     } catch (error) {}
   }
@@ -119,25 +122,36 @@ class LoanApproval with ChangeNotifier {
     var user_ucode = await storage.read(key: "user_ucode");
     var branch = await storage.read(key: 'branch');
     successfully = false;
-    var bodyRow =
-        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
+    final Map<String, dynamic> bodyRow = {
+      "rcode": "$rcode",
+      "ucode": "$user_ucode",
+      "bcode": "$branch",
+      "lcode": "$lcode",
+      "roleList": "${roleList}",
+      "cmt": "$cmt"
+    };
+
     try {
-      final response = await api().post(
-          baseURLInternal + 'loanRequests/post/' + rcode + '/Approve',
+      final Response response = await api().post(
+          Uri.parse(
+              baseURLInternal + 'loanRequests/post/' + rcode + '/Approve'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: bodyRow);
+          body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);
+
       if (response.statusCode == 201) {
         successfully = true;
+        notifyListeners();
         return parsed;
       } else {
         successfully = false;
       }
-      notifyListeners();
     } catch (error) {
+      logger().e("error :${error}");
+
       successfully = false;
     }
   }
@@ -150,17 +164,23 @@ class LoanApproval with ChangeNotifier {
     var user_ucode = await storage.read(key: "user_ucode");
     var branch = await storage.read(key: 'branch');
 
-    var bodyRow =
-        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
-
+    final Map<String, dynamic> bodyRow = {
+      "rcode": "$rcode",
+      "ucode": "$user_ucode",
+      "bcode": "$branch",
+      "lcode": "$lcode",
+      "roleList": "$roleList",
+      "cmt": "$cmt"
+    };
     try {
-      final response = await api().post(
-          baseURLInternal + 'loanRequests/post/' + rcode + '/Disapprove',
+      final Response response = await api().post(
+          Uri.parse(
+              baseURLInternal + 'loanRequests/post/' + rcode + '/Disapprove'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: bodyRow);
+          body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 201) {
         successfullyReject = true;
@@ -180,17 +200,23 @@ class LoanApproval with ChangeNotifier {
     var token = await storage.read(key: 'user_token');
     var user_ucode = await storage.read(key: "user_ucode");
     var branch = await storage.read(key: 'branch');
-
-    var bodyRow =
-        "{\n    \"rcode\": \"$rcode\",\n    \"ucode\": \"$user_ucode\",\n    \"bcode\": \"$branch\",\n    \"lcode\": \"$lcode\",\n    \"rdate\": \"\",\n    \"roleList\": \"$roleList\",\n    \"cmt\": \"$cmt\"\n\n}";
+    final Map<String, dynamic> bodyRow = {
+      "rcode": "$rcode",
+      "ucode": "$user_ucode",
+      "bcode": "$branch",
+      "lcode": "$lcode",
+      "rdate": "",
+      "roleList": "$roleList",
+      "cmt": "$cmt"
+    };
     try {
-      final response = await api().post(
-          baseURLInternal + 'loanRequests/post/' + rcode + '/Return',
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/post/' + rcode + '/Return'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: bodyRow);
+          body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);
       if (response.statusCode == 201) {
         successfullyReturn = true;

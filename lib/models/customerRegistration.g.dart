@@ -41,10 +41,10 @@ CustomerRegistration _$CustomerRegistrationFromJson(Map<String, dynamic> json) {
     ..villageName = json['villageName'] as String
     ..fullAddress = json['fullAddress'] as String
     ..user = json['user'] as String
-    ..loan = json['loan'] as String
-    ..branch = json['branch'] == null
-        ? null
-        : Branch.fromJson(json['branch'] as Map<String, dynamic>);
+    ..loan = json['loan'] as String;
+  // ..branch = json['branch'] == null
+  //     ? null
+  //     : Branch.fromJson(json['branch'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CustomerRegistrationToJson(

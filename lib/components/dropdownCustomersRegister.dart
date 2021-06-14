@@ -3,12 +3,12 @@ import 'package:select_dialog/select_dialog.dart';
 
 class DropDownCustomerRegister extends StatelessWidget {
   var selectedValue;
-  String texts;
-  bool readOnlys;
-  String title;
-  bool autofocus;
+  String? texts;
+  bool? readOnlys = false;
+  String? title;
+  bool? autofocus;
 
-  Function onInSidePress;
+  dynamic onInSidePress;
   var onChanged;
   var items;
   var icons;
@@ -18,7 +18,7 @@ class DropDownCustomerRegister extends StatelessWidget {
   var validate;
   var validateForm;
 
-  bool clear = true;
+  bool? clear = true;
 
   DropDownCustomerRegister(
       {this.readOnlys,
@@ -56,7 +56,7 @@ class DropDownCustomerRegister extends StatelessWidget {
                 child: FlatButton(
                     onPressed: onInSidePress ??
                         () {
-                          readOnlys
+                          readOnlys!
                               ? SelectDialog.showModal<String>(context,
                                   label: texts ?? 'Search',
                                   items: items,

@@ -2,10 +2,10 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Function onTap;
-  final isFlag;
+  final IconData? icon;
+  final String? text;
+  final dynamic? onTap;
+  dynamic? isFlag;
 
   CustomListTile(this.icon, this.text, this.onTap, this.isFlag);
   @override
@@ -40,7 +40,7 @@ class CustomListTile extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                         ),
                         Text(
-                          text,
+                          text!,
                           style: TextStyle(fontSize: 14),
                         ),
                       ],

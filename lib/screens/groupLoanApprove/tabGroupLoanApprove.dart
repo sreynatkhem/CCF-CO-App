@@ -5,16 +5,12 @@ import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/groupLoan/index.dart';
-import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/screens/detail/comment.dart';
-import 'package:chokchey_finance/screens/groupLoan/index.dart';
-import 'package:chokchey_finance/screens/groupLoan/selectGroupLoan.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabApproved.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabApproved.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabDetail.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +76,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
       _isLoading = true;
     });
     await GroupLoanProvider()
-        .fetchGroupLoanByID(groupLoanID['gcode'], "", "", "", "", "", "", "")
+        .fetchGroupLoanByID(groupLoanID['gcode'], 20, 1, "", "", "", "", "")
         .then((value) {
       if (value['groupLoanDetail'][0]['loan']['lstatus'] == 'G') {
         setState(() {
@@ -129,7 +125,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                   }),
                 },
               showInSnackBar(
-                  AppLocalizations.of(context).translate('successfully') ??
+                  AppLocalizations.of(context)!.translate('successfully') ??
                       'Successfully',
                   logolightGreen),
               Navigator.pushAndRemoveUntil(
@@ -146,7 +142,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
         _isLoading = false;
       });
       showInSnackBar(
-          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
           Colors.redAccent);
     });
     isFetchingSuccessfully =
@@ -154,12 +150,12 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
             .isFetchingSuccessfully;
     if (isFetchingSuccessfully == true) {
       showInSnackBar(
-          AppLocalizations.of(context).translate('successfully') ??
+          AppLocalizations.of(context)!.translate('successfully') ??
               'Successfully',
           logolightGreen);
     } else {
       showInSnackBar(
-          AppLocalizations.of(context).translate('failed') ?? 'Failed',
+          AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
           Colors.redAccent);
     }
     setState(() {
@@ -170,7 +166,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+    _scaffoldKey.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -183,8 +179,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
     return Header(
         keys: _scaffoldKey,
         headerTexts:
-            AppLocalizations.of(context).translate('detail_group_loan') ??
-                'Detail a group loan',
+            AppLocalizations.of(context)!.translate('detail_group_loan'),
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -209,7 +204,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                               child:
                                   TabBar(indicatorColor: Colors.white, tabs: [
                                 Tab(
-                                  text: AppLocalizations.of(context)
+                                  text: AppLocalizations.of(context)!
                                           .translate('detail') ??
                                       "Detail",
                                   icon: Icon(
@@ -224,7 +219,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                       size: 20,
                                     ),
                                     iconMargin: EdgeInsets.all(0),
-                                    text: AppLocalizations.of(context)
+                                    text: AppLocalizations.of(context)!
                                             .translate('approved') ??
                                         "Approved"),
                                 Tab(
@@ -233,7 +228,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                       size: 20,
                                     ),
                                     iconMargin: EdgeInsets.all(0),
-                                    text: AppLocalizations.of(context)
+                                    text: AppLocalizations.of(context)!
                                             .translate('comments') ??
                                         "Comments"),
                               ]),
@@ -288,11 +283,11 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                               headerAnimationLoop: false,
                                               dialogType: DialogType.INFO,
                                               title: AppLocalizations.of(
-                                                          context)
+                                                          context)!
                                                       .translate('reject') ??
                                                   'Reject',
                                               desc:
-                                                  // AppLocalizations.of(context)
+                                                  // AppLocalizations.of(context)!
                                                   //         .translate('thank_you') ??
                                                   'Would you like to Reject?',
                                               btnOkOnPress: () async {
@@ -300,7 +295,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                                     context, "Reject");
                                               },
                                               btnCancelText:
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                           .translate(
                                                               'cancel') ??
                                                       "Cancel",
@@ -309,13 +304,13 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                               btnOkIcon: Icons.check_circle,
                                               btnOkColor: logolightGreen,
                                               btnOkText:
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                           .translate('okay') ??
                                                       'Okay')
                                             ..show();
                                         },
                                         color: Colors.red,
-                                        text: AppLocalizations.of(context)
+                                        text: AppLocalizations.of(context)!
                                                 .translate('reject') ??
                                             'Reject'),
                                     Padding(padding: EdgeInsets.only(right: 5)),
@@ -330,11 +325,11 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                               headerAnimationLoop: false,
                                               dialogType: DialogType.INFO,
                                               title: AppLocalizations.of(
-                                                          context)
+                                                          context)!
                                                       .translate('return') ??
                                                   'Return',
                                               desc:
-                                                  // AppLocalizations.of(context)
+                                                  // AppLocalizations.of(context)!
                                                   //         .translate('thank_you') ??
                                                   'Would you like to Return?',
                                               btnOkOnPress: () async {
@@ -342,7 +337,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                                     context, "Return");
                                               },
                                               btnCancelText:
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                           .translate(
                                                               'cancel') ??
                                                       "Cancel",
@@ -351,13 +346,13 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                               btnOkIcon: Icons.check_circle,
                                               btnOkColor: logolightGreen,
                                               btnOkText:
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                           .translate('okay') ??
                                                       'Okay')
                                             ..show();
                                         },
                                         color: Colors.grey,
-                                        text: AppLocalizations.of(context)
+                                        text: AppLocalizations.of(context)!
                                                 .translate('return') ??
                                             'Return'),
                                     Padding(padding: EdgeInsets.only(right: 5)),
@@ -372,11 +367,11 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                               headerAnimationLoop: false,
                                               dialogType: DialogType.INFO,
                                               title: AppLocalizations.of(
-                                                          context)
+                                                          context)!
                                                       .translate('authrize') ??
                                                   'Authrize',
                                               desc:
-                                                  // AppLocalizations.of(context)
+                                                  // AppLocalizations.of(context)!
                                                   //         .translate('thank_you') ??
                                                   'Would you like to authrize?',
                                               btnOkOnPress: () async {
@@ -384,7 +379,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                                     context, "Approve");
                                               },
                                               btnCancelText:
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                           .translate(
                                                               'cancel') ??
                                                       "Cancel",
@@ -393,7 +388,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                               btnOkIcon: Icons.check_circle,
                                               btnOkColor: logolightGreen,
                                               btnOkText:
-                                                  AppLocalizations.of(context)
+                                                  AppLocalizations.of(context)!
                                                           .translate('okay') ??
                                                       'Okay')
                                             ..show();
@@ -401,7 +396,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
                                         color: logolightGreen,
                                         text: _isLoading
                                             ? 'loading'
-                                            : AppLocalizations.of(context)
+                                            : AppLocalizations.of(context)!
                                                     .translate('authrize') ??
                                                 'Authrize'),
                                   ],

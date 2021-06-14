@@ -31,7 +31,7 @@ class Header extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate(headerTexts) ?? headerTexts,
+          AppLocalizations.of(context)!.translate(headerTexts) ?? headerTexts,
           style: mainTitleStyle,
         ),
         actions: actionsNotification,

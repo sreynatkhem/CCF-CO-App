@@ -119,12 +119,16 @@ class CardDetail extends StatelessWidget {
                     //
                     ListDetail(
                       name: 'Disburse Date',
-                      value: getDateTimeApprove(loanHopeDate),
+                      value: loanHopeDate == null
+                          ? ""
+                          : getDateTimeApprove(loanHopeDate),
                     ),
                     //
                     ListDetail(
                       name: 'Maturity Date',
-                      value: getDateTimeApprove(loanExpiryDate),
+                      value: loanExpiryDate == null
+                          ? ""
+                          : getDateTimeApprove(loanExpiryDate),
                     ),
                     //
                     ListDetail(

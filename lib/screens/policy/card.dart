@@ -44,7 +44,7 @@ class _CardPolicyState extends State<CardPolicy> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context).translate(title)),
+                      Text(AppLocalizations.of(context)!.translate(title)!),
                     ],
                   ),
                 ])),

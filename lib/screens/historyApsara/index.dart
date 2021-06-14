@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
-import 'package:chokchey_finance/providers/approvalList.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -8,8 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class HistoryApsara extends StatefulWidget {
   @override
@@ -22,8 +23,8 @@ class _HistoryApsaraState extends State<HistoryApsara> {
   var listHistory;
   bool _isLoading = false;
   DateTime now = DateTime.now();
-  String startDateTimeDidMounted;
-  String endDateTimeDidMounted;
+  String? startDateTimeDidMounted;
+  String? endDateTimeDidMounted;
 
   //Fetch API
   @override
@@ -31,10 +32,14 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     // TODO: implement didChangeDependencies
     if (mounted) {
       var startDate = DateTime(now.year, now.month, now.day - 7);
+      var endDate = DateTime.now();
+
       setState(() {
         startDateTimeDidMounted = DateFormat("yyyy-MM-dd").format(startDate);
         endDateTimeDidMounted = DateFormat("yyyy-MM-dd").format(DateTime.now());
         status = "2";
+        startDateTime = DateFormat("yyyyMMdd").format(startDate);
+        endDateTime = DateFormat("yyyyMMdd").format(endDate);
       });
       fetchHistory();
       getListCO();
@@ -44,25 +49,22 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     super.didChangeDependencies();
   }
 
-  String userNameLogin;
-  String userIDLogin;
+  String? userNameLogin;
+  String? userIDLogin;
   bool _isSelectedUserIDLogin = false;
   String _isSelectedUserLogin = "";
   final storage = new FlutterSecureStorage();
-  String levelConvert;
+  String? levelConvert;
   int level = 2;
 
   // status 1:Process, 2:Approval, 9:Reject
   fetchHistory() async {
     DateTime now = DateTime.now();
 
-    var startDate =
-        sdate != null ? sdate : DateTime(now.year, now.month, now.day - 7);
-    var endDate = edate != null ? edate : DateTime.now();
-    String startDateTime = DateFormat("yyyyMMdd").format(startDate);
-    String endDateTime = DateFormat("yyyyMMdd").format(endDate);
-    String selectedStatus;
-    String selectedBranch;
+    // var endDate = edate != null ? edate : DateTime.now();
+    // String? endDateTime = DateFormat("yyyyMMdd").format(endDate);
+    String? selectedStatus;
+    String? selectedBranch;
     setState(() {
       _isLoading = true;
     });
@@ -90,19 +92,48 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     userNameLogin = await storage.read(key: 'user_name');
     userIDLogin = await storage.read(key: 'user_id');
     levelConvert = await storage.read(key: 'level');
-    level = int.parse(levelConvert);
-    await Provider.of<ApprovelistProvider>(context, listen: false)
-        .fetchHistoryAPSARA("${selectedBranch}", "", "${userIDLogin}",
-            "${startDateTime}", "${endDateTime}", "${selectedStatus}")
-        .then((value) => setState(() {
-              listHistory = value;
-              _isLoading = false;
-            }))
-        .catchError((onError) {
+    level = int.parse(levelConvert!);
+    // await Provider.of<ApprovelistProvider>(context, listen: false)
+    //     // ignore: unnecessary_brace_in_string_interps
+    //     .fetchHistoryAPSARA("${selectedBranch}", "", "${userIDLogin}",
+    //         "${startDateTime}", "${endDateTime}", "${selectedStatus}")
+    //     .then((value) => setState(() {
+    //           listHistory = value;
+    //           _isLoading = false;
+    //         }))
+    //     .catchError((onError) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    // });
+    try {
+      final storage = new FlutterSecureStorage();
+      String user_id = await storage.read(key: 'user_id');
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
+      request.body =
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"${selectedBranch}\",\n    \"customerNo\": \"\",\n    \"authorizerEmployeeNo\" :\"$user_id\",\n   \"inquiryFromDate\": \"${startDateTime}\",\n   \"inquiryToDate\": \"${endDateTime}\",\n   \"loanApprovalApplicationStatusCode\": \"${selectedStatus}\"\n    }\n}\n";
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        final respStr = await response.stream.bytesToString();
+        var json = jsonDecode(respStr);
+        setState(() {
+          _isLoading = false;
+          listHistory = json['body'];
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (error) {
       setState(() {
         _isLoading = false;
       });
-    });
+      logger().e("error: ${error}");
+    }
   }
 
   var sdate;
@@ -110,10 +141,11 @@ class _HistoryApsaraState extends State<HistoryApsara> {
   bool _isSelectedApproved = false;
   bool _isStatuSelectedReject = false;
   bool _isStatuSelectedReturn = false;
-  String status;
+  String? status;
   TextEditingController controllerStartDate = new TextEditingController();
   TextEditingController controllerEndDate = new TextEditingController();
-
+  String? startDateTime = "";
+  String? endDateTime = "";
   void _closeEndDrawer() {
     setState(() {
       controllerEndDate.text = '';
@@ -127,6 +159,10 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       _isStatuSelectedReject = false;
       _isStatuSelectedReturn = false;
     });
+    var startDate = DateTime(now.year, now.month, now.day - 7);
+    startDateTime = DateFormat("yyyyMMdd").format(startDate);
+    var endDate = DateTime.now();
+    endDateTime = DateFormat("yyyyMMdd").format(endDate);
     fetchHistory();
     Navigator.of(context).pop();
   }
@@ -138,11 +174,11 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     var startDate =
         sdate != null ? sdate : DateTime(now.year, now.month, now.day - 7);
     var endDate = edate != null ? edate : DateTime.now();
-    String startDateTime = DateFormat("yyyyMMdd").format(startDate);
-    String endDateTime = DateFormat("yyyyMMdd").format(endDate);
-    String selectedStatus;
-    String selectedUserID;
-    String selectedBranch;
+    String? startDateTime = DateFormat("yyyyMMdd").format(startDate);
+    String? endDateTime = DateFormat("yyyyMMdd").format(endDate);
+    String? selectedStatus;
+    String? selectedUserID;
+    String? selectedBranch;
 
     if (status == null) {
       selectedStatus = '2';
@@ -151,7 +187,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       selectedStatus = '2';
     }
     if (status != null && status != "") {
-      selectedStatus = status;
+      selectedStatus = status!;
     }
     if (userID == "") {
       selectedUserID = '';
@@ -180,19 +216,34 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       startDateTimeDidMounted = startDateTimeShow;
       endDateTimeDidMounted = endDateTimeShow;
     });
-    await Provider.of<ApprovelistProvider>(context, listen: false)
-        .fetchHistoryAPSARA("${selectedBranch}", "", "${selectedUserID}",
-            "${startDateTime}", "${endDateTime}", "${selectedStatus}")
-        .then((value) => setState(() {
-              listHistory = value;
-              _isLoading = false;
-              selectedBranch = "";
-            }))
-        .catchError((onError) {
+
+    try {
+      final storage = new FlutterSecureStorage();
+      String user_id = await storage.read(key: 'user_id');
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
+      request.body =
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"${selectedBranch}\",\n    \"customerNo\": \"${selectedUserID}\",\n    \"authorizerEmployeeNo\" :\"$user_id\",\n   \"inquiryFromDate\": \"${startDateTime}\",\n   \"inquiryToDate\": \"${endDateTime}\",\n   \"loanApprovalApplicationStatusCode\": \"${selectedStatus}\"\n    }\n}\n";
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        final respStr = await response.stream.bytesToString();
+        var json = jsonDecode(respStr);
+        setState(() {
+          _isLoading = false;
+          listHistory = json['body'];
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (error) {
       setState(() {
         _isLoading = false;
       });
-    });
+      logger().e("error: ${error}");
+    }
   }
 
   String valueStringStatus = "";
@@ -258,25 +309,25 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     DateTime now = DateTime.now();
     if (status == "2") {
       valueStringStatus =
-          AppLocalizations.of(context).translate('approved') ?? 'Approved';
+          AppLocalizations.of(context)!.translate('approved') ?? 'Approved';
     }
 
     if (status == "1") {
       valueStringStatus =
-          AppLocalizations.of(context).translate('processing') ?? 'Processing';
+          AppLocalizations.of(context)!.translate('processing') ?? 'Processing';
     }
 
     if (status == "9") {
       valueStringStatus =
-          AppLocalizations.of(context).translate('reject') ?? 'Reject';
+          AppLocalizations.of(context)!.translate('reject') ?? 'Reject';
     }
     return Scaffold(
         key: _scaffoldKeyHistoryApsara,
         appBar: AppBar(
           backgroundColor: logolightGreen,
-          title: Text(
-              AppLocalizations.of(context).translate('loan_approval_history') ??
-                  "Loan Approval History"),
+          title: Text(AppLocalizations.of(context)!
+                  .translate('loan_approval_history') ??
+              "Loan Approval History"),
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back),
             onPressed: () => Navigator.pushAndRemoveUntil(
@@ -303,7 +354,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                             Icon(Icons.filter_list),
                             Padding(padding: EdgeInsets.only(right: 5)),
                             Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                       .translate('filter') ??
                                   "Filter",
                               style: TextStyle(
@@ -318,7 +369,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                         alignment: Alignment.topLeft,
                         padding: EdgeInsets.only(left: 10),
                         child: Text(
-                          AppLocalizations.of(context).translate('by_user') ??
+                          AppLocalizations.of(context)!.translate('by_user') ??
                               'By User',
                           style: TextStyle(
                             fontWeight: fontWeight700,
@@ -349,7 +400,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                                     : null,
                                 padding: EdgeInsets.all(4),
                                 child: Text(
-                                  AppLocalizations.of(context)
+                                  AppLocalizations.of(context)!
                                           .translate('all_user') ??
                                       "All User",
                                   textAlign: TextAlign.center,
@@ -374,7 +425,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                               });
                               if (_isSelectedUserIDLogin == true) {
                                 setState(() {
-                                  _isSelectedUserLogin = userIDLogin;
+                                  _isSelectedUserLogin = userIDLogin!;
                                   _isSelectedUserID = false;
                                 });
                               }
@@ -438,7 +489,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                           alignment: Alignment.topLeft,
                           padding: EdgeInsets.only(left: 10),
                           child: Text(
-                            AppLocalizations.of(context)
+                            AppLocalizations.of(context)!
                                     .translate('by_branch') ??
                                 'By Branch',
                             style: TextStyle(
@@ -483,7 +534,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                       Container(
                         padding: EdgeInsets.only(left: 15, right: 15),
                         child: FormBuilderDateTimePicker(
-                          attribute: 'date',
+                          name: 'date',
                           controller: controllerStartDate,
                           inputType: InputType.date,
                           onChanged: (v) {
@@ -497,7 +548,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                               DateTime(now.year, now.month, now.day - 7),
                           format: DateFormat("yyyy-MM-dd"),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('start_date') ??
                                 "Start date",
                           ),
@@ -507,7 +558,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                       Container(
                         padding: EdgeInsets.only(left: 15, right: 15),
                         child: FormBuilderDateTimePicker(
-                          attribute: 'date',
+                          name: 'date',
                           controller: controllerEndDate,
                           inputType: InputType.date,
                           onChanged: (v) {
@@ -518,7 +569,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                           initialValue: DateTime.now(),
                           format: DateFormat("yyyy-MM-dd"),
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)
+                            labelText: AppLocalizations.of(context)!
                                     .translate('end_date') ??
                                 "End date",
                           ),
@@ -544,7 +595,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                             padding: EdgeInsets.all(10),
                             child: Center(
                               child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('approved') ??
                                     'Approved',
                                 style: TextStyle(
@@ -575,7 +626,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                             },
                             child: Center(
                               child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('reject') ??
                                     'Reject',
                                 style: TextStyle(
@@ -605,7 +656,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                             padding: EdgeInsets.all(10),
                             child: Center(
                               child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('processing') ??
                                     'Processing',
                                 style: TextStyle(
@@ -626,7 +677,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                           children: [
                             RaisedButton(
                               onPressed: _closeEndDrawer,
-                              child: Text(AppLocalizations.of(context)
+                              child: Text(AppLocalizations.of(context)!
                                       .translate('reset') ??
                                   "Reset"),
                             ),
@@ -634,7 +685,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                               color: logolightGreen,
                               onPressed: _applyEndDrawer,
                               child: Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate('apply') ??
                                     "Apply",
                                 style: TextStyle(color: Colors.white),
@@ -658,13 +709,12 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppLocalizations.of(context).translate('total') +
-                                    ": " ??
+                            AppLocalizations.of(context)!.translate('total') ??
                                 "Total: ",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                           Text(
-                            "${listHistory['judgementListCount']}",
+                            ": ${listHistory['judgementListCount']}",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                         ],
@@ -675,12 +725,13 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppLocalizations.of(context).translate('status') +
-                                    ": " ??
+                            AppLocalizations.of(context)!.translate('status') ??
                                 "Status: ",
                           ),
                           Text(
-                            valueStringStatus != null ? valueStringStatus : "",
+                            valueStringStatus != null
+                                ? ": " + valueStringStatus
+                                : "",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                         ],
@@ -691,13 +742,12 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppLocalizations.of(context)
-                                        .translate('from_date') +
-                                    ": " ??
+                            AppLocalizations.of(context)!
+                                    .translate('from_date') ??
                                 "From Date: ",
                           ),
                           Text(
-                            "${startDateTimeDidMounted}",
+                            ": ${startDateTimeDidMounted}",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                         ],
@@ -708,12 +758,12 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppLocalizations.of(context).translate('end_date') +
-                                    ": " ??
+                            AppLocalizations.of(context)!
+                                    .translate('end_date') ??
                                 "End Date: ",
                           ),
                           Text(
-                            "${endDateTimeDidMounted}",
+                            ": ${endDateTimeDidMounted}",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                         ],

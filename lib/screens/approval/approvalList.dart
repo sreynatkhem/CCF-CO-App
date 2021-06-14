@@ -1,29 +1,30 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/approvalList.dart';
-import 'package:chokchey_finance/screens/home/Home.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
+import 'package:chokchey_finance/screens/detail/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
-import 'package:chokchey_finance/widget/approval_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 class ApprovalLists extends StatefulWidget {
   static const routeName = '/ApprovalLists';
-  var isRefresh = false;
+  dynamic? isRefresh = false;
   ApprovalLists({this.isRefresh});
   @override
-  _ApprovalListsState createState() => new _ApprovalListsState(this.isRefresh);
+  _ApprovalListsState createState() => new _ApprovalListsState();
 }
 
 class _ApprovalListsState extends State<ApprovalLists>
     with SingleTickerProviderStateMixin {
-  _ApprovalListsState(this.isRefresh);
+  // _ApprovalListsState(this.isRefresh);
 
   static final GlobalKey<ScaffoldState> scaffoldKey =
       new GlobalKey<ScaffoldState>();
 
-  TextEditingController _searchQuery;
+  TextEditingController? _searchQuery;
   var isRefresh = false;
   bool _isSearching = false;
   bool _isLoading = false;
@@ -33,8 +34,42 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   @override
   void initState() {
-    super.initState();
+    fetchLoan();
     _searchQuery = new TextEditingController();
+    super.initState();
+  }
+
+  dynamic approvalList = [];
+
+  Future fetchLoan() async {
+    try {
+      final storage = new FlutterSecureStorage();
+      String user_id = await storage.read(key: 'user_id');
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0002'));
+      request.body =
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\"\n    }\n}\n";
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        var list = jsonDecode(await response.stream.bytesToString());
+        setState(() {
+          approvalList = list['body']['approvalList'];
+        });
+      }
+    } catch (error) {
+      logger().e("error: ${error}");
+    }
+  }
+
+  onClickCard(value, context) {
+    final loanApprovalApplicationNo = value['loanApprovalApplicationNo'];
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return new TabBarMenu(loanApprovalApplicationNo);
+        },
+        fullscreenDialog: true));
   }
 
   @override
@@ -44,7 +79,7 @@ class _ApprovalListsState extends State<ApprovalLists>
   }
 
   void _startSearch() {
-    ModalRoute.of(context)
+    ModalRoute.of(context)!
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
 
     setState(() {
@@ -62,7 +97,7 @@ class _ApprovalListsState extends State<ApprovalLists>
 
   void _clearSearchQuery() {
     setState(() {
-      _searchQuery.clear();
+      _searchQuery!.clear();
       updateSearchQuery("Search query");
     });
   }
@@ -71,7 +106,7 @@ class _ApprovalListsState extends State<ApprovalLists>
     var horizontalTitleAlignment =
         Platform.isIOS ? CrossAxisAlignment.center : CrossAxisAlignment.start;
     return new InkWell(
-      onTap: () => scaffoldKey.currentState.openDrawer(),
+      onTap: () => scaffoldKey.currentState!.openDrawer(),
       child: new Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: new Column(
@@ -79,7 +114,7 @@ class _ApprovalListsState extends State<ApprovalLists>
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).translate('approval_lists') ??
+              AppLocalizations.of(context)!.translate('approval_lists') ??
                   'Approval Lists',
               style: mainTitleStyle,
             ),
@@ -119,7 +154,7 @@ class _ApprovalListsState extends State<ApprovalLists>
         new IconButton(
           icon: const Icon(Icons.clear),
           onPressed: () {
-            if (_searchQuery == null || _searchQuery.text.isEmpty) {
+            if (_searchQuery == null || _searchQuery!.text.isEmpty) {
               Navigator.pop(context);
               return;
             }
@@ -145,6 +180,8 @@ class _ApprovalListsState extends State<ApprovalLists>
     });
   }
 
+  final images = const AssetImage('assets/images/request.png');
+
   @override
   Widget build(BuildContext context) {
     if (isRefresh == true) {
@@ -162,6 +199,83 @@ class _ApprovalListsState extends State<ApprovalLists>
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Approval_widget());
+            : approvalList == null ||
+                    approvalList!.length == 0 ||
+                    approvalList!.length <= 0
+                ? Center(
+                    child: Text(
+                      AppLocalizations.of(context)!
+                              .translate('no_approval_list') ??
+                          'No approval list',
+                      style: mainTitleBlack,
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: approvalList.length,
+                    padding: const EdgeInsets.only(top: 20.0),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 100,
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: logolightGreen, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: InkWell(
+                                splashColor: Colors.blue.withAlpha(30),
+                                onTap: () {
+                                  onClickCard(approvalList![index], context);
+                                },
+                                child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Image(
+                                        image: images,
+                                        width: 80,
+                                        height: 70,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Container(
+                                              child: Text(
+                                            approvalList![index]
+                                                ['standardCodeDomainName2']!,
+                                            style: mainTitleBlack,
+                                          )),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 2)),
+                                          Text(
+                                            'Application No: ${approvalList![index]['loanApprovalApplicationNo']}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 2)),
+                                          Text(
+                                            '${approvalList![index]['authorizationRequestEmpNo']}-${approvalList![index]['authorizationRequestEmpName']}[${approvalList![index]['branchName']}]',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 2)),
+                                          Text(
+                                            '${approvalList![index]['authorizationRequestDate']} ${approvalList![index]['authorizationRequestTime']}',
+                                            style: TextStyle(fontSize: 12),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                          padding: EdgeInsets.only(left: 40),
+                                          child:
+                                              Icon(Icons.keyboard_arrow_right)),
+                                    ]))),
+                      );
+                    }));
   }
 }

@@ -1,13 +1,13 @@
 class DetailApproval {
-  final String authorizerEmpName;
-  final String authorizationBranchCode;
-  final String authorizerEmployeeNo;
-  final String applicationDate;
-  final String loanApprovalApplicationNo;
-  final String acceptanceDate;
-  final String evaluateStatusCode;
-  final String authorizationDate;
-  final String authorizationOpinionContents;
+  final String? authorizerEmpName;
+  final String? authorizationBranchCode;
+  final String? authorizerEmployeeNo;
+  final String? applicationDate;
+  final String? loanApprovalApplicationNo;
+  final String? acceptanceDate;
+  final String? evaluateStatusCode;
+  final String? authorizationDate;
+  final String? authorizationOpinionContents;
 
   DetailApproval({
     this.authorizerEmpName,
@@ -21,18 +21,18 @@ class DetailApproval {
     this.authorizationOpinionContents,
   });
 
-  factory DetailApproval.fromJson(Map<String, dynamic> json) {
+  factory DetailApproval.fromJson(Map<String?, dynamic> json) {
     return DetailApproval(
-      authorizerEmpName: json['authorizerEmpName'] as String,
-      authorizationBranchCode: json['authorizationBranchCode'] as String,
-      authorizerEmployeeNo: json['authorizerEmployeeNo'] as String,
-      applicationDate: json['applicationDate'] as String,
-      loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String,
-      acceptanceDate: json['acceptanceDate'] as String,
-      evaluateStatusCode: json['evaluateStatusCode'] as String,
-      authorizationDate: json['authorizationDate'] as String,
+      authorizerEmpName: json['authorizerEmpName'] as String?,
+      authorizationBranchCode: json['authorizationBranchCode'] as String?,
+      authorizerEmployeeNo: json['authorizerEmployeeNo'] as String?,
+      applicationDate: json['applicationDate'] as String?,
+      loanApprovalApplicationNo: json['loanApprovalApplicationNo'] as String?,
+      acceptanceDate: json['acceptanceDate'] as String?,
+      evaluateStatusCode: json['evaluateStatusCode'] as String?,
+      authorizationDate: json['authorizationDate'] as String?,
       authorizationOpinionContents:
-          json['authorizationOpinionContents'] as String,
+          json['authorizationOpinionContents'] as String?,
     );
   }
 }

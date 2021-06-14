@@ -9,7 +9,9 @@ import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart';
 import 'package:smart_select/smart_select.dart';
+import 'package:http/http.dart' as http;
 
 class GroupLoanSelect extends StatefulWidget {
   var controller;
@@ -25,7 +27,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
 
   // snack bar
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeySelectedGroupLoan.currentState.showSnackBar(new SnackBar(
+    _scaffoldKeySelectedGroupLoan.currentState!.showSnackBar(new SnackBar(
       content: new Text(value),
       backgroundColor: colorsBackground,
     ));
@@ -50,7 +52,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
   var _selectedLeader;
   var _selectedMember;
 
-  var items = List<String>();
+  var items = <String>[];
   //
   getListLoan(_pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     final storage = new FlutterSecureStorage();
@@ -62,7 +64,6 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
       var user_ucode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
-      var bodyRow;
       var sdates = sdate != null ? sdate : '';
       var edates = edate != null ? edate : '';
       var codes = code != null ? code : '';
@@ -93,17 +94,29 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
         btlcode = '';
         ucode = code != null && code != "" ? code : '';
       }
-      bodyRow =
-          "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      // bodyRow =
+      //     "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$ucode\",\n    \"bcode\": \"$bcodes\",\n    \"btlcode\": \"$btlcode\",\n    \"status\": \"\",\n    \"code\": \"\",\n    \"sdate\": \"$sdates\",\n    \"edate\": \"$edates\"\n}";
+      final Map<String, dynamic> bodyRow = {
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates",
+        "edate": "$edates"
+      };
       Map<String, String> headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
-      final response = await api().post(baseURLInternal + 'loanRequests/all',
-          headers: headers, body: bodyRow);
+      final Response response = await api().post(
+          Uri.parse(baseURLInternal + 'loanRequests/all'),
+          headers: headers,
+          body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
-        logger().e("list loan: ${listLoan}");
         if (mounted)
           setState(() {
             _isLoading = false;
@@ -140,20 +153,21 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
     var objectGroupLoanDetail = [];
     if (controller == "") {
       showInSnackBar(
-          AppLocalizations.of(context).translate('please_input_group_name') ??
+          AppLocalizations.of(context)!.translate('please_input_group_name') ??
               'Please input group name!',
           Colors.red);
     } else if (list == null ||
         _selectedMember.length > 5 ||
         _selectedMember.length < 2) {
       showInSnackBar(
-          AppLocalizations.of(context)
+          AppLocalizations.of(context)!
                   .translate('please_select_member_correctly') ??
               'Please select member correctly',
           Colors.red);
     } else if (_selectedLeader == null || _selectedLeader.length > 2) {
       showInSnackBar(
-          AppLocalizations.of(context).translate('please_select_team_leader') ??
+          AppLocalizations.of(context)!
+                  .translate('please_select_team_leader') ??
               'Please select team leader',
           Colors.red);
     } else if (controller != '' ||
@@ -205,9 +219,57 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
         _isLoadingPostToServer = true;
       });
       //   // post to server
-      await GroupLoanProvider()
-          .postGroupLoan(controller, objectGroupLoanDetail)
-          .then((value) {
+      // await GroupLoanProvider()
+      //     .postGroupLoan(controller, objectGroupLoanDetail)
+      //     .then((value) {
+      //   setState(() {
+      //     _isLoadingPostToServer = false;
+      //     _selectedMember = [];
+      //     _selectedLeader = null;
+      //     objectGroupLoanDetail = [];
+      //     // newDate = [];
+      //   });
+      //   showInSnackBar(
+      //       AppLocalizations.of(context)!.translate('successfully') ??
+      //           'Successfully',
+      //       logolightGreen);
+      //   Navigator.pushAndRemoveUntil(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (BuildContext context) => GroupLoanApprove(
+      //           isRefresh: true,
+      //         ),
+      //       ),
+      //       ModalRoute.withName('/'));
+      // }).catchError((onError) {
+      //   setState(() {
+      //     _isLoadingPostToServer = false;
+      //   });
+      //   showInSnackBar(
+      //       AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
+      //       Colors.redAccent);
+      // });
+      var token = await storage.read(key: 'user_token');
+      String user_id = await storage.read(key: 'user_id');
+      var branch = await storage.read(key: 'branch');
+
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      };
+      var request = http.Request(
+          'POST', Uri.parse(baseURLInternal + 'GroupLoan/creategrouploan'));
+      request.body =
+          '''{\n    "ucode": "$user_id",\n    "bcode": "$branch",\n    "gname": "$controller",\n    "groupLoanDetail": $objectGroupLoanDetail\n}''';
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        // print(await response.stream.bytesToString());
+        var listes = jsonDecode(await response.stream.bytesToString());
+        logger().e("listes: $listes");
+
         setState(() {
           _isLoadingPostToServer = false;
           _selectedMember = [];
@@ -216,7 +278,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           // newDate = [];
         });
         showInSnackBar(
-            AppLocalizations.of(context).translate('successfully') ??
+            AppLocalizations.of(context)!.translate('successfully') ??
                 'Successfully',
             logolightGreen);
         Navigator.pushAndRemoveUntil(
@@ -227,14 +289,15 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
               ),
             ),
             ModalRoute.withName('/'));
-      }).catchError((onError) {
+      } else {
+        logger().e("error: ");
         setState(() {
           _isLoadingPostToServer = false;
         });
         showInSnackBar(
-            AppLocalizations.of(context).translate('failed') ?? 'Failed',
+            AppLocalizations.of(context)!.translate('failed') ?? 'Failed',
             Colors.redAccent);
-      });
+      }
     }
   }
 
@@ -254,7 +317,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
             Container(
               child: SmartSelect.multiple(
                   title:
-                      AppLocalizations.of(context).translate('select_member'),
+                      AppLocalizations.of(context)!.translate('select_member'),
                   value: [],
                   // choiceItems: newDataList,
                   choiceType: S2ChoiceType.checkboxes,
@@ -343,7 +406,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                           FlatButton(
                             color: Colors.red,
                             child: Text(
-                              AppLocalizations.of(context).translate('cancel'),
+                              AppLocalizations.of(context)!
+                                      .translate('cancel') ??
+                                  "",
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () =>
@@ -351,8 +416,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                           ),
                           const SizedBox(width: 5),
                           FlatButton(
-                            child: Text(
-                                AppLocalizations.of(context).translate('okay')),
+                            child: Text(AppLocalizations.of(context)!
+                                    .translate('okay') ??
+                                ""),
                             color: logolightGreen,
                             textColor: Colors.white,
                             onPressed: stateMember.changes.valid
@@ -371,7 +437,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                 padding: EdgeInsets.all(10),
                 child: Center(
                   child: Text(
-                    AppLocalizations.of(context)
+                    AppLocalizations.of(context)!
                             .translate('member_group_loan_have_to') ??
                         "Member Group Loan have to 2 or least then 5 or equal 5.",
                     style: TextStyle(color: Colors.red),
@@ -383,8 +449,8 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
             if (list != [])
               Container(
                 child: SmartSelect.single(
-                    title:
-                        AppLocalizations.of(context).translate('select_leader'),
+                    title: AppLocalizations.of(context)!
+                        .translate('select_leader'),
                     value: list,
                     choiceItems: list,
                     choiceType: S2ChoiceType.radios,
@@ -474,8 +540,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                             FlatButton(
                                 color: Colors.red,
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('cancel'),
+                                  AppLocalizations.of(context)!
+                                          .translate('cancel') ??
+                                      "",
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 onPressed: () {
@@ -483,8 +550,9 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                                 }),
                             const SizedBox(width: 5),
                             FlatButton(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate('okay')),
+                              child: Text(AppLocalizations.of(context)!
+                                      .translate('okay') ??
+                                  ""),
                               color: logolightGreen,
                               textColor: Colors.white,
                               onPressed: stateLeader.changes.valid
@@ -529,7 +597,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
                               width: 5,
                             ),
                             Text(
-                                AppLocalizations.of(context)
+                                AppLocalizations.of(context)!
                                         .translate("submit") ??
                                     "Submit",
                                 style: TextStyle(
