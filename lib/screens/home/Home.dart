@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
+import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
@@ -271,6 +272,8 @@ class _HomeState extends State<Home> {
   }
 
   _drawerList(context) {
+    String versionString =
+        baseURLInternal == "http://119.82.252.42:2020/api/" ? "v" : "version";
     return Drawer(
       child: Container(
         color: Colors.white,
@@ -418,7 +421,7 @@ class _HomeState extends State<Home> {
                           null),
                       Padding(padding: EdgeInsets.only(top: 10)),
                       ListTile(
-                        title: Text("v" + '$version'),
+                        title: Text("$versionString" + '$version'),
                         onTap: () {},
                       ),
                     ],

@@ -11,6 +11,7 @@ import 'package:chokchey_finance/providers/registerApproval.dart';
 import 'package:chokchey_finance/providers/reject.dart';
 import 'package:chokchey_finance/providers/returnFuc.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
+import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/screens/detail/cardDetail.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
@@ -102,7 +103,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
     try {
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0004'));
-      "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"20\",\n    \"loanApprovalApplicationNo\": \"${widget.loanApprovalApplicationNo}\",\n    \"authorizationOpinionContents\": \"$comments\"\n    }\n}";
+      request.body =
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"20\",\n    \"loanApprovalApplicationNo\": \"${widget.loanApprovalApplicationNo}\",\n    \"authorizationOpinionContents\": \"$comments\"\n    }\n}";
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -110,9 +112,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ApprovalLists(
-                isRefresh: true,
-              ),
+              builder: (BuildContext context) => Home(),
             ),
             ModalRoute.withName('/'));
       }
