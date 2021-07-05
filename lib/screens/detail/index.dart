@@ -106,27 +106,31 @@ class _TabBarMenuState extends State<TabBarMenu> {
       request.body =
           "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"20\",\n    \"loanApprovalApplicationNo\": \"${widget.loanApprovalApplicationNo}\",\n    \"authorizationOpinionContents\": \"$comments\"\n    }\n}";
       request.headers.addAll(headers);
-
       http.StreamedResponse response = await request.send();
+      final respStr = await response.stream.bytesToString();
+      var json = jsonDecode(respStr);
+      setState(() {
+        _isLoading = false;
+      });
       if (response.statusCode == 200) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => Home(),
-            ),
-            ModalRoute.withName('/'));
+        if (json['header']['result'] == false) {
+          showInSnackBar("Approval is not yet your level to approve.",
+              Colors.red, _scaffoldKeyApsara);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => Home(),
+              ),
+              ModalRoute.withName('/'));
+        }
       }
     } catch (error) {
       client.close();
+      setState(() {
+        _isLoading = false;
+      });
     }
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => ApprovalLists(
-            isRefresh: true,
-          ),
-        ),
-        ModalRoute.withName('/'));
   }
 
   returnFuc(
@@ -202,7 +206,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
 
   TextEditingController controller = new TextEditingController();
   final images = const AssetImage('assets/images/request.png');
-
+  final GlobalKey<ScaffoldState> _scaffoldKeyApsara =
+      new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     // var future = fetchListDetail(widget.loanApprovalApplicationNo);
@@ -212,6 +217,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
     final bool iphonex = MediaQuery.of(context).size.height >= 812.0;
     final double bottomPadding = iphonex ? 16.0 : 0.0;
     return Scaffold(
+      key: _scaffoldKeyApsara,
       appBar: AppBar(
         title: Text(
             AppLocalizations.of(context)!.translate('loan_information') ??
