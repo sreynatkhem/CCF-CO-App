@@ -160,9 +160,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ApprovalLists(
-                isRefresh: true,
-              ),
+              builder: (BuildContext context) => Home(),
             ),
             ModalRoute.withName('/'));
       }
@@ -193,9 +191,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => ApprovalLists(
-                isRefresh: true,
-              ),
+              builder: (BuildContext context) => Home(),
             ),
             ModalRoute.withName('/'));
       }
