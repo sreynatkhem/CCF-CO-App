@@ -46,7 +46,7 @@ dependencies:
   permission_handler: ^6.0.1
   flutter_spinkit: "^4.1.2"
   multi_image_picker: ^4.6.7
-  image_picker: ^0.7.0-nullsafety
+  image_picker: ^0.8.2
   # pdf_flutter: ^1.1.4
   awesome_dialog: ^1.1.2
   sticky_headers: ^0.1.8+1

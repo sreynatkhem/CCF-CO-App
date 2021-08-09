@@ -326,9 +326,10 @@ class _IRRScreenState extends State<IRRScreen> {
                             FocusScope.of(context)
                                 .requestFocus(loanAmountDefaultFocus);
                           },
-                          onChanged: (String v) {
+                          onChanged: (String? v) {
                             if (mounted) {
-                              dynamic amountDocble = double.tryParse(v);
+                              // ignore: unused_local_variable
+                              dynamic amountDocble = double.tryParse(v!);
 
                               // MoneyFormatterOutput fo =
                               //     FlutterMoneyFormatter(amount: amountDocble)
@@ -396,7 +397,7 @@ class _IRRScreenState extends State<IRRScreen> {
 
                             if (mounted) {
                               var amount = int.parse(amountDefault);
-                              var irrParse = double.parse(v);
+                              var irrParse = double.parse(v!);
                               var subFirstIncome = amount * irrParse;
                               var subSecoundString =
                                   subFirstIncome.toString().substring(0, 4);
@@ -702,7 +703,7 @@ class _IRRScreenState extends State<IRRScreen> {
                             // CurrencyInputFormatter(12),
                           ],
                           onChanged: (v) {
-                            var ranksDouble = double.parse(v);
+                            var ranksDouble = double.parse(v!);
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "KHR") {
