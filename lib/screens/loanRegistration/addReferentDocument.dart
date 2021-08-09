@@ -10,6 +10,7 @@ import 'package:chokchey_finance/screens/loanRegistration/widgetCardAddReferent.
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -873,288 +874,477 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   // getImage
   Future getImage() async {
-    final _picker = ImagePicker();
+    //
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageNation = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageNation = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
+    //
   }
 
 //getFamily
   Future getFamily() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageFamily = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageFamily = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getResident
   Future getResident() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageResident = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageResident = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getOther
   Future getOther() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageOther = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageOther = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getSalarySlip
   Future getSalarySlip() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageSalarySlip = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageSalarySlip = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getBankStatement
   Future getBankStatement() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageBankStatement = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageBankStatement =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getSalaryVerify
   Future getSalaryVerify() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageSalaryVerify = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageSalaryVerify =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getEmployeeContrat
   Future getEmployeeContrat() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageEmployeeContrat =
-            File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageEmployeeContrat =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getEmployeeID
   Future getEmployeeID() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageEmployeeID = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageEmployeeID = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getEmployeeContrat
   Future getEmployeeOther() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageEmployeeOther = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageEmployeeOther =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getBusinessOther
   Future getBusinessLocationTitle() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageBusinessLocationtitle =
-            File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageBusinessLocationtitle =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getBusinessOther
   Future getBusinessOther() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageBusinessOther = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageBusinessOther =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getBusinessRentalContract
   Future getBusinessRentalContract() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageRentalContract = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageRentalContract =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getBusinessSaleAndPurchase
   Future getBusinessSaleAndPurchase() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageSaleAndPurchase =
-            File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageSaleAndPurchase =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getBusinessPatent
   Future getBusinessPatent() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imagePatent = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imagePatent = File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getBusinessPermit
   Future getBusinessPermit() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageBusinessPermit = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageBusinessPermit =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getIncomeStatementAndBank
   Future getIncomeStatementAndBank() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageIncomeStatementBank =
-            File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageIncomeStatementBank =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
 // getPhotoOfService
   Future getPhotoOfService() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imagePhotoOfService = File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imagePhotoOfService =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getCollateralCertificate
   Future getCollateralCertificate() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageCollateralCertificate =
-            File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageCollateralCertificate =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   // getCollateralPicture
   Future getCollateralPicture() async {
-    final _picker = ImagePicker();
+    try {
+      final PickedFile? pickedFile =
+          await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
       setState(() {
-        _imageCollateralPicture =
-            File(pickedFile.path); // Exception occurred here
+        if (pickedFile != null) {
+          // Check if this is a browser session
+
+          setState(() {
+            _imageCollateralPicture =
+                File(pickedFile.path); // Exception occurred here
+          });
+        } else {
+          print("No image selected");
+        }
       });
-    } else {}
-    return null;
+      return null;
+    } on PlatformException catch (e) {
+      logger.e("PlatformException: '${e.message}'.");
+    }
   }
 
   Widget gridKYC(context) {

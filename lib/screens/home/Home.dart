@@ -33,7 +33,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
 class Home extends StatefulWidget {
@@ -468,18 +468,18 @@ class _HomeState extends State<Home> {
 
   Future<void>? _launched;
 
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-        headers: <String, String>{'my_header_key': 'my_header_value'},
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // Future<void> _launchInBrowser(String url) async {
+  //   if (await canLaunch(url)) {
+  //     await launch(
+  //       url,
+  //       forceSafariVC: false,
+  //       forceWebView: false,
+  //       headers: <String, String>{'my_header_key': 'my_header_value'},
+  //     );
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
   final english = const AssetImage('assets/images/english.png');
   final khmer = const AssetImage('assets/images/khmer.png');
@@ -511,9 +511,9 @@ class _HomeState extends State<Home> {
                 size: 25,
               ),
               onPressed: () {
-                setState(() {
-                  _launched = _launchInBrowser(guildeLine);
-                });
+                // setState(() {
+                //   _launched = _launchInBrowser(guildeLine);
+                // });
               }),
           // Using Stack to show Notification Badge
           new Stack(

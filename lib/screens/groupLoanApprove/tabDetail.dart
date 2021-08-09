@@ -40,6 +40,8 @@ class DetailScreen extends StatelessWidget {
                     itemCount: list['groupLoanDetail'].length,
                     padding: const EdgeInsets.only(top: 20.0),
                     itemBuilder: (context, index) {
+                      logger().e(
+                          "llll: ${list['groupLoanDetail'][index]['isteamlead']}");
                       return Card(
                         child: Container(
                           padding: EdgeInsets.all(10),
@@ -54,9 +56,17 @@ class DetailScreen extends StatelessWidget {
                                               ['customer'])
                                   .getTextDetail(),
                               Padding(padding: EdgeInsets.all(2)),
+                              // list['groupLoanDetail'][index]['loan']
                               DetailWidget(
                                       context: context,
-                                      title: "team_lead" + " ",
+                                      title: list['groupLoanDetail'][index]
+                                                  ['isteamlead'] ==
+                                              't'
+                                          ? "team_lead" + " "
+                                          : AppLocalizations.of(context)!
+                                                  .translate(
+                                                      "member_group_Loan")! +
+                                              " ",
                                       subTitle: list['groupLoanDetail'][index]
                                           ['loan']['customer'])
                                   .getTextDetail(),

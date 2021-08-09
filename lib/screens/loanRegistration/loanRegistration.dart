@@ -17,8 +17,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:select_dialog/select_dialog.dart';
 import 'package:logger/logger.dart';
 import 'addReferentDocument.dart';
@@ -123,10 +123,10 @@ class _LoanRegister extends State {
 
   //TEXT INPUT
   var valueAmount;
-  var valueNumberofTerm;
-  var valueInterest;
+  String valueNumberofTerm = "0";
+  String valueInterest = "0";
   var valueMaintenanceFee;
-  var valueAdminFee;
+  String valueAdminFee = "0";
   var valueRepaymentMethod;
   var valueOpenDate;
   var valueMaturityDate;
@@ -183,6 +183,13 @@ class _LoanRegister extends State {
   var listLoan;
   var loanCode;
   var statusEdit;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   onSubmit(context) async {
     final storage = new FlutterSecureStorage();
@@ -397,17 +404,21 @@ class _LoanRegister extends State {
       var adminFeeIRR;
       var valueIRR;
 
+      logger.e('valueInterest: $valueInterest');
+      logger.e('valueAdminFee: $valueAdminFee');
+
       interestIRR = valueInterest != null
-          ? double.parse(valueInterest)
+          ? double.parse(valueInterest ?? "0")
           : double.parse('0.0');
       maintenanceFeeIRR = valueMaintenanceFee != null
-          ? double.parse(valueMaintenanceFee)
+          ? double.parse(valueMaintenanceFee ?? "0")
           : double.parse('0.0');
-      adminFeeIRR = valueAdminFee != null
-          ? double.parse(valueAdminFee)
-          : double.parse('0.0');
+      if (mounted)
+        adminFeeIRR = valueAdminFee != null
+            ? double.parse(valueAdminFee ?? "0")
+            : double.parse('0.0');
       numberofTermIRR = valueNumberofTerm != null
-          ? double.parse(valueNumberofTerm)
+          ? double.parse(valueNumberofTerm ?? "0")
           : double.parse('0.0');
       setState(() {
         valueIRR = ((interestIRR + maintenanceFeeIRR) * 12) +
@@ -685,9 +696,8 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueNumberofTerm = v;
+                                valueNumberofTerm = v!;
                               });
-                              iRRCalculation();
                             }
                           },
                           valueTransformer: (text) {
@@ -726,9 +736,8 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueInterest = v;
+                                valueInterest = v!;
                               });
-                              iRRCalculation();
                             }
                           },
                           valueTransformer: (text) {
@@ -743,10 +752,10 @@ class _LoanRegister extends State {
                                             'monthly_interest_rate_required') ??
                                     "Monthly interest rate required(*)"),
                           ]),
-                          keyboardType: TextInputType.number,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
                           ],
                         ),
                       ),
@@ -771,7 +780,6 @@ class _LoanRegister extends State {
                               setState(() {
                                 valueMaintenanceFee = v;
                               });
-                              iRRCalculation();
                             }
                           },
                           valueTransformer: (text) {
@@ -785,10 +793,10 @@ class _LoanRegister extends State {
                                             'maintenance_fee_required') ??
                                     "Maintenance fee required(*)"),
                           ]),
-                          keyboardType: TextInputType.number,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
                           ],
                         ),
                       ),
@@ -812,10 +820,14 @@ class _LoanRegister extends State {
                             if (mounted)
                               {
                                 setState(() {
-                                  valueAdminFee = v;
+                                  valueAdminFee = v!;
                                   valueRepaymentMethod = v;
                                 }),
-                                iRRCalculation(),
+                                if (v != null || v != "")
+                                  {
+                                    logger.e("v: $v"),
+                                    iRRCalculation(),
+                                  }
                               }
                           },
                           valueTransformer: (text) {
@@ -828,10 +840,10 @@ class _LoanRegister extends State {
                                         .translate('admin_fee_required') ??
                                     "Admin fee required(*)"),
                           ]),
-                          keyboardType: TextInputType.number,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
                           ],
                         ),
                       ),
@@ -1032,16 +1044,16 @@ class _LoanRegister extends State {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          keyboardType: TextInputType.number,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(
                               context,
                             ),
                             FormBuilderValidators.max(context, 0.9)
                           ]),
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
                           ],
                         ),
                       ),
@@ -1070,16 +1082,16 @@ class _LoanRegister extends State {
                           valueTransformer: (text) {
                             return text == null ? null : text;
                           },
-                          keyboardType: TextInputType.number,
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(
                               context,
                             ),
                             FormBuilderValidators.min(context, 0)
                           ]),
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
                           ],
                         ),
                       ),
