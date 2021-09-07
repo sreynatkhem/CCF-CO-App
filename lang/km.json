@@ -207,5 +207,8 @@
   "member_group_Loan":"ឥណទានក្រុមជាសមាជិក",
   "customer_name": "ឈ្មោះ​អតិថិជន",
   "team_lead ": "ដឹកនាំក្រុម",
-  "filter": "ស្វែងរក"
+  "filter": "ស្វែងរក",
+  "profile_upload_image":"ផ្លាស់ប្តូររូបភាព",
+  "see_your_profile":"មើលប្រវត្តិរូបរបស់អ្នក",
+  "profile":"ប្រវត្តិរូប"
 }

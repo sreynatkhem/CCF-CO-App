@@ -280,8 +280,9 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-            AppLocalizations.of(context)!.translate('loan_information') ??
-                'Loan Information'),
+          AppLocalizations.of(context)!.translate('loan_information') ??
+              'Loan Information',
+        ),
         backgroundColor: logolightGreen,
       ),
       body: _isLoading
@@ -357,6 +358,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
                       child: MaterialButton(
                           onPressed: () => {},
                           child: Container(
+                            // color: Colors.red,
                             padding: EdgeInsets.only(top: 0),
                             margin: EdgeInsets.all(0),
                             child: Container(

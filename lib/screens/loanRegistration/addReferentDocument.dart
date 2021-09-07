@@ -823,7 +823,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
             )
           : SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 child: Card(
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: logolightGreen, width: 1),
@@ -1349,14 +1349,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   Widget gridKYC(context) {
     return Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(5),
+        // color: Colors.red,
         child: Column(
           children: <Widget>[
             Text(
               '1.KYC',
               style: mainTitleBlack,
             ),
-            Padding(padding: EdgeInsets.only(bottom: 10)),
+            Padding(padding: EdgeInsets.only(bottom: 5)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1446,7 +1447,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
                     image: _imageFamily),
               ],
             ),
-            Padding(padding: EdgeInsets.only(top: 10)),
+            // Padding(padding: EdgeInsets.all(10)),
+            Padding(padding: EdgeInsets.all(4)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1545,14 +1547,15 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   Widget gridEmployee(context) {
     return Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(5),
         child: Column(
           children: <Widget>[
             Text(
               '2.Employee',
               style: mainTitleBlack,
             ),
-            Padding(padding: EdgeInsets.only(bottom: 10)),
+            // Padding(padding: EdgeInsets.only(bottom: 10)),
+            Padding(padding: EdgeInsets.all(5)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1861,14 +1864,16 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   Widget gridBS(context) {
     return Container(
-        padding: EdgeInsets.all(20),
+        // padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(5),
         child: Column(
           children: <Widget>[
             Text(
               '3.Business',
               style: mainTitleBlack,
             ),
-            Padding(padding: EdgeInsets.only(bottom: 10)),
+            // Padding(padding: EdgeInsets.only(bottom: 10)),
+            Padding(padding: EdgeInsets.all(5)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2265,14 +2270,16 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
   Widget gridCollateralDocument(context) {
     return Container(
-        padding: EdgeInsets.all(20),
+        // padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(5),
         child: Column(
           children: <Widget>[
             Text(
               '4.Supporting Collateral',
               style: mainTitleBlack,
             ),
-            Padding(padding: EdgeInsets.only(bottom: 10)),
+            // Padding(padding: EdgeInsets.only(bottom: 10)),
+            Padding(padding: EdgeInsets.all(5)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

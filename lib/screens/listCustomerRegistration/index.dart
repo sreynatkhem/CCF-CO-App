@@ -275,7 +275,8 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                         itemCount: parsed.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
-                            padding: EdgeInsets.only(left: 5, right: 5, top: 3),
+                            padding: EdgeInsets.all(5),
+                            // padding: EdgeInsets.only(left: 5, right: 5, top: 3),
                             child: Card(
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
@@ -330,7 +331,8 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.only(
-                                                                bottom: 2)),
+                                                      bottom: 2,
+                                                    )),
                                                     Text(
                                                         '${parsed[index]['phone1']}'),
                                                     Padding(
@@ -359,7 +361,8 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                                               children: <Widget>[
                                                 Padding(
                                                     padding: EdgeInsets.only(
-                                                        bottom: 2)),
+                                                  bottom: 2,
+                                                )),
                                                 Padding(
                                                     padding: EdgeInsets.only(
                                                   top: 5,
@@ -369,8 +372,9 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
                                                 Text(''),
                                                 Padding(
                                                     padding: EdgeInsets.only(
-                                                  right: 100,
-                                                ))
+                                                        right: 2,
+                                                        left: 1,
+                                                        bottom: 10))
                                               ],
                                             ),
                                           ])),

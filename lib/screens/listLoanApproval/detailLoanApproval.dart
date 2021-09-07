@@ -366,11 +366,12 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
         : detiaLoan != null
             ? SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(
-                      left: 10,
-                      top: 10,
-                      right: 10,
-                      bottom: isIphoneX(context) ? 20 : 15),
+                  padding: EdgeInsets.all(7),
+                  // margin: EdgeInsets.only(
+                  //     left: 10,
+                  //     top: 10,
+                  //     right: 10,
+                  //     bottom: isIphoneX(context) ? 20 : 15),
                   child: Card(
                       shape: RoundedRectangleBorder(
                         side: BorderSide(color: logolightGreen, width: 1),
@@ -549,11 +550,11 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Text(
-                                                  _imageDocument[index]
-                                                      ['description'],
-                                                  style: mainTitleBlack,
-                                                ),
+                                                // Text(
+                                                //   _imageDocument[index]
+                                                //       ['description'],
+                                                //   style: mainTitleBlack,
+                                                // ),
                                                 Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 10)),
@@ -588,7 +589,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                 child: Container(
                     child: Text(
                         AppLocalizations.of(context)!.translate('no_data') ??
-                            "")));
+                            "No Data")));
     // FutureBuilder<List<CreateLoan>>(
     //     future: detiaLoan,
     //     builder: (context, snapshot) {

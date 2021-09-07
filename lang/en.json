@@ -208,6 +208,9 @@
   "member_group_Loan":"Member Group Loan",
   "customer_name": "Customer name",
   "team_lead ": "Team Lead ",
-  "filter": "Filter"
+  "filter": "Filter",
+  "profile_upload_image":"Profile Upload Image",
+  "see_your_profile":"See your Profile",
+  "profile":"Profile"
 
 }

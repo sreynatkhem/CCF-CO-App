@@ -436,9 +436,10 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                             var status = statusApproval(
                                 parsed != null ? parsed[index]['rstatus'] : '');
                             return Container(
-                              // height: 120,
-                              padding: EdgeInsets.only(
-                                  left: 5, right: 5, top: 5, bottom: 5),
+                              padding: EdgeInsets.all(3),
+                              // height: 100,
+                              // padding: EdgeInsets.only(
+                              //     left: 4, right: 4, top: 4, bottom: 4),
                               child: Card(
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
