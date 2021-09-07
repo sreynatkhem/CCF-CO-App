@@ -1,4 +1,5 @@
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class WidgetCardAddRef extends StatelessWidget {
@@ -23,9 +24,10 @@ class WidgetCardAddRef extends StatelessWidget {
     return InkWell(
       onTap: onTaps,
       child: Container(
+        padding: EdgeInsets.all(isIphoneX(context) ? 30 : 20),
         alignment: Alignment.center,
-        width: 155,
-        height: 120,
+        // width: 155,
+        // height: 120,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -46,34 +48,37 @@ class WidgetCardAddRef extends StatelessWidget {
             ? Stack(children: <Widget>[
                 imageDocumented != null
                     ? Container(
-                        height: 100, child: Image.memory(imageDocumented))
-                    : Container(height: 100, child: Image.file(image)),
+                        height: 90, child: Image.memory(imageDocumented))
+                    : Container(height: 90, child: Image.file(image)),
                 Positioned(
-                    top: 0,
-                    right: 25,
+                    // top: 0,
+                    // right: 25,
                     child: GestureDetector(
-                      onTap: onClearImage,
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                    ))
+                  onTap: onClearImage,
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                ))
               ])
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    width: 110,
+                    width: 113,
+                    height: 50,
+                    padding: EdgeInsets.all(10),
                     alignment: Alignment.center,
                     child: Text(
                       text,
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 13),
                       textAlign: TextAlign.center,
+                      maxLines: 2,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: EdgeInsets.only(top: 10),
                   ),
                   Icon(
                     Icons.add_a_photo,

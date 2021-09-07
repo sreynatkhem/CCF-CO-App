@@ -347,8 +347,9 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                 parsed != null ? parsed[index]['lstatus'] : '');
                             return Container(
                               // height: 130,
-                              padding:
-                                  EdgeInsets.only(left: 5, right: 5, top: 3),
+                              // padding: EdgeInsets.all(3),
+                              // padding:
+                              //     EdgeInsets.only(left: 5, right: 5, top: 3),
                               child: Card(
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(

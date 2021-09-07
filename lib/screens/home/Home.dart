@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
@@ -15,6 +16,7 @@ import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/historyApsara/index.dart';
+import 'package:chokchey_finance/screens/home/profileImage.dart';
 import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
@@ -26,11 +28,15 @@ import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/screens/requestSummary/index.dart';
 import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:chokchey_finance/screens/home/profileImage.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 // import 'package:url_launcher/url_launcher.dart';
@@ -48,6 +54,7 @@ class _HomeState extends State<Home> {
 
   String userId = '';
   String userName = '';
+  dynamic _profleImage;
 
   var profile;
 
@@ -259,6 +266,13 @@ class _HomeState extends State<Home> {
     );
   }
 
+  profileImage() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfileUploadImage(dynamic)),
+    );
+  }
+
   englishLanguage() {
     Locale _temp;
     _temp = Locale('en', 'US');
@@ -284,17 +298,38 @@ class _HomeState extends State<Home> {
               child: Column(
                 children: <Widget>[
                   Flexible(
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      margin: EdgeInsets.only(bottom: 5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image:
-                            DecorationImage(image: profile, fit: BoxFit.fill),
-                      ),
+                      child: Container(
+                    width: 100,
+                    height: 100,
+                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      clipBehavior: Clip.none,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProfileUploadImage(dynamic)),
+                            );
+                          },
+                          child: CircleAvatar(
+                            // child: profileImage!=null?profileImage:p,
+                            backgroundImage:
+                                AssetImage("assets/images/profile_create.jpg"),
+                            backgroundColor: Colors.grey,
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+
+                    // decoration: BoxDecoration(
+                    //   shape: BoxShape.circle,
+                    //   image: DecorationImage(image: profile, fit: BoxFit.fill),
+                    // ),
+                  )),
                   Text(
                     userName != "" ? userName : "",
                     style: TextStyle(
@@ -399,6 +434,15 @@ class _HomeState extends State<Home> {
                               "Loan Approval History",
                           () => {onListApprovalApsaraHistory()},
                           null),
+
+                      // Navigate to Profile screen, Need API First.
+
+                      // CustomListTile(
+                      //     Icons.person,
+                      //     AppLocalizations.of(context)!.translate('profile') ??
+                      //         "Profile",
+                      //     () => {profileImage()},
+                      //     null),
                       CustomListTile(
                         null,
                         AppLocalizations.of(context)!

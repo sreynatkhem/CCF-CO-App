@@ -197,7 +197,7 @@ class _LoanRegister extends State {
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
     var irr = iRRControllers.text;
-    var irrInt = double.parse(irr);
+    var irrInt = double.parse(irr.toString().replaceAll(",", "."));
     var expdate = expdateDay != null ? expdateDay : DateTime.now();
     try {
       final Map<String, dynamic> boyrow = {
@@ -294,6 +294,8 @@ class _LoanRegister extends State {
 
   final TextEditingController customerNameControllers = TextEditingController();
   final TextEditingController iRRControllers = TextEditingController(text: '');
+  final TextEditingController monthlyController = TextEditingController();
+
   var data = [
     {'name': "Mr.Sea", 'id': '001'},
     {'name': "Mr.SOk", 'id': '002'},
@@ -403,22 +405,18 @@ class _LoanRegister extends State {
       var numberofTermIRR;
       var adminFeeIRR;
       var valueIRR;
-
-      logger.e('valueInterest: $valueInterest');
-      logger.e('valueAdminFee: $valueAdminFee');
-
       interestIRR = valueInterest != null
-          ? double.parse(valueInterest ?? "0")
+          ? double.parse(valueInterest)
           : double.parse('0.0');
       maintenanceFeeIRR = valueMaintenanceFee != null
-          ? double.parse(valueMaintenanceFee ?? "0")
+          ? double.parse(valueMaintenanceFee)
           : double.parse('0.0');
       if (mounted)
         adminFeeIRR = valueAdminFee != null
-            ? double.parse(valueAdminFee ?? "0")
+            ? double.parse(valueAdminFee)
             : double.parse('0.0');
       numberofTermIRR = valueNumberofTerm != null
-          ? double.parse(valueNumberofTerm ?? "0")
+          ? double.parse(valueNumberofTerm)
           : double.parse('0.0');
       setState(() {
         valueIRR = ((interestIRR + maintenanceFeeIRR) * 12) +
@@ -720,6 +718,7 @@ class _LoanRegister extends State {
                         keys: interestRate,
                         imageIcon: percentages,
                         childs: FormBuilderTextField(
+                          controller: monthlyController,
                           name: 'number',
                           focusNode: interestRateFocus,
                           textInputAction: TextInputAction.next,
@@ -736,7 +735,8 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueInterest = v!;
+                                valueInterest =
+                                    v.toString().replaceAll(",", ".");
                               });
                             }
                           },
@@ -755,7 +755,8 @@ class _LoanRegister extends State {
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]')),
                           ],
                         ),
                       ),
@@ -778,7 +779,8 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueMaintenanceFee = v;
+                                valueMaintenanceFee =
+                                    v.toString().replaceAll(",", ".");
                               });
                             }
                           },
@@ -796,7 +798,7 @@ class _LoanRegister extends State {
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                            // FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                       ),
@@ -820,12 +822,13 @@ class _LoanRegister extends State {
                             if (mounted)
                               {
                                 setState(() {
-                                  valueAdminFee = v!;
-                                  valueRepaymentMethod = v;
+                                  valueAdminFee =
+                                      v.toString().replaceAll(",", ".");
+                                  valueRepaymentMethod =
+                                      v.toString().replaceAll(",", ".");
                                 }),
-                                if (v != null || v != "")
+                                if (v != null && v != "" && v.length > 1)
                                   {
-                                    logger.e("v: $v"),
                                     iRRCalculation(),
                                   }
                               }
@@ -843,7 +846,8 @@ class _LoanRegister extends State {
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]')),
                           ],
                         ),
                       ),
@@ -1037,7 +1041,7 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueLTV = v;
+                                valueLTV = v.toString().replaceAll(",", ".");
                               });
                             }
                           },
@@ -1053,7 +1057,8 @@ class _LoanRegister extends State {
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]')),
                           ],
                         ),
                       ),
@@ -1075,7 +1080,7 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueDscr = v;
+                                valueDscr = v.toString().replaceAll(",", ".");
                               });
                             }
                           },
@@ -1091,7 +1096,8 @@ class _LoanRegister extends State {
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp('[0-9.,]')),
                           ],
                         ),
                       ),
@@ -1125,6 +1131,13 @@ class _LoanRegister extends State {
                             'Save',
                         color: logolightGreen,
                         pressEvent: () {
+                          // maintenanceFee.currentState!.value['number'] =
+                          //     maintenanceFee.currentState!.value['number']
+                          //         .toString()
+                          //         .replaceAll(",", ".");
+
+                          // logger.e(
+                          //     "maintenanceFee.currentState: ${maintenanceFee.currentState!.value['number']}");
                           if (currenciesKey.currentState!.saveAndValidate() &&
                               loanAmount.currentState!.saveAndValidate() &&
                               loanProductsKey.currentState!.saveAndValidate() &&
@@ -1140,7 +1153,12 @@ class _LoanRegister extends State {
                               loanPurpose.currentState!.saveAndValidate() &&
                               ltvKey.currentState!.saveAndValidate() &&
                               dscrKey.currentState!.saveAndValidate()) {
-                            if (selectedValueCustomer == false) {
+                            var v = maintenanceFee.currentState!.value['number']
+                                .toString()
+                                .replaceAll(",", ".");
+                            if (double.parse(v) == 0.7) {
+                              maintenanceFee.currentState!.saveAndValidate();
+                            } else if (selectedValueCustomer == false) {
                               setState(() {
                                 validateCustomer = true;
                               });

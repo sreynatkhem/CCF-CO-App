@@ -553,7 +553,7 @@ class _DisApprovalSummaryState extends State<DisApprovalSummary> {
                       padding: EdgeInsets.only(left: 10),
                       child: Row(
                         children: [
-                          Icon(Icons.filter_list),
+                          // Icon(Icons.filter_list),
                           Padding(padding: EdgeInsets.only(right: 5)),
                           Text(
                             'Filter',

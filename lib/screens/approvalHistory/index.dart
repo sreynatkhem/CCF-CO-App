@@ -282,18 +282,22 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                 child: Column(
                   children: [
                     Container(
-                      height: 700,
-                      padding: EdgeInsets.all(5),
+                      height: 800,
+                      width: 500,
+                      padding: EdgeInsets.all(1),
                       child: Card(
                         child: Padding(
-                          padding: const EdgeInsets.all(1.0),
+                          padding: const EdgeInsets.all(10),
                           child: Column(
                             children: <Widget>[
                               Row(
                                 children: [
                                   Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
+                                          right: 1,
+                                          left: 50,
+                                          top: 1,
+                                          bottom: 2),
                                       child: CardReport(
                                         backgroundColors: logolightGreen,
                                         iconSizes: 25.0,
@@ -303,7 +307,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                       )),
                                   Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
+                                          right: 1, left: 2, top: 1, bottom: 2),
                                       child: CardReport(
                                         backgroundColors: Colors.green,
                                         iconSizes: 25.0,
@@ -311,43 +315,85 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                         text: 'total_approved',
                                         value: totalApproved.toString(),
                                       )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
-                                      child: CardReport(
-                                        backgroundColors: Colors.orange,
-                                        iconSizes: 25.0,
-                                        icons: Icons.replay,
-                                        text: 'total_processing',
-                                        value: totalProcessing.toString(),
-                                      )),
                                 ],
                               ),
+                              Container(
+                                width: 500,
+                                // height: 10,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 1,
+                                            left: 50,
+                                            top: 1,
+                                            bottom: 2),
+                                        child: CardReport(
+                                          backgroundColors: logolightGreen,
+                                          iconSizes: 25.0,
+                                          icons: Icons.cancel,
+                                          text: 'total_returned',
+                                          value: totalReturned.toString(),
+                                        )),
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 1,
+                                            right: 2,
+                                            bottom: 1,
+                                            top: 2),
+                                        child: CardReport(
+                                          backgroundColors: Colors.red,
+                                          iconSizes: 25.0,
+                                          icons: Icons.receipt,
+                                          text: 'total_disapproved',
+                                          value: totalDisapproved.toString(),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 500,
+                                // height: 10,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 1,
+                                            left: 50,
+                                            top: 1,
+                                            bottom: 2),
+                                        child: CardReport(
+                                          backgroundColors: logolightGreen,
+                                          iconSizes: 25.0,
+                                          icons: Icons.cancel,
+                                          text: 'total_loan',
+                                          value: totalReturned.toString(),
+                                        )),
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 1,
+                                            right: 2,
+                                            bottom: 1,
+                                            top: 2),
+                                        child: CardReport(
+                                          backgroundColors: Colors.orange,
+                                          iconSizes: 25.0,
+                                          icons: Icons.receipt,
+                                          text: 'total_processing',
+                                          value: totalDisapproved.toString(),
+                                        )),
+                                  ],
+                                ),
+                              ),
+
                               Row(
                                 children: [
                                   Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
-                                      child: CardReport(
-                                        backgroundColors: logolightGreen,
-                                        iconSizes: 25.0,
-                                        icons: Icons.cancel,
-                                        text: 'total_returned',
-                                        value: totalReturned.toString(),
-                                      )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
-                                      child: CardReport(
-                                        backgroundColors: Colors.red,
-                                        iconSizes: 25.0,
-                                        icons: Icons.receipt,
-                                        text: 'total_disapproved',
-                                        value: totalDisapproved.toString(),
-                                      )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
+                                          left: 110,
+                                          right: 50,
+                                          bottom: 5,
+                                          top: 5),
                                       child: CardReport(
                                         backgroundColors: logolightGreen,
                                         iconSizes: 25.0,
@@ -357,21 +403,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                       )),
                                 ],
                               ),
-                              //New
-                              Row(
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2, right: 2, bottom: 5, top: 5),
-                                      child: CardReport(
-                                        backgroundColors: logolightGreen,
-                                        iconSizes: 25.0,
-                                        icons: Icons.cancel,
-                                        text: 'total_loan',
-                                        value: totalLoan.toString(),
-                                      )),
-                                ],
-                              ),
+
                               //
                               Expanded(
                                 child: charts.BarChart(
