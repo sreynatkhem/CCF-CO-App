@@ -212,6 +212,12 @@
   "profile_upload_image":"Profile Upload Image",
   "see_your_profile":"See your Profile",
   "profile":"Profile",
-  "dis":"Dis"
+  "dis":"DisApproved",
+  "cu":"Cutomer",
+  "ap":"Approves",
+  "pro":"Processings",
+  "req":"Requests",
+  "lo":"Loans",
+  "re":"Returns"
 
 }

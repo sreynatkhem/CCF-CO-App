@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
@@ -275,8 +276,9 @@ class _HomeState extends State<Home> {
   }
 
   phoneCallLog() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CallLogScreen()));
+    if (Platform.isAndroid)
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CallLogScreen()));
   }
 
   englishLanguage() {
@@ -440,14 +442,15 @@ class _HomeState extends State<Home> {
                               "Loan Approval History",
                           () => {onListApprovalApsaraHistory()},
                           null),
-                      CustomListTile(
-                          Icons.phone_locked,
+                      if (Platform.isAndroid)
+                        CustomListTile(
+                            Icons.phone_locked,
 
-                          // AppLocalizations.of(context)!
-                          //         .translate('loan_approval_history') ??
-                          "Call log",
-                          () => {phoneCallLog()},
-                          null),
+                            // AppLocalizations.of(context)!
+                            //         .translate('loan_approval_history') ??
+                            "Call log",
+                            () => {phoneCallLog()},
+                            null),
 
                       // Navigate to Profile screen, Need API First.
 

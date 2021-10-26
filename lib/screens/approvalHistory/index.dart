@@ -326,7 +326,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                 ],
                               ),
                               Container(
-                                width: 500,
+                                width: widthView(context, 1),
                                 // height: 10,
                                 child: Row(
                                   children: [
@@ -360,7 +360,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                 ),
                               ),
                               Container(
-                                width: 500,
+                                width: widthView(context, 1),
                                 // height: 10,
                                 child: Row(
                                   children: [
@@ -393,7 +393,6 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                   ],
                                 ),
                               ),
-
                               Row(
                                 children: [
                                   Padding(
@@ -411,108 +410,115 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                       )),
                                 ],
                               ),
-                              Padding(padding: EdgeInsets.all(5)),
-                              Container(
-                                width: 310,
-                                height: 70,
-                                child: Column(
-                                  children: [
-                                    Row(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 150,
+                                        height: 120,
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: logolightGreen,
+                                                ),
+                                                Text(" Cu  = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('cu') ?? 'customer'}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: Colors.green,
+                                                ),
+                                                Text(" Ap  = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('ap') ?? 'Approves'}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: Colors.orange,
+                                                ),
+                                                Text(" pro = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('pro') ?? 'Processings'}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: logolightGreen,
+                                                ),
+                                                Text(" Re  = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('re') ?? 'Returns'}"),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    width: 150,
+                                    height: 100,
+                                    child: Column(
                                       children: [
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: logolightGreen,
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              color: Colors.red,
+                                            ),
+                                            Text(" Dis = "),
+                                            Text(
+                                                "${AppLocalizations.of(context)!.translate('dis') ?? 'DisApproved'}")
+                                          ],
                                         ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Cu = Customer(*)"),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              color: logolightGreen,
+                                            ),
+                                            Text(" Pro = "),
+                                            Text(
+                                                "${AppLocalizations.of(context)!.translate('req') ?? 'Requests'}")
+                                          ],
                                         ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 30)),
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: Colors.red,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Dis = DisApproved"),
-                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              color: logolightGreen,
+                                            ),
+                                            Text(" Lo  = "),
+                                            Text(
+                                                "${AppLocalizations.of(context)!.translate('lo') ?? 'Loans'}")
+                                          ],
+                                        )
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: Colors.green,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Ap = Approve"),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 55)),
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: logolightGreen,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Req = Request"),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: Colors.orange,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Pro = Processing"),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 33)),
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: logolightGreen,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Lo = Loan(*)"),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 15,
-                                          height: 15,
-                                          color: logolightGreen,
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 10)),
-                                        Container(
-                                          child: Text("Re = Return"),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              //
                               Expanded(
                                 child: charts.BarChart(
                                   _createSampleData(),
