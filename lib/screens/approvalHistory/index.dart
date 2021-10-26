@@ -67,25 +67,33 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   List<charts.Series<OrdinalSales, String>> _createSampleData() {
     final data = [
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('customer') ?? 'Customer',
+          // AppLocalizations.of(context)!.translate('customer') ?? 'Customer',
+          "Cu",
           totalCustomer),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('approve') ?? 'Approve',
+          // AppLocalizations.of(context)!.translate('approve') ?? 'Approve',
+          "Ap",
           totalApproved),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('processing') ?? 'Processing',
+          "Pro",
+          // AppLocalizations.of(context)!.translate('processing') ?? 'Processing',
           totalApproved),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('return') ?? 'Return',
+          "Re",
+          // AppLocalizations.of(context)!.translate('return') ?? 'Return',
           totalReturned),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('disapprove') ?? 'Disapprove',
+          "Dis",
+          // AppLocalizations.of(context)!.translate('disapprove') ?? 'Disapprove',
           totalDisapproved),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('request') ?? 'Request',
+          "Req",
+          // AppLocalizations.of(context)!.translate('request') ?? 'Request',
           totalRequested),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('loan') ?? 'Loan', totalLoan),
+          "Lo",
+          // AppLocalizations.of(context)!.translate('loan') ?? 'Loan',
+          totalLoan),
     ];
 
     return [
@@ -94,7 +102,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
         // colorFn: (_, __) => charts.ColorUtil.fromDartColor(logolightGreen),
         colorFn: (OrdinalSales segment, _) {
           switch (segment.year) {
-            case 'Approve':
+            case 'Ap':
               {
                 return charts.ColorUtil.fromDartColor(Colors.green);
               }
@@ -102,7 +110,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
               {
                 return charts.ColorUtil.fromDartColor(Colors.green);
               }
-            case "Disapprove":
+            case "Dis":
               {
                 return charts.ColorUtil.fromDartColor(Colors.red);
               }
@@ -111,7 +119,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
               {
                 return charts.ColorUtil.fromDartColor(Colors.red);
               }
-            case "Processing":
+            case "Pro":
               {
                 return charts.ColorUtil.fromDartColor(Colors.orange);
               }
@@ -403,7 +411,107 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                       )),
                                 ],
                               ),
-
+                              Padding(padding: EdgeInsets.all(5)),
+                              Container(
+                                width: 310,
+                                height: 70,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: logolightGreen,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Cu = Customer(*)"),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 30)),
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: Colors.red,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Dis = DisApproved"),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: Colors.green,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Ap = Approve"),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 55)),
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: logolightGreen,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Req = Request"),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: Colors.orange,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Pro = Processing"),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 33)),
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: logolightGreen,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Lo = Loan(*)"),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 15,
+                                          height: 15,
+                                          color: logolightGreen,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        Container(
+                                          child: Text("Re = Return"),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
                               //
                               Expanded(
                                 child: charts.BarChart(

@@ -65,7 +65,8 @@ dependencies:
   flutter_multi_formatter: ^2.1.0
   smart_select: ^4.3.2
   group_list_view: ^1.0.6
-
+  # call_log: ^3.0.3
+  call_log: ^3.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -127,6 +128,7 @@ flutter:
     - assets/images/302.png
     - assets/images/english.png
     - assets/images/khmer.png
+    - assets/images/phonecall.png
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
