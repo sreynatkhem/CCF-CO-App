@@ -468,9 +468,9 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                                                     width: 50,
                                                     height: 50,
                                                   ),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          right: 15)),
+                                                  // Padding(
+                                                  //     padding: EdgeInsets.only(
+                                                  //         right: 15)),
                                                   Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment

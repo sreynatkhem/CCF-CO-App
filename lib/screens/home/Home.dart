@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
@@ -11,12 +12,13 @@ import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
+import 'package:chokchey_finance/screens/callLog/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/historyApsara/index.dart';
-import 'package:chokchey_finance/screens/home/profileImage.dart';
+import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
@@ -30,7 +32,7 @@ import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:chokchey_finance/screens/home/profileImage.dart';
+import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
@@ -273,6 +275,12 @@ class _HomeState extends State<Home> {
     );
   }
 
+  phoneCallLog() async {
+    if (Platform.isAndroid)
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CallLogScreen()));
+  }
+
   englishLanguage() {
     Locale _temp;
     _temp = Locale('en', 'US');
@@ -434,6 +442,15 @@ class _HomeState extends State<Home> {
                               "Loan Approval History",
                           () => {onListApprovalApsaraHistory()},
                           null),
+                      if (Platform.isAndroid)
+                        CustomListTile(
+                            Icons.phone_locked,
+
+                            // AppLocalizations.of(context)!
+                            //         .translate('loan_approval_history') ??
+                            "Call log",
+                            () => {phoneCallLog()},
+                            null),
 
                       // Navigate to Profile screen, Need API First.
 

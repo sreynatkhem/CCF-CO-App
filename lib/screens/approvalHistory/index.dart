@@ -67,25 +67,33 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   List<charts.Series<OrdinalSales, String>> _createSampleData() {
     final data = [
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('customer') ?? 'Customer',
+          // AppLocalizations.of(context)!.translate('customer') ?? 'Customer',
+          "Cu",
           totalCustomer),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('approve') ?? 'Approve',
+          // AppLocalizations.of(context)!.translate('approve') ?? 'Approve',
+          "Ap",
           totalApproved),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('processing') ?? 'Processing',
+          "Pro",
+          // AppLocalizations.of(context)!.translate('processing') ?? 'Processing',
           totalApproved),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('return') ?? 'Return',
+          "Re",
+          // AppLocalizations.of(context)!.translate('return') ?? 'Return',
           totalReturned),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('disapprove') ?? 'Disapprove',
+          "Dis",
+          // AppLocalizations.of(context)!.translate('disapprove') ?? 'Disapprove',
           totalDisapproved),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('request') ?? 'Request',
+          "Req",
+          // AppLocalizations.of(context)!.translate('request') ?? 'Request',
           totalRequested),
       new OrdinalSales(
-          AppLocalizations.of(context)!.translate('loan') ?? 'Loan', totalLoan),
+          "Lo",
+          // AppLocalizations.of(context)!.translate('loan') ?? 'Loan',
+          totalLoan),
     ];
 
     return [
@@ -94,7 +102,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
         // colorFn: (_, __) => charts.ColorUtil.fromDartColor(logolightGreen),
         colorFn: (OrdinalSales segment, _) {
           switch (segment.year) {
-            case 'Approve':
+            case 'Ap':
               {
                 return charts.ColorUtil.fromDartColor(Colors.green);
               }
@@ -102,7 +110,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
               {
                 return charts.ColorUtil.fromDartColor(Colors.green);
               }
-            case "Disapprove":
+            case "Dis":
               {
                 return charts.ColorUtil.fromDartColor(Colors.red);
               }
@@ -111,7 +119,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
               {
                 return charts.ColorUtil.fromDartColor(Colors.red);
               }
-            case "Processing":
+            case "Pro":
               {
                 return charts.ColorUtil.fromDartColor(Colors.orange);
               }
@@ -318,7 +326,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                 ],
                               ),
                               Container(
-                                width: 500,
+                                width: widthView(context, 1),
                                 // height: 10,
                                 child: Row(
                                   children: [
@@ -352,7 +360,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                 ),
                               ),
                               Container(
-                                width: 500,
+                                width: widthView(context, 1),
                                 // height: 10,
                                 child: Row(
                                   children: [
@@ -385,7 +393,6 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                   ],
                                 ),
                               ),
-
                               Row(
                                 children: [
                                   Padding(
@@ -403,8 +410,115 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                       )),
                                 ],
                               ),
-
-                              //
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 150,
+                                        height: 120,
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: logolightGreen,
+                                                ),
+                                                Text(" Cu  = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('cu') ?? 'customer'}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: Colors.green,
+                                                ),
+                                                Text(" Ap  = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('ap') ?? 'Approves'}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: Colors.orange,
+                                                ),
+                                                Text(" pro = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('pro') ?? 'Processings'}"),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 15,
+                                                  height: 15,
+                                                  color: logolightGreen,
+                                                ),
+                                                Text(" Re  = "),
+                                                Text(
+                                                    "${AppLocalizations.of(context)!.translate('re') ?? 'Returns'}"),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    width: 150,
+                                    height: 100,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              color: Colors.red,
+                                            ),
+                                            Text(" Dis = "),
+                                            Text(
+                                                "${AppLocalizations.of(context)!.translate('dis') ?? 'DisApproved'}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              color: logolightGreen,
+                                            ),
+                                            Text(" Pro = "),
+                                            Text(
+                                                "${AppLocalizations.of(context)!.translate('req') ?? 'Requests'}")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 15,
+                                              height: 15,
+                                              color: logolightGreen,
+                                            ),
+                                            Text(" Lo  = "),
+                                            Text(
+                                                "${AppLocalizations.of(context)!.translate('lo') ?? 'Loans'}")
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Expanded(
                                 child: charts.BarChart(
                                   _createSampleData(),
