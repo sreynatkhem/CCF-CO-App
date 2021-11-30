@@ -65,6 +65,7 @@ dependencies:
   smart_select: ^4.3.2
   group_list_view: ^1.0.6
   call_log: ^2.0.2
+  webview_flutter: ^2.0.9
   
 
 dev_dependencies:
