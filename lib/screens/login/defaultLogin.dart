@@ -1,6 +1,7 @@
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 
 class DefaultLogin extends StatelessWidget {
   final controllerUser;
@@ -41,7 +42,7 @@ class DefaultLogin extends StatelessWidget {
               keyboardType: TextInputType.number,
               onFieldSubmitted: onFieldSubmittedUser,
               inputFormatters: <TextInputFormatter>[
-                WhitelistingTextInputFormatter.digitsOnly
+                FilteringTextInputFormatter.digitsOnly
               ],
               decoration: InputDecoration(
                   focusedBorder: UnderlineInputBorder(

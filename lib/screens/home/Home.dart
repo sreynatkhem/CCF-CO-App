@@ -36,7 +36,7 @@ import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+// import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info/package_info.dart';
@@ -276,7 +276,7 @@ class _HomeState extends State<Home> {
   }
 
   phoneCallLog() async {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) //Condition for platform Android
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => CallLogScreen()));
   }
@@ -400,6 +400,16 @@ class _HomeState extends State<Home> {
                               'Group loan approve',
                           () => {onListGroupLoanApprove()},
                           null),
+                      //Call Log
+                      if (Platform.isAndroid)
+                        CustomListTile(
+                            Icons.phone_locked,
+                            AppLocalizations.of(context)!
+                                    .translate('call_log') ??
+                                "Call log",
+                            () => {phoneCallLog()},
+                            null),
+
                       CustomListTile(
                           Icons.insert_chart,
                           AppLocalizations.of(context)!
@@ -442,15 +452,7 @@ class _HomeState extends State<Home> {
                               "Loan Approval History",
                           () => {onListApprovalApsaraHistory()},
                           null),
-                      if (Platform.isAndroid)
-                        CustomListTile(
-                            Icons.phone_locked,
-
-                            // AppLocalizations.of(context)!
-                            //         .translate('loan_approval_history') ??
-                            "Call log",
-                            () => {phoneCallLog()},
-                            null),
+                      //CallLog for Android
 
                       // Navigate to Profile screen, Need API First.
 

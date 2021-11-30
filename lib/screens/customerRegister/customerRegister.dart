@@ -550,9 +550,11 @@ class _CustomerRegister extends State {
                         ]),
                         keyboardType: TextInputType.text,
                         inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp("[0-9/\\\\|!.]"))
                           // ignore: deprecated_member_use
-                          BlacklistingTextInputFormatter(
-                              RegExp("[0-9/\\\\|!.]")),
+                          // BlacklistingTextInputFormatter(
+                          //     RegExp("[0-9/\\\\|!.]")),
                         ],
                       ),
                     ),
@@ -590,9 +592,10 @@ class _CustomerRegister extends State {
                         },
                         keyboardType: TextInputType.text,
                         inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
                           // ignore: deprecated_member_use
-                          new WhitelistingTextInputFormatter(
-                              RegExp("[a-z A-Z]")),
+                          // new WhitelistingTextInputFormatter(
+                          //     RegExp("[a-z A-Z]")),
                         ],
                       ),
                     ),
@@ -660,7 +663,8 @@ class _CustomerRegister extends State {
                         },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly
+                          // WhitelistingTextInputFormatter.digitsOnly
                         ],
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(context,
@@ -696,7 +700,8 @@ class _CustomerRegister extends State {
                         },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly
+                          // WhitelistingTextInputFormatter.digitsOnly
                         ],
                         valueTransformer: (text) {
                           return text == null ? null : text;

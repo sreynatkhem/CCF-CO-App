@@ -613,7 +613,7 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     name: 'number',
                     controller: selectedCustomerID,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly
+                      FilteringTextInputFormatter.digitsOnly,
                     ],
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
@@ -698,7 +698,7 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     autofocus: true,
                     controller: loanController,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly
+                      FilteringTextInputFormatter.digitsOnly,
                     ],
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
@@ -817,8 +817,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     ]),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
-                          RegExp(r'^(\d+)?\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'))
                     ],
                   ),
                 ),
@@ -860,8 +860,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     ]),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
-                          RegExp(r'^(\d+)?\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'))
                     ],
                   ),
                 ),
@@ -902,8 +902,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     ]),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
-                          RegExp(r'^(\d+)?\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'))
                     ],
                   ),
                 ),
@@ -941,8 +941,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                     ]),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
-                          RegExp(r'^(\d+)?\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'))
                     ],
                   ),
                 ),
@@ -968,9 +968,7 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                                   .translate('irr_required') ??
                               "IRR required(*)"),
                     ]),
-                    inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                 ),
                 GroupFromBuilder(
@@ -1085,7 +1083,8 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                       FormBuilderValidators.required(context),
                     ]),
                     inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly
+                      FilteringTextInputFormatter.digitsOnly
+                      // WhitelistingTextInputFormatter.digitsOnly
                     ],
                   ),
                 ),
@@ -1152,8 +1151,10 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                       FormBuilderValidators.max(context, 0.9)
                     ]),
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
-                          RegExp(r'^(\d+)?\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'))
+                      // WhitelistingTextInputFormatter(
+                      //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                     ],
                   ),
                 ),
@@ -1188,8 +1189,10 @@ class _EditLoanRegister extends State<EditLoanRegister> {
                       FormBuilderValidators.min(context, 0),
                     ]),
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(
-                          RegExp(r'^(\d+)?\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^(\d+)?\.?\d{0,2}'))
+                      // WhitelistingTextInputFormatter(
+                      //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                     ],
                   ),
                 ),

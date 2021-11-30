@@ -519,7 +519,7 @@ class _LoanRegister extends State {
                           name: 'number',
                           controller: selectedCustomerID,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
@@ -596,7 +596,7 @@ class _LoanRegister extends State {
                         childs: FormBuilderTextField(
                           name: 'number',
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                           textInputAction: TextInputAction.next,
                           decoration: InputDecoration(
@@ -709,8 +709,8 @@ class _LoanRegister extends State {
                           ]),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,2}'))
                           ],
                         ),
                       ),
@@ -874,7 +874,8 @@ class _LoanRegister extends State {
                                     "IRR required(*)"),
                           ]),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            // WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                       ),
@@ -989,7 +990,8 @@ class _LoanRegister extends State {
                             ),
                           ]),
                           inputFormatters: [
-                            WhitelistingTextInputFormatter.digitsOnly
+                            // WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                       ),

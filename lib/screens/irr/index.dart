@@ -311,8 +311,10 @@ class _IRRScreenState extends State<IRRScreen> {
                           name: 'number',
                           inputFormatters: [
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,100}')),
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,100}'))
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,100}')),
                           ],
                           controller: grossAmountDefaultController,
                           textInputAction: TextInputAction.next,
@@ -387,9 +389,11 @@ class _IRRScreenState extends State<IRRScreen> {
                                     "IRR required(*)"),
                           ]),
                           inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,2}'))
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                           onChanged: (v) {
                             var numberFormat =
@@ -611,7 +615,8 @@ class _IRRScreenState extends State<IRRScreen> {
                     ]),
                     inputFormatters: [
                       // ignore: deprecated_member_use
-                      WhitelistingTextInputFormatter.digitsOnly,
+                      // WhitelistingTextInputFormatter.digitsOnly,
+                      FilteringTextInputFormatter.digitsOnly
                     ],
                     onChanged: (value) {
                       if (mounted)
@@ -697,9 +702,11 @@ class _IRRScreenState extends State<IRRScreen> {
                           ]),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,100}'))
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,100}')),
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,100}')),
                             // CurrencyInputFormatter(12),
                           ],
                           onChanged: (v) {
@@ -815,9 +822,11 @@ class _IRRScreenState extends State<IRRScreen> {
                             return text == null ? null : text;
                           },
                           inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,2}'))
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context,
@@ -836,9 +845,11 @@ class _IRRScreenState extends State<IRRScreen> {
                           keyboardType: TextInputType.number,
                           controller: monthlyInterestController,
                           inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,2}'))
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                           onChanged: (v) {
                             if (mounted) {
@@ -877,9 +888,11 @@ class _IRRScreenState extends State<IRRScreen> {
                           keyboardType: TextInputType.number,
                           controller: monthlyFeeRateController,
                           inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,2}'))
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                           onChanged: (v) {
                             if (mounted) {
@@ -921,9 +934,11 @@ class _IRRScreenState extends State<IRRScreen> {
                           name: "admin_fee_rate",
                           keyboardType: TextInputType.number,
                           inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^(\d+)?\.?\d{0,2}'))
                             // ignore: deprecated_member_use
-                            WhitelistingTextInputFormatter(
-                                RegExp(r'^(\d+)?\.?\d{0,2}')),
+                            // WhitelistingTextInputFormatter(
+                            //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
                           validator: FormBuilderValidators.compose([
                             FormBuilderValidators.max(context, 2),
@@ -1509,7 +1524,10 @@ class _IRRScreenState extends State<IRRScreen> {
         height: 60.0,
         color: Colors.white,
         margin: EdgeInsets.all(4.0),
-        child: Text("${index + 1}", style: Theme.of(context).textTheme.title),
+        child: Text(
+          "${index + 1}",
+        ),
+        // style: Theme.of(context).textTheme.subtitle1
       ),
     );
   }
