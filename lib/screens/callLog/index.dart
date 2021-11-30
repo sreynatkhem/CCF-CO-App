@@ -1,8 +1,10 @@
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
+import 'package:logger/logger.dart';
 
 class CallLogScreen extends StatefulWidget {
   const CallLogScreen({Key? key}) : super(key: key);
@@ -14,15 +16,11 @@ class CallLogScreen extends StatefulWidget {
 class _CallLogScreenState extends State<CallLogScreen> {
   @override
   void didChangeDependencies() async {
-    // Future.delayed(
-    //   Duration(seconds: 1),
-    // ).then((value) => onFetchCallLog());
     onFetchCallLog();
     super.didChangeDependencies();
   }
 
   bool _isLoading = false;
-
   dynamic _callLogEntries;
 
   onFetchCallLog() async {
@@ -44,12 +42,12 @@ class _CallLogScreenState extends State<CallLogScreen> {
       );
 
       for (CallLogEntry entry in entries) {
+        var callType = entry.callType.toString().substring(9).toCapitalized();
         children.add(
           Column(
             children: [
               Container(
-                padding: EdgeInsets.all(2),
-                // margin: EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                padding: EdgeInsets.only(top: 5, left: 5, right: 5),
                 width: MediaQuery.of(context).size.width,
                 height: 100,
                 child: Card(
@@ -72,6 +70,7 @@ class _CallLogScreenState extends State<CallLogScreen> {
                             ),
                           ),
                           Container(
+                            padding: EdgeInsets.only(top: 8),
                             alignment: Alignment.bottomLeft,
                             width: 260,
                             height: 120,
@@ -81,18 +80,15 @@ class _CallLogScreenState extends State<CallLogScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Padding(
-                                        padding: EdgeInsets.only(bottom: 10)),
                                     Container(
-                                      width: 200,
-                                      child: Text(
-                                        'Name: ${entry.name}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                        overflow: TextOverflow.fade,
-                                      ),
-                                    ),
+                                        width: 200,
+                                        child: Text(
+                                          "Name: ${entry.name == null ? "" : entry.name}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                          overflow: TextOverflow.fade,
+                                        )),
                                     Row(
                                       children: [
                                         Container(
@@ -105,7 +101,7 @@ class _CallLogScreenState extends State<CallLogScreen> {
                                           ),
                                         ),
                                         Padding(
-                                            padding: EdgeInsets.only(left: 10)),
+                                            padding: EdgeInsets.only(left: 15)),
                                         Column(
                                           children: [
                                             Text(
@@ -125,7 +121,7 @@ class _CallLogScreenState extends State<CallLogScreen> {
                                     Container(
                                       width: 200,
                                       child: Text(
-                                        'Type: ${entry.callType}',
+                                        'Type: ${callType}',
                                       ),
                                     ),
                                   ],
@@ -135,31 +131,6 @@ class _CallLogScreenState extends State<CallLogScreen> {
                           ),
                         ],
                       ),
-
-                      // const Divider(),
-                      // Text(
-                      //   'F. NUMBER  : ${entry.formattedNumber}',
-                      // ),
-                      // Text(
-                      //   'C.M. NUMBER: ${entry.cachedMatchedNumber}',
-                      // ),
-                      // Text(
-                      //   'NUMBER     : ${entry.number}',
-                      // ),
-                      // Text(
-                      //   'TYPE       : ${entry.callType}',
-                      // ),
-                      // // Text('DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp)}',
-                      // //    ),
-                      // Text(
-                      //   'DURATION   : ${entry.duration} min',
-                      // ),
-                      // Text(
-                      //   'ACCOUNT ID : ${entry.phoneAccountId}',
-                      // ),
-                      // Text(
-                      //   'SIM NAME   : ${entry.simDisplayName}',
-                      // ),
                     ],
                   ),
                 ),
@@ -189,7 +160,8 @@ class _CallLogScreenState extends State<CallLogScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: logolightGreen,
-        title: Text("Call Log"),
+        title: Text(
+            AppLocalizations.of(context)!.translate('call_log') ?? "Call log"),
       ),
 
       // keys: _scaffoldKeyCreateCustomer,

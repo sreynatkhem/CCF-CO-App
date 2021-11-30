@@ -218,6 +218,7 @@
   "pro":"Processings",
   "req":"Requests",
   "lo":"Loans",
-  "re":"Returns"
+  "re":"Returns",
+  "call_log":"Call log"
 
 }
