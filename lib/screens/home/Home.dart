@@ -27,6 +27,7 @@ import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart'
 import 'package:chokchey_finance/screens/login/index.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
+import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:chokchey_finance/screens/requestSummary/index.dart';
 import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -271,7 +272,14 @@ class _HomeState extends State<Home> {
   profileImage() async {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProfileUploadImage(dynamic)),
+      MaterialPageRoute(builder: (context) => ProfileUploadImage()),
+    );
+  }
+
+  onClickCallLog() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CallLogScreen()),
     );
   }
 
@@ -319,8 +327,7 @@ class _HomeState extends State<Home> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProfileUploadImage(dynamic)),
+                                  builder: (context) => ProfileUploadImage()),
                             );
                           },
                           child: CircleAvatar(
@@ -462,6 +469,14 @@ class _HomeState extends State<Home> {
                       //         "Profile",
                       //     () => {profileImage()},
                       //     null),
+
+                      // Call Log User
+                      CustomListTile(
+                          Icons.history,
+                          // AppLocalizations.of(context)!.translate('profile') ??
+                          "Call Log",
+                          () => {onClickCallLog()},
+                          null),
                       CustomListTile(
                         null,
                         AppLocalizations.of(context)!
