@@ -11,9 +11,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileUploadImage extends StatefulWidget {
-  // const ProfileUploadImage({Key? key, dynamic lists}) : super(key: key);
-  dynamic lists;
-  ProfileUploadImage(this.lists);
   @override
   _ProfileUploadImageState createState() => _ProfileUploadImageState();
 }

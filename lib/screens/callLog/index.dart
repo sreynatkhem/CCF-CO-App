@@ -27,9 +27,6 @@ class _CallLogScreenState extends State<CallLogScreen> {
     setState(() {
       _isLoading = true;
     });
-    // Future.delayed(
-    //   Duration(seconds: 2),
-    // ).then((value) =>);
     try {
       Iterable entries = await CallLog.get();
 // QUERY CALL LOG (ALL PARAMS ARE OPTIONAL)
@@ -40,7 +37,9 @@ class _CallLogScreenState extends State<CallLogScreen> {
         dateFrom: from,
         dateTo: to,
       );
-
+      setState(() {
+        _isLoading = false;
+      });
       for (CallLogEntry entry in entries) {
         var callType = entry.callType.toString().substring(9).toCapitalized();
         children.add(
@@ -136,15 +135,11 @@ class _CallLogScreenState extends State<CallLogScreen> {
                 ),
               ),
             ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
           ),
         );
       }
-
-      Future.delayed(
-        Duration(seconds: 3),
-      ).then((value) => setState(() {
-            _isLoading = false;
-          }));
     } catch (error) {
       setState(() {
         _isLoading = false;
