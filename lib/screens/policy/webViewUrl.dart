@@ -33,22 +33,24 @@ class _WebViewUrlState extends State<WebViewUrl> {
           ),
           backgroundColor: logolightGreen,
           centerTitle: true),
-      body: Stack(children: <Widget>[
-        WebView(
-          initialUrl: widget.url,
-          javascriptMode: JavascriptMode.unrestricted,
-          onPageFinished: (finish) {
-            setState(() {
-              isLoading = false;
-            });
-          },
-        ),
-        isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Stack(),
-      ]),
+      body: Stack(
+        children: <Widget>[
+          WebView(
+            initialUrl: widget.url,
+            javascriptMode: JavascriptMode.unrestricted,
+            onPageFinished: (finish) {
+              setState(() {
+                isLoading = false;
+              });
+            },
+          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(),
+        ],
+      ),
     );
   }
 }
