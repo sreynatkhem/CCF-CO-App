@@ -167,9 +167,10 @@ class _LoginState extends State<Login> {
                         }),
                         // already change password
                         Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                            ModalRoute.withName("/login"))
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                          ModalRoute.withName("/login"),
+                        )
                       }
                   }
                 else
@@ -177,12 +178,14 @@ class _LoginState extends State<Login> {
                     showInSnackBar('Invalid User and Password!', Colors.red),
                   }
               })
-          .catchError((e) => {
-                setState(() {
-                  _isLoading = false;
-                }),
-                showInSnackBar('Invalid User and Password!', Colors.red),
-              });
+          .catchError(
+        (e) {
+          setState(() {
+            _isLoading = false;
+          });
+          showInSnackBar('Invalid User and Password!', Colors.red);
+        },
+      );
     } catch (error) {
       setState(() {
         _isLoading = false;

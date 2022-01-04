@@ -68,7 +68,9 @@ class _PolicyScreenState extends State<PolicyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var toLaunch = 'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
+    // var toLaunch = 'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
+    var toLaunch =
+        'https://drive.google.com/file/d/1Qi050IO1aDzQNSRQmG7hfx_XiQeYqWAf/view?usp=sharing';
     var creditOperationManualToLaunch =
         'https://drive.google.com/file/d/1VhkXHs3dHjSllJ47kCQN-lWw-6OHjaAi/view';
     // var test =
@@ -158,19 +160,7 @@ class _PolicyScreenState extends State<PolicyScreen> {
                       ),
                     ),
                   ),
-                // CardPolicy(
-                //   imageCard: hrPolicy,
-                //   onTap: () => Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => WebViewUrl(
-                //         title: "loan_check_list",
-                //         url: toLaunch,
-                //       ),
-                //     ),
-                //   ),
-                //   title: 'loan_check_list',
-                // ),
+
                 if (Platform.isAndroid)
                   Container(
                     margin: EdgeInsets.only(bottom: 5.0),

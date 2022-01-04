@@ -191,12 +191,13 @@ class _LoginState extends State<StepTwoLogin> {
                 hintText: firstLogin.text,
                 onSubmitted: (v) async {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      });
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  );
                   await onClickLogin(context);
                 },
               ),
@@ -205,23 +206,25 @@ class _LoginState extends State<StepTwoLogin> {
                 height: 45,
                 margin: EdgeInsets.only(top: 40, bottom: 20),
                 child: FlatButton(
-                    color: logolightGreen,
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(8.0),
-                    onPressed: () async {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          });
+                  color: logolightGreen,
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.all(8.0),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
 
-                      await onClickLogin(context);
-                    },
-                    child: Text(
-                      "Log In",
-                    )),
+                    await onClickLogin(context);
+                  },
+                  child: Text(
+                    "Log In",
+                  ),
+                ),
               ),
               Text(
                 'Forgot passwrod',
