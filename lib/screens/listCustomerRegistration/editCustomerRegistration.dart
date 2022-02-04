@@ -18,7 +18,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:select_dialog/select_dialog.dart';
-
+import 'package:geocoding/geocoding.dart';
 import 'detailCustomerRegistration.dart';
 
 class EditCustomerRegister extends StatefulWidget {
@@ -181,7 +181,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
   var listComunes = [];
   var listVillages = [];
 
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
   Position? _currentPosition;
   String? _currentAddress;
@@ -227,9 +227,8 @@ class _CustomerRegister extends State<EditCustomerRegister> {
     } catch (error) {}
   }
 
-  _getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+  _getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       setState(() {
         _currentPosition = position;
@@ -243,10 +242,10 @@ class _CustomerRegister extends State<EditCustomerRegister> {
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+      List<Placemark> placemarks = await placemarkFromCoordinates(
           _currentPosition!.latitude, _currentPosition!.longitude);
 
-      Placemark place = p[0];
+      Placemark place = placemarks[0];
       setState(() {
         _currentAddress =
             "${place.subLocality}, ${place.locality}, ${place.postalCode} ${place.country}";

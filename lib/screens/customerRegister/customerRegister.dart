@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -124,28 +125,28 @@ class _CustomerRegister extends State {
   final TextEditingController controllerU4 = TextEditingController();
   final TextEditingController controllerU5 = TextEditingController();
 
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+  // final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
-  _getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+  _getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       setState(() {
         _currentPosition = position;
       });
-
       _getAddressFromLatLng();
     }).catchError((e) {
       print(e);
     });
+
+    _getAddressFromLatLng();
   }
 
   _getAddressFromLatLng() async {
     try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+      List<Placemark> placemarks = await placemarkFromCoordinates(
           _currentPosition!.latitude, _currentPosition!.longitude);
 
-      Placemark place = p[0];
+      Placemark place = placemarks[0];
       setState(() {
         _currentAddress =
             "${place.subLocality}, ${place.locality}, ${place.postalCode} ${place.country}";
