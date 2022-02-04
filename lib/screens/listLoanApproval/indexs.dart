@@ -95,16 +95,35 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
         "code": "",
         "sdate": "$sdates"
       };
+      print({
+        "pageSize": "$_pageSize",
+        "pageNumber": "$_pageNumber",
+        "ucode": "$ucode",
+        "bcode": "$bcodes",
+        "btlcode": "$btlcode",
+        "status": "",
+        "code": "",
+        "sdate": "$sdates"
+      });
+
       Map<String, String> headers = {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       };
+
+      logger().e(headers);
+      logger().e(baseURLInternal + 'loanRequests/all');
+
       final Response response = await api().post(
           Uri.parse(baseURLInternal + 'loanRequests/all'),
           headers: headers,
           body: json.encode(bodyRow));
+      logger().e("response: ${response.statusCode}");
+
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
+        logger().e("listLoan: listLoan");
+
         setState(() {
           parsed = listLoan[0]['listLoanRequests'];
         });

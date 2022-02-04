@@ -276,18 +276,18 @@ class _HomeState extends State<Home> {
     );
   }
 
-  onClickCallLog() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CallLogScreen()),
-    );
-  }
+  // onClickCallLog() async {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => CallLogScreen()),
+  //   );
+  // }
 
-  phoneCallLog() async {
-    if (Platform.isAndroid) //Condition for platform Android
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CallLogScreen()));
-  }
+  // phoneCallLog() async {
+  //   if (Platform.isAndroid) //Condition for platform Android
+  //     Navigator.push(
+  //         context, MaterialPageRoute(builder: (context) => CallLogScreen()));
+  // }
 
   englishLanguage() {
     Locale _temp;
@@ -408,14 +408,14 @@ class _HomeState extends State<Home> {
                           () => {onListGroupLoanApprove()},
                           null),
                       //Call Log
-                      if (Platform.isAndroid)
-                        CustomListTile(
-                            Icons.phone_locked,
-                            AppLocalizations.of(context)!
-                                    .translate('call_log') ??
-                                "Call log",
-                            () => {phoneCallLog()},
-                            null),
+                      // if (Platform.isAndroid)
+                      //   CustomListTile(
+                      //       Icons.phone_locked,
+                      //       AppLocalizations.of(context)!
+                      //               .translate('call_log') ??
+                      //           "Call log",
+                      //       () => {phoneCallLog()},
+                      //       null),
 
                       CustomListTile(
                           Icons.insert_chart,
@@ -471,12 +471,12 @@ class _HomeState extends State<Home> {
                       //     null),
 
                       // Call Log User
-                      CustomListTile(
-                          Icons.history,
-                          // AppLocalizations.of(context)!.translate('profile') ??
-                          "Call Log",
-                          () => {onClickCallLog()},
-                          null),
+                      // CustomListTile(
+                      //     Icons.history,
+                      //     // AppLocalizations.of(context)!.translate('profile') ??
+                      //     "Call Log",
+                      //     () => {onClickCallLog()},
+                      //     null),
                       CustomListTile(
                         null,
                         AppLocalizations.of(context)!

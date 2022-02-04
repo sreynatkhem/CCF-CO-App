@@ -16,6 +16,7 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
   Future fetchListCustomerRegistration(
       _pageSize, _pageNumber, status, code, bcode, sdate, edate) async {
     _isFetching = true;
+
     try {
       _isFetching = false;
       var token = await storage.read(key: 'user_token');
