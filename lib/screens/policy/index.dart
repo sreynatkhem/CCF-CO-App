@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'pdfCreditOperationManual.dart';
 import 'webViewUrl.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
@@ -99,15 +100,6 @@ class _PolicyScreenState extends State<PolicyScreen> {
                     }),
                     title: 'loan_check_list',
                   ),
-                if (Platform.isIOS)
-                  CardPolicy(
-                    imageCard: hrPolicy,
-                    onTap: () => setState(() {
-                      _launched =
-                          _launchInWebViewOrVC(creditOperationManualToLaunch);
-                    }),
-                    title: 'credit_operation_manual',
-                  ),
                 //Platform For Android
                 if (Platform.isAndroid)
                   Container(
@@ -185,49 +177,47 @@ class _PolicyScreenState extends State<PolicyScreen> {
                           padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                           child: InkWell(
                             onTap: () async {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => WebViewUrl(
-                              //       title: "credit_operation_manual",
-                              //       url: creditOperationManualToLaunch,
-                              //     ),
-                              //   ),
-                              // );
-                              logger().e("Hello");
-                              Directory appDocDir =
-                                  await getApplicationDocumentsDirectory();
-                              print('$appDocDir');
-
-                              String iosBookPath =
-                                  '${appDocDir.path}/chair.epub';
-                              print(iosBookPath);
-                              String androidBookPath =
-                                  'file:///android_asset/3.epub';
-                              EpubViewer.setConfig(
-                                  themeColor: Theme.of(context).primaryColor,
-                                  identifier: "iosBook",
-                                  scrollDirection:
-                                      EpubScrollDirection.ALLDIRECTIONS,
-                                  allowSharing: true,
-                                  enableTts: false,
-                                  nightMode: false);
-                              await EpubViewer.openAsset(
-                                'assets/cd.epub',
-                                lastLocation: EpubLocator.fromJson({
-                                  "bookId": "2239",
-                                  "href": "/OEBPS/ch06.xhtml",
-                                  "created": 1539934158390,
-                                  "locations": {
-                                    "cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"
-                                  }
-                                }),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreditOperationManualScreen(),
+                                ),
                               );
-                              // get current locator
-                              EpubViewer.locatorStream.listen((locator) {
-                                print(
-                                    'LOCATOR: ${EpubLocator.fromJson(jsonDecode(locator))}');
-                              });
+                              // logger().e("Hello");
+                              // Directory appDocDir =
+                              //     await getApplicationDocumentsDirectory();
+                              // print('$appDocDir');
+
+                              // String iosBookPath =
+                              //     '${appDocDir.path}/chair.epub';
+                              // print(iosBookPath);
+                              // String androidBookPath =
+                              //     'file:///android_asset/3.epub';
+                              // EpubViewer.setConfig(
+                              //     themeColor: Theme.of(context).primaryColor,
+                              //     identifier: "iosBook",
+                              //     scrollDirection:
+                              //         EpubScrollDirection.ALLDIRECTIONS,
+                              //     allowSharing: true,
+                              //     enableTts: false,
+                              //     nightMode: false);
+                              // await EpubViewer.openAsset(
+                              //   'assets/cd.epub',
+                              //   lastLocation: EpubLocator.fromJson({
+                              //     "bookId": "2239",
+                              //     "href": "/OEBPS/ch06.xhtml",
+                              //     "created": 1539934158390,
+                              //     "locations": {
+                              //       "cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"
+                              //     }
+                              //   }),
+                              // );
+                              // // get current locator
+                              // EpubViewer.locatorStream.listen((locator) {
+                              //   print(
+                              //       'LOCATOR: ${EpubLocator.fromJson(jsonDecode(locator))}');
+                              // });
                             },
                             splashColor: Colors.blue.withAlpha(30),
                             child: Row(

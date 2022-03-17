@@ -23,6 +23,7 @@ environment:
   # sdk: ">=2.13.4 <3.0.0"
 
 dependencies:
+  platform: ^3.1.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -64,6 +65,8 @@ dependencies:
   # call_log: ^2.0.2
   webview_flutter: ^2.0.9
   epub_viewer: ^0.2.4
+  geocoding: ^2.0.4
+  syncfusion_flutter_pdfviewer: ^19.4.56-beta
 
 dev_dependencies:
   flutter_test:
@@ -128,6 +131,7 @@ flutter:
     - assets/images/khmer.png
     - assets/images/phonecall.png
     - assets/cd.epub
+    - assets/Credit_Operation_Manual.pdf
 
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
