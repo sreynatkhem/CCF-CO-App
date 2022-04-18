@@ -159,85 +159,95 @@ class _PolicyScreenState extends State<PolicyScreen> {
                 // if (Platform.)
                 Container(
                   margin: EdgeInsets.only(bottom: 5.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: logolightGreen, width: 1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(left: 10)),
-                        CircleAvatar(
-                          radius: 23.0,
-                          backgroundImage:
-                              AssetImage("assets/images/hr_policy.png"),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-                          child: InkWell(
-                            onTap: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreditOperationManualScreen(),
-                                ),
-                              );
-                              // logger().e("Hello");
-                              // Directory appDocDir =
-                              //     await getApplicationDocumentsDirectory();
-                              // print('$appDocDir');
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CreditOperationManualScreen()));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: logolightGreen, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Padding(padding: EdgeInsets.only(left: 10)),
+                          CircleAvatar(
+                            radius: 23.0,
+                            backgroundImage:
+                                AssetImage("assets/images/hr_policy.png"),
+                            backgroundColor: Colors.transparent,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+                            child: InkWell(
+                              onTap: () async {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreditOperationManualScreen(),
+                                  ),
+                                );
+                                // logger().e("Hello");
+                                // Directory appDocDir =
+                                //     await getApplicationDocumentsDirectory();
+                                // print('$appDocDir');
 
-                              // String iosBookPath =
-                              //     '${appDocDir.path}/chair.epub';
-                              // print(iosBookPath);
-                              // String androidBookPath =
-                              //     'file:///android_asset/3.epub';
-                              // EpubViewer.setConfig(
-                              //     themeColor: Theme.of(context).primaryColor,
-                              //     identifier: "iosBook",
-                              //     scrollDirection:
-                              //         EpubScrollDirection.ALLDIRECTIONS,
-                              //     allowSharing: true,
-                              //     enableTts: false,
-                              //     nightMode: false);
-                              // await EpubViewer.openAsset(
-                              //   'assets/cd.epub',
-                              //   lastLocation: EpubLocator.fromJson({
-                              //     "bookId": "2239",
-                              //     "href": "/OEBPS/ch06.xhtml",
-                              //     "created": 1539934158390,
-                              //     "locations": {
-                              //       "cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"
-                              //     }
-                              //   }),
-                              // );
-                              // // get current locator
-                              // EpubViewer.locatorStream.listen((locator) {
-                              //   print(
-                              //       'LOCATOR: ${EpubLocator.fromJson(jsonDecode(locator))}');
-                              // });
-                            },
-                            splashColor: Colors.blue.withAlpha(30),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 60, left: 10)),
-                                Padding(padding: EdgeInsets.only(right: 10)),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text("Credit Operation Manual"),
-                                  ],
-                                ),
-                              ],
+                                // String iosBookPath =
+                                //     '${appDocDir.path}/chair.epub';
+                                // print(iosBookPath);
+                                // String androidBookPath =
+                                //     'file:///android_asset/3.epub';
+                                // EpubViewer.setConfig(
+                                //     themeColor: Theme.of(context).primaryColor,
+                                //     identifier: "iosBook",
+                                //     scrollDirection:
+                                //         EpubScrollDirection.ALLDIRECTIONS,
+                                //     allowSharing: true,
+                                //     enableTts: false,
+                                //     nightMode: false);
+                                // await EpubViewer.openAsset(
+                                //   'assets/cd.epub',
+                                //   lastLocation: EpubLocator.fromJson({
+                                //     "bookId": "2239",
+                                //     "href": "/OEBPS/ch06.xhtml",
+                                //     "created": 1539934158390,
+                                //     "locations": {
+                                //       "cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"
+                                //     }
+                                //   }),
+                                // );
+                                // // get current locator
+                                // EpubViewer.locatorStream.listen((locator) {
+                                //   print(
+                                //       'LOCATOR: ${EpubLocator.fromJson(jsonDecode(locator))}');
+                                // });
+                              },
+                              splashColor: Colors.blue.withAlpha(30),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 60, left: 10)),
+                                  Padding(padding: EdgeInsets.only(right: 10)),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text("Credit Operation Manual"),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 )
