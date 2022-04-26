@@ -2,12 +2,20 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class MenuCard extends StatelessWidget {
-  MenuCard({this.onTap, this.imageNetwork, this.text, this.color, this.text2});
+  MenuCard({
+    this.onTap,
+    this.imageNetwork,
+    this.text,
+    this.color,
+    this.text2,
+    this.icons,
+  });
   final dynamic onTap;
   final dynamic imageNetwork;
   final dynamic text;
   final dynamic color;
   final dynamic text2;
+  final dynamic icons;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +32,13 @@ class MenuCard extends StatelessWidget {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image(
-                image: imageNetwork,
-                width: 55,
-                height: 55,
-              ),
+              icons != null
+                  ? icons
+                  : Image(
+                      image: imageNetwork,
+                      width: 55,
+                      height: 55,
+                    ),
               Padding(padding: EdgeInsets.only(top: 10)),
               Container(
                 alignment: Alignment.center,

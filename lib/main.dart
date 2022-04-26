@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'localizations/appLocalizations.dart';
+import 'providers/loanArrearProvider/loanArrearProvider.dart';
 import 'providers/login.dart';
 
 Future<void> main() async {
@@ -82,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Provider<LoanApproval>(create: (_) => LoanApproval()),
         Provider<NotificationProvider>(create: (_) => NotificationProvider()),
         Provider<GroupLoanProvider>(create: (_) => GroupLoanProvider()),
+        Provider<LoanArrearProvider>(create: (_) => LoanArrearProvider()),
       ],
       child: MaterialApp(
         locale: _locale,

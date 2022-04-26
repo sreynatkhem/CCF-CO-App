@@ -18,6 +18,7 @@ import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/historyApsara/index.dart';
+import 'package:chokchey_finance/screens/loanArrear/index.dart';
 import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
@@ -175,7 +176,6 @@ class _HomeState extends State<Home> {
 
   getStoreUser() async {
     var langCode = AppLocalizations.of(context)!.locale.languageCode;
-
     String userIds = await storage.read(key: 'user_id');
     String userNames = await storage.read(key: 'user_name');
     setState(() {
@@ -564,17 +564,17 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    const String toLaunch =
-        'http://192.168.111.18:2020/policy/requirementchecklist.pdf';
-    const String guildeLine =
-        'http://192.168.111.18:2020/policy/The%20Guidelines%20mobile%20application.pdf';
     var langCode = AppLocalizations.of(context)!.locale.languageCode;
+
     var test = storage.read(key: 'roles');
     test.then(
       (value) => setState(() {
         userRoles = jsonDecode(value);
+        // userRoles.add('99');
+        userRoles.insert(0, "99");
       }),
     );
+
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Header(
@@ -678,11 +678,11 @@ class _HomeState extends State<Home> {
                                           .translate('list_loan_approval'),
                                     );
                                   }
-                                  if (userRoles[index].toString() == '100001') {
-                                    return Padding(
-                                      padding: EdgeInsets.all(10),
-                                    );
-                                  }
+                                  // if (userRoles[index].toString() == '100001') {
+                                  //   return Padding(
+                                  //     padding: EdgeInsets.all(10),
+                                  //   );
+                                  // }
 
                                   if (userRoles[index].toString() == '100002') {
                                     if (langCode == 'en') {
@@ -720,11 +720,11 @@ class _HomeState extends State<Home> {
                                       );
                                     }
                                   }
-                                  if (userRoles[index].toString() == '100002') {
-                                    return Padding(
-                                      padding: EdgeInsets.all(10),
-                                    );
-                                  }
+                                  // if (userRoles[index].toString() == '100002') {
+                                  //   return Padding(
+                                  //     padding: EdgeInsets.all(10),
+                                  //   );
+                                  // }
                                   if (userRoles[index].toString() == '100003') {
                                     return MenuCard(
                                       onTap: () => Navigator.push(
@@ -740,11 +740,11 @@ class _HomeState extends State<Home> {
                                           'Loan Registration',
                                     );
                                   }
-                                  if (userRoles[index].toString() == '100003') {
-                                    return Padding(
-                                      padding: EdgeInsets.all(10),
-                                    );
-                                  }
+                                  // if (userRoles[index].toString() == '100003') {
+                                  //   return Padding(
+                                  //     padding: EdgeInsets.all(10),
+                                  //   );
+                                  // }
                                   if (userRoles[index].toString() == '100004') {
                                     return Container(
                                       width: 10,
@@ -764,16 +764,60 @@ class _HomeState extends State<Home> {
                                       ),
                                     );
                                   }
-                                  if (userRoles[index].toString() == '100005') {
-                                    return Text('');
+                                  // if (userRoles[index].toString() == '100004') {
+                                  //   return Padding(
+                                  //     padding: EdgeInsets.all(10),
+                                  //   );
+                                  // }
+
+                                  // if (userRoles[index].toString() == '100005') {
+                                  //   return Text('');
+                                  // }
+                                  // if (userRoles[index].toString() == '100006') {
+                                  //   return Text('${userRoles[index]}');
+                                  // }
+                                  if (userRoles[index].toString() == '99') {
+                                    return Container(
+                                      width: 10,
+                                      height: 20,
+                                      child: MenuCard(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoanArrearScreen()),
+                                        ),
+                                        color: logolightGreen,
+                                        icons: Icon(
+                                          Icons.paid,
+                                          color: Colors.red,
+                                          size: 50,
+                                        ),
+                                        text: 'Loan Arrear',
+                                      ),
+                                    );
                                   }
-                                  if (userRoles[index].toString() == '100006') {
-                                    return Text('');
-                                  }
+
                                   return Text("");
                                 }) // List View
                                 ),
                           ),
+                          // Container(
+                          //   padding: const EdgeInsets.only(
+                          //       left: 45.0, right: 45.0, top: 0, bottom: 50),
+                          //   child: MenuCard(
+                          //     onTap: () => Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) => CustomerRegister()),
+                          //     ),
+                          //     color: logolightGreen,
+                          //     imageNetwork: register,
+                          //     text: AppLocalizations.of(context)!
+                          //             .translate('customer_registration') ??
+                          //         'Customer',
+                          //   ),
+                          // ),
                           listMessageFromCEO != null && listMessageFromCEO != ""
                               ? CardMessage(
                                   title: AppLocalizations.of(context)!

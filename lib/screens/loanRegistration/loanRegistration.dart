@@ -694,7 +694,7 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueNumberofTerm = v!;
+                                valueNumberofTerm = v;
                               });
                             }
                           },
