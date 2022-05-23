@@ -19,6 +19,7 @@ import 'package:chokchey_finance/screens/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/historyApsara/index.dart';
 import 'package:chokchey_finance/screens/loanArrear/index.dart';
+import 'package:chokchey_finance/screens/notificationLoanArrear/index.dart';
 import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
@@ -190,6 +191,13 @@ class _HomeState extends State<Home> {
         context,
         MaterialPageRoute(builder: (context) => Login()),
         ModalRoute.withName("/login"));
+  }
+
+  onPushNotificationLoanArrear() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PushNotificationLoanLoanArrear()),
+    );
   }
 
   onListLoanApproval() async {
@@ -372,6 +380,11 @@ class _HomeState extends State<Home> {
                   color: Colors.white,
                   child: Column(
                     children: <Widget>[
+                      CustomListTile(
+                          Icons.notification_add,
+                          "Notification Loan Arrear",
+                          () => {onPushNotificationLoanArrear()},
+                          null),
                       CustomListTile(
                           Icons.monetization_on,
                           AppLocalizations.of(context)!
@@ -764,6 +777,7 @@ class _HomeState extends State<Home> {
                                       ),
                                     );
                                   }
+
                                   // if (userRoles[index].toString() == '100004') {
                                   //   return Padding(
                                   //     padding: EdgeInsets.all(10),
@@ -776,6 +790,7 @@ class _HomeState extends State<Home> {
                                   // if (userRoles[index].toString() == '100006') {
                                   //   return Text('${userRoles[index]}');
                                   // }
+
                                   if (userRoles[index].toString() == '99') {
                                     return Container(
                                       width: 10,

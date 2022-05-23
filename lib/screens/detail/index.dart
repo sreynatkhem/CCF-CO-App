@@ -114,8 +114,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
       });
       if (response.statusCode == 200) {
         if (json['header']['result'] == false) {
-          showInSnackBar("Approval is not yet your level to approve.",
-              Colors.red, _scaffoldKeyApsara);
+          showInSnackBar(json['header']['result']['resultMessage'],
+              logolightGreen, _scaffoldKeyApsara);
         } else {
           Navigator.pushAndRemoveUntil(
               context,

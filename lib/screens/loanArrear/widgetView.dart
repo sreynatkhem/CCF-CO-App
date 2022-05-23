@@ -19,6 +19,7 @@ class WidgetViewTextLoanArrear extends StatelessWidget {
                 child: Text(
                   title,
                   textAlign: TextAlign.right,
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 )),
             Container(
               width: widthView(context, 0.5),

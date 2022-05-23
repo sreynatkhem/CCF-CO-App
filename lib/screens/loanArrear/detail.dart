@@ -197,37 +197,63 @@ class _DetailLoanArrearState extends State<DetailLoanArrear> {
                                       ['customerListCodeName']
                                   .toString()),
                           Padding(padding: EdgeInsets.only(top: 5)),
-                          Text("Overdue Within Last 6 Months"),
-                          WidgetViewTextLoanArrear(
-                              title: "1st : ",
-                              value: listLoanArrear[index]
-                                      ['previousOverdueMonth1']
-                                  .toString()),
-                          WidgetViewTextLoanArrear(
-                              title: "2nd : ",
-                              value: listLoanArrear[index]
-                                      ['previousOverdueMonth2']
-                                  .toString()),
-                          WidgetViewTextLoanArrear(
-                              title: "3rd : ",
-                              value: listLoanArrear[index]
-                                      ['previousOverdueMonth3']
-                                  .toString()),
-                          WidgetViewTextLoanArrear(
-                              title: "4th : ",
-                              value: listLoanArrear[index]
-                                      ['previousOverdueMonth4']
-                                  .toString()),
-                          WidgetViewTextLoanArrear(
-                              title: "5th : ",
-                              value: listLoanArrear[index]
-                                      ['previousOverdueMonth5']
-                                  .toString()),
-                          WidgetViewTextLoanArrear(
-                              title: "6th : ",
-                              value: listLoanArrear[index]
-                                      ['previousOverdueMonth6']
-                                  .toString()),
+                          Text(
+                            "Overdue Within Last 6 Months",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 10, right: 10, top: 10, bottom: 10),
+                            child: Table(
+                              border: TableBorder.all(),
+                              children: [
+                                TableRow(
+                                  children: [
+                                    Text("1st", textAlign: TextAlign.center),
+                                    Text('2nd', textAlign: TextAlign.center),
+                                    Text('3rd', textAlign: TextAlign.center),
+                                    Text("4th", textAlign: TextAlign.center),
+                                    Text("5th", textAlign: TextAlign.center),
+                                    Text("6th", textAlign: TextAlign.center),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    Text(
+                                        listLoanArrear[index]
+                                                ['previousOverdueMonth1']
+                                            .toString(),
+                                        textAlign: TextAlign.center),
+                                    Text(
+                                        listLoanArrear[index]
+                                                ['previousOverdueMonth2']
+                                            .toString(),
+                                        textAlign: TextAlign.center),
+                                    Text(
+                                        listLoanArrear[index]
+                                                ['previousOverdueMonth3']
+                                            .toString(),
+                                        textAlign: TextAlign.center),
+                                    Text(
+                                        listLoanArrear[index]
+                                                ['previousOverdueMonth4']
+                                            .toString(),
+                                        textAlign: TextAlign.center),
+                                    Text(
+                                        listLoanArrear[index]
+                                                ['previousOverdueMonth5']
+                                            .toString(),
+                                        textAlign: TextAlign.center),
+                                    Text(
+                                        listLoanArrear[index]
+                                                ['previousOverdueMonth6']
+                                            .toString(),
+                                        textAlign: TextAlign.center),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                           Padding(padding: EdgeInsets.only(bottom: 10))
                         ],
                       ),
