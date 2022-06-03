@@ -25,10 +25,8 @@ class _ApprovalListsState extends State<ApprovalLists>
       new GlobalKey<ScaffoldState>();
 
   TextEditingController? _searchQuery;
-  var isRefresh = false;
+  bool isRefresh = false;
   bool _isSearching = false;
-  bool _isLoading = false;
-  bool _isInit = false;
 
   String searchQuery = "Search query";
 
@@ -188,94 +186,90 @@ class _ApprovalListsState extends State<ApprovalLists>
       onLoading();
     }
     return Scaffold(
-        key: scaffoldKey,
-        appBar: new AppBar(
-          leading: _isSearching ? const BackButton() : null,
-          title: _isSearching ? _buildSearchField() : _buildTitle(context),
-          actions: _buildActions(),
-          backgroundColor: logolightGreen,
-        ),
-        body: isRefresh == true
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : approvalList == null ||
-                    approvalList!.length == 0 ||
-                    approvalList!.length <= 0
-                ? Center(
-                    child: Text(
-                      AppLocalizations.of(context)!
-                              .translate('no_approval_list') ??
-                          'No approval list',
-                      style: mainTitleBlack,
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: approvalList.length,
-                    padding: const EdgeInsets.only(top: 20.0),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        height: 100,
-                        margin: EdgeInsets.only(bottom: 5.0),
-                        child: Card(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: logolightGreen, width: 1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: InkWell(
-                                splashColor: Colors.blue.withAlpha(30),
-                                onTap: () {
-                                  onClickCard(approvalList![index], context);
-                                },
-                                child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Image(
-                                        image: images,
-                                        width: 80,
-                                        height: 70,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                              child: Text(
-                                            approvalList![index]
-                                                ['standardCodeDomainName2']!,
-                                            style: mainTitleBlack,
-                                          )),
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 2)),
-                                          Text(
-                                            'Application No: ${approvalList![index]['loanApprovalApplicationNo']}',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 2)),
-                                          Text(
-                                            '${approvalList![index]['authorizationRequestEmpNo']}-${approvalList![index]['authorizationRequestEmpName']}[${approvalList![index]['branchName']}]',
-                                            style: TextStyle(fontSize: 12),
-                                          ),
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 2)),
-                                          Text(
-                                            '${approvalList![index]['authorizationRequestDate']} ${approvalList![index]['authorizationRequestTime']}',
-                                            style: TextStyle(fontSize: 12),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                          padding: EdgeInsets.only(left: 40),
-                                          child:
-                                              Icon(Icons.keyboard_arrow_right)),
-                                    ]))),
-                      );
-                    }));
+      key: scaffoldKey,
+      appBar: new AppBar(
+        leading: _isSearching ? const BackButton() : null,
+        title: _isSearching ? _buildSearchField() : _buildTitle(context),
+        actions: _buildActions(),
+        backgroundColor: logolightGreen,
+      ),
+      body: isRefresh == true
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : approvalList == null ||
+                  approvalList!.length == 0 ||
+                  approvalList!.length <= 0
+              ? Center(
+                  child: Text(
+                    AppLocalizations.of(context)!
+                            .translate('no_approval_list') ??
+                        'No approval list',
+                    style: mainTitleBlack,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: approvalList.length,
+                  padding: const EdgeInsets.only(top: 20.0),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 100,
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: logolightGreen, width: 1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: InkWell(
+                          splashColor: Colors.blue.withAlpha(30),
+                          onTap: () {
+                            onClickCard(approvalList![index], context);
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Image(
+                                image: images,
+                                width: 80,
+                                height: 70,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                      child: Text(
+                                    approvalList![index]
+                                        ['standardCodeDomainName2']!,
+                                    style: mainTitleBlack,
+                                  )),
+                                  Padding(padding: EdgeInsets.only(bottom: 2)),
+                                  Text(
+                                    'Application No: ${approvalList![index]['loanApprovalApplicationNo']}',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Padding(padding: EdgeInsets.only(bottom: 2)),
+                                  Text(
+                                    '${approvalList![index]['authorizationRequestEmpNo']}-${approvalList![index]['authorizationRequestEmpName']}[${approvalList![index]['branchName']}]',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Padding(padding: EdgeInsets.only(bottom: 2)),
+                                  Text(
+                                    '${approvalList![index]['authorizationRequestDate']} ${approvalList![index]['authorizationRequestTime']}',
+                                    style: TextStyle(fontSize: 12),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 40),
+                                  child: Icon(Icons.keyboard_arrow_right)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+    );
   }
 }

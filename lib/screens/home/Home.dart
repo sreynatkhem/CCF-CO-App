@@ -39,12 +39,10 @@ import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-// import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
 class Home extends StatefulWidget {
@@ -62,12 +60,6 @@ class _HomeState extends State<Home> {
   dynamic _profleImage;
 
   var profile;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  // }
 
   @override
   void dispose() {
@@ -139,6 +131,14 @@ class _HomeState extends State<Home> {
 
     getNotificationLock();
     fetchVersionApp();
+    getNotificationLoanArrear();
+  }
+
+  getNotificationLoanArrear() async {
+    await Provider.of<NotificationProvider>(context, listen: false)
+        .pushNotificationLoanArrear()
+        .then((value) {})
+        .onError((error, stackTrace) {});
   }
 
   String version = "";

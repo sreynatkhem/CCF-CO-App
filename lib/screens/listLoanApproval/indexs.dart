@@ -575,9 +575,12 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                     )
                   : Center(
                       child: Container(
-                          child: Text(AppLocalizations.of(context)!
-                                  .translate('no_data') ??
-                              ""))),
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('no_data') ??
+                              "",
+                        ),
+                      ),
+                    ),
           endDrawer: Drawer(
             child: SingleChildScrollView(
               child: Container(

@@ -95,6 +95,7 @@ class ApprovalHistoryProvider {
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
+
         return list;
       }
     } catch (error) {
@@ -122,6 +123,7 @@ class ApprovalHistoryProvider {
       );
       if (response.statusCode == 200) {
         var list = jsonDecode(response.body);
+        logger().e("List : ${list}");
         return list;
       }
     } catch (error) {

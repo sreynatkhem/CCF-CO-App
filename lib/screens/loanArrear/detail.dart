@@ -73,13 +73,13 @@ class _DetailLoanArrearState extends State<DetailLoanArrear> {
                     elevation: 5,
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailLoanArrear(
-                                    loanAccountNo: listLoanArrear[index],
-                                  )),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => DetailLoanArrear(
+                        //             loanAccountNo: listLoanArrear[index],
+                        //           )),
+                        // );
                       },
                       child: Column(
                         children: [

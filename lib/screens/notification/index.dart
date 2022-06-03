@@ -7,6 +7,7 @@ import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/tebBarDetail.dart';
+import 'package:chokchey_finance/screens/loanArrear/detail.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -359,6 +360,8 @@ class _NotificationState extends State<NotificationScreen> {
                                               var rcodeGroup =
                                                   subString.substring(0, 1);
                                               var groupLoanCode = '6';
+                                              // if()
+
                                               if (groupLoanCode == rcodeGroup) {
                                                 navigatorGroupLoan(
                                                     listMessages[index]);
@@ -367,6 +370,21 @@ class _NotificationState extends State<NotificationScreen> {
                                                   "announcement") {
                                                 onTapsAnnouncement(
                                                     listMessages[index]);
+                                              } else if (listMessages[index]
+                                                      ['title'] ==
+                                                  'Loan Arrears') {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        DetailLoanArrear(
+                                                            loanAccountNo:
+                                                                listMessages[
+                                                                        index]
+                                                                    ['lcode']),
+                                                  ),
+                                                );
                                               } else {
                                                 onTapsDetail(
                                                     listMessages[index]);

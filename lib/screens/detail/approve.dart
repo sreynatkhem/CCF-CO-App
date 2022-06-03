@@ -90,7 +90,7 @@ class _ApproveState extends State<Approve> with SingleTickerProviderStateMixin {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.translate('approval_lists') ??
-                  'Approval Lists',
+                  'Approval Lists ',
               style: mainTitleStyle,
             ),
           ],

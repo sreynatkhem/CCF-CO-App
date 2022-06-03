@@ -287,6 +287,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
 
   String coName = "";
   Future getListCO() async {
+    logger().e("coName: $coName");
     await ApprovalHistoryProvider()
         .getListCO(coName)
         .then((value) => {

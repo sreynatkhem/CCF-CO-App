@@ -33,8 +33,8 @@ class TabBarMenu extends StatefulWidget {
 }
 
 class _TabBarMenuState extends State<TabBarMenu> {
-  var _isInit = false;
-  var _isLoading = false;
+  bool _isInit = false;
+  bool _isLoading = false;
   var response = [];
   dynamic list = [];
 
@@ -149,6 +149,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
     //         http.Client(), widget.loanApprovalApplicationNo, 80, comments)
     //     .then((_) => {});
     try {
+      setState(() {
+        _isLoading = false;
+      });
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0004'));
       request.body =
@@ -156,6 +159,7 @@ class _TabBarMenuState extends State<TabBarMenu> {
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+
       if (response.statusCode == 200) {
         Navigator.pushAndRemoveUntil(
             context,
@@ -165,6 +169,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
             ModalRoute.withName('/'));
       }
     } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
       client.close();
     }
   }
@@ -175,11 +182,17 @@ class _TabBarMenuState extends State<TabBarMenu> {
     context,
     http.Client client,
   ) async {
+    setState(() {
+      _isLoading = true;
+    });
     var comments = controller.text;
     String user_id = await storage.read(key: 'user_id');
     String user_name = await storage.read(key: 'user_name');
 
     try {
+      setState(() {
+        _isLoading = false;
+      });
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0004'));
       request.body =
@@ -196,6 +209,9 @@ class _TabBarMenuState extends State<TabBarMenu> {
             ModalRoute.withName('/'));
       }
     } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
       client.close();
     }
   }

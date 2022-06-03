@@ -34,17 +34,14 @@ class _LoginState extends State<Login> {
   final TextEditingController firstLogin = TextEditingController();
 
   var chokchey;
-
   bool _firstLogIn = false;
   bool _isLoading = false;
   bool autofocus = false;
-
   final focusPassword = FocusNode();
   final focusFirstLogin = FocusNode();
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     getStore();
     chokchey = const AssetImage('assets/images/chokchey.png');
     super.didChangeDependencies();
@@ -96,7 +93,6 @@ class _LoginState extends State<Login> {
     setState(() {
       _isLoading = true;
     });
-
     try {
       await Provider.of<LoginProvider>(context, listen: false)
           .fetchLogin(user_id, valuePassword)
@@ -158,7 +154,6 @@ class _LoginState extends State<Login> {
                         await storage.write(
                             key: "isapprover",
                             value: value[0]['isapprover'].toString()),
-
                         FirebaseMessaging.instance
                             .getToken()
                             .then((String? token) {

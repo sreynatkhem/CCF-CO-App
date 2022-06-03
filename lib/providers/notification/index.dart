@@ -3,6 +3,7 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
@@ -10,6 +11,60 @@ import 'package:http/http.dart';
 class NotificationProvider with ChangeNotifier {
   final storage = new FlutterSecureStorage();
   var successfully = false;
+
+  Future pushNotificationLoanArrear(
+      {ucode, accountcustomer, overduedate, namecustomer, phone}) async {
+    try {
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST',
+          Uri.parse(baseURLInternal + 'LoanArrear/pushnotificationloanarrear'));
+      request.body = json.encode({
+        "ucode": "$ucode",
+        "accountcustomer": "$accountcustomer",
+        "overduedate": "$overduedate",
+        "namecustomer": "$namecustomer",
+        "phone": "$phone"
+      });
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        var parsed = jsonDecode(await response.stream.bytesToString());
+        logger().e("asdfasdfasdf: ${parsed}");
+        notifyListeners();
+        return parsed;
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (onError) {
+      logger().e(onError);
+    }
+  }
+
+  Future getListLoanArrear(
+      {baseDate,
+      mgmtBranchCode,
+      currencyCode,
+      loanAccountNo,
+      referenEmployeeNo}) async {
+    try {
+      var headers = {'Content-Type': 'application/json; charset=utf-8'};
+      var request = http.Request('POST', Uri.parse(baseUrl + 'LEN0001'));
+      request.body =
+          '''{\n    "header": {\n        "userID" :"SYSTEM",\n\t\t"channelTypeCode" :"08",\n\t\t"previousTransactionID" :"",\n\t\t"previousTransactionDate" :""\n    },\n    "body": {\n        "baseDate": "$baseDate",\n        "mgmtBranchCode": "$mgmtBranchCode",\n        "currencyCode": "$currencyCode",\n        "loanAccountNo": "$loanAccountNo",\n        "referenEmployeeNo":"$referenEmployeeNo"\n    }\n}\n''';
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        var parsed = jsonDecode(await response.stream.bytesToString());
+        var list = parsed['body']['arrearList'];
+        notifyListeners();
+        return list;
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (Error) {
+      logger().e(Error);
+    }
+  }
 
   Future postNotificationRead(number) async {
     var token = await storage.read(key: 'user_token');
