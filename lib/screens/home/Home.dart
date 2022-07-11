@@ -72,47 +72,47 @@ class _HomeState extends State<Home> {
   @override
   void didChangeDependencies() {
     getStoreUser();
-    getMessageFromCEO();
+    // getMessageFromCEO();
     profile = const AssetImage('assets/images/profile_create.jpg');
     super.didChangeDependencies();
   }
 
   var messageFromCEO;
-  var listMessageFromCEO;
+  // var listMessageFromCEO;
   var _isLoading = false;
   var langCode;
 
-  Future getMessageFromCEO() async {
-    setState(() {
-      _isLoading = true;
-    });
+  // Future getMessageFromCEO() async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
 
-    await Provider.of<NotificationProvider>(context, listen: false)
-        .fetchMessageFromCEO()
-        .then((value) => {
-              setState(() {
-                _isLoading = false;
-              }),
-              langCode = AppLocalizations.of(context)!.locale.languageCode,
-              if (langCode == 'en')
-                {
-                  setState(() {
-                    listMessageFromCEO = value['en'];
-                  }),
-                }
-              else
-                {
-                  setState(() {
-                    listMessageFromCEO = value['kh'];
-                  }),
-                }
-            })
-        .catchError((onError) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-  }
+  //   await Provider.of<NotificationProvider>(context, listen: false)
+  //       .fetchMessageFromCEO()
+  //       .then((value) => {
+  //             setState(() {
+  //               _isLoading = false;
+  //             }),
+  //             langCode = AppLocalizations.of(context)!.locale.languageCode,
+  //             if (langCode == 'en')
+  //               {
+  //                 setState(() {
+  //                   listMessageFromCEO = value['en'];
+  //                 }),
+  //               }
+  //             else
+  //               {
+  //                 setState(() {
+  //                   listMessageFromCEO = value['kh'];
+  //                 }),
+  //               }
+  //           })
+  //       .catchError((onError) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   });
+  // }
 
   @override
   void initState() {
@@ -145,7 +145,6 @@ class _HomeState extends State<Home> {
   fetchVersionApp() async {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       version = packageInfo.version;
-
       String appName = packageInfo.appName;
       String packageName = packageInfo.packageName;
       String buildNumber = packageInfo.buildNumber;
@@ -833,16 +832,16 @@ class _HomeState extends State<Home> {
                           //         'Customer',
                           //   ),
                           // ),
-                          listMessageFromCEO != null && listMessageFromCEO != ""
-                              ? CardMessage(
-                                  title: AppLocalizations.of(context)!
-                                          .translate('message_from_ceo') ??
-                                      'Message from CEO',
-                                  textMessage: listMessageFromCEO != null &&
-                                          listMessageFromCEO != ""
-                                      ? listMessageFromCEO
-                                      : "")
-                              : Text("")
+                          // listMessageFromCEO != null && listMessageFromCEO != ""
+                          //     ? CardMessage(
+                          //         title: AppLocalizations.of(context)!
+                          //                 .translate('message_from_ceo') ??
+                          //             'Message from CEO',
+                          //         textMessage: listMessageFromCEO != null &&
+                          //                 listMessageFromCEO != ""
+                          //             ? listMessageFromCEO
+                          //             : "")
+                          //     : Text("")
                         ],
                       ),
                     ),

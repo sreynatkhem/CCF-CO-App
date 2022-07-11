@@ -21,7 +21,6 @@ class LoanArrearProvider with ChangeNotifier {
         "searchusername": "$searchusername"
       });
       request.headers.addAll(headers);
-
       http.StreamedResponse response = await request.send();
       logger().e(response.statusCode);
       if (response.statusCode == 200) {
@@ -41,16 +40,14 @@ class LoanArrearProvider with ChangeNotifier {
       mgmtBranchCode,
       currencyCode,
       loanAccountNo,
-      referenEmployeeNo}) async {
+      referenceEmployeeNo}) async {
     try {
       var headers = {'Content-Type': 'application/json; charset=utf-8'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LEN0001'));
       request.body =
-          '''{\n    "header": {\n        "userID" :"SYSTEM",\n\t\t"channelTypeCode" :"08",\n\t\t"previousTransactionID" :"",\n\t\t"previousTransactionDate" :""\n    },\n    "body": {\n        "baseDate": "$baseDate",\n        "mgmtBranchCode": "$mgmtBranchCode",\n        "currencyCode": "$currencyCode",\n        "loanAccountNo": "$loanAccountNo",\n        "referenEmployeeNo":"$referenEmployeeNo"\n    }\n}\n''';
+          '''{\n    "header": {\n        "userID" :"SYSTEM",\n\t\t"channelTypeCode" :"08",\n\t\t"previousTransactionID" :"",\n\t\t"previousTransactionDate" :""\n    },\n    "body": {\n        "baseDate": "$baseDate",\n        "mgmtBranchCode": "$mgmtBranchCode",\n        "currencyCode": "$currencyCode",\n        "loanAccountNo": "$loanAccountNo",\n        "referenceEmployeeNo":"$referenceEmployeeNo"\n    }\n}\n''';
       request.headers.addAll(headers);
-      logger().e(request.body);
       http.StreamedResponse response = await request.send();
-
       if (response.statusCode == 200) {
         final parsed = jsonDecode(await response.stream.bytesToString());
         final list = parsed['body']['arrearList'];

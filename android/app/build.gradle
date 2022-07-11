@@ -32,7 +32,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
     }
 
     android {
-        compileSdkVersion 30  //Old Version 30       
+        compileSdkVersion 31  //Old Version 30       
 
         sourceSets {
             main.java.srcDirs += 'src/main/kotlin'
@@ -47,8 +47,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
         applicationId "com.ccf.coapp"
         minSdkVersion 21       
         targetSdkVersion 30    //Old Version 30 
-        versionCode 16
-        versionName "1.3.5"
+        versionCode 19
+        versionName "1.3.8"
         multiDexEnabled true
         ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
     }

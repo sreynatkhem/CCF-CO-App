@@ -35,7 +35,7 @@ class _DetailLoanArrearState extends State<DetailLoanArrear> {
       currencyCode: "",
       loanAccountNo: "${widget.loanAccountNo}",
       mgmtBranchCode: "",
-      referenEmployeeNo: "",
+      referenceEmployeeNo: "",
     )
         .then((value) {
       setState(() {

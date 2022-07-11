@@ -77,7 +77,6 @@ class _PushNotificationLoanLoanArrearState
       )
           .then((value) {
         totalAccountPush = idx + 1;
-        // logger().e(totalAccount);
         setState(() {
           isLoading = false;
         });
