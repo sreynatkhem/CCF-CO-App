@@ -397,72 +397,27 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             var user_ucode =
                                 await storage.read(key: "user_ucode");
                             var storeUser = [];
-                            var finalZuthrize = [];
                             for (int index = 0;
                                 index < approvalListLoan.length;
                                 index++) {
-                              if (user_ucode == "101000") {
-                                if (user_ucode !=
-                                    approvalListLoan[index]
-                                        ['authorizerEmployeeNo']) {
-                                  storeUser.add(approvalListLoan[index]);
-                                }
-                              } else {
-                                if (approvalListLoan[index]
-                                            ['evaluateStatusCode'] ==
-                                        "" &&
-                                    user_ucode !=
-                                        approvalListLoan[index]
-                                            ['authorizerEmployeeNo']) {
-                                  storeUser.add(approvalListLoan[index]);
-                                } else if (index + 1 ==
-                                    approvalListLoan.length) {
-                                  if (approvalListLoan[index]['seqNo'] ==
-                                      approvalListLoan.length) {
-                                    for (int indexes = 0;
-                                        indexes < approvalListLoan.length;
-                                        indexes++) {
-                                      if (indexes != index) {
-                                        finalZuthrize
-                                            .add(approvalListLoan[indexes]);
-                                      }
-                                    }
-                                  }
-                                }
+                              if (user_ucode !=
+                                  approvalListLoan[index]
+                                      ['authorizerEmployeeNo']) {
+                                storeUser.add(approvalListLoan[index]);
                               }
                             }
                             reject(
                               context,
                               http.Client(),
                             );
-                            if (user_ucode == "101000") {
-                              for (int index = 0;
-                                  index < storeUser.length;
-                                  index++) {
-                                postPushNotification(
-                                    storeUser[index]['authorizerEmployeeNo'],
-                                    "Reject",
-                                    "101000");
-                              }
-                            } else {
-                              for (int index = 0;
-                                  index < storeUser.length;
-                                  index++) {
-                                if (index == 0) {
-                                  postPushNotification(
-                                      storeUser[index]['authorizerEmployeeNo'],
-                                      "Reject",
-                                      user_ucode);
-                                }
-                              }
-                            }
-                            if (finalZuthrize.length >= 0) {
-                              for (var item in finalZuthrize) {
-                                postPushNotification(
-                                    item['authorizerEmployeeNo'],
-                                    "Reject",
-                                    user_ucode);
-                              }
+
+                            for (int index = 0;
+                                index < storeUser.length;
+                                index++) {
+                              postPushNotification(
+                                  storeUser[index]['authorizerEmployeeNo'],
+                                  "Reject",
+                                  user_ucode);
                             }
                           },
                           color: Colors.red,
@@ -478,72 +433,26 @@ class _TabBarMenuState extends State<TabBarMenu> {
                             var user_ucode =
                                 await storage.read(key: "user_ucode");
                             var storeUser = [];
-                            var finalZuthrize = [];
                             for (int index = 0;
                                 index < approvalListLoan.length;
                                 index++) {
-                              if (user_ucode == "101000") {
-                                if (user_ucode !=
-                                    approvalListLoan[index]
-                                        ['authorizerEmployeeNo']) {
-                                  storeUser.add(approvalListLoan[index]);
-                                }
-                              } else {
-                                if (approvalListLoan[index]
-                                            ['evaluateStatusCode'] ==
-                                        "" &&
-                                    user_ucode !=
-                                        approvalListLoan[index]
-                                            ['authorizerEmployeeNo']) {
-                                  storeUser.add(approvalListLoan[index]);
-                                } else if (index + 1 ==
-                                    approvalListLoan.length) {
-                                  if (approvalListLoan[index]['seqNo'] ==
-                                      approvalListLoan.length) {
-                                    for (int indexes = 0;
-                                        indexes < approvalListLoan.length;
-                                        indexes++) {
-                                      if (indexes != index) {
-                                        finalZuthrize
-                                            .add(approvalListLoan[indexes]);
-                                      }
-                                    }
-                                  }
-                                }
+                              if (user_ucode !=
+                                  approvalListLoan[index]
+                                      ['authorizerEmployeeNo']) {
+                                storeUser.add(approvalListLoan[index]);
                               }
                             }
                             returnFuc(
                               context,
                               http.Client(),
                             );
-                            if (user_ucode == "101000") {
-                              for (int index = 0;
-                                  index < storeUser.length;
-                                  index++) {
-                                postPushNotification(
-                                    storeUser[index]['authorizerEmployeeNo'],
-                                    "Return",
-                                    "101000");
-                              }
-                            } else {
-                              for (int index = 0;
-                                  index < storeUser.length;
-                                  index++) {
-                                if (index == 0) {
-                                  postPushNotification(
-                                      storeUser[index]['authorizerEmployeeNo'],
-                                      "Return",
-                                      user_ucode);
-                                }
-                              }
-                            }
-                            if (finalZuthrize.length >= 0) {
-                              for (var item in finalZuthrize) {
-                                postPushNotification(
-                                    item['authorizerEmployeeNo'],
-                                    "Return",
-                                    user_ucode);
-                              }
+                            for (int index = 0;
+                                index < storeUser.length;
+                                index++) {
+                              postPushNotification(
+                                  storeUser[index]['authorizerEmployeeNo'],
+                                  "Return",
+                                  user_ucode);
                             }
                           },
                           color: Colors.grey,
