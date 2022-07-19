@@ -8,11 +8,10 @@ final baseUrl = 'http://45.115.209.191:10410/ONLWeb/HTT/OpnInHttSysApi/';
 
 //DEV APSARA
 // final baseUrl = 'http://10.168.40.12:10410/ONLWeb/HTT/OpnInHttSysApi/';
-// final baseUrl = 'http://119.82.252.42:10410/ONLWeb/HTT/OpnInHttSysApi/';
+// final baseUrl = 'http://45.115.209.191:10410/ONLWeb/HTT/OpnInHttSysApi/';
 
 final baseURLInternal = 'http://45.115.209.191:2020/api/';
 // final baseURLInternal = 'https://192.168.1.100:5001/api/';
-
 
 // CO UAT MOBILE URL
 

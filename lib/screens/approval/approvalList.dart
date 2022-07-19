@@ -140,7 +140,6 @@ class _ApprovalListsState extends State<ApprovalLists>
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
         var list = jsonDecode(await response.stream.bytesToString());
-        logger().e("list: ${list}");
         setState(() {
           approvalList = list['body']['approvalList'];
           _isLoading = false;

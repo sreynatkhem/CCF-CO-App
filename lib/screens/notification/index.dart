@@ -5,6 +5,7 @@ import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
+import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/tebBarDetail.dart';
 import 'package:chokchey_finance/screens/loanArrear/detail.dart';
@@ -339,6 +340,7 @@ class _NotificationState extends State<NotificationScreen> {
                               itemCount: listMessages.length,
                               itemBuilder: (BuildContext context, int index) {
                                 // var status = statusApproval(parsed[index]['rstatus']);
+                                logger().e(listMessages[index]['rcode']);
                                 if (listMessages.length >= 0) {
                                   return Container(
                                     height: 100,
@@ -355,14 +357,33 @@ class _NotificationState extends State<NotificationScreen> {
                                                 Colors.blue.withAlpha(30),
                                             onTap: () {
                                               // var value = listMessages[index];
-                                              var subString =
-                                                  listMessages[index]['rcode'];
-                                              var rcodeGroup =
-                                                  subString.substring(0, 1);
-                                              var groupLoanCode = '6';
-                                              // if()
+                                              var rcodeGroup;
+                                              var subString;
+                                              var groupLoanCode;
+                                              if (listMessages[index]
+                                                      ['rcode'] !=
+                                                  "") {
+                                                subString = listMessages[index]
+                                                    ['rcode'];
+                                                rcodeGroup =
+                                                    subString.substring(0, 1);
+                                                groupLoanCode = '6';
+                                              }
 
-                                              if (groupLoanCode == rcodeGroup) {
+                                              // if()
+                                              if (listMessages[index]
+                                                      ['title'] ==
+                                                  "Apsara System") {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        ApprovalLists(),
+                                                  ),
+                                                );
+                                              } else if (groupLoanCode ==
+                                                  rcodeGroup) {
                                                 navigatorGroupLoan(
                                                     listMessages[index]);
                                               } else if (listMessages[index]
