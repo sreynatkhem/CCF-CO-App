@@ -220,6 +220,35 @@ class _TabBarMenuState extends State<TabBarMenu> {
   final images = const AssetImage('assets/images/request.png');
   final GlobalKey<ScaffoldState> _scaffoldKeyApsara =
       new GlobalKey<ScaffoldState>();
+  var namecustomer = "";
+  var accountcustomer = "";
+  var overduedate = "";
+
+  postPushNotification(ucode, status, byuser) async {
+    try {
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request(
+          'POST', Uri.parse(baseURLInternal + 'ApproveLoanApsara'));
+      request.body = json.encode({
+        "ucode": "$ucode",
+        "accountcustomer": "$accountcustomer",
+        "overduedate": "$overduedate",
+        "namecustomer": "$namecustomer",
+        "phone": "",
+        "status": "$status",
+        "byuser": "$byuser"
+      });
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        logger().e(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (error) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     // var future = fetchListDetail(widget.loanApprovalApplicationNo);
@@ -299,7 +328,12 @@ class _TabBarMenuState extends State<TabBarMenu> {
                                       padding: const EdgeInsets.only(top: 20.0),
                                       itemBuilder: (context, index) {
                                         var listes = list[index];
-                                        // return Text("${listes.toString()}");
+                                        namecustomer = listes['customerName'];
+                                        accountcustomer =
+                                            listes['loanApprovalApplicationNo'];
+                                        overduedate =
+                                            listes['applicationAmount'];
+
                                         return CardDetail(
                                           images: images,
                                           applyInterestRate:
@@ -359,11 +393,77 @@ class _TabBarMenuState extends State<TabBarMenu> {
                           widtdButton: _widtdButton,
                           heightButton: _heightButton,
                           borderRadius: _borderRadius,
-                          onPressed: () {
+                          onPressed: () async {
+                            var user_ucode =
+                                await storage.read(key: "user_ucode");
+                            var storeUser = [];
+                            var finalZuthrize = [];
+                            for (int index = 0;
+                                index < approvalListLoan.length;
+                                index++) {
+                              if (user_ucode == "101000") {
+                                if (user_ucode !=
+                                    approvalListLoan[index]
+                                        ['authorizerEmployeeNo']) {
+                                  storeUser.add(approvalListLoan[index]);
+                                }
+                              } else {
+                                if (approvalListLoan[index]
+                                            ['evaluateStatusCode'] ==
+                                        "" &&
+                                    user_ucode !=
+                                        approvalListLoan[index]
+                                            ['authorizerEmployeeNo']) {
+                                  storeUser.add(approvalListLoan[index]);
+                                } else if (index + 1 ==
+                                    approvalListLoan.length) {
+                                  if (approvalListLoan[index]['seqNo'] ==
+                                      approvalListLoan.length) {
+                                    for (int indexes = 0;
+                                        indexes < approvalListLoan.length;
+                                        indexes++) {
+                                      if (indexes != index) {
+                                        finalZuthrize
+                                            .add(approvalListLoan[indexes]);
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
                             reject(
                               context,
                               http.Client(),
                             );
+                            if (user_ucode == "101000") {
+                              for (int index = 0;
+                                  index < storeUser.length;
+                                  index++) {
+                                postPushNotification(
+                                    storeUser[index]['authorizerEmployeeNo'],
+                                    "Reject",
+                                    "101000");
+                              }
+                            } else {
+                              for (int index = 0;
+                                  index < storeUser.length;
+                                  index++) {
+                                if (index == 0) {
+                                  postPushNotification(
+                                      storeUser[index]['authorizerEmployeeNo'],
+                                      "Reject",
+                                      user_ucode);
+                                }
+                              }
+                            }
+                            if (finalZuthrize.length >= 0) {
+                              for (var item in finalZuthrize) {
+                                postPushNotification(
+                                    item['authorizerEmployeeNo'],
+                                    "Reject",
+                                    user_ucode);
+                              }
+                            }
                           },
                           color: Colors.red,
                           text: AppLocalizations.of(context)!
@@ -374,11 +474,77 @@ class _TabBarMenuState extends State<TabBarMenu> {
                           widtdButton: _widtdButton,
                           heightButton: _heightButton,
                           borderRadius: _borderRadius,
-                          onPressed: () {
+                          onPressed: () async {
+                            var user_ucode =
+                                await storage.read(key: "user_ucode");
+                            var storeUser = [];
+                            var finalZuthrize = [];
+                            for (int index = 0;
+                                index < approvalListLoan.length;
+                                index++) {
+                              if (user_ucode == "101000") {
+                                if (user_ucode !=
+                                    approvalListLoan[index]
+                                        ['authorizerEmployeeNo']) {
+                                  storeUser.add(approvalListLoan[index]);
+                                }
+                              } else {
+                                if (approvalListLoan[index]
+                                            ['evaluateStatusCode'] ==
+                                        "" &&
+                                    user_ucode !=
+                                        approvalListLoan[index]
+                                            ['authorizerEmployeeNo']) {
+                                  storeUser.add(approvalListLoan[index]);
+                                } else if (index + 1 ==
+                                    approvalListLoan.length) {
+                                  if (approvalListLoan[index]['seqNo'] ==
+                                      approvalListLoan.length) {
+                                    for (int indexes = 0;
+                                        indexes < approvalListLoan.length;
+                                        indexes++) {
+                                      if (indexes != index) {
+                                        finalZuthrize
+                                            .add(approvalListLoan[indexes]);
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
                             returnFuc(
                               context,
                               http.Client(),
                             );
+                            if (user_ucode == "101000") {
+                              for (int index = 0;
+                                  index < storeUser.length;
+                                  index++) {
+                                postPushNotification(
+                                    storeUser[index]['authorizerEmployeeNo'],
+                                    "Return",
+                                    "101000");
+                              }
+                            } else {
+                              for (int index = 0;
+                                  index < storeUser.length;
+                                  index++) {
+                                if (index == 0) {
+                                  postPushNotification(
+                                      storeUser[index]['authorizerEmployeeNo'],
+                                      "Return",
+                                      user_ucode);
+                                }
+                              }
+                            }
+                            if (finalZuthrize.length >= 0) {
+                              for (var item in finalZuthrize) {
+                                postPushNotification(
+                                    item['authorizerEmployeeNo'],
+                                    "Return",
+                                    user_ucode);
+                              }
+                            }
                           },
                           color: Colors.grey,
                           text: AppLocalizations.of(context)!
@@ -389,11 +555,77 @@ class _TabBarMenuState extends State<TabBarMenu> {
                           widtdButton: _widtdButton,
                           heightButton: _heightButton,
                           borderRadius: _borderRadius,
-                          onPressed: () {
+                          onPressed: () async {
+                            var user_ucode =
+                                await storage.read(key: "user_ucode");
+                            var storeUser = [];
+                            var finalZuthrize = [];
+                            for (int index = 0;
+                                index < approvalListLoan.length;
+                                index++) {
+                              if (user_ucode == "101000") {
+                                if (user_ucode !=
+                                    approvalListLoan[index]
+                                        ['authorizerEmployeeNo']) {
+                                  storeUser.add(approvalListLoan[index]);
+                                }
+                              } else {
+                                if (approvalListLoan[index]
+                                            ['evaluateStatusCode'] ==
+                                        "" &&
+                                    user_ucode !=
+                                        approvalListLoan[index]
+                                            ['authorizerEmployeeNo']) {
+                                  storeUser.add(approvalListLoan[index]);
+                                } else if (index + 1 ==
+                                    approvalListLoan.length) {
+                                  if (approvalListLoan[index]['seqNo'] ==
+                                      approvalListLoan.length) {
+                                    for (int indexes = 0;
+                                        indexes < approvalListLoan.length;
+                                        indexes++) {
+                                      if (indexes != index) {
+                                        finalZuthrize
+                                            .add(approvalListLoan[indexes]);
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
                             authrize(
                               context,
                               http.Client(),
                             );
+                            if (user_ucode == "101000") {
+                              for (int index = 0;
+                                  index < storeUser.length;
+                                  index++) {
+                                postPushNotification(
+                                    storeUser[index]['authorizerEmployeeNo'],
+                                    "Authrize",
+                                    "101000");
+                              }
+                            } else {
+                              for (int index = 0;
+                                  index < storeUser.length;
+                                  index++) {
+                                if (index == 0) {
+                                  postPushNotification(
+                                      storeUser[index]['authorizerEmployeeNo'],
+                                      "Authrize",
+                                      user_ucode);
+                                }
+                              }
+                            }
+                            if (finalZuthrize.length >= 0) {
+                              for (var item in finalZuthrize) {
+                                postPushNotification(
+                                    item['authorizerEmployeeNo'],
+                                    "Final Authrize",
+                                    user_ucode);
+                              }
+                            }
                           },
                           color: logolightGreen,
                           text: AppLocalizations.of(context)!

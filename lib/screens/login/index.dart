@@ -154,11 +154,16 @@ class _LoginState extends State<Login> {
                         await storage.write(
                             key: "isapprover",
                             value: value[0]['isapprover'].toString()),
-                        FirebaseMessaging.instance
+                        await FirebaseMessaging.instance
                             .getToken()
                             .then((String? token) {
                           assert(token != null);
                           postTokenPushNotification(token);
+                        }).onError((error, stackTrace) {
+                          logger().e("error: $error");
+                          logger().e("stackTrace: $stackTrace");
+                        }).catchError((onError) {
+                          logger().e("onError: $onError");
                         }),
                         // already change password
                         Navigator.pushAndRemoveUntil(

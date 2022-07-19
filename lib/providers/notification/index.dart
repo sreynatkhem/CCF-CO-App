@@ -29,7 +29,6 @@ class NotificationProvider with ChangeNotifier {
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
         var parsed = jsonDecode(await response.stream.bytesToString());
-        logger().e("asdfasdfasdf: ${parsed}");
         notifyListeners();
         return parsed;
       } else {

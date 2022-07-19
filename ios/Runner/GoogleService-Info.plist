@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>805483562052-pejp1qotc96tjjs52vjro5d1quvmclr6.apps.googleusercontent.com</string>
+	<string>775185412465-47ir8a6d84eca3pp1286pieegk9osunr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.805483562052-pejp1qotc96tjjs52vjro5d1quvmclr6</string>
+	<string>com.googleusercontent.apps.775185412465-47ir8a6d84eca3pp1286pieegk9osunr</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDeGM37nCDGB_HpDeUs1S_oxzj_Adl8lME</string>
+	<string>AIzaSyDqNq10xb3Y4p_wJ17SttowsTN7Hv53WDA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>805483562052</string>
+	<string>775185412465</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.chokcheyFinance</string>
+	<string>com.chokchey.co</string>
 	<key>PROJECT_ID</key>
-	<string>cff-application-test</string>
+	<string>ccfcoapp</string>
 	<key>STORAGE_BUCKET</key>
-	<string>cff-application-test.appspot.com</string>
+	<string>ccfcoapp.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:805483562052:ios:fe4f86b5852af911c56811</string>
+	<string>1:775185412465:ios:c02291bcaefdb9ce14c6d0</string>
 	<key>DATABASE_URL</key>
-	<string>https://cff-application-test.firebaseio.com</string>
+	<string>https://ccfcoapp.firebaseio.com</string>
 </dict>
 </plist>

@@ -126,9 +126,11 @@ class _HomeState extends State<Home> {
       AndroidNotification? android = message.notification?.android;
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      Navigator.pushNamed(context, '/message', arguments: NotificationScreen());
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => NotificationScreen()),
+      );
     });
-
     getNotificationLock();
     fetchVersionApp();
     getNotificationLoanArrear();
