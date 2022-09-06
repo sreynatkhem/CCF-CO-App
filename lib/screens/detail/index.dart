@@ -332,7 +332,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
                                         accountcustomer =
                                             listes['loanApprovalApplicationNo'];
                                         overduedate =
-                                            listes['applicationAmount'];
+                                            listes['applicationAmount']
+                                                .toString();
 
                                         return CardDetail(
                                           images: images,
