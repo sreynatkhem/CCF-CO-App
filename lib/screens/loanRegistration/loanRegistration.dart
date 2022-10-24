@@ -193,7 +193,7 @@ class _LoanRegister extends State {
 
   onSubmit(context) async {
     final storage = new FlutterSecureStorage();
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
     var token = await storage.read(key: 'user_token');
     var irr = iRRControllers.text;
@@ -201,7 +201,7 @@ class _LoanRegister extends State {
     var expdate = expdateDay != null ? expdateDay : DateTime.now();
     try {
       final Map<String, dynamic> boyrow = {
-        "ucode": "$user_ucode",
+        "ucode": "$userUcode",
         "bcode": "$branch",
         "ccode": "$idCcode",
         "curcode": "$curcode",
@@ -254,21 +254,22 @@ class _LoanRegister extends State {
             Colors.redAccent);
       }
     } catch (error) {
-      logger.e('error:: ${error}');
+      logger.e('error:: $error');
     }
   }
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeyCreateLoan.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Future onAddFile(context) async {
     await onSubmit(context);
     // loanCode
-    logger.e('loanCode: ${loanCode}');
+    logger.e('loanCode: $loanCode');
     if (loanCode != null) {
       await Navigator.push(
         context,
@@ -331,12 +332,12 @@ class _LoanRegister extends State {
   var listCustomers = [];
   getCustomer() async {
     final storage = new FlutterSecureStorage();
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
     var token = await storage.read(key: 'user_token');
 
     try {
       final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'valuelists/customers/' + user_ucode),
+        Uri.parse(baseURLInternal + 'valuelists/customers/' + userUcode),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
@@ -397,9 +398,7 @@ class _LoanRegister extends State {
   var expdateDay;
 
   iRRCalculation() {
-    if (valueNumberofTerm != '0' &&
-        valueNumberofTerm != null &&
-        valueNumberofTerm != '') {
+    if (valueNumberofTerm != '0' && valueNumberofTerm != '') {
       var interestIRR;
       var maintenanceFeeIRR;
       var numberofTermIRR;
@@ -427,7 +426,7 @@ class _LoanRegister extends State {
   }
 
   onCheckDay(v) {
-    logger.e('message:: ${v}');
+    logger.e('message:: $v');
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKeyCreateLoan =
@@ -827,7 +826,7 @@ class _LoanRegister extends State {
                                   valueRepaymentMethod =
                                       v.toString().replaceAll(",", ".");
                                 }),
-                                if (v != null && v != "" && v.length > 1)
+                                if (v != "" && v.length > 1)
                                   {
                                     iRRCalculation(),
                                   }

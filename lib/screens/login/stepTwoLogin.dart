@@ -127,7 +127,7 @@ class _LoginState extends State<StepTwoLogin> {
 
   postTokenPushNotification(tokens) async {
     var token = await storage.read(key: 'user_token');
-    var user_ucode = await storage.read(key: "user_ucode");
+    var userUcode = await storage.read(key: "user_ucode");
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -136,11 +136,11 @@ class _LoginState extends State<StepTwoLogin> {
     final Map<String, dynamic> bodyRow = {"mtoken": "$tokens"};
     try {
       final Response response = await api().post(
-          Uri.parse(baseURLInternal + 'users/' + user_ucode + '/mtoken'),
+          Uri.parse(baseURLInternal + 'users/' + userUcode + '/mtoken'),
           headers: headers,
           body: json.encode(bodyRow));
     } catch (error) {
-      print('error:: ${error}');
+      print('error:: $error');
     }
   }
 
@@ -205,10 +205,11 @@ class _LoginState extends State<StepTwoLogin> {
                 width: 320,
                 height: 45,
                 margin: EdgeInsets.only(top: 40, bottom: 20),
-                child: FlatButton(
-                  color: logolightGreen,
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: logolightGreen,
+                      padding: const EdgeInsets.all(8.0),
+                      textStyle: TextStyle(color: Colors.white)),
                   onPressed: () async {
                     showDialog(
                       context: context,

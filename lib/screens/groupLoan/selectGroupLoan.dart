@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/groupLoan/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
@@ -10,7 +9,7 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
-import 'package:smart_select/smart_select.dart';
+// import 'package:smart_select/smart_select.dart';
 import 'package:http/http.dart' as http;
 
 class GroupLoanSelect extends StatefulWidget {
@@ -27,10 +26,11 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
 
   // snack bar
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeySelectedGroupLoan.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKeySelectedGroupLoan =
@@ -47,8 +47,8 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
 
   var _isLoading = false;
   var listGroupLoan = [];
-  List<S2Choice> newDataList = [];
-  List<S2Choice> list = [];
+  // List<S2Choice> newDataList = [];
+  // List<S2Choice> list = [];
   var _selectedLeader;
   var _selectedMember;
 
@@ -61,7 +61,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
     });
     try {
       var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
+      var userUcode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
       var sdates = sdate != null ? sdate : '';
@@ -79,13 +79,13 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
 
       if (level == '2') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
-        btlcode = user_ucode;
+        btlcode = userUcode;
         ucode = code != null && code != "" ? code : '';
       }
 
       if (level == '1') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
-        ucode = user_ucode;
+        ucode = userUcode;
         btlcode = '';
       }
 
@@ -117,20 +117,20 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           body: json.encode(bodyRow));
       if (response.statusCode == 200) {
         var listLoan = jsonDecode(response.body);
-        if (mounted)
-          setState(() {
-            _isLoading = false;
-            listGroupLoan = listLoan[0]['listLoanRequests'];
-            for (var values in listGroupLoan) {
-              setState(() {
-                newDataList.add(S2Choice<int>(
-                  value: int.parse(values['rcode']),
-                  title:
-                      "${values['rcode']} - ${values['lcode']} - ${values['loan']['customer']} - ${values['loan']['currency']} ${numFormat.format(values['loan']['lamt'])} ",
-                ));
-              });
-            }
-          });
+        // if (mounted)
+        //   setState(() {
+        //     _isLoading = false;
+        //     listGroupLoan = listLoan[0]['listLoanRequests'];
+        //     for (var values in listGroupLoan) {
+        //       setState(() {
+        //         newDataList.add(S2Choice<int>(
+        //           value: int.parse(values['rcode']),
+        //           title:
+        //               "${values['rcode']} - ${values['lcode']} - ${values['loan']['customer']} - ${values['loan']['currency']} ${numFormat.format(values['loan']['lamt'])} ",
+        //         ));
+        //       });
+        //     }
+        //   });
       } else {
         if (mounted)
           setState(() {
@@ -156,9 +156,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
           AppLocalizations.of(context)!.translate('please_input_group_name') ??
               'Please input group name!',
           Colors.red);
-    } else if (list == null ||
-        _selectedMember.length > 5 ||
-        _selectedMember.length < 2) {
+    } else if (_selectedMember.length > 5 || _selectedMember.length < 2) {
       showInSnackBar(
           AppLocalizations.of(context)!
                   .translate('please_select_member_correctly') ??
@@ -250,7 +248,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
       //       Colors.redAccent);
       // });
       var token = await storage.read(key: 'user_token');
-      String user_id = await storage.read(key: 'user_id');
+      String userId = await storage.read(key: 'user_id');
       var branch = await storage.read(key: 'branch');
 
       var headers = {
@@ -260,7 +258,7 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
       var request = http.Request(
           'POST', Uri.parse(baseURLInternal + 'GroupLoan/creategrouploan'));
       request.body =
-          '''{\n    "ucode": "$user_id",\n    "bcode": "$branch",\n    "gname": "$controller",\n    "groupLoanDetail": $objectGroupLoanDetail\n}''';
+          '''{\n    "ucode": "$userId",\n    "bcode": "$branch",\n    "gname": "$controller",\n    "groupLoanDetail": $objectGroupLoanDetail\n}''';
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -314,270 +312,280 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
         ),
         bodys: Column(
           children: [
-            Container(
-              child: SmartSelect.multiple(
-                  title:
-                      AppLocalizations.of(context)!.translate('select_member'),
-                  value: [],
-                  // choiceItems: newDataList,
-                  choiceType: S2ChoiceType.checkboxes,
-                  modalFilter: true,
-                  modalFilterAuto: true,
-                  choiceItems: newDataList,
-                  //  selected.valueTitle
-                  onChange: (selected) {
-                    if (mounted)
-                      setState(() {
-                        list = [];
-                        _selectedMember = [];
-                      });
+            // Container(
+            //   child: SmartSelect.multiple(
+            //       title:
+            //           AppLocalizations.of(context)!.translate('select_member'),
+            //       value: [],
+            //       // choiceItems: newDataList,
+            //       choiceType: S2ChoiceType.checkboxes,
+            //       modalFilter: true,
+            //       modalFilterAuto: true,
+            //       choiceItems: newDataList,
+            //       //  selected.valueTitle
+            //       onChange: (selected) {
+            //         if (mounted)
+            //           setState(() {
+            //             list = [];
+            //             _selectedMember = [];
+            //           });
 
-                    if (selected != null && selected.valueTitle != null) {
-                      _selectedMember = selected.valueTitle;
-                      for (var item in selected.valueTitle) {
-                        // loop id member rcode and lcode
-                        var subStringCode = item.substring(0, 15);
-                        var rcodeMember = subStringCode.substring(0, 6);
-                        setState(() {
-                          list.addAll([
-                            S2Choice<int>(
-                              value: int.parse(rcodeMember),
-                              title: item,
-                            )
-                          ]);
-                        });
-                      }
-                    }
-                  },
-                  // setState(() => list = selected.valueTitle),
-                  modalHeaderStyle: S2ModalHeaderStyle(
-                      actionsIconTheme: IconThemeData(color: Colors.white),
-                      iconTheme: IconThemeData(color: Colors.white),
-                      backgroundColor: logolightGreen,
-                      textStyle: TextStyle(color: Colors.white)),
-                  choiceConfig: const S2ChoiceConfig(
-                    useDivider: true,
-                  ),
-                  modalType: S2ModalType.fullPage,
-                  modalDividerBuilder: (context, state) {
-                    return const Divider(height: 1);
-                  },
-                  tileBuilder: (context, stateMember) {
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 7,
-                        horizontal: 15,
-                      ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
-                        child: S2Tile.fromState(
-                          stateMember,
-                          hideValue: true,
-                          isLoading: _isLoading,
-                          leading: CircleAvatar(
-                            backgroundColor: logolightGreen,
-                            child: Text('5',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                          body: S2TileChips(
-                            chipLength: stateMember.valueObject.length,
-                            chipLabelBuilder: (context, i) {
-                              return Text(stateMember.valueObject[i].title);
-                            },
-                            chipColor: logolightGreen,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  modalFooterBuilder: (context, stateMember) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 7.0,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          const Spacer(),
-                          FlatButton(
-                            color: Colors.red,
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                      .translate('cancel') ??
-                                  "",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () =>
-                                stateMember.closeModal(confirmed: false),
-                          ),
-                          const SizedBox(width: 5),
-                          FlatButton(
-                            child: Text(AppLocalizations.of(context)!
-                                    .translate('okay') ??
-                                ""),
-                            color: logolightGreen,
-                            textColor: Colors.white,
-                            onPressed: stateMember.changes.valid
-                                ? () => stateMember.closeModal(confirmed: true)
-                                : null,
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-            ),
+            //         if (selected.valueTitle != null) {
+            //           _selectedMember = selected.valueTitle;
+            //           for (var item in selected.valueTitle) {
+            //             // loop id member rcode and lcode
+            //             var subStringCode = item.substring(0, 15);
+            //             var rcodeMember = subStringCode.substring(0, 6);
+            //             setState(() {
+            //               list.addAll([
+            //                 S2Choice<int>(
+            //                   value: int.parse(rcodeMember),
+            //                   title: item,
+            //                 )
+            //               ]);
+            //             });
+            //           }
+            //         }
+            //       },
+            //       // setState(() => list = selected.valueTitle),
+            //       modalHeaderStyle: S2ModalHeaderStyle(
+            //           actionsIconTheme: IconThemeData(color: Colors.white),
+            //           iconTheme: IconThemeData(color: Colors.white),
+            //           backgroundColor: logolightGreen,
+            //           textStyle: TextStyle(color: Colors.white)),
+            //       choiceConfig: const S2ChoiceConfig(
+            //         useDivider: true,
+            //       ),
+            //       modalType: S2ModalType.fullPage,
+            //       modalDividerBuilder: (context, state) {
+            //         return const Divider(height: 1);
+            //       },
+            //       tileBuilder: (context, stateMember) {
+            //         return Card(
+            //           elevation: 2,
+            //           margin: const EdgeInsets.symmetric(
+            //             vertical: 7,
+            //             horizontal: 15,
+            //           ),
+            //           shape: const RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            //           ),
+            //           child: Padding(
+            //             padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
+            //             child: S2Tile.fromState(
+            //               stateMember,
+            //               hideValue: true,
+            //               isLoading: _isLoading,
+            //               leading: CircleAvatar(
+            //                 backgroundColor: logolightGreen,
+            //                 child: Text('5',
+            //                     style: TextStyle(color: Colors.white)),
+            //               ),
+            //               body: S2TileChips(
+            //                 chipLength: stateMember.valueObject.length,
+            //                 chipLabelBuilder: (context, i) {
+            //                   return Text(stateMember.valueObject[i].title);
+            //                 },
+            //                 chipColor: logolightGreen,
+            //               ),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //       modalFooterBuilder: (context, stateMember) {
+            //         return Container(
+            //           padding: const EdgeInsets.symmetric(
+            //             horizontal: 12.0,
+            //             vertical: 7.0,
+            //           ),
+            //           child: Row(
+            //             children: <Widget>[
+            //               const Spacer(),
+            //               ElevatedButton(
+            //                 style: ElevatedButton.styleFrom(
+            //                   backgroundColor: Colors.red,
+            //                 ),
+            //                 child: Text(
+            //                   AppLocalizations.of(context)!
+            //                           .translate('cancel') ??
+            //                       "",
+            //                   style: TextStyle(color: Colors.white),
+            //                 ),
+            //                 onPressed: () =>
+            //                     stateMember.closeModal(confirmed: false),
+            //               ),
+            //               const SizedBox(width: 5),
+            //               ElevatedButton(
+            //                 child: Text(AppLocalizations.of(context)!
+            //                         .translate('okay') ??
+            //                     ""),
+            //                 style: ElevatedButton.styleFrom(
+            //                   backgroundColor: logolightGreen,
+            //                   textStyle: TextStyle(color: Colors.white),
+            //                 ),
+            //                 onPressed: stateMember.changes.valid
+            //                     ? () => stateMember.closeModal(confirmed: true)
+            //                     : null,
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       }),
+            // ),
             //validate group member
-            if (list.length > 5 || list.length < 2)
-              Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                padding: EdgeInsets.all(10),
-                child: Center(
-                  child: Text(
-                    AppLocalizations.of(context)!
-                            .translate('member_group_loan_have_to') ??
-                        "Member Group Loan have to 2 or least then 5 or equal 5.",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ),
+            // if (list.length > 5 || list.length < 2)
+            //   Container(
+            //     width: MediaQuery.of(context).size.width * 0.9,
+            //     padding: EdgeInsets.all(10),
+            //     child: Center(
+            //       child: Text(
+            //         AppLocalizations.of(context)!
+            //                 .translate('member_group_loan_have_to') ??
+            //             "Member Group Loan have to 2 or least then 5 or equal 5.",
+            //         style: TextStyle(color: Colors.red),
+            //       ),
+            //     ),
+            //   ),
 
             //select leader
-            if (list != [])
-              Container(
-                child: SmartSelect.single(
-                    title: AppLocalizations.of(context)!
-                        .translate('select_leader'),
-                    value: list,
-                    choiceItems: list,
-                    choiceType: S2ChoiceType.radios,
-                    modalFilter: true,
-                    modalFilterAuto: true,
-                    onChange: (stateLeader) {
-                      setState(() {
-                        _selectedLeader = [];
-                      });
-                      if (stateLeader.valueTitle != "" &&
-                          stateLeader.valueTitle != null) {
-                        setState(() {
-                          _selectedLeader = [stateLeader.valueTitle];
-                        });
-                      }
-                    },
-                    modalHeaderStyle: S2ModalHeaderStyle(
-                        actionsIconTheme: IconThemeData(color: Colors.white),
-                        iconTheme: IconThemeData(color: Colors.white),
-                        backgroundColor: logolightGreen,
-                        textStyle: TextStyle(color: Colors.white)),
-                    choiceConfig: const S2ChoiceConfig(
-                      useDivider: true,
-                    ),
-                    modalType: S2ModalType.fullPage,
-                    modalDividerBuilder: (context, state) {
-                      return const Divider(height: 1);
-                    },
-                    tileBuilder: (context, stateLeader) {
-                      return Card(
-                        elevation: 2,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 7,
-                          horizontal: 15,
-                        ),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
-                          child: S2Tile.fromState(
-                            stateLeader,
-                            hideValue: true,
-                            value: stateLeader.toString(),
-                            leading: CircleAvatar(
-                              backgroundColor: logolightGreen,
-                              child: Text('1',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                            body: Container(
-                              margin: EdgeInsets.only(left: 15, right: 15),
-                              child: stateLeader.valueTitle != null
-                                  ? Card(
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: logolightGreen, width: 0.2),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Container(
-                                        padding: EdgeInsets.all(7),
-                                        margin: EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          stateLeader.valueTitle != null
-                                              ? "${stateLeader.valueTitle}"
-                                              : "",
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                              color: logolightGreen,
-                                              fontSize: fontSizeXxs),
-                                        ),
-                                      ))
-                                  : Center(),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    modalFooterBuilder: (context, stateLeader) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 7.0,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            const Spacer(),
-                            FlatButton(
-                                color: Colors.red,
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                          .translate('cancel') ??
-                                      "",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {
-                                  stateLeader.closeModal(confirmed: false);
-                                }),
-                            const SizedBox(width: 5),
-                            FlatButton(
-                              child: Text(AppLocalizations.of(context)!
-                                      .translate('okay') ??
-                                  ""),
-                              color: logolightGreen,
-                              textColor: Colors.white,
-                              onPressed: stateLeader.changes.valid
-                                  ? () {
-                                      stateLeader.closeModal(confirmed: true);
-                                    }
-                                  : null,
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-              ),
+            // if (list != [])
+            // Container(
+            //   child: SmartSelect.single(
+            //       title: AppLocalizations.of(context)!
+            //           .translate('select_leader'),
+            //       value: list,
+            //       choiceItems: list,
+            //       choiceType: S2ChoiceType.radios,
+            //       modalFilter: true,
+            //       modalFilterAuto: true,
+            //       onChange: (stateLeader) {
+            //         setState(() {
+            //           _selectedLeader = [];
+            //         });
+            //         if (stateLeader.valueTitle != "" &&
+            //             stateLeader.valueTitle != null) {
+            //           setState(() {
+            //             _selectedLeader = [stateLeader.valueTitle];
+            //           });
+            //         }
+            //       },
+            //       modalHeaderStyle: S2ModalHeaderStyle(
+            //           actionsIconTheme: IconThemeData(color: Colors.white),
+            //           iconTheme: IconThemeData(color: Colors.white),
+            //           backgroundColor: logolightGreen,
+            //           textStyle: TextStyle(color: Colors.white)),
+            //       choiceConfig: const S2ChoiceConfig(
+            //         useDivider: true,
+            //       ),
+            //       modalType: S2ModalType.fullPage,
+            //       modalDividerBuilder: (context, state) {
+            //         return const Divider(height: 1);
+            //       },
+            //       tileBuilder: (context, stateLeader) {
+            //         return Card(
+            //           elevation: 2,
+            //           margin: const EdgeInsets.symmetric(
+            //             vertical: 7,
+            //             horizontal: 15,
+            //           ),
+            //           shape: const RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            //           ),
+            //           child: Padding(
+            //             padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
+            //             child: S2Tile.fromState(
+            //               stateLeader,
+            //               hideValue: true,
+            //               value: stateLeader.toString(),
+            //               leading: CircleAvatar(
+            //                 backgroundColor: logolightGreen,
+            //                 child: Text('1',
+            //                     style: TextStyle(color: Colors.white)),
+            //               ),
+            //               body: Container(
+            //                 margin: EdgeInsets.only(left: 15, right: 15),
+            //                 child: stateLeader.valueTitle != null
+            //                     ? Card(
+            //                         shape: RoundedRectangleBorder(
+            //                           side: BorderSide(
+            //                               color: logolightGreen, width: 0.2),
+            //                           borderRadius: BorderRadius.circular(20),
+            //                         ),
+            //                         child: Container(
+            //                           padding: EdgeInsets.all(7),
+            //                           margin: EdgeInsets.only(left: 5),
+            //                           child: Text(
+            //                             stateLeader.valueTitle != null
+            //                                 ? "${stateLeader.valueTitle}"
+            //                                 : "",
+            //                             maxLines: 1,
+            //                             style: TextStyle(
+            //                                 color: logolightGreen,
+            //                                 fontSize: fontSizeXxs),
+            //                           ),
+            //                         ))
+            //                     : Center(),
+            //               ),
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //       modalFooterBuilder: (context, stateLeader) {
+            //         return Container(
+            //           padding: const EdgeInsets.symmetric(
+            //             horizontal: 12.0,
+            //             vertical: 7.0,
+            //           ),
+            //           child: Row(
+            //             children: <Widget>[
+            //               const Spacer(),
+            //               ElevatedButton(
+            //                   style: ElevatedButton.styleFrom(
+            //                     backgroundColor: Colors.red,
+            //                   ),
+            //                   child: Text(
+            //                     AppLocalizations.of(context)!
+            //                             .translate('cancel') ??
+            //                         "",
+            //                     style: TextStyle(color: Colors.white),
+            //                   ),
+            //                   onPressed: () {
+            //                     stateLeader.closeModal(confirmed: false);
+            //                   }),
+            //               const SizedBox(width: 5),
+            //               ElevatedButton(
+            //                 child: Text(AppLocalizations.of(context)!
+            //                         .translate('okay') ??
+            //                     ""),
+            //                 style: ElevatedButton.styleFrom(
+            //                     backgroundColor: logolightGreen,
+            //                     textStyle: TextStyle(color: Colors.white)),
+            //                 onPressed: stateLeader.changes.valid
+            //                     ? () {
+            //                         stateLeader.closeModal(confirmed: true);
+            //                       }
+            //                     : null,
+            //               ),
+            //             ],
+            //           ),
+            //         );
+            //       }),
+            // ),
             Container(
               padding: EdgeInsets.all(15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RaisedButton(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: logolightGreen, width: 1),
-                      borderRadius: BorderRadius.circular(10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      textStyle: TextStyle(color: Colors.white),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: logolightGreen, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: logolightGreen,
                     ),
-                    color: logolightGreen,
                     onPressed: () {
                       submitGroupLoan();
                     },

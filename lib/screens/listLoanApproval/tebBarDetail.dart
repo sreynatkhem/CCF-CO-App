@@ -99,11 +99,11 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   authrize(value, context) async {
     var branch = await storage.read(key: 'branch');
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
     var comments = controller.text;
 
     var rcode = value['rcode'];
-    var ucode = user_ucode;
+    var ucode = userUcode;
     var bcode = branch;
     var lcode = value['lcode'];
     var rdate = '';
@@ -138,9 +138,8 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
         _isLoading = false;
       });
     });
-    isFetchingSuccessfully =
-        await Provider.of<LoanApproval>(context, listen: false)
-            .isFetchingSuccessfully;
+    isFetchingSuccessfully = Provider.of<LoanApproval>(context, listen: false)
+        .isFetchingSuccessfully;
     if (isFetchingSuccessfully == true) {
       showInSnackBar(
           AppLocalizations.of(context)!.translate('successfully') ??
@@ -158,10 +157,10 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   returnFuc(value, context) async {
     var branch = await storage.read(key: 'branch');
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
     var comments = controller.text;
     var rcode = value['rcode'];
-    var ucode = user_ucode;
+    var ucode = userUcode;
     var bcode = branch;
     var lcode = value['lcode'];
     var rdate = '';
@@ -191,7 +190,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       });
     });
     isFetchingSuccessfullReturn =
-        await Provider.of<LoanApproval>(context, listen: false)
+        Provider.of<LoanApproval>(context, listen: false)
             .isFetchingSuccessfullyReturn;
     if (isFetchingSuccessfullReturn == true) {
       showInSnackBar(
@@ -207,11 +206,11 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
 
   reject(value, context) async {
     var branch = await storage.read(key: 'branch');
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
 
     var comments = controller.text;
     var rcode = value['rcode'];
-    var ucode = user_ucode;
+    var ucode = userUcode;
     var bcode = branch;
     var lcode = value['lcode'];
     var rdate = '';
@@ -245,7 +244,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     });
 
     isFetchingSuccessfullReject =
-        await Provider.of<LoanApproval>(context, listen: false)
+        Provider.of<LoanApproval>(context, listen: false)
             .isFetchingSuccessfullyReject;
     if (isFetchingSuccessfullReject == true) {
       showInSnackBar(
@@ -264,10 +263,11 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKey.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

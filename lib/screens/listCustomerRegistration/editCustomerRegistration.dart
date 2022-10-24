@@ -370,10 +370,10 @@ class _CustomerRegister extends State<EditCustomerRegister> {
               idVillage,
               _currentAddress)
           .then((value) async => {
-                statusCodes =
-                    await Provider.of<ListCustomerRegistrationProvider>(context,
-                            listen: false)
-                        .isStatusCode,
+                statusCodes = Provider.of<ListCustomerRegistrationProvider>(
+                        context,
+                        listen: false)
+                    .isStatusCode,
                 if (statusCodes == true)
                   {
                     await Navigator.pushAndRemoveUntil(
@@ -417,7 +417,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
     var year = DateTime(now.year, now.month, now.day).year;
     var nday = day.toString().padLeft(2, "0");
     var nmonth = month.toString().padLeft(2, "0");
-    var fullDate = "${year}${nmonth}${nday}";
+    var fullDate = "$year$nmonth$nday";
 
     // final yesterday = DateTime(now.year, now.month, now.day - 1);
     // final tomorrow = DateTime(now.year, now.month, now.day + 1);
@@ -434,7 +434,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
 
       var ndayPicker = aDay.toString().padLeft(2, "0");
       var nmonthPicker = aMonth.toString().padLeft(2, "0");
-      fullDatePicker = "${aYear}${nmonthPicker}${ndayPicker}";
+      fullDatePicker = "$aYear$nmonthPicker$ndayPicker";
     }
 
     var val1 = int.parse(fullDate);
@@ -1275,7 +1275,7 @@ class _CustomerRegister extends State<EditCustomerRegister> {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  FlatButton(
+                                  ElevatedButton(
                                     child: Container(
                                       width: 240,
                                       child: Text(

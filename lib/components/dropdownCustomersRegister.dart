@@ -53,7 +53,7 @@ class DropDownCustomerRegister extends StatelessWidget {
                 ),
               ),
               Container(
-                child: FlatButton(
+                child: ElevatedButton(
                     onPressed: onInSidePress ??
                         () {
                           readOnlys!
@@ -61,7 +61,7 @@ class DropDownCustomerRegister extends StatelessWidget {
                                   label: texts ?? 'Search',
                                   items: items,
                                   onChange: onChanged,
-                                  autofocus: autofocus)
+                                  autofocus: autofocus ?? false)
                               : null;
                         },
                     child: Container(

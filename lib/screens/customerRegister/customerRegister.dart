@@ -184,10 +184,9 @@ class _CustomerRegister extends State {
                 idCommune,
                 idVillage,
                 _currentAddress);
-        var nextNavigator = await Provider.of<CustomerRegistrationProvider>(
-                context,
-                listen: false)
-            .isFetchingOkay;
+        var nextNavigator =
+            Provider.of<CustomerRegistrationProvider>(context, listen: false)
+                .isFetchingOkay;
         if (nextNavigator == true) {
           showInSnackBar(
               AppLocalizations.of(context)!.translate(
@@ -214,10 +213,11 @@ class _CustomerRegister extends State {
       new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeyCreateCustomer.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   var _isIint = false;
@@ -439,7 +439,7 @@ class _CustomerRegister extends State {
     var year = DateTime(now.year, now.month, now.day).year;
     var nday = day.toString().padLeft(2, "0");
     var nmonth = month.toString().padLeft(2, "0");
-    var fullDate = "${year}${nmonth}${nday}";
+    var fullDate = "$year$nmonth$nday";
 
     // final yesterday = DateTime(now.year, now.month, now.day - 1);
     // final tomorrow = DateTime(now.year, now.month, now.day + 1);
@@ -456,7 +456,7 @@ class _CustomerRegister extends State {
 
       var ndayPicker = aDay.toString().padLeft(2, "0");
       var nmonthPicker = aMonth.toString().padLeft(2, "0");
-      fullDatePicker = "${aYear}${nmonthPicker}${ndayPicker}";
+      fullDatePicker = "$aYear$nmonthPicker$ndayPicker";
     }
 
     var val1 = int.parse(fullDate);
@@ -1159,7 +1159,7 @@ class _CustomerRegister extends State {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  FlatButton(
+                                  ElevatedButton(
                                     child: Container(
                                       width: 240,
                                       child: Container(

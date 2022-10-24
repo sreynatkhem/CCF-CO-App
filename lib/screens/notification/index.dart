@@ -44,7 +44,7 @@ class _NotificationState extends State<NotificationScreen> {
     final storage = new FlutterSecureStorage();
 
     var token = await storage.read(key: 'user_token');
-    var user_ucode = await storage.read(key: "user_ucode");
+    var userUcode = await storage.read(key: "user_ucode");
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -53,7 +53,7 @@ class _NotificationState extends State<NotificationScreen> {
     final Map<String, dynamic> bodyRow = {
       "pageSize": "$_pageSizeParam",
       "pageNumber": "$_pageNumberParam",
-      "ucode": "$user_ucode"
+      "ucode": "$userUcode"
     };
     try {
       final Response response = await api().post(
@@ -191,10 +191,11 @@ class _NotificationState extends State<NotificationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKeys = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeys.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   ScrollController _scrollController = ScrollController();
@@ -243,14 +244,14 @@ class _NotificationState extends State<NotificationScreen> {
     final storage = new FlutterSecureStorage();
 
     var token = await storage.read(key: 'user_token');
-    var user_ucode = await storage.read(key: "user_ucode");
+    var userUcode = await storage.read(key: "user_ucode");
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token"
     };
     var bodyRow =
-        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$user_ucode\",\n}";
+        "{\n    \"pageSize\": $_pageSize,\n    \"pageNumber\": $_pageNumber,\n    \"ucode\": \"$userUcode\",\n}";
     try {
       final Response response = await api().post(
           Uri.parse(baseURLInternal + 'messages/byuser'),
@@ -266,7 +267,7 @@ class _NotificationState extends State<NotificationScreen> {
         });
       }
     } catch (error) {
-      logger().e('error: ${error}');
+      logger().e('error: $error');
     }
   }
 
@@ -300,7 +301,7 @@ class _NotificationState extends State<NotificationScreen> {
         ),
       );
     }).catchError((onError) {
-      logger().e('onError: ${onError}');
+      logger().e('onError: $onError');
     });
   }
 

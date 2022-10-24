@@ -52,7 +52,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
     final storage = new FlutterSecureStorage();
     try {
       var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
+      var userUcode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
       var sdates = sdate != null ? sdate : '';
@@ -70,13 +70,13 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
 
       if (level == '2') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
-        btlcode = user_ucode;
+        btlcode = userUcode;
         ucode = code != null && code != "" ? code : '';
       }
 
       if (level == '1') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
-        ucode = user_ucode;
+        ucode = userUcode;
         btlcode = '';
       }
 
@@ -134,7 +134,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
         });
       }
     } catch (error) {
-      print('error::: ${error}');
+      print('error::: $error');
     }
   }
 
@@ -253,7 +253,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
 
     try {
       var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
+      var userUcode = await storage.read(key: "user_ucode");
 
       Map<String, String> headers = {
         "Content-Type": "application/json",
@@ -261,7 +261,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
       };
       final Response response = await api().get(
         Uri.parse(
-            baseURLInternal + 'valuelists/users/co/' + user_ucode + '/' + ''),
+            baseURLInternal + 'valuelists/users/co/' + userUcode + '/' + ''),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -272,7 +272,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
         return list;
       }
     } catch (error) {
-      logger().e('error :: ${error}');
+      logger().e('error :: $error');
     }
   }
 
@@ -298,7 +298,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
     final storage = new FlutterSecureStorage();
     try {
       var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
+      var userUcode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
       var sdates = sdateParam != null ? sdateParam : '';
@@ -317,13 +317,13 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
 
       if (level == '2') {
         bcodes = bcodeParam != null && bcodeParam != "" ? bcodeParam : branch;
-        btlcode = user_ucode;
+        btlcode = userUcode;
         ucode = codeParam != null && codeParam != "" ? codeParam : '';
       }
 
       if (level == '1') {
         bcodes = bcodeParam != null && bcodeParam != "" ? bcodeParam : branch;
-        ucode = user_ucode;
+        ucode = userUcode;
         btlcode = '';
       }
 
@@ -363,7 +363,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
         });
       }
     } catch (error) {
-      print('error::: ${error}');
+      print('error::: $error');
     }
   }
 
@@ -699,14 +699,16 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          RaisedButton(
+                          ElevatedButton(
                             onPressed: _closeEndDrawer,
                             child: Text(AppLocalizations.of(context)!
                                     .translate('reset') ??
                                 "Reset"),
                           ),
-                          RaisedButton(
-                            color: logolightGreen,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: logolightGreen,
+                            ),
                             onPressed: _applyEndDrawer,
                             child: Text(
                               AppLocalizations.of(context)!

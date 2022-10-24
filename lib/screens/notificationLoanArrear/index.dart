@@ -1,6 +1,4 @@
-import 'package:chokchey_finance/screens/notificationLoanArrear/widgetLoanArrear.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -127,7 +125,7 @@ class _PushNotificationLoanLoanArrearState
                         ),
                         Padding(padding: EdgeInsets.only(bottom: 5)),
                         Text(
-                          "${totalAccount}",
+                          "$totalAccount",
                           style: TextStyle(
                               fontSize: 20,
                               color: Colors.red,
@@ -172,10 +170,12 @@ class _PushNotificationLoanLoanArrearState
                 Container(
                   height: 90,
                   padding: EdgeInsets.all(20),
-                  child: RaisedButton.icon(
-                    color: logolightGreen,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: logolightGreen,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
                     onPressed: () {
                       onClickPushNotification();
                     },

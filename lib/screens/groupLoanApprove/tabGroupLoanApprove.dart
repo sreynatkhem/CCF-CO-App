@@ -100,14 +100,14 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
 
   authrize(gcode, context, status) async {
     var branch = await storage.read(key: 'branch');
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
 
     setState(() {
       _isLoading = true;
     });
     await Provider.of<GroupLoanProvider>(context, listen: false)
         .approvalRejectReturn(
-            gcode, user_ucode, branch, userRoles, controller.text, status)
+            gcode, userUcode, branch, userRoles, controller.text, status)
         .then((value) => {
               setState(() {
                 _isLoading = false;
@@ -146,7 +146,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
           Colors.redAccent);
     });
     isFetchingSuccessfully =
-        await Provider.of<GroupLoanProvider>(context, listen: false)
+        Provider.of<GroupLoanProvider>(context, listen: false)
             .isFetchingSuccessfully;
     if (isFetchingSuccessfully == true) {
       showInSnackBar(
@@ -166,10 +166,11 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKey.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override

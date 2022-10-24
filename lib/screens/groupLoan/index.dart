@@ -63,13 +63,15 @@ class _GroupLoanState extends State<GroupLoan> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RaisedButton(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(color: logolightGreen, width: 1),
-                      borderRadius: BorderRadius.circular(10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: logolightGreen, width: 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    color: logolightGreen,
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(

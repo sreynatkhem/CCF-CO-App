@@ -33,12 +33,14 @@ class Button extends StatelessWidget {
           ),
         ],
       ),
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: onPressed,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
         ),
-        color: color,
         child: Text(
           text,
           style: TextStyle(

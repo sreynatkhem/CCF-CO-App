@@ -108,11 +108,11 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     // });
     try {
       final storage = new FlutterSecureStorage();
-      String user_id = await storage.read(key: 'user_id');
+      String userId = await storage.read(key: 'user_id');
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
       request.body =
-          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"${selectedBranch}\",\n    \"customerNo\": \"\",\n    \"authorizerEmployeeNo\" :\"$user_id\",\n   \"inquiryFromDate\": \"${startDateTime}\",\n   \"inquiryToDate\": \"${endDateTime}\",\n   \"loanApprovalApplicationStatusCode\": \"${selectedStatus}\"\n    }\n}\n";
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"$selectedBranch\",\n    \"customerNo\": \"\",\n    \"authorizerEmployeeNo\" :\"$userId\",\n   \"inquiryFromDate\": \"$startDateTime\",\n   \"inquiryToDate\": \"$endDateTime\",\n   \"loanApprovalApplicationStatusCode\": \"$selectedStatus\"\n    }\n}\n";
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
@@ -132,7 +132,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       setState(() {
         _isLoading = false;
       });
-      logger().e("error: ${error}");
+      logger().e("error: $error");
     }
   }
 
@@ -219,11 +219,11 @@ class _HistoryApsaraState extends State<HistoryApsara> {
 
     try {
       final storage = new FlutterSecureStorage();
-      String user_id = await storage.read(key: 'user_id');
+      String userId = await storage.read(key: 'user_id');
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
       request.body =
-          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"${selectedBranch}\",\n    \"customerNo\": \"${selectedUserID}\",\n    \"authorizerEmployeeNo\" :\"$user_id\",\n   \"inquiryFromDate\": \"${startDateTime}\",\n   \"inquiryToDate\": \"${endDateTime}\",\n   \"loanApprovalApplicationStatusCode\": \"${selectedStatus}\"\n    }\n}\n";
+          "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n		\"channelTypeCode\" :\"08\",\n		\"previousTransactionID\" :\"\",\n		\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"branchCode\": \"$selectedBranch\",\n    \"customerNo\": \"$selectedUserID\",\n    \"authorizerEmployeeNo\" :\"$userId\",\n   \"inquiryFromDate\": \"$startDateTime\",\n   \"inquiryToDate\": \"$endDateTime\",\n   \"loanApprovalApplicationStatusCode\": \"$selectedStatus\"\n    }\n}\n";
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
@@ -242,7 +242,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
       setState(() {
         _isLoading = false;
       });
-      logger().e("error: ${error}");
+      logger().e("error: $error");
     }
   }
 
@@ -438,7 +438,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                                   : null,
                               padding: EdgeInsets.all(4),
                               child: Text(
-                                "${userIDLogin} " + "${userNameLogin}",
+                                "$userIDLogin " + "$userNameLogin",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: _isSelectedUserIDLogin == true
@@ -676,14 +676,16 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            RaisedButton(
+                            ElevatedButton(
                               onPressed: _closeEndDrawer,
                               child: Text(AppLocalizations.of(context)!
                                       .translate('reset') ??
                                   "Reset"),
                             ),
-                            RaisedButton(
-                              color: logolightGreen,
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: logolightGreen,
+                              ),
                               onPressed: _applyEndDrawer,
                               child: Text(
                                 AppLocalizations.of(context)!
@@ -748,7 +750,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                                 "From Date: ",
                           ),
                           Text(
-                            ": ${startDateTimeDidMounted}",
+                            ": $startDateTimeDidMounted",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                         ],
@@ -764,7 +766,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
                                 "End Date: ",
                           ),
                           Text(
-                            ": ${endDateTimeDidMounted}",
+                            ": $endDateTimeDidMounted",
                             style: TextStyle(fontWeight: fontWeight800),
                           ),
                         ],

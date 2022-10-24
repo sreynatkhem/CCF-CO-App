@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -456,7 +455,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     final storage = new FlutterSecureStorage();
 
     var token = await storage.read(key: 'user_token');
-    var user_ucode = await storage.read(key: 'user_ucode');
+    var userUcode = await storage.read(key: 'user_ucode');
     var branch = await storage.read(key: 'branch');
 
     Map<String, String> headers = {
@@ -465,9 +464,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }; // ignore this headers if there is no authentication
 
     // multipart that takes file
-    if (_imageNation != null &&
-        _imageNation!.path != null &&
-        _imageNation!.path.isNotEmpty) {
+    if (_imageNation != null && _imageNation!.path.isNotEmpty) {
       var stream =
           new http.ByteStream(DelegatingStream.typed(_imageNation!.openRead()));
       var length = await _imageNation!.length();
@@ -476,9 +473,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // FamilyBook
-    if (_imageFamily != null &&
-        _imageFamily!.path != null &&
-        _imageFamily!.path.isNotEmpty) {
+    if (_imageFamily != null && _imageFamily!.path.isNotEmpty) {
       var stream =
           new http.ByteStream(DelegatingStream.typed(_imageFamily!.openRead()));
       var length = await _imageFamily!.length();
@@ -487,9 +482,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Resident
-    if (_imageResident != null &&
-        _imageResident!.path != null &&
-        _imageResident!.path.isNotEmpty) {
+    if (_imageResident != null && _imageResident!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageResident!.openRead()));
       var length = await _imageResident!.length();
@@ -498,9 +491,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Kyc Other
-    if (_imageOther != null &&
-        _imageOther!.path != null &&
-        _imageOther!.path.isNotEmpty) {
+    if (_imageOther != null && _imageOther!.path.isNotEmpty) {
       var stream =
           new http.ByteStream(DelegatingStream.typed(_imageOther!.openRead()));
       var length = await _imageOther!.length();
@@ -509,9 +500,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Employee Salary Slip
-    if (_imageSalarySlip != null &&
-        _imageSalarySlip!.path != null &&
-        _imageSalarySlip!.path.isNotEmpty) {
+    if (_imageSalarySlip != null && _imageSalarySlip!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageSalarySlip!.openRead()));
       var length = await _imageSalarySlip!.length();
@@ -520,9 +509,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Employee Bank Statement
-    if (_imageBankStatement != null &&
-        _imageBankStatement!.path != null &&
-        _imageBankStatement!.path.isNotEmpty) {
+    if (_imageBankStatement != null && _imageBankStatement!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageBankStatement!.openRead()));
       var length = await _imageBankStatement!.length();
@@ -531,9 +518,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Employee SalaryVerify
-    if (_imageSalaryVerify != null &&
-        _imageSalaryVerify!.path != null &&
-        _imageSalaryVerify!.path.isNotEmpty) {
+    if (_imageSalaryVerify != null && _imageSalaryVerify!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageSalaryVerify!.openRead()));
       var length = await _imageSalaryVerify!.length();
@@ -543,7 +528,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // Employee Employee Contrat
     if (_imageEmployeeContrat != null &&
-        _imageEmployeeContrat!.path != null &&
         _imageEmployeeContrat!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageEmployeeContrat!.openRead()));
@@ -553,9 +537,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Employee Employee ID
-    if (_imageEmployeeID != null &&
-        _imageEmployeeID!.path != null &&
-        _imageEmployeeID!.path.isNotEmpty) {
+    if (_imageEmployeeID != null && _imageEmployeeID!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageEmployeeID!.openRead()));
       var length = await _imageEmployeeID!.length();
@@ -563,9 +545,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
           filename: basename(_imageEmployeeID!.path)));
     }
     // Employee Employee ID
-    if (_imageEmployeeOther != null &&
-        _imageEmployeeOther!.path != null &&
-        _imageEmployeeOther!.path.isNotEmpty) {
+    if (_imageEmployeeOther != null && _imageEmployeeOther!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageEmployeeOther!.openRead()));
       var length = await _imageEmployeeOther!.length();
@@ -574,9 +554,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Business Photo of Service
-    if (_imagePhotoOfService != null &&
-        _imagePhotoOfService!.path != null &&
-        _imagePhotoOfService!.path.isNotEmpty) {
+    if (_imagePhotoOfService != null && _imagePhotoOfService!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imagePhotoOfService!.openRead()));
       var length = await _imagePhotoOfService!.length();
@@ -586,9 +564,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Business
-    if (_imageBusinessPermit != null &&
-        _imageBusinessPermit!.path != null &&
-        _imageBusinessPermit!.path.isNotEmpty) {
+    if (_imageBusinessPermit != null && _imageBusinessPermit!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageBusinessPermit!.openRead()));
       var length = await _imageBusinessPermit!.length();
@@ -599,7 +575,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // Business
     if (_imageIncomeStatementBank != null &&
-        _imageIncomeStatementBank!.path != null &&
         _imageIncomeStatementBank!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageIncomeStatementBank!.openRead()));
@@ -610,9 +585,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Business
-    if (_imagePatent != null &&
-        _imagePatent!.path != null &&
-        _imagePatent!.path.isNotEmpty) {
+    if (_imagePatent != null && _imagePatent!.path.isNotEmpty) {
       var stream =
           new http.ByteStream(DelegatingStream.typed(_imagePatent!.openRead()));
       var length = await _imagePatent!.length();
@@ -622,9 +595,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
 
     // Business
-    if (_imageRentalContract != null &&
-        _imageRentalContract!.path != null &&
-        _imageRentalContract!.path.isNotEmpty) {
+    if (_imageRentalContract != null && _imageRentalContract!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageRentalContract!.openRead()));
       var length = await _imageRentalContract!.length();
@@ -635,7 +606,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // _imageBusinessLocationtitleDedd
     if (_imageBusinessLocationtitle != null &&
-        _imageBusinessLocationtitle!.path != null &&
         _imageBusinessLocationtitle!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageBusinessLocationtitle!.openRead()));
@@ -646,7 +616,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
     }
     // Business
     if (_imageSaleAndPurchase != null &&
-        _imageSaleAndPurchase!.path != null &&
         _imageSaleAndPurchase!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageSaleAndPurchase!.openRead()));
@@ -656,9 +625,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
           filename: basename(_imageSaleAndPurchase!.path)));
     }
     // Business
-    if (_imageBusinessOther != null &&
-        _imageBusinessOther!.path != null &&
-        _imageBusinessOther!.path.isNotEmpty) {
+    if (_imageBusinessOther != null && _imageBusinessOther!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageBusinessOther!.openRead()));
       var length = await _imageBusinessOther!.length();
@@ -669,7 +636,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // Collateral
     if (_imageCollateralCertificate != null &&
-        _imageCollateralCertificate!.path != null &&
         _imageCollateralCertificate!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageCollateralCertificate!.openRead()));
@@ -681,7 +647,6 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     // Collateral
     if (_imageCollateralPicture != null &&
-        _imageCollateralPicture!.path != null &&
         _imageCollateralPicture!.path.isNotEmpty) {
       var stream = new http.ByteStream(
           DelegatingStream.typed(_imageCollateralPicture!.openRead()));
@@ -699,7 +664,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         widget.listLoan != null ? widget.listLoan['lcode'] : widget.editLoan;
     request.fields['lcode'] = loanCode;
     request.fields['bcode'] = branch;
-    request.fields['ucode'] = user_ucode;
+    request.fields['ucode'] = userUcode;
     setState(() {
       _isLoading = true;
     });
@@ -716,7 +681,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
         showInSnackBar(
             AppLocalizations.of(context)!.translate('successfully') ??
                 'Successfully',
-            Colors.redAccent);
+            Colors.redAccent,
+            context);
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => Home()),
@@ -729,7 +695,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       }
       // listen for response
       response.stream.transform(utf8.decoder).listen((value) {
-        logger.i('message::::: ${value}');
+        logger.i('message::::: $value');
       });
     } catch (e) {
       setState(() {
@@ -738,18 +704,20 @@ class _GridHeaderState extends State<AddReferentDocument> {
       showInSnackBar(
           AppLocalizations.of(context)!.translate('please_select_document') ??
               'Please select document',
-          Colors.redAccent);
+          Colors.redAccent,
+          context);
     }
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKeyAddDocument =
       new GlobalKey<ScaffoldState>();
 
-  void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeyAddDocument.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+  void showInSnackBar(String value, colorsBackground, context) {
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   showDailog(context, value, imageClear1, imageClear2) {
@@ -793,7 +761,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
       });
       // final list = jsonDecode(response.body);
     } catch (error) {
-      logger.e('error delete image: ${error}');
+      logger.e('error delete image: $error');
     }
   }
 
@@ -1394,7 +1362,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedNation = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1435,7 +1403,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedFamily = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1488,7 +1456,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedResidentBook = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1529,7 +1497,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedKYCOther = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1595,7 +1563,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedEmployeeSalaySlip = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1644,7 +1612,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedEmployeeBankStatement = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1699,7 +1667,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedEmployeeSalaryVerify = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1744,7 +1712,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedEmployeeEmployeeID = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1800,7 +1768,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedEmployeeEmployeecontract = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1846,7 +1814,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedEmployeeEmployeeOther = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1910,7 +1878,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessPhotosService = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -1951,7 +1919,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessPermit = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2007,7 +1975,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessIncomeStatement = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2052,7 +2020,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessPaten = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2107,7 +2075,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessSalePurchase = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2152,7 +2120,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessRental = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2207,7 +2175,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessLocation = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2252,7 +2220,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedBusinessOther = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2316,7 +2284,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedCollateralCertificate = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {
@@ -2357,7 +2325,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                             imageDocumentedCollateralPicture = null;
                           });
                         } catch (error) {
-                          logger.e('error delete image: ${error}');
+                          logger.e('error delete image: $error');
                         }
                       } else {
                         setState(() {

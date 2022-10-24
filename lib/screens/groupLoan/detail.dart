@@ -59,7 +59,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                               ),
                             ),
                             Text(
-                              "៖ ${groupNameParam}",
+                              "៖ $groupNameParam",
                               style: TextStyle(
                                   fontSize: fontSizeXs,
                                   fontWeight: FontWeight.w700),
@@ -96,7 +96,7 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                               alignment: Alignment.topCenter,
                               width: isIphoneX(context) ? 240 : 230,
                               child: Text(
-                                " ${leaderGroupLoanParam}",
+                                " $leaderGroupLoanParam",
                                 style: TextStyle(
                                     fontSize: fontSizeXs,
                                     fontWeight: FontWeight.w700),
@@ -144,11 +144,13 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       // ignore: deprecated_member_use
-                      RaisedButton(
-                        color: logolightGreen,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Colors.white)),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: logolightGreen,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.white)),
+                        ),
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
                           height: 40,
@@ -192,11 +194,13 @@ class _GroupLoanDetailState extends State<GroupLoanDetail> {
                           // }
                         },
                       ),
-                      RaisedButton(
-                        color: Colors.red,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Colors.white)),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.white)),
+                        ),
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
                           height: 40,

@@ -1,18 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
-import 'package:chokchey_finance/components/messageFromCEO.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
-import 'package:chokchey_finance/screens/callLog/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
 import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/groupLoan/index.dart';
@@ -29,18 +25,14 @@ import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart'
 import 'package:chokchey_finance/screens/login/index.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
-import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:chokchey_finance/screens/requestSummary/index.dart';
 import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:chokchey_finance/screens/profile/index.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
@@ -407,20 +399,20 @@ class _HomeState extends State<Home> {
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
-                      CustomListTile(
-                          Icons.group_add,
-                          AppLocalizations.of(context)!
-                                  .translate('create_group_loan') ??
-                              'Group Loan',
-                          () => {onListGroupLoan()},
-                          null),
-                      CustomListTile(
-                          Icons.group,
-                          AppLocalizations.of(context)!
-                                  .translate('group_loan_approve') ??
-                              'Group loan approve',
-                          () => {onListGroupLoanApprove()},
-                          null),
+                      // CustomListTile(
+                      //     Icons.group_add,
+                      //     AppLocalizations.of(context)!
+                      //             .translate('create_group_loan') ??
+                      //         'Group Loan',
+                      //     () => {onListGroupLoan()},
+                      //     null),
+                      // CustomListTile(
+                      //     Icons.group,
+                      //     AppLocalizations.of(context)!
+                      //             .translate('group_loan_approve') ??
+                      //         'Group loan approve',
+                      //     () => {onListGroupLoanApprove()},
+                      //     null),
                       //Call Log
                       // if (Platform.isAndroid)
                       //   CustomListTile(

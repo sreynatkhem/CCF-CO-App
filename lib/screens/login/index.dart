@@ -80,22 +80,23 @@ class _LoginState extends State<Login> {
       new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeySignUp.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 // Create storage Login
   Future<void> onClickLogin(context) async {
-    final String user_id = id.text;
+    final String userId = id.text;
     final String valuePassword = password.text;
     setState(() {
       _isLoading = true;
     });
     try {
       await Provider.of<LoginProvider>(context, listen: false)
-          .fetchLogin(user_id, valuePassword)
+          .fetchLogin(userId, valuePassword)
           .then((value) async => {
                 if (value[0]['token'] != null)
                   {
@@ -195,7 +196,7 @@ class _LoginState extends State<Login> {
 
   postTokenPushNotification(tokens) async {
     var token = await storage.read(key: 'user_token');
-    var user_ucode = await storage.read(key: "user_ucode");
+    var userUcode = await storage.read(key: "user_ucode");
 
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -204,11 +205,11 @@ class _LoginState extends State<Login> {
     final Map<String, dynamic> bodyRow = {"mtoken": "$tokens"};
     try {
       final Response response = await api().post(
-          Uri.parse(baseURLInternal + 'users/' + user_ucode + '/mtoken'),
+          Uri.parse(baseURLInternal + 'users/' + userUcode + '/mtoken'),
           headers: headers,
           body: json.encode(bodyRow));
     } catch (error) {
-      print('error:: ${error}');
+      print('error:: $error');
     }
   }
 
@@ -283,10 +284,11 @@ class _LoginState extends State<Login> {
                 width: 320,
                 height: 45,
                 margin: EdgeInsets.only(top: 40, bottom: 20),
-                child: FlatButton(
-                  color: logolightGreen,
-                  textColor: Colors.white,
-                  padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: logolightGreen,
+                      padding: const EdgeInsets.all(8.0),
+                      textStyle: TextStyle(color: Colors.white)),
                   onPressed: () async {
                     await onClickLogin(context);
                   },

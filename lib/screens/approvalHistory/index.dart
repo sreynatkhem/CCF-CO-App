@@ -680,14 +680,16 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RaisedButton(
+                        ElevatedButton(
                           onPressed: _closeEndDrawer,
                           child: Text(AppLocalizations.of(context)!
                                   .translate('reset') ??
                               "Reset"),
                         ),
-                        RaisedButton(
-                          color: logolightGreen,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: logolightGreen,
+                          ),
                           onPressed: _applyEndDrawer,
                           child: Text(
                             AppLocalizations.of(context)!.translate('apply') ??

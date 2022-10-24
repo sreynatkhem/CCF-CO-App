@@ -189,10 +189,11 @@ class _IRRScreenState extends State<IRRScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKeyIRR =
       new GlobalKey<ScaffoldState>();
   void showInSnackBar(String value, colorsBackground) {
-    _scaffoldKeyIRR.currentState!.showSnackBar(new SnackBar(
-      content: new Text(value),
+    SnackBar snackBar = SnackBar(
+      content: Text(value),
       backgroundColor: colorsBackground,
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   final GlobalKey<FormBuilderState> monthlyInterestGlobalKey =
@@ -271,7 +272,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                 items: ["USD"]
                                     .map((e) => DropdownMenuItem(
                                           value: e.toString(),
-                                          child: Text("${e}"),
+                                          child: Text("$e"),
                                         ))
                                     .toList()),
                           ),
@@ -446,11 +447,13 @@ class _IRRScreenState extends State<IRRScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(''),
-                          RaisedButton(
-                            color: logolightGreen,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: logolightGreen,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.white)),
+                            ),
                             child: Container(
                               width: 110,
                               height: 40,
@@ -498,7 +501,7 @@ class _IRRScreenState extends State<IRRScreen> {
                                     });
                                   }
                                   logger().e(
-                                      "showValueAmountDefault: null ${showValueAmountDefault}");
+                                      "showValueAmountDefault: null $showValueAmountDefault");
                                   var irrDobule =
                                       double.parse(iRRDefaultController.text)
                                           .toStringAsFixed(2);
@@ -542,11 +545,13 @@ class _IRRScreenState extends State<IRRScreen> {
                               }
                             },
                           ),
-                          RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
-                            color: Colors.red,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.white)),
+                            ),
                             onPressed: () {
                               setState(() {
                                 amountDefault = "";
@@ -1037,11 +1042,13 @@ class _IRRScreenState extends State<IRRScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          RaisedButton(
-                            color: logolightGreen,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: logolightGreen,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.white)),
+                            ),
                             child: Container(
                               width: 80,
                               height: 40,
@@ -1214,10 +1221,12 @@ class _IRRScreenState extends State<IRRScreen> {
                               }
                             },
                           ),
-                          RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.white)),
+                            ),
                             child: Container(
                               width: 80,
                               height: 40,
@@ -1259,12 +1268,14 @@ class _IRRScreenState extends State<IRRScreen> {
                               });
                             },
                           ),
-                          RaisedButton(
-                            color: Colors.red,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
-                            padding: EdgeInsets.all(0),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  side: BorderSide(color: Colors.white)),
+                              padding: EdgeInsets.all(0),
+                            ),
                             onPressed: () {
                               setState(() {
                                 data = [];
@@ -1553,7 +1564,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    if (maxDigits != null && newValue.selection.baseOffset > maxDigits) {
+    if (newValue.selection.baseOffset > maxDigits) {
       return oldValue;
     }
 

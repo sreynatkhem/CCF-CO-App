@@ -64,7 +64,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
     final storage = new FlutterSecureStorage();
     try {
       var token = await storage.read(key: 'user_token');
-      var user_ucode = await storage.read(key: "user_ucode");
+      var userUcode = await storage.read(key: "user_ucode");
       var branch = await storage.read(key: "branch");
       var level = await storage.read(key: "level");
       var sdates = sdate != null ? sdate : '';
@@ -82,13 +82,13 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
 
       if (level == '2') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
-        btlcode = user_ucode;
+        btlcode = userUcode;
         ucode = code != null && code != "" ? code : '';
       }
 
       if (level == '1') {
         bcodes = bcode != null && bcode != "" ? bcode : branch;
-        ucode = user_ucode;
+        ucode = userUcode;
         btlcode = '';
       }
 
@@ -124,7 +124,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
         return list;
       }
     } catch (error) {
-      logger().e("error: ${error}");
+      logger().e("error: $error");
     }
   }
 
@@ -414,7 +414,7 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                                                               .translate(
                                                                   'interest')!),
                                                           Text(
-                                                              '${parsed[index]['intrate']}%/m, IRR ${irr}%'),
+                                                              '${parsed[index]['intrate']}%/m, IRR $irr%'),
                                                         ],
                                                       ),
                                                       Padding(
@@ -587,14 +587,16 @@ class _ListLoanRegistrationsState extends State<ListLoanRegistrations> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          RaisedButton(
+                          ElevatedButton(
                             onPressed: _closeEndDrawer,
                             child: Text(AppLocalizations.of(context)!
                                     .translate('reset') ??
                                 "Reset"),
                           ),
-                          RaisedButton(
-                            color: logolightGreen,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: logolightGreen,
+                            ),
                             onPressed: _applyEndDrawer,
                             child: Text(
                               AppLocalizations.of(context)!
