@@ -1,21 +1,16 @@
 import 'dart:convert';
 
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:chokchey_finance/components/searchCO.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/loanArrearProvider/loanArrearProvider.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
-import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
 import 'package:chokchey_finance/screens/loanArrear/detail.dart';
 import 'package:chokchey_finance/screens/loanArrear/widgetView.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:platform/platform.dart';
 import 'package:provider/provider.dart';
 import '../../providers/manageService.dart';
 import 'package:http/http.dart' as http;
@@ -33,17 +28,7 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
     // TODO: implement initState
 
     if (mounted) {
-      fetchLoanArrear()
-          .then((value) => {
-                setState(() {
-                  _isLoading = false;
-                })
-              })
-          .catchError((onError) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
+      fetchLoanArrear();
       getListBranches();
     }
 
@@ -101,10 +86,6 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
     if (selectedEmployeeID != "") {
       referenEmployeeNo = selectedEmployeeID;
     }
-
-    logger().e("mgmtBranchCode: $mgmtBranchCode");
-    logger().e("referenEmployeeNo: $referenEmployeeNo");
-
     await Provider.of<LoanArrearProvider>(context, listen: false)
         .fetchLoanArrearProvider(
       baseDate: getDateTimeNow,
@@ -223,6 +204,7 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
       });
       logger().e(Error);
     }
+    return null;
   }
 
   String selectedEmployeeID = "";
@@ -774,7 +756,7 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
                         width: 120,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: logoDarkBlue,
+                              backgroundColor: logoDarkBlue,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           onPressed: () {
@@ -793,7 +775,7 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
                         width: 120,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: logolightGreen,
+                              backgroundColor: logolightGreen,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           onPressed: () {

@@ -1,7 +1,8 @@
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:select_dialog/select_dialog.dart';
 
-class DropDownCustomerRegister extends StatelessWidget {
+class DropDownLmapRegister extends StatelessWidget {
   var selectedValue;
   String? texts;
   bool? readOnlys = false;
@@ -21,7 +22,7 @@ class DropDownCustomerRegister extends StatelessWidget {
 
   bool? clear = true;
 
-  DropDownCustomerRegister(
+  DropDownLmapRegister(
       {this.readOnlys,
       this.onInSidePress,
       this.texts,
@@ -48,13 +49,7 @@ class DropDownCustomerRegister extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 5),
-                child: Icon(
-                  icons,
-                  color: Colors.grey,
-                ),
-              ),
-              Container(
+                width: widthView(context, 0.362),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white, elevation: 0),

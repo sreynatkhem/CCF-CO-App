@@ -14,6 +14,7 @@ import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
 import 'package:chokchey_finance/screens/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/historyApsara/index.dart';
+import 'package:chokchey_finance/screens/lMap/index.dart';
 import 'package:chokchey_finance/screens/loanArrear/index.dart';
 import 'package:chokchey_finance/screens/notificationLoanArrear/index.dart';
 import 'package:chokchey_finance/screens/profile/index.dart';
@@ -126,6 +127,7 @@ class _HomeState extends State<Home> {
     getNotificationLock();
     fetchVersionApp();
     getNotificationLoanArrear();
+    checkMenu();
   }
 
   getNotificationLoanArrear() async {
@@ -167,6 +169,7 @@ class _HomeState extends State<Home> {
   }
 
   List<Object> userRoles = [];
+  List<Object> userRoleses = [];
 
   getStoreUser() async {
     var langCode = AppLocalizations.of(context)!.locale.languageCode;
@@ -346,13 +349,13 @@ class _HomeState extends State<Home> {
                     //   image: DecorationImage(image: profile, fit: BoxFit.fill),
                     // ),
                   )),
-                  Text(
-                    userName != "" ? userName : "",
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  ),
+                  // Text(
+                  //   userName != "" ? userName : "",
+                  //   style: TextStyle(
+                  //       fontSize: 18.0,
+                  //       fontWeight: FontWeight.w500,
+                  //       color: Colors.white),
+                  // ),
                   Center(
                     child: Text(
                       "${AppLocalizations.of(context)!.translate('your_id')} : ${userId}",
@@ -568,18 +571,44 @@ class _HomeState extends State<Home> {
   final english = const AssetImage('assets/images/english.png');
   final khmer = const AssetImage('assets/images/khmer.png');
 
+  checkMenu() {
+    var test = storage.read(key: 'roles');
+
+    test.then(
+      (value) {
+        setState(() {
+          userRoleses = jsonDecode(value);
+          userRoleses.insert(3, "99");
+          userRoleses.insert(4, "98");
+        });
+
+        for (var element in userRoleses) {
+          if (element == 100003) {
+            userRoles.insert(0, 100003);
+          }
+          if (element == 100002) {
+            userRoles.insert(1, 100002);
+          }
+          if (element == 100004) {
+            userRoles.add(100004);
+          }
+          if (element == "99") {
+            userRoles.add(99);
+          }
+          if (element == "98") {
+            userRoles.add(98);
+          }
+          if (element == 100001) {
+            userRoles.add(100001);
+          }
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var langCode = AppLocalizations.of(context)!.locale.languageCode;
-
-    var test = storage.read(key: 'roles');
-    test.then(
-      (value) => setState(() {
-        userRoles = jsonDecode(value);
-        // userRoles.add('99');
-        userRoles.insert(0, "99");
-      }),
-    );
 
     return WillPopScope(
       onWillPop: _onBackPressed,
@@ -679,7 +708,12 @@ class _HomeState extends State<Home> {
                                                 ApprovalLists()),
                                       ),
                                       color: logolightGreen,
-                                      imageNetwork: list,
+                                      // imageNetwork: list,
+                                      icons: Icon(
+                                        Icons.checklist,
+                                        color: Colors.white,
+                                        size: 50,
+                                      ),
                                       text: AppLocalizations.of(context)!
                                           .translate('list_loan_approval'),
                                     );
@@ -700,7 +734,12 @@ class _HomeState extends State<Home> {
                                                   CustomerRegister()),
                                         ),
                                         color: logolightGreen,
-                                        imageNetwork: register,
+                                        // imageNetwork: register,
+                                        icons: Icon(
+                                          Icons.person_add,
+                                          color: Colors.white,
+                                          size: 50,
+                                        ),
                                         text: AppLocalizations.of(context)!
                                                 .translate('customers') ??
                                             'Customer',
@@ -718,7 +757,12 @@ class _HomeState extends State<Home> {
                                                   CustomerRegister()),
                                         ),
                                         color: logolightGreen,
-                                        imageNetwork: register,
+                                        // imageNetwork: register,
+                                        icons: Icon(
+                                          Icons.person_add,
+                                          color: Colors.white,
+                                          size: 50,
+                                        ),
                                         text: AppLocalizations.of(context)!
                                                 .translate(
                                                     'customer_registration') ??
@@ -740,7 +784,12 @@ class _HomeState extends State<Home> {
                                                 LoanRegister()),
                                       ),
                                       color: logolightGreen,
-                                      imageNetwork: loanRegistration,
+                                      // imageNetwork: loanRegistration,
+                                      icons: Icon(
+                                        Icons.real_estate_agent,
+                                        color: Colors.white,
+                                        size: 50,
+                                      ),
                                       text: AppLocalizations.of(context)!
                                               .translate('loan_registration') ??
                                           'Loan Registration',
@@ -763,7 +812,12 @@ class _HomeState extends State<Home> {
                                                   PolicyScreen()),
                                         ),
                                         color: logolightGreen,
-                                        imageNetwork: policy,
+                                        // imageNetwork: policy,
+                                        icons: Icon(
+                                          Icons.policy,
+                                          color: Colors.white,
+                                          size: 50,
+                                        ),
                                         text: AppLocalizations.of(context)!
                                                 .translate('policy') ??
                                             'Policy',
@@ -798,10 +852,31 @@ class _HomeState extends State<Home> {
                                         color: logolightGreen,
                                         icons: Icon(
                                           Icons.paid,
-                                          color: Colors.red,
+                                          color: Colors.white,
                                           size: 50,
                                         ),
                                         text: 'Loan Arrear',
+                                      ),
+                                    );
+                                  }
+                                  if (userRoles[index].toString() == '98') {
+                                    return Container(
+                                      width: 10,
+                                      height: 20,
+                                      child: MenuCard(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LMapScreen()),
+                                        ),
+                                        color: logolightGreen,
+                                        icons: Icon(
+                                          Icons.calendar_month_sharp,
+                                          color: Colors.white,
+                                          size: 50,
+                                        ),
+                                        text: 'LMAP Data',
                                       ),
                                     );
                                   }

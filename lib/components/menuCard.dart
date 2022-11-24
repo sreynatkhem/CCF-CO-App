@@ -38,6 +38,7 @@ class MenuCard extends StatelessWidget {
                       image: imageNetwork,
                       width: 55,
                       height: 55,
+                      // color: Colors.white,
                     ),
               Padding(padding: EdgeInsets.only(top: 10)),
               Container(
@@ -46,7 +47,7 @@ class MenuCard extends StatelessWidget {
                   text,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: fontSizeXxs,
+                    fontSize: fontSizeXs,
                     color: Colors.white,
                     fontWeight: fontWeight700,
                   ),
@@ -58,7 +59,7 @@ class MenuCard extends StatelessWidget {
                   text2 ?? '',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: fontSizeXxs,
+                    fontSize: fontSizeXs,
                     color: Colors.white,
                     fontWeight: fontWeight700,
                   ),

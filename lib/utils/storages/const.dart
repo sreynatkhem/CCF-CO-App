@@ -95,6 +95,12 @@ getYYMMDD(time) {
   return dateTime;
 }
 
+getDDMMYY(time) {
+  DateTime dateTimeApproved = DateTime.parse(time);
+  String dateTime = DateFormat("dd-MM-yyyy").format(dateTimeApproved);
+  return dateTime;
+}
+
 Future<String> readResponse(HttpClientResponse response) {
   final completer = Completer<String>();
   final contents = StringBuffer();
