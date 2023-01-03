@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 
+import '../../components/header.dart';
+
 class IRRScreen extends StatefulWidget {
   @override
   _IRRScreenState createState() => _IRRScreenState();
@@ -230,10 +232,11 @@ class _IRRScreenState extends State<IRRScreen> {
   //
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKeyIRR,
-      appBar: null,
-      body: SingleChildScrollView(
+    return Header(
+      keys: _scaffoldKeyIRR,
+      // appBar: null,
+      headerTexts: AppLocalizations.of(context)!.translate('irr'),
+      bodys: SingleChildScrollView(
         child: Center(
             child: Container(
           padding: EdgeInsets.all(10),

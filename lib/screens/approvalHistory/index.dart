@@ -261,7 +261,7 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return WillPopScope(
-      onWillPop: _onBackPressed,
+      onWillPop: null,
       child: Header(
         headerTexts: AppLocalizations.of(context)!.translate('report_summary'),
         actionsNotification: [
@@ -273,13 +273,13 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
             ),
           ),
         ],
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => Home()),
-              ModalRoute.withName("/Home")),
-        ),
+        // leading: new IconButton(
+        //   icon: new Icon(Icons.arrow_back),
+        //   onPressed: () => Navigator.pushAndRemoveUntil(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => Home()),
+        //       ModalRoute.withName("/Home")),
+        // ),
         bodys: _isLoading
             ? Center(
                 child: Container(

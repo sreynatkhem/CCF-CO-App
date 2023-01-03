@@ -7,18 +7,10 @@ import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
-import 'package:chokchey_finance/screens/approvalHistory/index.dart';
-import 'package:chokchey_finance/screens/approvalSummary/index.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
-import 'package:chokchey_finance/screens/disApprovalSummary/index.dart';
-import 'package:chokchey_finance/screens/groupLoan/index.dart';
-import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
-import 'package:chokchey_finance/screens/historyApsara/index.dart';
 import 'package:chokchey_finance/screens/lMap/index.dart';
 import 'package:chokchey_finance/screens/loanArrear/index.dart';
 import 'package:chokchey_finance/screens/notificationLoanArrear/index.dart';
-import 'package:chokchey_finance/screens/profile/index.dart';
-import 'package:chokchey_finance/screens/irr/index.dart';
 import 'package:chokchey_finance/screens/listCustomerRegistration/index.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
 import 'package:chokchey_finance/screens/listLoanRegistration/index.dart';
@@ -26,17 +18,16 @@ import 'package:chokchey_finance/screens/loanRegistration/loanRegistration.dart'
 import 'package:chokchey_finance/screens/login/index.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
-import 'package:chokchey_finance/screens/requestSummary/index.dart';
-import 'package:chokchey_finance/screens/returnSummary/index.dart';
+import 'package:chokchey_finance/screens/report/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
+import '../irr/index.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -66,7 +57,7 @@ class _HomeState extends State<Home> {
   void didChangeDependencies() {
     getStoreUser();
     // getMessageFromCEO();
-    profile = const AssetImage('assets/images/profile_create.jpg');
+    // profile = const AssetImage('assets/images/profile_create.jpg');
     super.didChangeDependencies();
   }
 
@@ -210,17 +201,10 @@ class _HomeState extends State<Home> {
     );
   }
 
-  onListGroupLoan() {
+  onListReport() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => GroupLoan()),
-    );
-  }
-
-  onListGroupLoanApprove() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => GroupLoanApprove()),
+      MaterialPageRoute(builder: (context) => ReportScreen()),
     );
   }
 
@@ -230,68 +214,6 @@ class _HomeState extends State<Home> {
       MaterialPageRoute(builder: (context) => ListLoanRegistrations()),
     );
   }
-
-  onListApprovalHistory() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ApprovalHistory()),
-    );
-  }
-
-  onListApprovalApsaraHistory() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HistoryApsara()),
-    );
-  }
-
-  onListApprovalSummary() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ApprovalSummary()),
-    );
-  }
-
-  onListDisApprovalSummary() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => DisApprovalSummary()),
-    );
-  }
-
-  onListRequestSummary() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RequestSummary()),
-    );
-  }
-
-  onListReturnSummary() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ReturnSummary()),
-    );
-  }
-
-  profileImage() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ProfileUploadImage()),
-    );
-  }
-
-  // onClickCallLog() async {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => CallLogScreen()),
-  //   );
-  // }
-
-  // phoneCallLog() async {
-  //   if (Platform.isAndroid) //Condition for platform Android
-  //     Navigator.push(
-  //         context, MaterialPageRoute(builder: (context) => CallLogScreen()));
-  // }
 
   englishLanguage() {
     Locale _temp;
@@ -326,21 +248,19 @@ class _HomeState extends State<Home> {
                       fit: StackFit.expand,
                       clipBehavior: Clip.none,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileUploadImage()),
-                            );
-                          },
-                          child: CircleAvatar(
-                            // child: profileImage!=null?profileImage:p,
-                            backgroundImage:
-                                AssetImage("assets/images/profile_create.jpg"),
-                            backgroundColor: Colors.grey,
-                          ),
-                        )
+                        IconButton(
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => ProfileUploadImage()),
+                              // );
+                            },
+                            color: Colors.grey,
+                            icon: Icon(
+                              Icons.person,
+                              size: 100,
+                            ))
                       ],
                     ),
 
@@ -349,13 +269,13 @@ class _HomeState extends State<Home> {
                     //   image: DecorationImage(image: profile, fit: BoxFit.fill),
                     // ),
                   )),
-                  // Text(
-                  //   userName != "" ? userName : "",
-                  //   style: TextStyle(
-                  //       fontSize: 18.0,
-                  //       fontWeight: FontWeight.w500,
-                  //       color: Colors.white),
-                  // ),
+                  Text(
+                    userName != "" ? userName : "",
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white),
+                  ),
                   Center(
                     child: Text(
                       "${AppLocalizations.of(context)!.translate('your_id')} : ${userId}",
@@ -402,90 +322,12 @@ class _HomeState extends State<Home> {
                               'Loan Register List',
                           () => {onListLoanRegistration()},
                           null),
-                      // CustomListTile(
-                      //     Icons.group_add,
-                      //     AppLocalizations.of(context)!
-                      //             .translate('create_group_loan') ??
-                      //         'Group Loan',
-                      //     () => {onListGroupLoan()},
-                      //     null),
-                      // CustomListTile(
-                      //     Icons.group,
-                      //     AppLocalizations.of(context)!
-                      //             .translate('group_loan_approve') ??
-                      //         'Group loan approve',
-                      //     () => {onListGroupLoanApprove()},
-                      //     null),
-                      //Call Log
-                      // if (Platform.isAndroid)
-                      //   CustomListTile(
-                      //       Icons.phone_locked,
-                      //       AppLocalizations.of(context)!
-                      //               .translate('call_log') ??
-                      //           "Call log",
-                      //       () => {phoneCallLog()},
-                      //       null),
-
                       CustomListTile(
-                          Icons.insert_chart,
-                          AppLocalizations.of(context)!
-                                  .translate('report_approval') ??
-                              'Report Approval',
-                          () => {onListApprovalSummary()},
+                          Icons.report,
+                          AppLocalizations.of(context)!.translate('report') ??
+                              'Report',
+                          () => {onListReport()},
                           null),
-                      CustomListTile(
-                          Icons.insert_chart,
-                          AppLocalizations.of(context)!
-                                  .translate('report_disapproval') ??
-                              'Report Disapproval',
-                          () => {onListDisApprovalSummary()},
-                          null),
-                      CustomListTile(
-                          Icons.insert_chart,
-                          AppLocalizations.of(context)!
-                                  .translate('report_request') ??
-                              'Report Request',
-                          () => {onListRequestSummary()},
-                          null),
-                      CustomListTile(
-                          Icons.insert_chart,
-                          AppLocalizations.of(context)!
-                                  .translate('report_return') ??
-                              'Report Return',
-                          () => {onListReturnSummary()},
-                          null),
-                      CustomListTile(
-                          Icons.insert_chart,
-                          AppLocalizations.of(context)!
-                                  .translate('report_summary') ??
-                              'Report Summary',
-                          () => {onListApprovalHistory()},
-                          null),
-                      CustomListTile(
-                          Icons.insert_chart,
-                          AppLocalizations.of(context)!
-                                  .translate('loan_approval_history') ??
-                              "Loan Approval History",
-                          () => {onListApprovalApsaraHistory()},
-                          null),
-                      //CallLog for Android
-
-                      // Navigate to Profile screen, Need API First.
-
-                      // CustomListTile(
-                      //     Icons.person,
-                      //     AppLocalizations.of(context)!.translate('profile') ??
-                      //         "Profile",
-                      //     () => {profileImage()},
-                      //     null),
-
-                      // Call Log User
-                      // CustomListTile(
-                      //     Icons.history,
-                      //     // AppLocalizations.of(context)!.translate('profile') ??
-                      //     "Call Log",
-                      //     () => {onClickCallLog()},
-                      //     null),
                       CustomListTile(
                         null,
                         AppLocalizations.of(context)!
@@ -580,6 +422,7 @@ class _HomeState extends State<Home> {
           userRoleses = jsonDecode(value);
           userRoleses.insert(3, "99");
           userRoleses.insert(4, "98");
+          userRoleses.insert(6, "97");
         });
 
         for (var element in userRoleses) {
@@ -598,6 +441,9 @@ class _HomeState extends State<Home> {
           if (element == "98") {
             userRoles.add(98);
           }
+          if (element == "97") {
+            userRoles.add(97);
+          }
           if (element == 100001) {
             userRoles.add(100001);
           }
@@ -609,25 +455,15 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var langCode = AppLocalizations.of(context)!.locale.languageCode;
-
+    double width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Header(
         drawers: new Drawer(
           child: _drawerList(context),
         ),
-        headerTexts: AppLocalizations.of(context)!.translate('loans'),
+        headerTexts: AppLocalizations.of(context)!.translate('home'),
         actionsNotification: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.help,
-                size: 25,
-              ),
-              onPressed: () {
-                // setState(() {
-                //   _launched = _launchInBrowser(guildeLine);
-                // });
-              }),
           // Using Stack to show Notification Badge
           new Stack(
             alignment: Alignment.center,
@@ -679,282 +515,458 @@ class _HomeState extends State<Home> {
                 ),
               )
             : SizedBox.expand(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() => _currentIndex = index);
-                  },
-                  children: <Widget>[
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 4,
-                            child: GridView.count(
-                                primary: false,
-                                padding: const EdgeInsets.only(
-                                    left: 45.0, right: 45.0, top: 20),
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                crossAxisCount: 2,
-                                children:
-                                    List.generate(userRoles.length, (index) {
-                                  if (userRoles[index].toString() == '100001') {
-                                    return MenuCard(
-                                      onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ApprovalLists()),
-                                      ),
-                                      color: logolightGreen,
-                                      // imageNetwork: list,
-                                      icons: Icon(
-                                        Icons.checklist,
-                                        color: Colors.white,
-                                        size: 50,
-                                      ),
-                                      text: AppLocalizations.of(context)!
-                                          .translate('list_loan_approval'),
-                                    );
-                                  }
-                                  // if (userRoles[index].toString() == '100001') {
-                                  //   return Padding(
-                                  //     padding: EdgeInsets.all(10),
-                                  //   );
-                                  // }
-
-                                  if (userRoles[index].toString() == '100002') {
-                                    if (langCode == 'en') {
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      width == 838.0952380952381
+                          ? Expanded(
+                              flex: 4,
+                              child: GridView.count(
+                                  primary: false,
+                                  padding: const EdgeInsets.only(
+                                      left: 150.0, right: 150.0, top: 20),
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  crossAxisCount: 3,
+                                  children:
+                                      List.generate(userRoles.length, (index) {
+                                    if (userRoles[index].toString() ==
+                                        '100001') {
                                       return MenuCard(
                                         onTap: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CustomerRegister()),
+                                                  ApprovalLists()),
                                         ),
                                         color: logolightGreen,
-                                        // imageNetwork: register,
+                                        // imageNetwork: list,
                                         icons: Icon(
-                                          Icons.person_add,
+                                          Icons.checklist,
                                           color: Colors.white,
                                           size: 50,
                                         ),
                                         text: AppLocalizations.of(context)!
-                                                .translate('customers') ??
-                                            'Customer',
-                                        // AppLocalizations.of(context)!.locale.languageCode == 'en'
-                                        text2: AppLocalizations.of(context)!
-                                                .translate('registration') ??
-                                            'Registration',
+                                            .translate('list_loan_approval'),
                                       );
-                                    } else {
+                                    }
+                                    // if (userRoles[index].toString() == '100001') {
+                                    //   return Padding(
+                                    //     padding: EdgeInsets.all(10),
+                                    //   );
+                                    // }
+
+                                    if (userRoles[index].toString() ==
+                                        '100002') {
+                                      if (langCode == 'en') {
+                                        return MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CustomerRegister()),
+                                          ),
+                                          color: logolightGreen,
+                                          // imageNetwork: register,
+                                          icons: Icon(
+                                            Icons.person_add,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate('customers') ??
+                                              'Customer',
+                                          // AppLocalizations.of(context)!.locale.languageCode == 'en'
+                                          text2: AppLocalizations.of(context)!
+                                                  .translate('registration') ??
+                                              'Registration',
+                                        );
+                                      } else {
+                                        return MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CustomerRegister()),
+                                          ),
+                                          color: logolightGreen,
+                                          // imageNetwork: register,
+                                          icons: Icon(
+                                            Icons.person_add,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'customer_registration') ??
+                                              'Customer',
+                                        );
+                                      }
+                                    }
+                                    // if (userRoles[index].toString() == '100002') {
+                                    //   return Padding(
+                                    //     padding: EdgeInsets.all(10),
+                                    //   );
+                                    // }
+                                    if (userRoles[index].toString() ==
+                                        '100003') {
                                       return MenuCard(
                                         onTap: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CustomerRegister()),
+                                                  LoanRegister()),
                                         ),
                                         color: logolightGreen,
-                                        // imageNetwork: register,
+                                        // imageNetwork: loanRegistration,
                                         icons: Icon(
-                                          Icons.person_add,
+                                          Icons.edit_note,
                                           color: Colors.white,
                                           size: 50,
                                         ),
                                         text: AppLocalizations.of(context)!
                                                 .translate(
-                                                    'customer_registration') ??
-                                            'Customer',
+                                                    'loan_registration') ??
+                                            'Loan Registration',
                                       );
                                     }
-                                  }
-                                  // if (userRoles[index].toString() == '100002') {
-                                  //   return Padding(
-                                  //     padding: EdgeInsets.all(10),
-                                  //   );
-                                  // }
-                                  if (userRoles[index].toString() == '100003') {
-                                    return MenuCard(
-                                      onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoanRegister()),
-                                      ),
-                                      color: logolightGreen,
-                                      // imageNetwork: loanRegistration,
-                                      icons: Icon(
-                                        Icons.real_estate_agent,
-                                        color: Colors.white,
-                                        size: 50,
-                                      ),
-                                      text: AppLocalizations.of(context)!
-                                              .translate('loan_registration') ??
-                                          'Loan Registration',
-                                    );
-                                  }
-                                  // if (userRoles[index].toString() == '100003') {
-                                  //   return Padding(
-                                  //     padding: EdgeInsets.all(10),
-                                  //   );
-                                  // }
-                                  if (userRoles[index].toString() == '100004') {
-                                    return Container(
-                                      width: 10,
-                                      height: 20,
-                                      child: MenuCard(
+                                    // if (userRoles[index].toString() == '100003') {
+                                    //   return Padding(
+                                    //     padding: EdgeInsets.all(10),
+                                    //   );
+                                    // }
+                                    if (userRoles[index].toString() ==
+                                        '100004') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PolicyScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          // imageNetwork: policy,
+                                          icons: Icon(
+                                            Icons.auto_stories,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate('policy') ??
+                                              'Policy',
+                                        ),
+                                      );
+                                    }
+                                    if (userRoles[index].toString() == '99') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoanArrearScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          icons: Icon(
+                                            Icons.account_balance_wallet,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate('loan_arrear') ??
+                                              'Loan Arrear',
+                                        ),
+                                      );
+                                    }
+                                    if (userRoles[index].toString() == '98') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LMapScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          icons: Icon(
+                                            Icons.real_estate_agent,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                              .translate('lmap_data'),
+                                        ),
+                                      );
+                                    }
+                                    if (userRoles[index].toString() == '97') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IRRScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          icons: Icon(
+                                            Icons.calculate,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: 'IRR Calculator',
+                                        ),
+                                      );
+                                    }
+
+                                    return Text("");
+                                  }) // List View
+                                  ),
+                            )
+                          : Expanded(
+                              flex: 4,
+                              child: GridView.count(
+                                  primary: false,
+                                  padding: const EdgeInsets.only(
+                                      left: 45.0, right: 45.0, top: 20),
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  crossAxisCount: 2,
+                                  children:
+                                      List.generate(userRoles.length, (index) {
+                                    if (userRoles[index].toString() ==
+                                        '100001') {
+                                      return MenuCard(
                                         onTap: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PolicyScreen()),
+                                                  ApprovalLists()),
                                         ),
                                         color: logolightGreen,
-                                        // imageNetwork: policy,
+                                        // imageNetwork: list,
                                         icons: Icon(
-                                          Icons.policy,
+                                          Icons.checklist,
                                           color: Colors.white,
                                           size: 50,
                                         ),
                                         text: AppLocalizations.of(context)!
-                                                .translate('policy') ??
-                                            'Policy',
-                                      ),
-                                    );
-                                  }
-
-                                  // if (userRoles[index].toString() == '100004') {
-                                  //   return Padding(
-                                  //     padding: EdgeInsets.all(10),
-                                  //   );
-                                  // }
-
-                                  // if (userRoles[index].toString() == '100005') {
-                                  //   return Text('');
-                                  // }
-                                  // if (userRoles[index].toString() == '100006') {
-                                  //   return Text('${userRoles[index]}');
-                                  // }
-
-                                  if (userRoles[index].toString() == '99') {
-                                    return Container(
-                                      width: 10,
-                                      height: 20,
-                                      child: MenuCard(
+                                            .translate('list_loan_approval'),
+                                      );
+                                    }
+                                    if (userRoles[index].toString() ==
+                                        '100002') {
+                                      if (langCode == 'en') {
+                                        return MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CustomerRegister()),
+                                          ),
+                                          color: logolightGreen,
+                                          // imageNetwork: register,
+                                          icons: Icon(
+                                            Icons.person_add,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate('customers') ??
+                                              'Customer',
+                                          text2: AppLocalizations.of(context)!
+                                                  .translate('registration') ??
+                                              'Registration',
+                                        );
+                                      } else {
+                                        return MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CustomerRegister()),
+                                          ),
+                                          color: logolightGreen,
+                                          // imageNetwork: register,
+                                          icons: Icon(
+                                            Icons.person_add,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'customer_registration') ??
+                                              'Customer',
+                                        );
+                                      }
+                                    }
+                                    if (userRoles[index].toString() ==
+                                        '100003') {
+                                      return MenuCard(
                                         onTap: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  LoanArrearScreen()),
+                                                  LoanRegister()),
                                         ),
                                         color: logolightGreen,
+                                        // imageNetwork: loanRegistration,
                                         icons: Icon(
-                                          Icons.paid,
+                                          Icons.edit_note,
                                           color: Colors.white,
                                           size: 50,
                                         ),
-                                        text: 'Loan Arrear',
-                                      ),
-                                    );
-                                  }
-                                  if (userRoles[index].toString() == '98') {
-                                    return Container(
-                                      width: 10,
-                                      height: 20,
-                                      child: MenuCard(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LMapScreen()),
+                                        text: AppLocalizations.of(context)!
+                                                .translate(
+                                                    'loan_registration') ??
+                                            'Loan Registration',
+                                      );
+                                    }
+                                    if (userRoles[index].toString() ==
+                                        '100004') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PolicyScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          // imageNetwork: policy,
+                                          icons: Icon(
+                                            Icons.auto_stories,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                                  .translate('policy') ??
+                                              'Policy',
                                         ),
-                                        color: logolightGreen,
-                                        icons: Icon(
-                                          Icons.calendar_month_sharp,
-                                          color: Colors.white,
-                                          size: 50,
+                                      );
+                                    }
+                                    if (userRoles[index].toString() == '99') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoanArrearScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          icons: Icon(
+                                            Icons.account_balance_wallet,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                              .translate('loan_arrear'),
                                         ),
-                                        text: 'LMAP Data',
-                                      ),
-                                    );
-                                  }
+                                      );
+                                    }
+                                    if (userRoles[index].toString() == '98') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LMapScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          icons: Icon(
+                                            Icons.real_estate_agent,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: AppLocalizations.of(context)!
+                                              .translate('lmap_data'),
+                                        ),
+                                      );
+                                    }
+                                    if (userRoles[index].toString() == '97') {
+                                      return Container(
+                                        width: 10,
+                                        height: 20,
+                                        child: MenuCard(
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IRRScreen()),
+                                          ),
+                                          color: logolightGreen,
+                                          icons: Icon(
+                                            Icons.calculate,
+                                            color: Colors.white,
+                                            size: 50,
+                                          ),
+                                          text: 'IRR Calculator',
+                                        ),
+                                      );
+                                    }
 
-                                  return Text("");
-                                }) // List View
-                                ),
-                          ),
-                          // Container(
-                          //   padding: const EdgeInsets.only(
-                          //       left: 45.0, right: 45.0, top: 0, bottom: 50),
-                          //   child: MenuCard(
-                          //     onTap: () => Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //           builder: (context) => CustomerRegister()),
-                          //     ),
-                          //     color: logolightGreen,
-                          //     imageNetwork: register,
-                          //     text: AppLocalizations.of(context)!
-                          //             .translate('customer_registration') ??
-                          //         'Customer',
-                          //   ),
-                          // ),
-                          // listMessageFromCEO != null && listMessageFromCEO != ""
-                          //     ? CardMessage(
-                          //         title: AppLocalizations.of(context)!
-                          //                 .translate('message_from_ceo') ??
-                          //             'Message from CEO',
-                          //         textMessage: listMessageFromCEO != null &&
-                          //                 listMessageFromCEO != ""
-                          //             ? listMessageFromCEO
-                          //             : "")
-                          //     : Text("")
-                        ],
-                      ),
-                    ),
-                    IRRScreen(),
-                    // HistoryApsara(),
-                    // Container(
-                    //   color: Colors.white,
-                    // ),
-                  ],
+                                    return Text("");
+                                  }) // List View
+                                  ),
+                            ),
+                    ],
+                  ),
                 ),
+                // IRRScreen(),
+                // HistoryApsara(),
+                // Container(
+                //   color: Colors.white,
+                // ),
               ),
-        bottomNavigationBars: BottomNavyBar(
-          selectedIndex: _currentIndex,
-          onItemSelected: (index) {
-            setState(() => _currentIndex = index);
-            _pageController!.jumpToPage(index);
-          },
-          items: <BottomNavyBarItem>[
-            BottomNavyBarItem(
-                title: Text(
-                    AppLocalizations.of(context)!.translate('home') ?? 'Home'),
-                icon: Icon(Icons.home),
-                textAlign: TextAlign.center,
-                activeColor: logolightGreen),
-            BottomNavyBarItem(
-                title: Text(
-                    AppLocalizations.of(context)!.translate('irr') ?? 'IRR'),
-                icon: Icon(Icons.calculate),
-                textAlign: TextAlign.center,
-                activeColor: logolightGreen),
-            // BottomNavyBarItem(
-            //     title: Text(AppLocalizations.of(context)!.translate('search') ??
-            //         'Search'),
-            //     icon: Icon(Icons.search),
-            //     textAlign: TextAlign.center,
-            //     activeColor: logolightGreen),
-            // BottomNavyBarItem(
-            //     title: Text(AppLocalizations.of(context)!.translate('setting') ??
-            //         'Setting'),
-            //     icon: Icon(Icons.settings),
-            //     textAlign: TextAlign.center,
-            //     activeColor: logolightGreen),
-          ],
-        ),
+        // bottomNavigationBars: BottomNavyBar(
+        //   selectedIndex: _currentIndex,
+        //   onItemSelected: (index) {
+        //     setState(() => _currentIndex = index);
+        //     _pageController!.jumpToPage(index);
+        //   },
+        //   items: <BottomNavyBarItem>[
+        //     BottomNavyBarItem(
+        //         title: Text(
+        //             AppLocalizations.of(context)!.translate('home') ?? 'Home'),
+        //         icon: Icon(Icons.home),
+        //         textAlign: TextAlign.center,
+        //         activeColor: logolightGreen),
+        //     BottomNavyBarItem(
+        //         title: Text(
+        //             AppLocalizations.of(context)!.translate('irr') ?? 'IRR'),
+        //         icon: Icon(Icons.calculate),
+        //         textAlign: TextAlign.center,
+        //         activeColor: logolightGreen),
+        //     // BottomNavyBarItem(
+        //     //     title: Text(AppLocalizations.of(context)!.translate('search') ??
+        //     //         'Search'),
+        //     //     icon: Icon(Icons.search),
+        //     //     textAlign: TextAlign.center,
+        //     //     activeColor: logolightGreen),
+        //     // BottomNavyBarItem(
+        //     //     title: Text(AppLocalizations.of(context)!.translate('setting') ??
+        //     //         'Setting'),
+        //     //     icon: Icon(Icons.settings),
+        //     //     textAlign: TextAlign.center,
+        //     //     activeColor: logolightGreen),
+        //   ],
+        // ),
       ),
     );
   }

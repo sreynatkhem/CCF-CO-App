@@ -332,7 +332,7 @@ class _ReturnSummaryState extends State<ReturnSummary> {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return WillPopScope(
-      onWillPop: _onBackPressed,
+      onWillPop: null,
       child: NotificationListener(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
@@ -355,13 +355,13 @@ class _ReturnSummaryState extends State<ReturnSummary> {
               ),
             ),
           ],
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-                ModalRoute.withName("/Home")),
-          ),
+          // leading: new IconButton(
+          //   icon: new Icon(Icons.arrow_back),
+          //   onPressed: () => Navigator.pushAndRemoveUntil(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => Home()),
+          //       ModalRoute.withName("/Home")),
+          // ),
           bodys: isLoading
               ? Center(
                   child: CircularProgressIndicator(),

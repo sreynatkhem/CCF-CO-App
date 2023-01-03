@@ -32,13 +32,14 @@ class CustomListTile extends StatelessWidget {
                             height: 20,
                             fit: BoxFit.fill,
                           ),
-                        Icon(
-                          icon,
-                          size: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                        ),
+                        // Icon(
+                        //   icon,
+                        //   size: 20,
+                        // ),
+                        if (isFlag != null)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                          ),
                         Text(
                           text!,
                           style: TextStyle(fontSize: 14),

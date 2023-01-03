@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/lmapProvider/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:select_dialog/select_dialog.dart';
@@ -29,19 +29,20 @@ class _LMapScreenState extends State<LMapScreen> {
   void didChangeDependencies() {
     fetchLamp("0", "", "", "", "");
     DateTime now = new DateTime.now();
-    var date = new DateTime(now.year, now.month, now.day).toString();
-    currentDate = getDDMMYY(date);
+    var date = DateFormat('dd MMMM, yyyy')
+        .format(DateTime(now.year, now.month, now.day));
+    currentDate = date;
   }
 
   var pageSizes = "10";
   bool isLoading = false;
-  fetchLamp(
+  Future fetchLamp(
     pageSize,
     province,
     district,
     commune,
     village,
-  ) {
+  ) async {
     setState(() {
       isLoading = true;
     });
@@ -65,54 +66,30 @@ class _LMapScreenState extends State<LMapScreen> {
     });
   }
 
-  Future<bool> _onBackPressed() async {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-        ModalRoute.withName("/Home"));
-    return false;
-  }
-
   getDistrict(stateProvince) async {
-    final storage = new FlutterSecureStorage();
-    var token = await storage.read(key: 'user_token');
-    stateProvince.forEach((item) async {
-      if (selectedValueProvince == item['prodes']) {
-        setState(() {
-          idProvince = item['procode'];
-        });
-      }
-    });
     try {
-      final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'addresses/districts/' + idProvince),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-      );
-      final parsed = jsonDecode(response.body);
-      setState(() {
-        listDistricts = parsed;
-      });
-      // await response.close();
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('GET',
+          Uri.parse(baseURLInternal + 'addresses/district/' + stateProvince));
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        final parsed = jsonDecode(await response.stream.bytesToString());
+        setState(() {
+          listDistricts = parsed;
+        });
+      } else {
+        print(response.reasonPhrase);
+      }
     } catch (error) {
       print('error $error');
     }
   }
 
   getCommune(listDistrict) async {
-    listDistrict.forEach((item) async {
-      if (selectedValueDistrict == item['disdes']) {
-        setState(() {
-          idDistrict = item['discode'];
-        });
-      }
-    });
-
     try {
-      var request = await http.Request(
-          'GET', Uri.parse(baseURLInternal + 'addresses/communes/$idDistrict'));
+      var request = await http.Request('GET',
+          Uri.parse(baseURLInternal + 'addresses/commune/$listDistrict'));
 
       http.StreamedResponse response = await request.send();
 
@@ -133,29 +110,20 @@ class _LMapScreenState extends State<LMapScreen> {
     }
   }
 
-  getVillage() async {
-    final storage = new FlutterSecureStorage();
-    var token = await storage.read(key: 'user_token');
-    listComunes.forEach((item) async {
-      if (selectedValueCommune == item['comdes']) {
-        setState(() {
-          idCommune = item['comcode'];
-        });
-      }
-    });
+  getVillage(selectedValueCommune) async {
     try {
       final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'addresses/Villages/' + idCommune),
+        Uri.parse(
+            baseURLInternal + 'addresses/village/' + selectedValueCommune),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
         },
       );
       final parsed = jsonDecode(response.body);
       setState(() {
         listVillages = parsed;
       });
-      // await response.close();
+      UserModels.fromJsonList(parsed);
     } catch (error) {}
   }
 
@@ -169,7 +137,7 @@ class _LMapScreenState extends State<LMapScreen> {
   bool validateVillage = false;
   var selectedValueDistrict;
   var selectedValueCommune;
-  var selectedValueVillage;
+  String? selectedValueVillage;
 
   var districtreadOnlys = false;
   var communereadOnlys = false;
@@ -177,7 +145,9 @@ class _LMapScreenState extends State<LMapScreen> {
   var listDistricts = [];
   var listComunes = [];
   var listVillages = [];
+  double heightWidthContant = 25;
 
+  var _onSelectVillageDisplay;
   @override
   Widget build(BuildContext context) {
     final testData = [
@@ -186,29 +156,20 @@ class _LMapScreenState extends State<LMapScreen> {
       "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង​",
       "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ"
     ];
-    return Consumer<LmapProvider>(
-        //                    <--- Consumer
-        builder: (context, myModel, child) {
+    return Consumer<LmapProvider>(builder: (context, myModel, child) {
       return WillPopScope(
           onWillPop: null,
           child: Scaffold(
             appBar: AppBar(
-              title: Text("LMAP Data"),
+              title: Text(
+                AppLocalizations.of(context)!.translate('lmap_data') ??
+                    'LMAP Data',
+              ),
               backgroundColor: logolightGreen,
               leading: new IconButton(
                 icon: new Icon(Icons.arrow_back),
                 onPressed: () => Navigator.pop(context),
               ),
-              // actions: [
-              //   Builder(
-              //     builder: (context) => IconButton(
-              //       icon: Icon(Icons.filter_list),
-              //       onPressed: () => Scaffold.of(context).openEndDrawer(),
-              //       tooltip:
-              //           MaterialLocalizations.of(context).openAppDrawerTooltip,
-              //     ),
-              //   ),
-              // ],
             ),
             body: isLoading == true
                 ? Center(
@@ -218,7 +179,6 @@ class _LMapScreenState extends State<LMapScreen> {
                     children: [
                       Padding(padding: EdgeInsets.only(top: 10)),
                       Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           DropDownLmapRegister(
                             elevation: 0,
@@ -239,10 +199,9 @@ class _LMapScreenState extends State<LMapScreen> {
                               try {
                                 final Response response = await api().get(
                                   Uri.parse(
-                                      baseURLInternal + 'addresses/provinces'),
+                                      baseURLInternal + 'addresses/province'),
                                   headers: {
                                     "Content-Type": "application/json",
-                                    "Authorization": "Bearer " + token
                                   },
                                 );
                                 list = jsonDecode(response.body);
@@ -255,8 +214,8 @@ class _LMapScreenState extends State<LMapScreen> {
                                 label: AppLocalizations.of(context)!
                                         .translate('search') ??
                                     'Search',
-                                items: List.generate(list.length,
-                                    (index) => "${list[index]['prodes']}"),
+                                items: List.generate(
+                                    list.length, (index) => "${list[index]}"),
                                 onChange: (value) async {
                                   if (mounted) {
                                     FocusScope.of(context)
@@ -265,7 +224,8 @@ class _LMapScreenState extends State<LMapScreen> {
                                       selectedValueProvince = value;
                                       selectedValueDistrict = "ស្រុក/ខណ្ឌ";
                                       selectedValueCommune = "ឃុំ/សងា្កត់";
-                                      selectedValueVillage = "ភូមិ";
+                                      _onSelectVillageDisplay = "ភូមិ";
+                                      selectedValueVillage = null;
                                       districtreadOnlys = true;
                                     });
                                   }
@@ -290,10 +250,12 @@ class _LMapScreenState extends State<LMapScreen> {
                                   selectedValueProvince = "ខេត្ត/ក្រុង";
                                   selectedValueDistrict = "ស្រុក/ខណ្ឌ";
                                   selectedValueCommune = "ឃុំ/សងា្កត់";
-                                  selectedValueVillage = "ភូមិ";
+                                  _onSelectVillageDisplay = "ភូមិ";
+                                  selectedValueVillage = null;
                                   districtreadOnlys = false;
                                   communereadOnlys = false;
                                   villagereadOnlys = false;
+                                  myModel.clearLmap();
                                 });
                               }
                             },
@@ -332,16 +294,14 @@ class _LMapScreenState extends State<LMapScreen> {
                                 FocusScope.of(context)
                                     .unfocus(disposition: disposition);
                                 if (districtreadOnlys == true) {
-                                  await getDistrict(stateProvince);
+                                  await getDistrict(selectedValueProvince);
                                   await SelectDialog.showModal<String>(
                                     context,
                                     label: AppLocalizations.of(context)!
                                             .translate('search') ??
                                         'Search',
-                                    items: List.generate(
-                                        listDistricts.length,
-                                        (index) =>
-                                            "${listDistricts[index]['disdes']}"),
+                                    items: List.generate(listDistricts.length,
+                                        (index) => "${listDistricts[index]}"),
                                     onChange: (value) {
                                       setState(() {
                                         selectedValueDistrict = value;
@@ -357,9 +317,11 @@ class _LMapScreenState extends State<LMapScreen> {
                                 setState(() {
                                   selectedValueDistrict = "ស្រុក/ខណ្ឌ";
                                   selectedValueCommune = "ឃុំ/សងា្កត់";
-                                  selectedValueVillage = "ភូមិ";
+                                  _onSelectVillageDisplay = "ភូមិ";
+                                  selectedValueVillage = null;
                                   villagereadOnlys = false;
                                   communereadOnlys = false;
+                                  myModel.clearLmap();
                                 });
                               }
                             },
@@ -396,21 +358,20 @@ class _LMapScreenState extends State<LMapScreen> {
                                 FocusScope.of(context)
                                     .unfocus(disposition: disposition);
                                 if (communereadOnlys == true) {
-                                  await getCommune(listDistricts);
+                                  await getCommune(selectedValueDistrict);
                                   await SelectDialog.showModal<String>(
                                     context,
                                     label: AppLocalizations.of(context)!
                                             .translate('search') ??
                                         'Search',
-                                    items: List.generate(
-                                        listComunes.length,
-                                        (index) =>
-                                            "${listComunes[index]['comdes']}"),
-                                    onChange: (value) {
+                                    items: List.generate(listComunes.length,
+                                        (index) => "${listComunes[index]}"),
+                                    onChange: (value) async {
                                       setState(() {
                                         selectedValueCommune = value;
                                         villagereadOnlys = true;
                                       });
+                                      await getVillage(value);
                                     },
                                   );
                                 }
@@ -420,8 +381,10 @@ class _LMapScreenState extends State<LMapScreen> {
                               if (mounted) {
                                 setState(() {
                                   selectedValueCommune = "ឃុំ/សងា្កត់";
-                                  selectedValueVillage = "ភូមិ";
+                                  _onSelectVillageDisplay = "ភូមិ";
+                                  selectedValueVillage = null;
                                   villagereadOnlys = false;
+                                  myModel.clearLmap();
                                 });
                               }
                             },
@@ -445,86 +408,103 @@ class _LMapScreenState extends State<LMapScreen> {
                                     fontWeight: fontWeight500),
                             readOnlys: communereadOnlys,
                           ),
-                          DropDownLmapRegister(
-                            icons: null,
-                            selectedValue: selectedValueVillage,
-                            validate: validateVillage
-                                ? RoundedRectangleBorder(
-                                    side:
-                                        BorderSide(color: Colors.red, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  )
-                                : null,
-                            clear: true,
-                            onInSidePress: () async {
-                              FocusScope.of(context)
-                                  .unfocus(disposition: disposition);
-                              if (villagereadOnlys == true) {
-                                await getVillage();
-                                SelectDialog.showModal<String>(
-                                  context,
-                                  label: AppLocalizations.of(context)!
-                                          .translate('search') ??
-                                      'Search',
-                                  items: List.generate(
-                                      listVillages.length,
-                                      (index) =>
-                                          "${listVillages[index]['vildes']}"),
-                                  onChange: (value) async {
-                                    setState(() {
-                                      selectedValueVillage = value;
-                                    });
-                                    listVillages.forEach((item) {
-                                      if (selectedValueVillage ==
-                                          item['vildes']) {
-                                        setState(() {
-                                          idVillage = item['vilcode'];
-                                        });
-                                      }
-                                    });
-                                  },
-                                );
-                              } else {
-                                logger().e('false');
-                              }
-                            },
-                            iconsClose: Icon(Icons.close),
-                            onPressed: () {
-                              if (mounted) {
-                                setState(() {
-                                  selectedValueVillage = "ភូមិ";
-                                  villagereadOnlys = true;
-                                });
-                              }
-                            },
-                            styleTexts: selectedValueVillage != ''
-                                ? TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.black,
-                                    fontWeight: fontWeight500)
-                                : TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.grey,
-                                    fontWeight: fontWeight500),
-                            texts: selectedValueVillage != null
-                                ? selectedValueVillage
-                                : "ភូមិ",
-                            title: selectedValueVillage != null
-                                ? selectedValueVillage
-                                : "ភូមិ",
-                            readOnlys: villagereadOnlys,
+                          SizedBox(
+                            width: 5,
                           ),
+                          Container(
+                              width: widthView(context, 0.47),
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    padding: EdgeInsets.only(left: 20),
+                                  ),
+                                  onPressed: () {
+                                    if (selectedValueCommune != null &&
+                                        selectedValueCommune != "ឃុំ/សងា្កត់")
+                                      SelectDialog.showModal<UserModels>(
+                                          context,
+                                          label: 'Search',
+                                          items: List.generate(
+                                            listVillages.length as dynamic,
+                                            (index) => UserModels(
+                                              name:
+                                                  "${listVillages[index]['village']}",
+                                              id: listVillages[index]
+                                                  ['zone_code'],
+                                            ),
+                                          ), itemBuilder: (BuildContext context,
+                                              UserModels item,
+                                              bool isSelected) {
+                                        return Container(
+                                          decoration: !isSelected
+                                              ? null
+                                              : BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color: Theme.of(context)
+                                                          .primaryColor),
+                                                ),
+                                          child: ListTile(
+                                            selected: isSelected,
+                                            title: Text(
+                                              item.name,
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        );
+                                      }, onChange: ((selectedItem) {
+                                        setState(() {
+                                          selectedValueVillage =
+                                              selectedItem.id as dynamic;
+                                          _onSelectVillageDisplay =
+                                              selectedItem.name as dynamic;
+                                        });
+                                      }), autofocus: false);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Center(),
+                                      Container(
+                                        width: isIphoneX(context) ? 130 : 110,
+                                        child: Center(
+                                          child: Text(
+                                            "${_onSelectVillageDisplay != null ? _onSelectVillageDisplay : "ភូមិ"}",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: fontWeight500),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          color: Colors.blue,
+                                          padding: EdgeInsets.all(0),
+                                          onPressed: () {
+                                            setState(() {
+                                              selectedValueVillage = null;
+                                              _onSelectVillageDisplay = null;
+                                              myModel.clearLmap();
+                                            });
+                                          },
+                                          icon: Icon(
+                                            Icons.close,
+                                            color: Colors.grey,
+                                          )),
+                                    ],
+                                  ))),
                         ],
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundColor: logolightGreen,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black, width: 0.2),
-                          ),
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(color: Colors.white)),
                           textStyle: TextStyle(color: Colors.red),
                         ),
                         onPressed: () {
@@ -538,10 +518,11 @@ class _LMapScreenState extends State<LMapScreen> {
                         child: Container(
                             width: widthView(context, 0.2),
                             height: widthView(context, 0.1),
+                            color: logolightGreen,
                             child: Center(
                               child: Text("ស្វែងរក",
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 20)),
+                                      color: Colors.white, fontSize: 20)),
                             )),
                       ),
                       SizedBox(
@@ -550,15 +531,11 @@ class _LMapScreenState extends State<LMapScreen> {
                       Container(
                         width: widthView(context, 1),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: widthView(context, 1),
-                              margin: EdgeInsets.only(right: 38),
                               child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                // mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text("ដំណាក់កាលស្ថានភាព",
                                       style: TextStyle(
@@ -570,76 +547,152 @@ class _LMapScreenState extends State<LMapScreen> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(right: 97),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              width: widthView(context, 0.6),
+                              child: Column(
                                 children: [
-                                  Text("• ",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      )),
-                                  Text(
-                                    "ពុំទាន់មានទិន្នន័យ",
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(right: 6),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("• ",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      )),
                                   Container(
-                                    color: Colors.green,
-                                    child: Text(
-                                      "បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង",
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Card(
+                                          color: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          child: Container(
+                                            height: heightWidthContant,
+                                            width: heightWidthContant,
+                                            child: Center(
+                                              child: Text(
+                                                "",
+                                                style: TextStyle(
+                                                  fontSize: fontSizeLg,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 1,
+                                        ),
+                                        Text(
+                                          "ពុំទាន់មានទិន្នន័យ",
+                                        )
+                                      ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("• ",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                    )),
-                                Container(
-                                  color: Colors.yellow,
-                                  child: Text(
-                                    "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង",
                                   ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 7.5),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("• ",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                      )),
                                   Container(
-                                    color: Colors.red,
-                                    child: Text(
-                                      "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ",
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Card(
+                                          color: Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          child: Container(
+                                            height: heightWidthContant,
+                                            width: heightWidthContant,
+                                            child: Center(
+                                              child: Text(
+                                                "",
+                                                style: TextStyle(
+                                                  fontSize: fontSizeLg,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 1,
+                                        ),
+                                        Container(
+                                          child: Text(
+                                            "បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង",
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
+                                  ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Card(
+                                        color: Colors.yellow,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30)),
+                                        child: Container(
+                                          height: heightWidthContant,
+                                          width: heightWidthContant,
+                                          child: Center(
+                                            child: Text(
+                                              "",
+                                              style: TextStyle(
+                                                fontSize: fontSizeLg,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 1,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង",
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Card(
+                                          color: Colors.red,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          child: Container(
+                                            height: heightWidthContant,
+                                            width: heightWidthContant,
+                                            child: Center(
+                                              child: Text(
+                                                "",
+                                                style: TextStyle(
+                                                  fontSize: fontSizeLg,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 1,
+                                        ),
+                                        Container(
+                                          child: Text(
+                                            "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ",
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -649,10 +702,7 @@ class _LMapScreenState extends State<LMapScreen> {
                       SizedBox(
                         height: 30,
                       ),
-                      if (myModel.parsed.length == 0)
-                        Center(
-                          child: Text("No Data"),
-                        ),
+                      if (myModel.parsed.length == 0) Center(),
                       Expanded(
                         child: ListView.builder(
                             itemCount: myModel.parsed.length,
@@ -674,146 +724,103 @@ class _LMapScreenState extends State<LMapScreen> {
                                   'បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ') {
                                 myColor = Colors.red;
                               }
-                              // DateFormat inputFormat = DateFormat('dd-MM-yyyy');
-                              // var convert = myModel.parsed[index]['dates'];
-                              // DateTime input = inputFormat.parse(convert);
-                              // String datee =
-                              //     DateFormat('dd-MM-yyyy').format(input);
-
-                              return Container(
-                                margin: EdgeInsets.all(5),
+                              return Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                margin: EdgeInsets.all(10),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: logolightGreen,
-                                              border: Border(
-                                                left: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                                top: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                                right: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                                bottom: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                              )),
-                                          width: widthView(context, 0.65),
-                                          child: Center(
-                                              child: Text(
-                                            "ស្ថានភាព",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          )),
-                                        ),
-                                        Container(
-                                          width: widthView(context, 0.3),
-                                          decoration: BoxDecoration(
-                                              color: logolightGreen,
-                                              border: Border(
-                                                bottom: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                                right: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                                top: BorderSide(
-                                                  //                   <--- left side
-                                                  color: Colors.black,
-                                                  width: 1.0,
-                                                ),
-                                              )),
-                                          child: Center(
-                                            child: Text(
-                                              "ការបរិច្ឆេទចែកប្លង់",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                              left: BorderSide(
-                                                //                   <--- left side
-                                                color: Colors.black,
-                                                width: 1.0,
-                                              ),
-                                              bottom: BorderSide(
-                                                //                    <--- top side
-                                                color: Colors.black,
-                                                width: 1.0,
-                                              ),
-                                              right: BorderSide(
-                                                //                    <--- top side
-                                                color: Colors.black,
-                                                width: 1.0,
-                                              ),
-                                            )),
-                                            width: widthView(context, 0.65),
-                                            child: Container(
-                                              color: myColor,
-                                              child: Center(
-                                                  child: Text(
-                                                "${myModel.parsed[index]['status']}",
-                                              )),
-                                            )),
-                                        Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                              bottom: BorderSide(
-                                                //                    <--- top side
-                                                color: Colors.black,
-                                                width: 1.0,
-                                              ),
-                                              right: BorderSide(
-                                                //                    <--- top side
-                                                color: Colors.black,
-                                                width: 1.0,
-                                              ),
-                                            )),
-                                            width: widthView(context, 0.3),
+                                    Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      color: logolightGreen,
+                                      elevation: 0,
+                                      margin: EdgeInsets.all(0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Container(
+                                            // color: logolightGreen,
+                                            // width: widthView(context, 0.60),
                                             child: Center(
                                                 child: Text(
-                                                    myModel.parsed[index]
-                                                                ['dates'] !=
-                                                            ""
-                                                        ? myModel.parsed[index]
-                                                            ['dates']
-                                                        : ""))),
+                                              "ស្ថានភាព",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: fontWeight700),
+                                            )),
+                                          ),
+                                          Container(
+                                            // color: logolightGreen,
+                                            // width: widthView(context, 0.352),
+                                            child: Center(
+                                              child: Text(
+                                                "ការបរិច្ឆេទចែកប្លង់",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight: fontWeight700),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                            // height: 50,
+                                            // width: widthView(context, 0.60),
+                                            child: Container(
+                                          child: Row(
+                                            children: [
+                                              Card(
+                                                color: myColor,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30)),
+                                                child: Container(
+                                                  height: heightWidthContant,
+                                                  width: heightWidthContant,
+                                                  child: Center(
+                                                    child: Text(
+                                                      " ",
+                                                      style: TextStyle(
+                                                        fontSize: fontSizeLg,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Center(
+                                                  child: Text(
+                                                "    ${myModel.parsed[index]['status']}",
+                                              )),
+                                            ],
+                                          ),
+                                        )),
+                                        Container(
+                                            height: 50,
+                                            width: widthView(context, 0.2),
+                                            child: Center(
+                                                child: Text(
+                                              myModel.parsed[index]['dates'] !=
+                                                      ""
+                                                  ? myModel.parsed[index]
+                                                      ['dates']
+                                                  : "",
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ))),
                                       ],
                                     ),
                                   ],
@@ -822,39 +829,37 @@ class _LMapScreenState extends State<LMapScreen> {
                             }),
                       ),
                       Container(
+                        padding: EdgeInsets.only(
+                            bottom: isIphoneX(context) ? 20 : 0),
                         child: Text(
                           "កាលបរិច្ឆេទទិន្នន័យ៖ $currentDate​",
                         ),
                       )
                     ],
                   ),
-            // floatingActionButton: SizedBox(
-            //   height: 40,
-            //   child: FloatingActionButton.extended(
-            //     label: Text('Refresh'),
-            //     icon: Icon(Icons.refresh, size: 25),
-            //     backgroundColor: logolightGreen,
-            //     onPressed: () {
-            //       setState(() {
-            //         selectedValueProvince = "ខេត្ត/ក្រុង";
-            //         selectedValueDistrict = "ស្រុក/ខណ្ឌ";
-            //         selectedValueCommune = "ឃុំ/សងា្កត់";
-            //         selectedValueVillage = "ភូមិ";
-            //         districtreadOnlys = false;
-            //         communereadOnlys = false;
-            //         villagereadOnlys = false;
-            //       });
-            //       fetchLamp(
-            //         "$pageSizes",
-            //         "",
-            //         "",
-            //         "",
-            //         "",
-            //       );
-            //     },
-            //   ),
-            // ),
           ));
     });
+  }
+}
+
+class UserModels {
+  final String id;
+  final String name;
+  final String? avatar;
+  final DateTime? createdAt;
+
+  UserModels(
+      {required this.id, required this.name, this.avatar, this.createdAt});
+
+  factory UserModels.fromJson(Map<String, dynamic> json) {
+    return UserModels(
+      id: json["zone_code"],
+      name: json["village"],
+    );
+  }
+
+  static List<UserModels>? fromJsonList(List list) {
+    if (list == null) return null;
+    return list.map((item) => UserModels.fromJson(item)).toList();
   }
 }

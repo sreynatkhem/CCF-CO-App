@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class LmapProvider with ChangeNotifier {
   var parsed = [];
+
+  Future clearLmap() async {
+    parsed = [];
+    notifyListeners();
+  }
 
   Future getLmap({
     pageSize,
@@ -31,11 +35,9 @@ class LmapProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
-      logger().e(request.body);
 
       if (response.statusCode == 200) {
         parsed = jsonDecode(await response.stream.bytesToString());
-        logger().e(parsed);
         notifyListeners();
       } else {
         parsed = [];

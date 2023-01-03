@@ -49,7 +49,7 @@ class DropDownLmapRegister extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                width: widthView(context, 0.362),
+                width: widthView(context, 0.35),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white, elevation: 0),

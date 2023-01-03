@@ -29,6 +29,7 @@ class MenuCard extends StatelessWidget {
         ),
         color: color,
         child: new Container(
+          // padding: EdgeInsets.all(45),
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -47,7 +48,7 @@ class MenuCard extends StatelessWidget {
                   text,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: fontSizeXs,
+                    fontSize: fontSizeSm,
                     color: Colors.white,
                     fontWeight: fontWeight700,
                   ),
@@ -59,7 +60,7 @@ class MenuCard extends StatelessWidget {
                   text2 ?? '',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: fontSizeXs,
+                    fontSize: fontSizeSm,
                     color: Colors.white,
                     fontWeight: fontWeight700,
                   ),

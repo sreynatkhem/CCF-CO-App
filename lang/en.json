@@ -10,7 +10,7 @@
   "customers": "Customer",
   "registration": "Registration",
   "customer_registration": "Customer Registration",
-  "list_loan_approval": "List Loan Approval",
+  "list_loan_approval": "Loan Approval",
   "list_customer_registration": "List Customer Registration",
   "list_loan_registration": "List Loan Registration",
   "loan_registration": "Loan Registration",
@@ -220,5 +220,10 @@
   "lo": "Loans",
   "re": "Returns",
   "call_log": "Call log",
-  "credit_operation_manual": "Credit Operation Manual"
+  "credit_operation_manual": "Credit Operation Manual",
+  "loan_arrear":"Loan Arrear",
+  "lmap_data":"LMAP Data",
+  "report":"Report"
+
+
 }

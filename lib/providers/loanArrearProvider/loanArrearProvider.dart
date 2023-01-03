@@ -47,6 +47,7 @@ class LoanArrearProvider with ChangeNotifier {
       request.body =
           '''{\n    "header": {\n        "userID" :"SYSTEM",\n\t\t"channelTypeCode" :"08",\n\t\t"previousTransactionID" :"",\n\t\t"previousTransactionDate" :""\n    },\n    "body": {\n        "baseDate": "$baseDate",\n        "mgmtBranchCode": "$mgmtBranchCode",\n        "currencyCode": "$currencyCode",\n        "loanAccountNo": "$loanAccountNo",\n        "referenceEmployeeNo":"$referenceEmployeeNo"\n    }\n}\n''';
       request.headers.addAll(headers);
+      print("request.body: ${request.body}");
       http.StreamedResponse response = await request.send();
       if (response.statusCode == 200) {
         final parsed = jsonDecode(await response.stream.bytesToString());

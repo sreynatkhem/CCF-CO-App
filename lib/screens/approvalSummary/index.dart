@@ -266,7 +266,7 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     return WillPopScope(
-      onWillPop: _onBackPressed,
+      onWillPop: null,
       child: NotificationListener(
         onNotification: onNotification,
         child: Header(
@@ -280,10 +280,10 @@ class _ApprovalSummaryState extends State<ApprovalSummary> {
               ),
             ),
           ],
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
+          // leading: new IconButton(
+          //   icon: new Icon(Icons.arrow_back),
+          //   onPressed: () => Navigator.pop(context),
+          // ),
           bodys: isLoading
               ? Center(
                   child: CircularProgressIndicator(),

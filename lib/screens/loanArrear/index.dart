@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chokchey_finance/components/searchCO.dart';
+import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/loanArrearProvider/loanArrearProvider.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
@@ -240,7 +241,10 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Loan Arrear"),
+          title: Text(
+            AppLocalizations.of(context)!.translate('loan_arrear') ??
+                'Loan Arrear',
+          ),
           backgroundColor: logolightGreen,
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back),

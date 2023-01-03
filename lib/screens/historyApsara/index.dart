@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
@@ -329,13 +328,13 @@ class _HistoryApsaraState extends State<HistoryApsara> {
           title: Text(AppLocalizations.of(context)!
                   .translate('loan_approval_history') ??
               "Loan Approval History"),
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => Home()),
-                ModalRoute.withName("/Home")),
-          ),
+          // leading: new IconButton(
+          //   icon: new Icon(Icons.arrow_back),
+          //   onPressed: () => Navigator.pushAndRemoveUntil(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => Home()),
+          //       ModalRoute.withName("/Home")),
+          // ),
         ),
         endDrawer: Drawer(
             child: Container(

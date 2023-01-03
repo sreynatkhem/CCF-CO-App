@@ -1,13 +1,9 @@
 import 'dart:io';
 
-import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileUploadImage extends StatefulWidget {
@@ -22,12 +18,15 @@ class _ProfileUploadImageState extends State<ProfileUploadImage> {
   String userId = '';
   String userName = '';
 
-  // @override
-  // void didChangeDependencies() {
-  //   getImageDocument();
-  //   uploadImageProfile();
-  //   super.didChangeDependencies();
-  // }
+  @override
+  void didChangeDependencies() {
+    getProfile();
+    super.didChangeDependencies();
+  }
+
+  Future getProfile() async {
+    try {} catch (error) {}
+  }
 
   Future uploadImageProfile() async {
     try {
@@ -68,26 +67,31 @@ class _ProfileUploadImageState extends State<ProfileUploadImage> {
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 15),
                       child: Stack(
                         children: <Widget>[
+                          // Icon(Icons.person)
                           Card(
                             elevation: 10.0,
                             shape: CircleBorder(),
                             child: SizedBox(
-                              child: CircleAvatar(
-                                radius: 70.0,
-                                backgroundColor: logolightGreen,
-                                child: CircleAvatar(
-                                  // child: Align(),
-                                  radius: 70.0,
-                                  backgroundImage: _profleImage == null
-                                      ? AssetImage('assets/images/103.png')
-                                      : Image.file(
+                              child: _profleImage != null
+                                  ? CircleAvatar(
+                                      radius: 70.0,
+                                      backgroundColor: logolightGreen,
+                                      child: CircleAvatar(
+                                        // child: Align(),
+                                        radius: 70.0,
+                                        backgroundImage: Image.file(
                                           _profleImage,
                                           fit: BoxFit.fill,
                                           width: 150,
                                           height: 150,
                                         ).image,
-                                ),
-                              ),
+                                      ),
+                                    )
+                                  : Icon(
+                                      Icons.person,
+                                      size: 150,
+                                      color: Colors.grey,
+                                    ),
                             ),
                           ),
                           Positioned(
