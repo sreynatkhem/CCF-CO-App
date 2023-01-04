@@ -305,6 +305,8 @@ class _LMapScreenState extends State<LMapScreen> {
                                     onChange: (value) {
                                       setState(() {
                                         selectedValueDistrict = value;
+                                        selectedValueCommune = "ឃុំ/សងា្កត់";
+                                        _onSelectVillageDisplay = "ភូមិ";
                                         communereadOnlys = true;
                                       });
                                     },
@@ -369,6 +371,7 @@ class _LMapScreenState extends State<LMapScreen> {
                                     onChange: (value) async {
                                       setState(() {
                                         selectedValueCommune = value;
+                                        _onSelectVillageDisplay = "ភូមិ";
                                         villagereadOnlys = true;
                                       });
                                       await getVillage(value);
