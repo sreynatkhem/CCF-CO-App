@@ -228,6 +228,7 @@ class _LMapScreenState extends State<LMapScreen> {
                                       selectedValueVillage = null;
                                       districtreadOnlys = true;
                                     });
+                                    myModel.clearLmap();
                                   }
                                 },
                               );
@@ -309,6 +310,7 @@ class _LMapScreenState extends State<LMapScreen> {
                                         _onSelectVillageDisplay = "ភូមិ";
                                         communereadOnlys = true;
                                       });
+                                      myModel.clearLmap();
                                     },
                                   );
                                 }
@@ -374,6 +376,7 @@ class _LMapScreenState extends State<LMapScreen> {
                                         _onSelectVillageDisplay = "ភូមិ";
                                         villagereadOnlys = true;
                                       });
+                                      myModel.clearLmap();
                                       await getVillage(value);
                                     },
                                   );
@@ -415,11 +418,13 @@ class _LMapScreenState extends State<LMapScreen> {
                             width: 5,
                           ),
                           Container(
-                              width: widthView(context, 0.47),
+                              width: isIphoneX(context)
+                                  ? widthView(context, 0.46)
+                                  : widthView(context, 0.47),
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
-                                    padding: EdgeInsets.only(left: 20),
+                                    padding: EdgeInsets.only(left: 10),
                                   ),
                                   onPressed: () {
                                     if (selectedValueCommune != null &&
@@ -465,6 +470,7 @@ class _LMapScreenState extends State<LMapScreen> {
                                           _onSelectVillageDisplay =
                                               selectedItem.name as dynamic;
                                         });
+                                        myModel.clearLmap();
                                       }), autofocus: false);
                                   },
                                   child: Row(
@@ -511,6 +517,11 @@ class _LMapScreenState extends State<LMapScreen> {
                           textStyle: TextStyle(color: Colors.red),
                         ),
                         onPressed: () {
+                          if (_onSelectVillageDisplay == "ភូមិ") {
+                            setState(() {
+                              selectedValueVillage = "";
+                            });
+                          }
                           fetchLamp(
                               "$pageSizes",
                               "$selectedValueProvince",
