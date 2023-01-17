@@ -399,7 +399,7 @@ class _IRRScreenState extends State<IRRScreen> {
                             // WhitelistingTextInputFormatter(
                             //     RegExp(r'^(\d+)?\.?\d{0,2}')),
                           ],
-                          onChanged: (v) {
+                          onChanged: (dynamic v) {
                             var numberFormat =
                                 new NumberFormat("#,###.00", "en_US");
 
@@ -426,7 +426,7 @@ class _IRRScreenState extends State<IRRScreen> {
 
                             if (mounted) {
                               var amount = int.parse(amountDefault);
-                              var irrParse = double.parse(v);
+                              var irrParse = double.parse(v!);
                               var subFirstIncome = amount * irrParse;
                               var subSecoundString =
                                   subFirstIncome.toString().substring(0, 4);
@@ -718,7 +718,7 @@ class _IRRScreenState extends State<IRRScreen> {
                             // CurrencyInputFormatter(12),
                           ],
                           onChanged: (v) {
-                            var ranksDouble = double.parse(v);
+                            var ranksDouble = double.parse(v!);
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "KHR") {
@@ -749,7 +749,7 @@ class _IRRScreenState extends State<IRRScreen> {
                             }
                           },
                           onSubmitted: (v) {
-                            var ranksDouble = double.parse(v);
+                            var ranksDouble = double.parse(v!);
                             var ranksRoundUp = ranksDouble.round();
                             var rankInt = int.parse(ranksRoundUp.toString());
                             if (onSelectedCurrency == "USD") {

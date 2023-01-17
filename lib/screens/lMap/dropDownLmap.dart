@@ -21,7 +21,7 @@ class DropDownLmapRegister extends StatelessWidget {
   double? elevation = 0.0;
 
   bool? clear = true;
-
+  dynamic isPhoneXParam;
   DropDownLmapRegister(
       {this.readOnlys,
       this.onInSidePress,
@@ -38,7 +38,8 @@ class DropDownLmapRegister extends StatelessWidget {
       this.onPressed,
       this.autofocus,
       this.icons,
-      this.elevation});
+      this.elevation,
+      this.isPhoneXParam});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -49,7 +50,9 @@ class DropDownLmapRegister extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                width: widthView(context, 0.35),
+                width: isPhoneXParam != null
+                    ? isPhoneXParam
+                    : widthView(context, 0.35),
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white, elevation: 0),

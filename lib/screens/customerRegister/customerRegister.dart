@@ -615,7 +615,7 @@ class _CustomerRegister extends State {
                           labelText: 'Gender',
                         ),
                         name: "gender",
-                        onChanged: (v) {
+                        onChanged: (dynamic v) {
                           if (v == 'Female') {
                             FocusScope.of(context)
                                 .unfocus(disposition: disposition);

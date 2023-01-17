@@ -34,7 +34,7 @@ class DefaultLogin extends StatelessWidget {
           margin: EdgeInsets.only(top: 20),
           padding: EdgeInsets.only(left: 20, right: 20),
           child: TextFormField(
-            autofocus: true,
+            // autofocus: true,
             controller: controllerUser,
             maxLength: 6,
             onChanged: onChangedUser,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
@@ -269,13 +270,13 @@ class _HomeState extends State<Home> {
                     //   image: DecorationImage(image: profile, fit: BoxFit.fill),
                     // ),
                   )),
-                  Text(
-                    userName != "" ? userName : "",
-                    style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  ),
+                  // Text(
+                  //   userName != "" ? userName : "",
+                  //   style: TextStyle(
+                  //       fontSize: 18.0,
+                  //       fontWeight: FontWeight.w500,
+                  //       color: Colors.white),
+                  // ),
                   Center(
                     child: Text(
                       "${AppLocalizations.of(context)!.translate('your_id')} : ${userId}",
@@ -415,39 +416,46 @@ class _HomeState extends State<Home> {
 
   checkMenu() {
     var test = storage.read(key: 'roles');
-
     test.then(
       (value) {
-        setState(() {
+        if (value == null) {
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => Login()),
+          //     ModalRoute.withName("/login"));
+        } else {
           userRoleses = jsonDecode(value);
-          userRoleses.insert(3, "99");
-          userRoleses.insert(4, "98");
-          userRoleses.insert(6, "97");
-        });
+          userRoleses.add("99");
+          userRoleses.add("98");
+          userRoleses.add("97");
 
-        for (var element in userRoleses) {
-          if (element == 100003) {
-            userRoles.insert(0, 100003);
-          }
-          if (element == 100002) {
-            userRoles.insert(1, 100002);
-          }
-          if (element == 100004) {
-            userRoles.add(100004);
-          }
-          if (element == "99") {
-            userRoles.add(99);
-          }
-          if (element == "98") {
-            userRoles.add(98);
-          }
-          if (element == "97") {
-            userRoles.add(97);
-          }
-          if (element == 100001) {
-            userRoles.add(100001);
+          for (var element in userRoleses) {
+            if (element == 100003) {
+              userRoles.insert(0, 100003);
+            }
+            if (element == 100002) {
+              userRoles.insert(1, 100002);
+            }
+            if (element == 100004) {
+              userRoles.add(100004);
+            }
+            if (element == "99") {
+              userRoles.add(99);
+            }
+
+            if (element == "98") {
+              userRoles.add(98);
+            }
+            if (element == "97") {
+              userRoles.add(97);
+            }
+            if (element == 100001) {
+              userRoles.add(100001);
+            }
           }
         }
+
+        // userRoleses = jsonDecode(value);
       },
     );
   }

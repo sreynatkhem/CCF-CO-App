@@ -20,7 +20,6 @@ import 'package:logger/logger.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:select_dialog/select_dialog.dart';
-import 'package:logger/logger.dart';
 import 'addReferentDocument.dart';
 
 class LoanRegister extends StatefulWidget {
@@ -693,7 +692,7 @@ class _LoanRegister extends State {
                           onChanged: (v) {
                             if (mounted) {
                               setState(() {
-                                valueNumberofTerm = v;
+                                valueNumberofTerm = v!;
                               });
                             }
                           },
@@ -826,7 +825,7 @@ class _LoanRegister extends State {
                                   valueRepaymentMethod =
                                       v.toString().replaceAll(",", ".");
                                 }),
-                                if (v != "" && v.length > 1)
+                                if (v != "" && v!.length > 1)
                                   {
                                     iRRCalculation(),
                                   }

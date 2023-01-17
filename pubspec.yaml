@@ -64,7 +64,6 @@ dependencies:
   group_list_view: ^1.0.6
   # call_log: ^2.0.2
   webview_flutter: ^2.0.9
-  epub_viewer: ^0.2.4
   geocoding: ^2.0.4
   multi_select_flutter: ^4.1.2
   autocomplete_textfield: ^1.7.3

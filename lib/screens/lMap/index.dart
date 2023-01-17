@@ -189,7 +189,9 @@ class _LMapScreenState extends State<LMapScreen> {
                                         BorderSide(color: Colors.red, width: 1),
                                     borderRadius: BorderRadius.circular(10),
                                   )
-                                : null,
+                                : RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                             onInSidePress: () async {
                               FocusScope.of(context)
                                   .unfocus(disposition: disposition);
@@ -273,6 +275,9 @@ class _LMapScreenState extends State<LMapScreen> {
                                     fontWeight: fontWeight500),
                           ),
                           DropDownLmapRegister(
+                            isPhoneXParam: isIphoneX(context)
+                                ? widthView(context, 0.37)
+                                : null,
                             icons: Icons.location_on,
                             selectedValue: selectedValueDistrict,
                             validate: validateVillage
@@ -281,7 +286,9 @@ class _LMapScreenState extends State<LMapScreen> {
                                         BorderSide(color: Colors.red, width: 1),
                                     borderRadius: BorderRadius.circular(10),
                                   )
-                                : null,
+                                : RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                             texts: selectedValueDistrict != null
                                 ? selectedValueDistrict
                                 : "ស្រុក/ខណ្ឌ",
@@ -355,7 +362,9 @@ class _LMapScreenState extends State<LMapScreen> {
                                         BorderSide(color: Colors.red, width: 1),
                                     borderRadius: BorderRadius.circular(10),
                                   )
-                                : null,
+                                : RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                             iconsClose: Icon(Icons.close),
                             onInSidePress: () async {
                               if (mounted) {
@@ -419,19 +428,24 @@ class _LMapScreenState extends State<LMapScreen> {
                           ),
                           Container(
                               width: isIphoneX(context)
-                                  ? widthView(context, 0.46)
+                                  ? widthView(context, 0.48)
                                   : widthView(context, 0.47),
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     padding: EdgeInsets.only(left: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                   onPressed: () {
                                     if (selectedValueCommune != null &&
                                         selectedValueCommune != "ឃុំ/សងា្កត់")
                                       SelectDialog.showModal<UserModels>(
                                           context,
-                                          label: 'Search',
+                                          label: AppLocalizations.of(context)!
+                                                  .translate('search') ??
+                                              'Search',
                                           items: List.generate(
                                             listVillages.length as dynamic,
                                             (index) => UserModels(
@@ -542,143 +556,109 @@ class _LMapScreenState extends State<LMapScreen> {
                       SizedBox(
                         height: widthView(context, 0.05),
                       ),
-                      Container(
-                        width: widthView(context, 1),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: Column(
-                                children: [
-                                  Text("ដំណាក់កាលស្ថានភាព",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        decoration: TextDecoration.underline,
-                                      )),
-                                ],
+                      if (myModel.parsed.length == 0)
+                        Container(
+                          width: widthView(context, 1),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: Column(
+                                  children: [
+                                    Text("ដំណាក់កាលស្ថានភាព",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          decoration: TextDecoration.underline,
+                                        )),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Container(
-                              width: widthView(context, 0.6),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Card(
-                                          color: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          child: Container(
-                                            height: heightWidthContant,
-                                            width: heightWidthContant,
-                                            child: Center(
-                                              child: Text(
-                                                "",
-                                                style: TextStyle(
-                                                  fontSize: fontSizeLg,
-                                                  color: Colors.white,
+                              Container(
+                                width: widthView(context, 0.6),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            child: Container(
+                                              height: heightWidthContant,
+                                              width: heightWidthContant,
+                                              child: Center(
+                                                child: Text(
+                                                  "",
+                                                  style: TextStyle(
+                                                    fontSize: fontSizeLg,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 1,
-                                        ),
-                                        Text(
-                                          "ពុំទាន់មានទិន្នន័យ",
-                                        )
-                                      ],
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Text(
+                                            "ពុំទាន់មានទិន្នន័យ",
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Card(
-                                          color: Colors.green,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          child: Container(
-                                            height: heightWidthContant,
-                                            width: heightWidthContant,
-                                            child: Center(
-                                              child: Text(
-                                                "",
-                                                style: TextStyle(
-                                                  fontSize: fontSizeLg,
-                                                  color: Colors.white,
+                                    Container(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            color: Colors.green,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            child: Container(
+                                              height: heightWidthContant,
+                                              width: heightWidthContant,
+                                              child: Center(
+                                                child: Text(
+                                                  "",
+                                                  style: TextStyle(
+                                                    fontSize: fontSizeLg,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 1,
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            "បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង",
+                                          SizedBox(
+                                            width: 1,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Card(
-                                        color: Colors.yellow,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30)),
-                                        child: Container(
-                                          height: heightWidthContant,
-                                          width: heightWidthContant,
-                                          child: Center(
+                                          Container(
                                             child: Text(
-                                              "",
-                                              style: TextStyle(
-                                                fontSize: fontSizeLg,
-                                                color: Colors.white,
-                                              ),
+                                              "បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង",
                                             ),
-                                          ),
-                                        ),
+                                          )
+                                        ],
                                       ),
-                                      SizedBox(
-                                        width: 1,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង",
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                    child: Row(
+                                    ),
+                                    Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
                                         Card(
-                                          color: Colors.red,
+                                          color: Colors.yellow,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(30)),
@@ -701,18 +681,54 @@ class _LMapScreenState extends State<LMapScreen> {
                                         ),
                                         Container(
                                           child: Text(
-                                            "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ",
+                                            "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង",
                                           ),
                                         )
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    Container(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            color: Colors.red,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            child: Container(
+                                              height: heightWidthContant,
+                                              width: heightWidthContant,
+                                              child: Center(
+                                                child: Text(
+                                                  "",
+                                                  style: TextStyle(
+                                                    fontSize: fontSizeLg,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ",
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                       SizedBox(
                         height: 30,
                       ),
@@ -776,7 +792,7 @@ class _LMapScreenState extends State<LMapScreen> {
                                             // width: widthView(context, 0.352),
                                             child: Center(
                                               child: Text(
-                                                "ការបរិច្ឆេទចែកប្លង់",
+                                                "កាលបរិច្ឆេទចែកប្លង់",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18,

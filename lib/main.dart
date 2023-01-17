@@ -8,6 +8,7 @@ import 'package:chokchey_finance/providers/loan/loanApproval.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/providers/approvalList.dart';
+import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -59,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> isLogin() async {
     String ids = await storage.read(key: 'user_id');
-    if (ids != '') {
+    logger().e("ids: ${ids}");
+    if (ids != null) {
       setState(() {
         _isLogin = true;
       });
