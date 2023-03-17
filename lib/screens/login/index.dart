@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/screens/login/defaultLogin.dart';
@@ -225,137 +226,139 @@ class _LoginState extends State<Login> {
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: 300.0,
-                  height: 250.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(42.0),
-                    image: DecorationImage(
-                      image: chokchey,
-                      fit: BoxFit.fill,
+            child: MaxWidthWrapper(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: 300.0,
+                    height: 250.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(42.0),
+                      image: DecorationImage(
+                        image: chokchey,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
-                Text(
-                  'Welcome',
-                  style: TextStyle(
-                    fontFamily: fontFamily,
-                    fontSize: fontSizeLg,
-                    color: logolightGreen,
-                    fontWeight: fontWeight700,
+                  Text(
+                    'Welcome',
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: fontSizeLg,
+                      color: logolightGreen,
+                      fontWeight: fontWeight700,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 5),
-                ),
-                Text(
-                  ' CHOKCHEY Finance',
-                  style: TextStyle(
-                    fontFamily: fontFamily,
-                    fontSize: fontSizeLg,
-                    color: logolightGreen,
-                    fontWeight: fontWeight700,
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 5),
                   ),
-                ),
-                // Container(
-                //   margin: EdgeInsets.only(top: 20),
-                //   padding: EdgeInsets.only(left: 20, right: 20),
-                //   child: TextFormField(
-                //     // autofocus: true,
-                //     controller: id,
-                //     maxLength: 6,
-                //     onChanged: (text) {
-                //       logger().e(text);
-                //       if (text.length == 6) {
-                //         // FocusScope.of(context).requestFocus(focusPassword);
-                //       }
-                //     },
-                //     textInputAction: TextInputAction.next,
-                //     keyboardType: TextInputType.number,
-                //     onFieldSubmitted: (text) {
-                //       logger().e(text);
+                  Text(
+                    ' CHOKCHEY Finance',
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: fontSizeLg,
+                      color: logolightGreen,
+                      fontWeight: fontWeight700,
+                    ),
+                  ),
+                  // Container(
+                  //   margin: EdgeInsets.only(top: 20),
+                  //   padding: EdgeInsets.only(left: 20, right: 20),
+                  //   child: TextFormField(
+                  //     // autofocus: true,
+                  //     controller: id,
+                  //     maxLength: 6,
+                  //     onChanged: (text) {
+                  //       logger().e(text);
+                  //       if (text.length == 6) {
+                  //         // FocusScope.of(context).requestFocus(focusPassword);
+                  //       }
+                  //     },
+                  //     textInputAction: TextInputAction.next,
+                  //     keyboardType: TextInputType.number,
+                  //     onFieldSubmitted: (text) {
+                  //       logger().e(text);
 
-                //       if (text.length == 6) {
-                //         // FocusScope.of(context).unfocus();
-                //         // FocusScope.of(context).requestFocus(focusPassword);
-                //       }
-                //     },
-                //     inputFormatters: <TextInputFormatter>[
-                //       FilteringTextInputFormatter.digitsOnly
-                //     ],
-                //     decoration: InputDecoration(
-                //       focusedBorder: UnderlineInputBorder(
-                //         borderSide: BorderSide(color: logolightGreen),
-                //       ),
-                //       labelText: 'User ID',
-                //       hintText: id.text,
-                //       labelStyle: TextStyle(
-                //         fontSize: 15,
-                //         color: const Color(0xff0ABAB5),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                DefaultLogin(
-                  onFieldSubmittedUser: (text) {
-                    if (text.length == 6) {
-                      FocusScope.of(context).unfocus();
-                      FocusScope.of(context).requestFocus(focusPassword);
-                    }
-                  },
-                  hintTextUser: id.text,
-                  controllerUser: id,
-                  onChangedUser: (text) {
-                    if (text.length == 6) {
-                      FocusScope.of(context).requestFocus(focusPassword);
-                    }
-                  },
-                  controllerPassword: password,
-                  focusNodePassword: focusPassword,
-                  hintTextPassword: password.text,
-                  onChangedPassword: (v) {},
-                  onFieldSubmittedPassword: (text) async {
-                    await onClickLogin(context);
-                    setState(() {
-                      autofocus = true;
-                    });
-                  },
-                ),
-                Container(
-                  width: 320,
-                  height: 45,
-                  margin: EdgeInsets.only(top: 40, bottom: 20),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: logolightGreen,
-                        padding: const EdgeInsets.all(8.0),
-                        textStyle: TextStyle(color: Colors.white)),
-                    onPressed: () async {
-                      await onClickLogin(context);
+                  //       if (text.length == 6) {
+                  //         // FocusScope.of(context).unfocus();
+                  //         // FocusScope.of(context).requestFocus(focusPassword);
+                  //       }
+                  //     },
+                  //     inputFormatters: <TextInputFormatter>[
+                  //       FilteringTextInputFormatter.digitsOnly
+                  //     ],
+                  //     decoration: InputDecoration(
+                  //       focusedBorder: UnderlineInputBorder(
+                  //         borderSide: BorderSide(color: logolightGreen),
+                  //       ),
+                  //       labelText: 'User ID',
+                  //       hintText: id.text,
+                  //       labelStyle: TextStyle(
+                  //         fontSize: 15,
+                  //         color: const Color(0xff0ABAB5),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  DefaultLogin(
+                    onFieldSubmittedUser: (text) {
+                      if (text.length == 6) {
+                        FocusScope.of(context).unfocus();
+                        FocusScope.of(context).requestFocus(focusPassword);
+                      }
                     },
-                    child: _isLoading
-                        ? Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : Text(
-                            "Next",
-                          ),
+                    hintTextUser: id.text,
+                    controllerUser: id,
+                    onChangedUser: (text) {
+                      if (text.length == 6) {
+                        FocusScope.of(context).requestFocus(focusPassword);
+                      }
+                    },
+                    controllerPassword: password,
+                    focusNodePassword: focusPassword,
+                    hintTextPassword: password.text,
+                    onChangedPassword: (v) {},
+                    onFieldSubmittedPassword: (text) async {
+                      await onClickLogin(context);
+                      setState(() {
+                        autofocus = true;
+                      });
+                    },
                   ),
-                ),
-                Text(
-                  'Forgot passwrod',
-                  style: TextStyle(
-                    fontFamily: 'Segoe UI',
-                    fontSize: 12,
-                    color: const Color(0xff39a5ef),
-                    fontWeight: FontWeight.w700,
-                    decoration: TextDecoration.underline,
+                  Container(
+                    width: 320,
+                    height: 45,
+                    margin: EdgeInsets.only(top: 40, bottom: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: logolightGreen,
+                          padding: const EdgeInsets.all(8.0),
+                          textStyle: TextStyle(color: Colors.white)),
+                      onPressed: () async {
+                        await onClickLogin(context);
+                      },
+                      child: _isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text(
+                              "Next",
+                            ),
+                    ),
                   ),
-                  textAlign: TextAlign.left,
-                ),
-              ],
+                  Text(
+                    'Forgot passwrod',
+                    style: TextStyle(
+                      fontFamily: 'Segoe UI',
+                      fontSize: 12,
+                      color: const Color(0xff39a5ef),
+                      fontWeight: FontWeight.w700,
+                      decoration: TextDecoration.underline,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

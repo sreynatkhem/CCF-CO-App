@@ -1,4 +1,3 @@
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 
 class WidgetViewTextLoanArrear extends StatelessWidget {
@@ -14,18 +13,25 @@ class WidgetViewTextLoanArrear extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
-                width: widthView(context, 0.4),
+            Expanded(
+              child: SizedBox(
+                  //width: widthView(context, 0.4),
+                  child: Text(
+                title,
+                textAlign: TextAlign.right,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )),
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              child: SizedBox(
+                //width: widthView(context, 0.5),
                 child: Text(
-                  title,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
-            Container(
-              width: widthView(context, 0.5),
-              child: Text(
-                value,
-                textAlign: TextAlign.left,
+                  value,
+                  textAlign: TextAlign.left,
+                ),
               ),
             ),
           ],

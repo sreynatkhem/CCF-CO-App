@@ -9,6 +9,7 @@ import 'dart:async';
 import 'colors.dart';
 
 final String fontFamily = 'Segoe UI';
+final double gMaxWidth = 400.0;
 
 const fontSizeLg = 20.0;
 const fontSizeSm = 18.0;

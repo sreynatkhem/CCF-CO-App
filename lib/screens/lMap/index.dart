@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/lmapProvider/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -175,697 +176,720 @@ class _LMapScreenState extends State<LMapScreen> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : Column(
-                    children: [
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Row(
-                        children: [
-                          DropDownLmapRegister(
-                            elevation: 0,
-                            icons: null,
-                            validate: validateVillage
-                                ? RoundedRectangleBorder(
-                                    side:
-                                        BorderSide(color: Colors.red, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  )
-                                : RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                            onInSidePress: () async {
-                              FocusScope.of(context)
-                                  .unfocus(disposition: disposition);
-                              final storage = new FlutterSecureStorage();
-                              var token = await storage.read(key: 'user_token');
-                              var list;
-                              try {
-                                final Response response = await api().get(
-                                  Uri.parse(
-                                      baseURLInternal + 'addresses/province'),
-                                  headers: {
-                                    "Content-Type": "application/json",
-                                  },
-                                );
-                                list = jsonDecode(response.body);
-                                setState(() {
-                                  stateProvince = list ?? '';
-                                });
-                              } catch (error) {}
-                              SelectDialog.showModal<String>(
-                                context,
-                                label: AppLocalizations.of(context)!
-                                        .translate('search') ??
-                                    'Search',
-                                items: List.generate(
-                                    list.length, (index) => "${list[index]}"),
-                                onChange: (value) async {
+                : MaxWidthWrapper(
+                    child: Column(
+                      children: [
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropDownLmapRegister(
+                                elevation: 0,
+                                icons: null,
+                                validate: validateVillage
+                                    ? RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.red, width: 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      )
+                                    : RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                onInSidePress: () async {
+                                  FocusScope.of(context)
+                                      .unfocus(disposition: disposition);
+                                  final storage = new FlutterSecureStorage();
+                                  var token =
+                                      await storage.read(key: 'user_token');
+                                  var list;
+                                  try {
+                                    final Response response = await api().get(
+                                      Uri.parse(baseURLInternal +
+                                          'addresses/province'),
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      },
+                                    );
+                                    list = jsonDecode(response.body);
+                                    setState(() {
+                                      stateProvince = list ?? '';
+                                    });
+                                  } catch (error) {}
+                                  SelectDialog.showModal<String>(
+                                    context,
+                                    label: AppLocalizations.of(context)!
+                                            .translate('search') ??
+                                        'Search',
+                                    items: List.generate(list.length,
+                                        (index) => "${list[index]}"),
+                                    onChange: (value) async {
+                                      if (mounted) {
+                                        FocusScope.of(context)
+                                            .unfocus(disposition: disposition);
+                                        setState(() {
+                                          selectedValueProvince = value;
+                                          selectedValueDistrict = "ស្រុក/ខណ្ឌ";
+                                          selectedValueCommune = "ឃុំ/សងា្កត់";
+                                          _onSelectVillageDisplay = "ភូមិ";
+                                          selectedValueVillage = null;
+                                          districtreadOnlys = true;
+                                        });
+                                        myModel.clearLmap();
+                                      }
+                                    },
+                                  );
+                                },
+                                selectedValue: selectedValueProvince,
+                                texts: selectedValueProvince != null
+                                    ? selectedValueProvince
+                                    : "ខេត្ត/ក្រុង",
+                                title: selectedValueProvince != null
+                                    ? selectedValueProvince
+                                    : "ខេត្ត/ក្រុង",
+                                clear: true,
+                                readOnlys: true,
+                                iconsClose: Icon(Icons.close),
+                                onPressed: () {
                                   if (mounted) {
                                     FocusScope.of(context)
                                         .unfocus(disposition: disposition);
                                     setState(() {
-                                      selectedValueProvince = value;
+                                      selectedValueProvince = "ខេត្ត/ក្រុង";
                                       selectedValueDistrict = "ស្រុក/ខណ្ឌ";
                                       selectedValueCommune = "ឃុំ/សងា្កត់";
                                       _onSelectVillageDisplay = "ភូមិ";
                                       selectedValueVillage = null;
-                                      districtreadOnlys = true;
+                                      districtreadOnlys = false;
+                                      communereadOnlys = false;
+                                      villagereadOnlys = false;
+                                      myModel.clearLmap();
                                     });
-                                    myModel.clearLmap();
                                   }
                                 },
-                              );
-                            },
-                            selectedValue: selectedValueProvince,
-                            texts: selectedValueProvince != null
-                                ? selectedValueProvince
-                                : "ខេត្ត/ក្រុង",
-                            title: selectedValueProvince != null
-                                ? selectedValueProvince
-                                : "ខេត្ត/ក្រុង",
-                            clear: true,
-                            readOnlys: true,
-                            iconsClose: Icon(Icons.close),
-                            onPressed: () {
-                              if (mounted) {
-                                FocusScope.of(context)
-                                    .unfocus(disposition: disposition);
-                                setState(() {
-                                  selectedValueProvince = "ខេត្ត/ក្រុង";
-                                  selectedValueDistrict = "ស្រុក/ខណ្ឌ";
-                                  selectedValueCommune = "ឃុំ/សងា្កត់";
-                                  _onSelectVillageDisplay = "ភូមិ";
-                                  selectedValueVillage = null;
-                                  districtreadOnlys = false;
-                                  communereadOnlys = false;
-                                  villagereadOnlys = false;
-                                  myModel.clearLmap();
-                                });
-                              }
-                            },
-                            styleTexts: selectedValueProvince != ''
-                                ? TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.black,
-                                    fontWeight: fontWeight500)
-                                : TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.grey,
-                                    fontWeight: fontWeight500),
-                          ),
-                          DropDownLmapRegister(
-                            isPhoneXParam: isIphoneX(context)
-                                ? widthView(context, 0.37)
-                                : null,
-                            icons: Icons.location_on,
-                            selectedValue: selectedValueDistrict,
-                            validate: validateVillage
-                                ? RoundedRectangleBorder(
-                                    side:
-                                        BorderSide(color: Colors.red, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  )
-                                : RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                            texts: selectedValueDistrict != null
-                                ? selectedValueDistrict
-                                : "ស្រុក/ខណ្ឌ",
-                            title: selectedValueDistrict != null
-                                ? selectedValueDistrict
-                                : "ស្រុក/ខណ្ឌ",
-                            clear: true,
-                            iconsClose: Icon(Icons.close),
-                            onInSidePress: () async {
-                              if (mounted) {
-                                FocusScope.of(context)
-                                    .unfocus(disposition: disposition);
-                                if (districtreadOnlys == true) {
-                                  await getDistrict(selectedValueProvince);
-                                  await SelectDialog.showModal<String>(
-                                    context,
-                                    label: AppLocalizations.of(context)!
-                                            .translate('search') ??
-                                        'Search',
-                                    items: List.generate(listDistricts.length,
-                                        (index) => "${listDistricts[index]}"),
-                                    onChange: (value) {
-                                      setState(() {
-                                        selectedValueDistrict = value;
-                                        selectedValueCommune = "ឃុំ/សងា្កត់";
-                                        _onSelectVillageDisplay = "ភូមិ";
-                                        communereadOnlys = true;
-                                      });
+                                styleTexts: selectedValueProvince != ''
+                                    ? TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: fontSizeXs,
+                                        color: Colors.black,
+                                        fontWeight: fontWeight500)
+                                    : TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: fontSizeXs,
+                                        color: Colors.grey,
+                                        fontWeight: fontWeight500),
+                              ),
+                            ),
+                            Expanded(
+                              child: DropDownLmapRegister(
+                                isPhoneXParam: isIphoneX(context)
+                                    ? widthView(context, 0.37)
+                                    : null,
+                                icons: Icons.location_on,
+                                selectedValue: selectedValueDistrict,
+                                validate: validateVillage
+                                    ? RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.red, width: 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      )
+                                    : RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                texts: selectedValueDistrict != null
+                                    ? selectedValueDistrict
+                                    : "ស្រុក/ខណ្ឌ",
+                                title: selectedValueDistrict != null
+                                    ? selectedValueDistrict
+                                    : "ស្រុក/ខណ្ឌ",
+                                clear: true,
+                                iconsClose: Icon(Icons.close),
+                                onInSidePress: () async {
+                                  if (mounted) {
+                                    FocusScope.of(context)
+                                        .unfocus(disposition: disposition);
+                                    if (districtreadOnlys == true) {
+                                      await getDistrict(selectedValueProvince);
+                                      await SelectDialog.showModal<String>(
+                                        context,
+                                        label: AppLocalizations.of(context)!
+                                                .translate('search') ??
+                                            'Search',
+                                        items: List.generate(
+                                            listDistricts.length,
+                                            (index) =>
+                                                "${listDistricts[index]}"),
+                                        onChange: (value) {
+                                          setState(() {
+                                            selectedValueDistrict = value;
+                                            selectedValueCommune =
+                                                "ឃុំ/សងា្កត់";
+                                            _onSelectVillageDisplay = "ភូមិ";
+                                            communereadOnlys = true;
+                                          });
+                                          myModel.clearLmap();
+                                        },
+                                      );
+                                    }
+                                  }
+                                },
+                                onPressed: () {
+                                  if (mounted) {
+                                    setState(() {
+                                      selectedValueDistrict = "ស្រុក/ខណ្ឌ";
+                                      selectedValueCommune = "ឃុំ/សងា្កត់";
+                                      _onSelectVillageDisplay = "ភូមិ";
+                                      selectedValueVillage = null;
+                                      villagereadOnlys = false;
+                                      communereadOnlys = false;
                                       myModel.clearLmap();
-                                    },
-                                  );
-                                }
-                              }
-                            },
-                            onPressed: () {
-                              if (mounted) {
-                                setState(() {
-                                  selectedValueDistrict = "ស្រុក/ខណ្ឌ";
-                                  selectedValueCommune = "ឃុំ/សងា្កត់";
-                                  _onSelectVillageDisplay = "ភូមិ";
-                                  selectedValueVillage = null;
-                                  villagereadOnlys = false;
-                                  communereadOnlys = false;
-                                  myModel.clearLmap();
-                                });
-                              }
-                            },
-                            readOnlys: districtreadOnlys,
-                            styleTexts: selectedValueDistrict != ''
-                                ? TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.black,
-                                    fontWeight: fontWeight500)
-                                : TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.grey,
-                                    fontWeight: fontWeight500),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          DropDownLmapRegister(
-                            icons: Icons.location_on,
-                            selectedValue: selectedValueCommune,
-                            validate: validateVillage
-                                ? RoundedRectangleBorder(
-                                    side:
-                                        BorderSide(color: Colors.red, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  )
-                                : RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                            iconsClose: Icon(Icons.close),
-                            onInSidePress: () async {
-                              if (mounted) {
-                                FocusScope.of(context)
-                                    .unfocus(disposition: disposition);
-                                if (communereadOnlys == true) {
-                                  await getCommune(selectedValueDistrict);
-                                  await SelectDialog.showModal<String>(
-                                    context,
-                                    label: AppLocalizations.of(context)!
-                                            .translate('search') ??
-                                        'Search',
-                                    items: List.generate(listComunes.length,
-                                        (index) => "${listComunes[index]}"),
-                                    onChange: (value) async {
-                                      setState(() {
-                                        selectedValueCommune = value;
-                                        _onSelectVillageDisplay = "ភូមិ";
-                                        villagereadOnlys = true;
-                                      });
+                                    });
+                                  }
+                                },
+                                readOnlys: districtreadOnlys,
+                                styleTexts: selectedValueDistrict != ''
+                                    ? TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: fontSizeXs,
+                                        color: Colors.black,
+                                        fontWeight: fontWeight500)
+                                    : TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: fontSizeXs,
+                                        color: Colors.grey,
+                                        fontWeight: fontWeight500),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropDownLmapRegister(
+                                icons: Icons.location_on,
+                                selectedValue: selectedValueCommune,
+                                validate: validateVillage
+                                    ? RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.red, width: 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      )
+                                    : RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                iconsClose: Icon(Icons.close),
+                                onInSidePress: () async {
+                                  if (mounted) {
+                                    FocusScope.of(context)
+                                        .unfocus(disposition: disposition);
+                                    if (communereadOnlys == true) {
+                                      await getCommune(selectedValueDistrict);
+                                      await SelectDialog.showModal<String>(
+                                        context,
+                                        label: AppLocalizations.of(context)!
+                                                .translate('search') ??
+                                            'Search',
+                                        items: List.generate(listComunes.length,
+                                            (index) => "${listComunes[index]}"),
+                                        onChange: (value) async {
+                                          setState(() {
+                                            selectedValueCommune = value;
+                                            _onSelectVillageDisplay = "ភូមិ";
+                                            villagereadOnlys = true;
+                                          });
+                                          myModel.clearLmap();
+                                          await getVillage(value);
+                                        },
+                                      );
+                                    }
+                                  }
+                                },
+                                onPressed: () {
+                                  if (mounted) {
+                                    setState(() {
+                                      selectedValueCommune = "ឃុំ/សងា្កត់";
+                                      _onSelectVillageDisplay = "ភូមិ";
+                                      selectedValueVillage = null;
+                                      villagereadOnlys = false;
                                       myModel.clearLmap();
-                                      await getVillage(value);
-                                    },
-                                  );
-                                }
-                              }
-                            },
-                            onPressed: () {
-                              if (mounted) {
-                                setState(() {
-                                  selectedValueCommune = "ឃុំ/សងា្កត់";
-                                  _onSelectVillageDisplay = "ភូមិ";
-                                  selectedValueVillage = null;
-                                  villagereadOnlys = false;
-                                  myModel.clearLmap();
-                                });
-                              }
-                            },
-                            texts: selectedValueCommune != null
-                                ? selectedValueCommune
-                                : "ឃុំ/សងា្កត់",
-                            title: selectedValueCommune != null
-                                ? selectedValueCommune
-                                : "ឃុំ/សងា្កត់",
-                            clear: true,
-                            styleTexts: selectedValueCommune != ''
-                                ? TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.black,
-                                    fontWeight: fontWeight500)
-                                : TextStyle(
-                                    fontFamily: fontFamily,
-                                    fontSize: fontSizeXs,
-                                    color: Colors.grey,
-                                    fontWeight: fontWeight500),
-                            readOnlys: communereadOnlys,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Container(
-                              width: isIphoneX(context)
-                                  ? widthView(context, 0.48)
-                                  : widthView(context, 0.47),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    padding: EdgeInsets.only(left: 10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    if (selectedValueCommune != null &&
-                                        selectedValueCommune != "ឃុំ/សងា្កត់")
-                                      SelectDialog.showModal<UserModels>(
-                                          context,
-                                          label: AppLocalizations.of(context)!
-                                                  .translate('search') ??
-                                              'Search',
-                                          items: List.generate(
-                                            listVillages.length as dynamic,
-                                            (index) => UserModels(
-                                              name:
-                                                  "${listVillages[index]['village']}",
-                                              id: listVillages[index]
-                                                  ['zone_code'],
-                                            ),
-                                          ), itemBuilder: (BuildContext context,
-                                              UserModels item,
-                                              bool isSelected) {
-                                        return Container(
-                                          decoration: !isSelected
-                                              ? null
-                                              : BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: Theme.of(context)
-                                                          .primaryColor),
-                                                ),
-                                          child: ListTile(
-                                            selected: isSelected,
-                                            title: Text(
-                                              item.name,
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        );
-                                      }, onChange: ((selectedItem) {
-                                        setState(() {
-                                          selectedValueVillage =
-                                              selectedItem.id as dynamic;
-                                          _onSelectVillageDisplay =
-                                              selectedItem.name as dynamic;
-                                        });
-                                        myModel.clearLmap();
-                                      }), autofocus: false);
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Center(),
-                                      Container(
-                                        width: isIphoneX(context) ? 130 : 110,
-                                        child: Center(
-                                          child: Text(
-                                            "${_onSelectVillageDisplay != null ? _onSelectVillageDisplay : "ភូមិ"}",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: fontWeight500),
-                                          ),
+                                    });
+                                  }
+                                },
+                                texts: selectedValueCommune != null
+                                    ? selectedValueCommune
+                                    : "ឃុំ/សងា្កត់",
+                                title: selectedValueCommune != null
+                                    ? selectedValueCommune
+                                    : "ឃុំ/សងា្កត់",
+                                clear: true,
+                                styleTexts: selectedValueCommune != ''
+                                    ? TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: fontSizeXs,
+                                        color: Colors.black,
+                                        fontWeight: fontWeight500)
+                                    : TextStyle(
+                                        fontFamily: fontFamily,
+                                        fontSize: fontSizeXs,
+                                        color: Colors.grey,
+                                        fontWeight: fontWeight500),
+                                readOnlys: communereadOnlys,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        padding: EdgeInsets.only(left: 10),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                       ),
-                                      IconButton(
-                                          color: Colors.blue,
-                                          padding: EdgeInsets.all(0),
-                                          onPressed: () {
+                                      onPressed: () {
+                                        if (selectedValueCommune != null &&
+                                            selectedValueCommune !=
+                                                "ឃុំ/សងា្កត់")
+                                          SelectDialog.showModal<UserModels>(
+                                              context,
+                                              label: AppLocalizations.of(
+                                                          context)!
+                                                      .translate('search') ??
+                                                  'Search',
+                                              items: List.generate(
+                                                listVillages.length as dynamic,
+                                                (index) => UserModels(
+                                                  name:
+                                                      "${listVillages[index]['village']}",
+                                                  id: listVillages[index]
+                                                      ['zone_code'],
+                                                ),
+                                              ), itemBuilder:
+                                                  (BuildContext context,
+                                                      UserModels item,
+                                                      bool isSelected) {
+                                            return Container(
+                                              decoration: !isSelected
+                                                  ? null
+                                                  : BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor),
+                                                    ),
+                                              child: ListTile(
+                                                selected: isSelected,
+                                                title: Text(
+                                                  item.name,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            );
+                                          }, onChange: ((selectedItem) {
                                             setState(() {
-                                              selectedValueVillage = null;
-                                              _onSelectVillageDisplay = null;
-                                              myModel.clearLmap();
+                                              selectedValueVillage =
+                                                  selectedItem.id as dynamic;
+                                              _onSelectVillageDisplay =
+                                                  selectedItem.name as dynamic;
                                             });
-                                          },
-                                          icon: Icon(
-                                            Icons.close,
-                                            color: Colors.grey,
-                                          )),
-                                    ],
-                                  ))),
-                        ],
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: logolightGreen,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(color: Colors.white)),
-                          textStyle: TextStyle(color: Colors.red),
+                                            myModel.clearLmap();
+                                          }), autofocus: false);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Center(),
+                                          Container(
+                                            width:
+                                                isIphoneX(context) ? 130 : 110,
+                                            child: Center(
+                                              child: Text(
+                                                "${_onSelectVillageDisplay != null ? _onSelectVillageDisplay : "ភូមិ"}",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: fontWeight500),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                              color: Colors.blue,
+                                              padding: EdgeInsets.all(0),
+                                              onPressed: () {
+                                                setState(() {
+                                                  selectedValueVillage = null;
+                                                  _onSelectVillageDisplay =
+                                                      null;
+                                                  myModel.clearLmap();
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.close,
+                                                color: Colors.grey,
+                                              )),
+                                        ],
+                                      ))),
+                            ),
+                          ],
                         ),
-                        onPressed: () {
-                          if (_onSelectVillageDisplay == "ភូមិ") {
-                            setState(() {
-                              selectedValueVillage = "";
-                            });
-                          }
-                          fetchLamp(
-                              "$pageSizes",
-                              "$selectedValueProvince",
-                              "$selectedValueDistrict",
-                              "$selectedValueCommune",
-                              "$selectedValueVillage");
-                        },
-                        child: Container(
-                            width: widthView(context, 0.2),
-                            height: widthView(context, 0.1),
-                            color: logolightGreen,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: logolightGreen,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  side: BorderSide(color: logolightGreen)),
+                              textStyle: TextStyle(color: Colors.red),
+                            ),
+                            onPressed: () {
+                              if (_onSelectVillageDisplay == "ភូមិ") {
+                                setState(() {
+                                  selectedValueVillage = "";
+                                });
+                              }
+                              fetchLamp(
+                                  "$pageSizes",
+                                  "$selectedValueProvince",
+                                  "$selectedValueDistrict",
+                                  "$selectedValueCommune",
+                                  "$selectedValueVillage");
+                            },
                             child: Center(
                               child: Text("ស្វែងរក",
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 20)),
-                            )),
-                      ),
-                      SizedBox(
-                        height: widthView(context, 0.05),
-                      ),
-                      if (myModel.parsed.length == 0)
-                        Container(
-                          width: widthView(context, 1),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: Column(
-                                  children: [
-                                    Text("ដំណាក់កាលស្ថានភាព",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          decoration: TextDecoration.underline,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: widthView(context, 0.6),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Card(
-                                            color: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30)),
-                                            child: Container(
-                                              height: heightWidthContant,
-                                              width: heightWidthContant,
-                                              child: Center(
-                                                child: Text(
-                                                  "",
-                                                  style: TextStyle(
-                                                    fontSize: fontSizeLg,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 1,
-                                          ),
-                                          Text(
-                                            "ពុំទាន់មានទិន្នន័យ",
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Card(
-                                            color: Colors.green,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30)),
-                                            child: Container(
-                                              height: heightWidthContant,
-                                              width: heightWidthContant,
-                                              child: Center(
-                                                child: Text(
-                                                  "",
-                                                  style: TextStyle(
-                                                    fontSize: fontSizeLg,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 1,
-                                          ),
-                                          Container(
-                                            child: Text(
-                                              "បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង",
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Card(
-                                          color: Colors.yellow,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          child: Container(
-                                            height: heightWidthContant,
-                                            width: heightWidthContant,
-                                            child: Center(
-                                              child: Text(
-                                                "",
-                                                style: TextStyle(
-                                                  fontSize: fontSizeLg,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 1,
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង",
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Card(
-                                            color: Colors.red,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(30)),
-                                            child: Container(
-                                              height: heightWidthContant,
-                                              width: heightWidthContant,
-                                              child: Center(
-                                                child: Text(
-                                                  "",
-                                                  style: TextStyle(
-                                                    fontSize: fontSizeLg,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 1,
-                                          ),
-                                          Container(
-                                            child: Text(
-                                              "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ",
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  )),
+                            ),
                           ),
                         ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      if (myModel.parsed.length == 0) Center(),
-                      Expanded(
-                        child: ListView.builder(
-                            itemCount: myModel.parsed.length,
-                            itemBuilder: (context, index) {
-                              Color myColor = Colors.red;
-                              if (myModel.parsed[index]['status'] ==
-                                  'ពុំទាន់មានទិន្នន័យ') {
-                                myColor = Colors.white;
-                              }
-                              if (myModel.parsed[index]['status'] ==
-                                  'បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង') {
-                                myColor = Colors.green;
-                              }
-                              if (myModel.parsed[index]['status'] ==
-                                  'បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង') {
-                                myColor = Colors.yellow;
-                              }
-                              if (myModel.parsed[index]['status'] ==
-                                  'បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ') {
-                                myColor = Colors.red;
-                              }
-                              return Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                        SizedBox(
+                          height: widthView(context, 0.05),
+                        ),
+                        if (myModel.parsed.length == 0)
+                          Container(
+                            width: widthView(context, 1),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Text("ដំណាក់កាលស្ថានភាព",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          )),
+                                    ],
+                                  ),
                                 ),
-                                margin: EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10)),
-                                      ),
-                                      color: logolightGreen,
-                                      elevation: 0,
-                                      margin: EdgeInsets.all(0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Container(
-                                            // color: logolightGreen,
-                                            // width: widthView(context, 0.60),
-                                            child: Center(
-                                                child: Text(
-                                              "ស្ថានភាព",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                  fontWeight: fontWeight700),
-                                            )),
-                                          ),
-                                          Container(
-                                            // color: logolightGreen,
-                                            // width: widthView(context, 0.352),
-                                            child: Center(
-                                              child: Text(
-                                                "កាលបរិច្ឆេទចែកប្លង់",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                    fontWeight: fontWeight700),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                            // height: 50,
-                                            // width: widthView(context, 0.60),
-                                            child: Container(
-                                          child: Row(
-                                            children: [
-                                              Card(
-                                                color: myColor,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30)),
-                                                child: Container(
-                                                  height: heightWidthContant,
-                                                  width: heightWidthContant,
-                                                  child: Center(
-                                                    child: Text(
-                                                      " ",
-                                                      style: TextStyle(
-                                                        fontSize: fontSizeLg,
-                                                        color: Colors.white,
-                                                      ),
+                                Container(
+                                  width: widthView(context, 0.6),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Card(
+                                              color: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30)),
+                                              child: Container(
+                                                height: heightWidthContant,
+                                                width: heightWidthContant,
+                                                child: Center(
+                                                  child: Text(
+                                                    "",
+                                                    style: TextStyle(
+                                                      fontSize: fontSizeLg,
+                                                      color: Colors.white,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              Center(
+                                            ),
+                                            SizedBox(
+                                              width: 1,
+                                            ),
+                                            Text(
+                                              "ពុំទាន់មានទិន្នន័យ",
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Card(
+                                              color: Colors.green,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30)),
+                                              child: Container(
+                                                height: heightWidthContant,
+                                                width: heightWidthContant,
+                                                child: Center(
                                                   child: Text(
-                                                "    ${myModel.parsed[index]['status']}",
-                                              )),
-                                            ],
-                                          ),
-                                        )),
-                                        Container(
-                                            height: 50,
-                                            width: widthView(context, 0.2),
-                                            child: Center(
+                                                    "",
+                                                    style: TextStyle(
+                                                      fontSize: fontSizeLg,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 1,
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង",
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            color: Colors.yellow,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                            child: Container(
+                                              height: heightWidthContant,
+                                              width: heightWidthContant,
+                                              child: Center(
                                                 child: Text(
-                                              myModel.parsed[index]['dates'] !=
-                                                      ""
-                                                  ? myModel.parsed[index]
-                                                      ['dates']
-                                                  : "",
-                                              style: TextStyle(
-                                                  color: Colors.black),
-                                            ))),
-                                      ],
-                                    ),
-                                  ],
+                                                  "",
+                                                  style: TextStyle(
+                                                    fontSize: fontSizeLg,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Container(
+                                            child: Text(
+                                              "បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង",
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Card(
+                                              color: Colors.red,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30)),
+                                              child: Container(
+                                                height: heightWidthContant,
+                                                width: heightWidthContant,
+                                                child: Center(
+                                                  child: Text(
+                                                    "",
+                                                    style: TextStyle(
+                                                      fontSize: fontSizeLg,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 1,
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                "បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ",
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              );
-                            }),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(
-                            bottom: isIphoneX(context) ? 20 : 0),
-                        child: Text(
-                          "កាលបរិច្ឆេទទិន្នន័យ៖ $currentDate​",
+                              ],
+                            ),
+                          ),
+                        SizedBox(
+                          height: 30,
                         ),
-                      )
-                    ],
+                        if (myModel.parsed.length == 0) Center(),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: myModel.parsed.length,
+                              itemBuilder: (context, index) {
+                                Color myColor = Colors.red;
+                                if (myModel.parsed[index]['status'] ==
+                                    'ពុំទាន់មានទិន្នន័យ') {
+                                  myColor = Colors.white;
+                                }
+                                if (myModel.parsed[index]['status'] ==
+                                    'បានកំណត់តំបន់សំរាប់ធ្វើការវាស់វែង') {
+                                  myColor = Colors.green;
+                                }
+                                if (myModel.parsed[index]['status'] ==
+                                    'បានវាស់វែង និង ចែកបង្កាន់ដៃវាស់វែង') {
+                                  myColor = Colors.yellow;
+                                }
+                                if (myModel.parsed[index]['status'] ==
+                                    'បានចែកវិញ្ញាបនបត្រសម្គាល់អចលនវត្ថុ') {
+                                  myColor = Colors.red;
+                                }
+                                return Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  margin: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10)),
+                                        ),
+                                        color: logolightGreen,
+                                        elevation: 0,
+                                        margin: EdgeInsets.all(0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Container(
+                                              // color: logolightGreen,
+                                              // width: widthView(context, 0.60),
+                                              child: Center(
+                                                  child: Text(
+                                                "ស្ថានភាព",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight: fontWeight700),
+                                              )),
+                                            ),
+                                            Container(
+                                              // color: logolightGreen,
+                                              // width: widthView(context, 0.352),
+                                              child: Center(
+                                                child: Text(
+                                                  "កាលបរិច្ឆេទចែកប្លង់",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          fontWeight700),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                              // height: 50,
+                                              // width: widthView(context, 0.60),
+                                              child: Container(
+                                            child: Row(
+                                              children: [
+                                                Card(
+                                                  color: myColor,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30)),
+                                                  child: Container(
+                                                    height: heightWidthContant,
+                                                    width: heightWidthContant,
+                                                    child: Center(
+                                                      child: Text(
+                                                        " ",
+                                                        style: TextStyle(
+                                                          fontSize: fontSizeLg,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Center(
+                                                    child: Text(
+                                                  "    ${myModel.parsed[index]['status']}",
+                                                )),
+                                              ],
+                                            ),
+                                          )),
+                                          Container(
+                                              height: 50,
+                                              width: widthView(context, 0.2),
+                                              child: Center(
+                                                  child: Text(
+                                                myModel.parsed[index]
+                                                            ['dates'] !=
+                                                        ""
+                                                    ? myModel.parsed[index]
+                                                        ['dates']
+                                                    : "",
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ))),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                              bottom: isIphoneX(context) ? 20 : 0),
+                          child: Text(
+                            "កាលបរិច្ឆេទទិន្នន័យ៖ $currentDate​",
+                          ),
+                        )
+                      ],
+                    ),
                   ),
           ));
     });

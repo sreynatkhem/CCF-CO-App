@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -448,130 +449,144 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
               : parsed.length > 0
                   ? RefreshIndicator(
                       onRefresh: _getData,
-                      child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: parsed.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            var status = statusApproval(
-                                parsed != null ? parsed[index]['rstatus'] : '');
-                            return Container(
-                              padding: EdgeInsets.all(3),
-                              // height: 100,
-                              // padding: EdgeInsets.only(
-                              //     left: 4, right: 4, top: 4, bottom: 4),
-                              child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: logolightGreen, width: 1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    child: InkWell(
-                                        splashColor: Colors.blue.withAlpha(30),
-                                        onTap: () {
-                                          var value = parsed[index];
-                                          onTapsDetail(value, context);
-                                        },
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 5)),
-                                                  Image(
-                                                    image: _imagesFindApproval,
-                                                    width: 50,
-                                                    height: 50,
-                                                  ),
-                                                  // Padding(
-                                                  //     padding: EdgeInsets.only(
-                                                  //         right: 15)),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                      child: MaxWidthWrapper(
+                        child: ListView.builder(
+                            controller: _scrollController,
+                            itemCount: parsed.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var status = statusApproval(parsed != null
+                                  ? parsed[index]['rstatus']
+                                  : '');
+                              return Container(
+                                padding: EdgeInsets.all(3),
+                                // height: 100,
+                                // padding: EdgeInsets.only(
+                                //     left: 4, right: 4, top: 4, bottom: 4),
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: logolightGreen, width: 1),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: InkWell(
+                                          splashColor:
+                                              Colors.blue.withAlpha(30),
+                                          onTap: () {
+                                            var value = parsed[index];
+                                            onTapsDetail(value, context);
+                                          },
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Row(
                                                     children: <Widget>[
-                                                      Container(
-                                                          width: widthView(
-                                                              context, 0.5),
-                                                          child: Text(
-                                                            parsed[index]
-                                                                    ['loan']
-                                                                ['customer'],
-                                                            style:
-                                                                mainTitleBlack,
-                                                          )),
-                                                      Text(
-                                                          '${parsed[index]['rcode']}'),
                                                       Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 2)),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 2)),
-                                                      Text(
-                                                          '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 2)),
-                                                      Text(
-                                                          '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 2)),
-                                                      Container(
-                                                        width: widthView(
-                                                            context, 0.5),
-                                                        child: Text(
-                                                            '${parsed[index]['loan']['user'].substring(9)} - ${parsed[index]['loan']['branch']}'),
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Image(
+                                                          image:
+                                                              _imagesFindApproval,
+                                                          width: 50,
+                                                          height: 50,
+                                                        ),
                                                       ),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 2)),
+                                                      // Padding(
+                                                      //     padding: EdgeInsets.only(
+                                                      //         right: 15)),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              parsed[index]
+                                                                      ['loan']
+                                                                  ['customer'],
+                                                              style:
+                                                                  mainTitleBlack,
+                                                            ),
+                                                            Text(
+                                                                '${parsed[index]['rcode']}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Text(
+                                                                '${getDateTimeYMD(parsed[index]['loan']['odate'])}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Text(
+                                                                '${parsed[index]['loan']['currency']} ${numFormat.format(parsed[index]['loan']['lamt'])}'),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                            Text(
+                                                              '${parsed[index]['loan']['user'].substring(9)} - ${parsed[index]['loan']['branch']}',
+                                                            ),
+                                                            Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        bottom:
+                                                                            2)),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
-                                              Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                          bottom: 2)),
-                                                  status,
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                    top: 5,
-                                                  )),
-                                                  if (parsed[index]['rdate'] !=
-                                                      '')
-                                                    Text(getDateTimeYMD(
-                                                        parsed[index]
-                                                            ['rdate'])),
-                                                  Text(''),
-                                                  Padding(
-                                                      padding: EdgeInsets.only(
-                                                    right: 100,
-                                                  ))
-                                                ],
-                                              ),
-                                            ])),
-                                  )),
-                            );
-                          }),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 2)),
+                                                    status,
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                      top: 5,
+                                                    )),
+                                                    if (parsed[index]
+                                                            ['rdate'] !=
+                                                        '')
+                                                      Text(getDateTimeYMD(
+                                                          parsed[index]
+                                                              ['rdate'])),
+                                                    Text(''),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                      right: 100,
+                                                    ))
+                                                  ],
+                                                ),
+                                              ])),
+                                    )),
+                              );
+                            }),
+                      ),
                     )
                   : Center(
                       child: Container(

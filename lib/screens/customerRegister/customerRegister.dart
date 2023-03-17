@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/customerRegistration.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -515,763 +516,781 @@ class _CustomerRegister extends State {
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: new Column(
-                  children: <Widget>[
-                    GroupFromBuilder(
-                      icons: Icons.person,
-                      keys: khmerName,
-                      childs: FormBuilderTextField(
-                        name: 'name',
-                        focusNode: khmerNameFocus,
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (v) {
-                          FocusScope.of(context).requestFocus(englishNameFocus);
-                        },
-                        decoration: new InputDecoration(
-                          border: InputBorder.none,
-                          labelText: AppLocalizations.of(context)!
-                                  .translate('full_khmer_name') ??
-                              'Full Khmer Name(*)',
-                        ),
-                        onChanged: (v) {
-                          if (mounted) {
-                            getValueKhmerName(v);
-                          }
-                        },
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context,
-                              errorText: AppLocalizations.of(context)!
-                                      .translate('khmer_name_required') ??
-                                  "Khmer Name required"),
-                        ]),
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp("[0-9/\\\\|!.]"))
-                          // ignore: deprecated_member_use
-                          // BlacklistingTextInputFormatter(
-                          //     RegExp("[0-9/\\\\|!.]")),
-                        ],
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.person,
-                      keys: englishName,
-                      childs: FormBuilderTextField(
-                        name: 'name',
-                        focusNode: englishNameFocus,
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (v) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                          FocusScope.of(context)
-                              .requestFocus(datehofBrithFocus);
-                        },
-                        decoration: new InputDecoration(
+              child: MaxWidthWrapper(
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: new Column(
+                    children: <Widget>[
+                      GroupFromBuilder(
+                        icons: Icons.person,
+                        keys: khmerName,
+                        childs: FormBuilderTextField(
+                          name: 'name',
+                          focusNode: khmerNameFocus,
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (v) {
+                            FocusScope.of(context)
+                                .requestFocus(englishNameFocus);
+                          },
+                          decoration: new InputDecoration(
                             border: InputBorder.none,
                             labelText: AppLocalizations.of(context)!
-                                    .translate('full_english_name') ??
-                                'Full English Name'),
-                        onChanged: (v) {
-                          if (mounted) {
-                            getValueEnglishName(v);
-                          }
-                        },
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context,
-                              errorText: AppLocalizations.of(context)!
-                                      .translate('english_name_required') ??
-                                  "English Name required"),
-                        ]),
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[a-z A-Z]"))
-                          // ignore: deprecated_member_use
-                          // new WhitelistingTextInputFormatter(
-                          //     RegExp("[a-z A-Z]")),
-                        ],
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.wc,
-                      keys: _gender,
-                      childs: FormBuilderRadioGroup(
-                        options: [
-                          AppLocalizations.of(context)!.translate("female"),
-                          AppLocalizations.of(context)!.translate("male"),
-                        ]
-                            .map((lang) => FormBuilderFieldOption(value: lang))
-                            .toList(growable: false),
-                        decoration: new InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Gender',
-                        ),
-                        name: "gender",
-                        onChanged: (dynamic v) {
-                          if (v == 'Female') {
-                            FocusScope.of(context)
-                                .unfocus(disposition: disposition);
-                            getGenderValueF(v);
-                          } else {
-                            FocusScope.of(context)
-                                .unfocus(disposition: disposition);
-                            setState(() {
-                              gender = 'M';
-                            });
-                          }
-                        },
-                        validator: FormBuilderValidators.compose(
-                          [
+                                    .translate('full_khmer_name') ??
+                                'Full Khmer Name(*)',
+                          ),
+                          onChanged: (v) {
+                            if (mounted) {
+                              getValueKhmerName(v);
+                            }
+                          },
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          validator: FormBuilderValidators.compose([
                             FormBuilderValidators.required(context,
                                 errorText: AppLocalizations.of(context)!
-                                        .translate('gender_required') ??
-                                    "Gender required(*)"),
+                                        .translate('khmer_name_required') ??
+                                    "Khmer Name required"),
+                          ]),
+                          keyboardType: TextInputType.text,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[0-9/\\\\|!.]"))
+                            // ignore: deprecated_member_use
+                            // BlacklistingTextInputFormatter(
+                            //     RegExp("[0-9/\\\\|!.]")),
                           ],
                         ),
                       ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.phone,
-                      keys: phoneKey,
-                      childs: FormBuilderTextField(
-                        name: 'phone',
-                        focusNode: phoneKeyFocus,
-                        controller: controllerPhone1,
-                        textInputAction: TextInputAction.next,
-                        decoration: new InputDecoration(
-                          border: InputBorder.none,
-                          labelText: AppLocalizations.of(context)!
-                                  .translate('phone_number_1') ??
-                              'Phone Number 1',
-                        ),
-                        onSubmitted: (v) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                        },
-                        maxLength: 10,
-                        onChanged: (v) {
-                          if (mounted) {
-                            valuePhone1 = v;
-                          }
-                        },
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                          // WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context,
-                              errorText: AppLocalizations.of(context)!
-                                      .translate('phone_number_1_required') ??
-                                  "Gender required(*)"),
-                          FormBuilderValidators.numeric(context,
-                              errorText: "Number only"),
-                        ]),
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.phone,
-                      keys: phoneKey2,
-                      childs: FormBuilderTextField(
-                        name: 'name',
-                        focusNode: phoneKey2Focus,
-                        controller: controllerPhone2,
-                        textInputAction: TextInputAction.next,
-                        decoration: new InputDecoration(
-                            border: InputBorder.none,
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('phone_number_2') ??
-                                'Phone Number 2'),
-                        maxLength: 10,
-                        onChanged: (v) {
-                          if (mounted) {
-                            valuePhone2 = v;
-                          }
-                        },
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                          // WhitelistingTextInputFormatter.digitsOnly
-                        ],
-                        valueTransformer: (text) {
-                          return text == null ? null : text;
-                        },
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.work,
-                      keys: occupationOfCustomer,
-                      childs: FormBuilderDropdown(
-                        name: "Name",
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!
-                                  .translate('occupation_of_customer') ??
-                              "Occupation of customer",
-                          border: InputBorder.none,
-                        ),
-                        hint: Text(
-                          AppLocalizations.of(context)!
-                                  .translate('occupation_of_customer') ??
-                              'Occupation of customer',
-                        ),
-                        onChanged: (value) {
-                          if (mounted) {
+                      GroupFromBuilder(
+                        icons: Icons.person,
+                        keys: englishName,
+                        childs: FormBuilderTextField(
+                          name: 'name',
+                          focusNode: englishNameFocus,
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (v) {
                             FocusScope.of(context)
                                 .unfocus(disposition: disposition);
-                            setState(() {
-                              valueOccupationOfCustomer = value;
-                            });
-                          }
-                        },
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(context,
-                              errorText: AppLocalizations.of(context)!
-                                      .translate(
-                                          'occupation_of_customer_required') ??
-                                  "Occupation of customer Required(*)")
-                        ]),
-                        items: ['Employee', 'Business ownership']
-                            .map((v) => DropdownMenuItem(
-                                value: v,
-                                child: Text(
-                                  "$v",
-                                )))
-                            .toList(),
-                      ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.date_range,
-                      keys: nextVisitDate,
-                      childs: FormBuilderDateTimePicker(
-                        name: "",
-                        inputType: InputType.date,
-                        focusNode: nextVisitDateFocus,
-                        textInputAction: TextInputAction.next,
-                        onChanged: (v) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                          valueNextVisitDate = v;
-                          checkMoreThenCurrentDay(v);
-                        },
-                        initialValue: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        format: DateFormat("yyyy-MM-dd"),
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!
-                                  .translate('next_visit_date') ??
-                              "Next visit date",
-                          border: InputBorder.none,
+                            FocusScope.of(context)
+                                .requestFocus(datehofBrithFocus);
+                          },
+                          decoration: new InputDecoration(
+                              border: InputBorder.none,
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('full_english_name') ??
+                                  'Full English Name'),
+                          onChanged: (v) {
+                            if (mounted) {
+                              getValueEnglishName(v);
+                            }
+                          },
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
+                                        .translate('english_name_required') ??
+                                    "English Name required"),
+                          ]),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                          keyboardType: TextInputType.text,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp("[a-z A-Z]"))
+                            // ignore: deprecated_member_use
+                            // new WhitelistingTextInputFormatter(
+                            //     RegExp("[a-z A-Z]")),
+                          ],
                         ),
                       ),
-                    ),
-                    GroupFromBuilder(
-                      icons: Icons.check,
-                      keys: prospective,
-                      childs: FormBuilderDropdown(
-                        name: 'name',
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!
-                                  .translate('prospective') ??
-                              "Prospective",
-                          border: InputBorder.none,
+                      GroupFromBuilder(
+                        icons: Icons.wc,
+                        keys: _gender,
+                        childs: FormBuilderRadioGroup(
+                          options: [
+                            AppLocalizations.of(context)!.translate("female"),
+                            AppLocalizations.of(context)!.translate("male"),
+                          ]
+                              .map(
+                                  (lang) => FormBuilderFieldOption(value: lang))
+                              .toList(growable: false),
+                          decoration: new InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'Gender',
+                          ),
+                          name: "gender",
+                          onChanged: (dynamic v) {
+                            if (v == 'Female') {
+                              FocusScope.of(context)
+                                  .unfocus(disposition: disposition);
+                              getGenderValueF(v);
+                            } else {
+                              FocusScope.of(context)
+                                  .unfocus(disposition: disposition);
+                              setState(() {
+                                gender = 'M';
+                              });
+                            }
+                          },
+                          validator: FormBuilderValidators.compose(
+                            [
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate('gender_required') ??
+                                      "Gender required(*)"),
+                            ],
+                          ),
                         ),
-                        hint: Text(
-                          AppLocalizations.of(context)!
-                                  .translate('prospective') ??
-                              'Prospective Y=Yes, N=No',
-                        ),
-                        onChanged: (value) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                          setState(() {
-                            valueProspective = value;
-                          });
-                        },
-                        items: [
-                          'Y',
-                          'N',
-                        ]
-                            .map((valueProspective) => DropdownMenuItem(
-                                value: valueProspective,
-                                child: Text(
-                                  "$valueProspective",
-                                )))
-                            .toList(),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    DropDownCustomerRegister(
-                      icons: Icons.location_on,
-                      validate: validateVillage
-                          ? RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.circular(10),
-                            )
-                          : null,
-                      onInSidePress: () async {
-                        FocusScope.of(context)
-                            .unfocus(disposition: disposition);
-                        final storage = new FlutterSecureStorage();
-                        var token = await storage.read(key: 'user_token');
-                        var list;
-                        try {
-                          final Response response = await api().get(
-                            Uri.parse(baseURLInternal + 'addresses/provinces'),
-                            headers: {
-                              "Content-Type": "application/json",
-                              "Authorization": "Bearer " + token
-                            },
-                          );
-                          list = jsonDecode(response.body);
-                          setState(() {
-                            stateProvince = list ?? '';
-                          });
-                        } catch (error) {}
-                        SelectDialog.showModal<String>(
-                          context,
-                          label: AppLocalizations.of(context)!
-                                  .translate('search') ??
-                              'Search',
-                          items: List.generate(list.length,
-                              (index) => "${list[index]['prodes']}"),
-                          onChange: (value) async {
+                      GroupFromBuilder(
+                        icons: Icons.phone,
+                        keys: phoneKey,
+                        childs: FormBuilderTextField(
+                          name: 'phone',
+                          focusNode: phoneKeyFocus,
+                          controller: controllerPhone1,
+                          textInputAction: TextInputAction.next,
+                          decoration: new InputDecoration(
+                            border: InputBorder.none,
+                            labelText: AppLocalizations.of(context)!
+                                    .translate('phone_number_1') ??
+                                'Phone Number 1',
+                          ),
+                          onSubmitted: (v) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                          },
+                          maxLength: 10,
+                          onChanged: (v) {
+                            if (mounted) {
+                              valuePhone1 = v;
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                            // WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
+                                        .translate('phone_number_1_required') ??
+                                    "Gender required(*)"),
+                            FormBuilderValidators.numeric(context,
+                                errorText: "Number only"),
+                          ]),
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                        ),
+                      ),
+                      GroupFromBuilder(
+                        icons: Icons.phone,
+                        keys: phoneKey2,
+                        childs: FormBuilderTextField(
+                          name: 'name',
+                          focusNode: phoneKey2Focus,
+                          controller: controllerPhone2,
+                          textInputAction: TextInputAction.next,
+                          decoration: new InputDecoration(
+                              border: InputBorder.none,
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('phone_number_2') ??
+                                  'Phone Number 2'),
+                          maxLength: 10,
+                          onChanged: (v) {
+                            if (mounted) {
+                              valuePhone2 = v;
+                            }
+                          },
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                            // WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                          valueTransformer: (text) {
+                            return text == null ? null : text;
+                          },
+                        ),
+                      ),
+                      GroupFromBuilder(
+                        icons: Icons.work,
+                        keys: occupationOfCustomer,
+                        childs: FormBuilderDropdown(
+                          name: "Name",
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!
+                                    .translate('occupation_of_customer') ??
+                                "Occupation of customer",
+                            border: InputBorder.none,
+                          ),
+                          hint: Text(
+                            AppLocalizations.of(context)!
+                                    .translate('occupation_of_customer') ??
+                                'Occupation of customer',
+                          ),
+                          onChanged: (value) {
                             if (mounted) {
                               FocusScope.of(context)
                                   .unfocus(disposition: disposition);
                               setState(() {
-                                selectedValueProvince = value;
-                                selectedValueDistrict =
-                                    AppLocalizations.of(context)!
-                                        .translate('district_code');
-                                selectedValueCommune =
-                                    AppLocalizations.of(context)!
-                                        .translate('commune_code');
-                                selectedValueVillage =
-                                    AppLocalizations.of(context)!
-                                        .translate('village_code');
-                                districtreadOnlys = true;
+                                valueOccupationOfCustomer = value;
                               });
                             }
                           },
-                        );
-                      },
-                      selectedValue: selectedValueProvince,
-                      texts: selectedValueProvince != null
-                          ? selectedValueProvince
-                          : AppLocalizations.of(context)!
-                                  .translate('province_code') ??
-                              'Province code',
-                      title: selectedValueProvince != null
-                          ? selectedValueProvince
-                          : AppLocalizations.of(context)!
-                                  .translate('province_code') ??
-                              'Province code',
-                      clear: true,
-                      readOnlys: true,
-                      iconsClose: Icon(Icons.close),
-                      onPressed: () {
-                        if (mounted) {
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(context,
+                                errorText: AppLocalizations.of(context)!
+                                        .translate(
+                                            'occupation_of_customer_required') ??
+                                    "Occupation of customer Required(*)")
+                          ]),
+                          items: ['Employee', 'Business ownership']
+                              .map((v) => DropdownMenuItem(
+                                  value: v,
+                                  child: Text(
+                                    "$v",
+                                  )))
+                              .toList(),
+                        ),
+                      ),
+                      GroupFromBuilder(
+                        icons: Icons.date_range,
+                        keys: nextVisitDate,
+                        childs: FormBuilderDateTimePicker(
+                          name: "",
+                          inputType: InputType.date,
+                          focusNode: nextVisitDateFocus,
+                          textInputAction: TextInputAction.next,
+                          onChanged: (v) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            valueNextVisitDate = v;
+                            checkMoreThenCurrentDay(v);
+                          },
+                          initialValue: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          format: DateFormat("yyyy-MM-dd"),
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!
+                                    .translate('next_visit_date') ??
+                                "Next visit date",
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      GroupFromBuilder(
+                        icons: Icons.check,
+                        keys: prospective,
+                        childs: FormBuilderDropdown(
+                          name: 'name',
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!
+                                    .translate('prospective') ??
+                                "Prospective",
+                            border: InputBorder.none,
+                          ),
+                          hint: Text(
+                            AppLocalizations.of(context)!
+                                    .translate('prospective') ??
+                                'Prospective Y=Yes, N=No',
+                          ),
+                          onChanged: (value) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            setState(() {
+                              valueProspective = value;
+                            });
+                          },
+                          items: [
+                            'Y',
+                            'N',
+                          ]
+                              .map((valueProspective) => DropdownMenuItem(
+                                  value: valueProspective,
+                                  child: Text(
+                                    "$valueProspective",
+                                  )))
+                              .toList(),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                      DropDownCustomerRegister(
+                        icons: Icons.location_on,
+                        validate: validateVillage
+                            ? RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              )
+                            : null,
+                        onInSidePress: () async {
                           FocusScope.of(context)
                               .unfocus(disposition: disposition);
-                          setState(() {
-                            selectedValueProvince =
-                                AppLocalizations.of(context)!
-                                        .translate('province_code') ??
-                                    'Province code';
-                            selectedValueDistrict =
-                                AppLocalizations.of(context)!
-                                        .translate('district_code') ??
-                                    'District code';
-                            selectedValueCommune = AppLocalizations.of(context)!
-                                    .translate('commune_code') ??
-                                'Commune code';
-                            selectedValueVillage = AppLocalizations.of(context)!
-                                    .translate('village_code') ??
-                                'Village code';
-                            districtreadOnlys = false;
-                            communereadOnlys = false;
-                            villagereadOnlys = false;
-                          });
-                        }
-                      },
-                      styleTexts: selectedValueProvince != ''
-                          ? TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.black,
-                              fontWeight: fontWeight500)
-                          : TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.grey,
-                              fontWeight: fontWeight500),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    DropDownCustomerRegister(
-                      icons: Icons.location_on,
-                      selectedValue: selectedValueDistrict,
-                      validate: validateVillage
-                          ? RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.circular(10),
-                            )
-                          : null,
-                      texts: selectedValueDistrict != null
-                          ? selectedValueDistrict
-                          : AppLocalizations.of(context)!
-                                  .translate('district_code') ??
-                              'District code',
-                      title: selectedValueDistrict != null
-                          ? selectedValueDistrict
-                          : AppLocalizations.of(context)!
-                                  .translate('district_code') ??
-                              'District code',
-                      clear: true,
-                      iconsClose: Icon(Icons.close),
-                      onInSidePress: () async {
-                        if (mounted) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                          if (districtreadOnlys == true) {
-                            await getDistrict(stateProvince);
-                            await SelectDialog.showModal<String>(
-                              context,
-                              label: AppLocalizations.of(context)!
-                                      .translate('search') ??
-                                  'Search',
-                              items: List.generate(
-                                  listDistricts.length,
-                                  (index) =>
-                                      "${listDistricts[index]['disdes']}"),
-                              onChange: (value) {
-                                setState(() {
-                                  selectedValueDistrict = value;
-                                  communereadOnlys = true;
-                                });
+                          final storage = new FlutterSecureStorage();
+                          var token = await storage.read(key: 'user_token');
+                          var list;
+                          try {
+                            final Response response = await api().get(
+                              Uri.parse(
+                                  baseURLInternal + 'addresses/provinces'),
+                              headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer " + token
                               },
                             );
-                          }
-                        }
-                      },
-                      onPressed: () {
-                        if (mounted) {
-                          setState(() {
-                            selectedValueDistrict =
-                                AppLocalizations.of(context)!
-                                        .translate('district_code') ??
-                                    'District code';
-                            selectedValueCommune = AppLocalizations.of(context)!
-                                    .translate('commune_code') ??
-                                'Commune code';
-                            selectedValueVillage = AppLocalizations.of(context)!
-                                    .translate('village_code') ??
-                                'Village code';
-                            villagereadOnlys = false;
-                            communereadOnlys = false;
-                          });
-                        }
-                      },
-                      readOnlys: districtreadOnlys,
-                      styleTexts: selectedValueDistrict != ''
-                          ? TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.black,
-                              fontWeight: fontWeight500)
-                          : TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.grey,
-                              fontWeight: fontWeight500),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    DropDownCustomerRegister(
-                      icons: Icons.location_on,
-                      selectedValue: selectedValueCommune,
-                      validate: validateVillage
-                          ? RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.circular(10),
-                            )
-                          : null,
-                      iconsClose: Icon(Icons.close),
-                      onInSidePress: () async {
-                        if (mounted) {
-                          FocusScope.of(context)
-                              .unfocus(disposition: disposition);
-                          if (communereadOnlys == true) {
-                            await getCommune();
-                            SelectDialog.showModal<String>(
-                              context,
-                              label: AppLocalizations.of(context)!
-                                      .translate('search') ??
-                                  'Search',
-                              items: List.generate(listComunes.length,
-                                  (index) => "${listComunes[index]['comdes']}"),
-                              onChange: (value) {
-                                setState(() {
-                                  selectedValueCommune = value;
-                                  villagereadOnlys = true;
-                                });
-                              },
-                            );
-                          }
-                        }
-                      },
-                      onPressed: () {
-                        if (mounted) {
-                          setState(() {
-                            selectedValueCommune = AppLocalizations.of(context)!
-                                    .translate('commune_code') ??
-                                'Commune code';
-                            selectedValueVillage = AppLocalizations.of(context)!
-                                    .translate('village_code') ??
-                                'Village code';
-                            villagereadOnlys = false;
-                          });
-                        }
-                      },
-                      texts: selectedValueCommune != null
-                          ? selectedValueCommune
-                          : AppLocalizations.of(context)!
-                                  .translate('commune_code') ??
-                              'District code',
-                      title: selectedValueCommune != null
-                          ? selectedValueCommune
-                          : AppLocalizations.of(context)!
-                                  .translate('commune_code') ??
-                              'Commune code',
-                      clear: true,
-                      styleTexts: selectedValueCommune != ''
-                          ? TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.black,
-                              fontWeight: fontWeight500)
-                          : TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.grey,
-                              fontWeight: fontWeight500),
-                      readOnlys: communereadOnlys,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                    DropDownCustomerRegister(
-                      icons: Icons.location_on,
-                      selectedValue: selectedValueVillage,
-                      validate: validateVillage
-                          ? RoundedRectangleBorder(
-                              side: BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.circular(10),
-                            )
-                          : null,
-                      clear: true,
-                      onInSidePress: () async {
-                        FocusScope.of(context)
-                            .unfocus(disposition: disposition);
-                        if (villagereadOnlys == true) {
-                          await getVillage();
+                            list = jsonDecode(response.body);
+                            setState(() {
+                              stateProvince = list ?? '';
+                            });
+                          } catch (error) {}
                           SelectDialog.showModal<String>(
                             context,
                             label: AppLocalizations.of(context)!
                                     .translate('search') ??
                                 'Search',
-                            items: List.generate(listVillages.length,
-                                (index) => "${listVillages[index]['vildes']}"),
+                            items: List.generate(list.length,
+                                (index) => "${list[index]['prodes']}"),
                             onChange: (value) async {
-                              setState(() {
-                                selectedValueVillage = value;
-                              });
-                              listVillages.forEach((item) {
-                                if (selectedValueVillage == item['vildes']) {
-                                  setState(() {
-                                    idVillage = item['vilcode'];
-                                  });
-                                }
-                              });
+                              if (mounted) {
+                                FocusScope.of(context)
+                                    .unfocus(disposition: disposition);
+                                setState(() {
+                                  selectedValueProvince = value;
+                                  selectedValueDistrict =
+                                      AppLocalizations.of(context)!
+                                          .translate('district_code');
+                                  selectedValueCommune =
+                                      AppLocalizations.of(context)!
+                                          .translate('commune_code');
+                                  selectedValueVillage =
+                                      AppLocalizations.of(context)!
+                                          .translate('village_code');
+                                  districtreadOnlys = true;
+                                });
+                              }
                             },
                           );
-                        } else {
-                          logger().e('false');
-                        }
-                      },
-                      iconsClose: Icon(Icons.close),
-                      onPressed: () {
-                        if (mounted) {
-                          setState(() {
-                            selectedValueVillage = AppLocalizations.of(context)!
-                                    .translate('village_code') ??
-                                'Village code';
-                            villagereadOnlys = true;
-                          });
-                        }
-                      },
-                      styleTexts: selectedValueVillage != ''
-                          ? TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.black,
-                              fontWeight: fontWeight500)
-                          : TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: fontSizeXs,
-                              color: Colors.grey,
-                              fontWeight: fontWeight500),
-                      texts: selectedValueVillage != null
-                          ? selectedValueVillage
-                          : AppLocalizations.of(context)!
-                                  .translate('village_code') ??
-                              'Village code',
-                      title: selectedValueVillage != null
-                          ? selectedValueVillage
-                          : AppLocalizations.of(context)!
-                                  .translate('village_code') ??
-                              'Village code',
-                      readOnlys: villagereadOnlys,
-                    ),
-                    Card(
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.only(left: 5),
-                                    child: Icon(
-                                      Icons.navigation,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    child: Container(
-                                      width: 240,
-                                      child: Container(
-                                        padding: EdgeInsets.all(4),
-                                        child: Column(
-                                          children: [
-                                            Center(
-                                              child: Text(
-                                                _currentAddress ??
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .translate(
-                                                            'get_location') ??
-                                                    "Get location",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontFamily: fontFamily,
-                                                    fontSize: 17,
-                                                    color: Colors.grey[500],
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      if (mounted) {
-                                        _getCurrentLocation();
-                                      }
-                                    },
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(right: 10),
-                                    child: Icon(
-                                      Icons.map,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
-                    AnimatedButton(
-                      text: AppLocalizations.of(context)!.translate('submit') ??
-                          'Submit',
-                      color: logolightGreen,
-                      pressEvent: () async {
-                        if (khmerName.currentState!.saveAndValidate() &&
-                            englishName.currentState!.saveAndValidate() &&
-                            _gender.currentState!.saveAndValidate() &&
-                            phoneKey.currentState!.saveAndValidate() &&
-                            occupationOfCustomer.currentState!
-                                .saveAndValidate()) {
-                          // await onSubmit(context);
-                          if (selectedValueVillage == null ||
-                              selectedValueVillage ==
-                                  AppLocalizations.of(context)!
-                                      .translate('village_code')) {
+                        },
+                        selectedValue: selectedValueProvince,
+                        texts: selectedValueProvince != null
+                            ? selectedValueProvince
+                            : AppLocalizations.of(context)!
+                                    .translate('province_code') ??
+                                'Province code',
+                        title: selectedValueProvince != null
+                            ? selectedValueProvince
+                            : AppLocalizations.of(context)!
+                                    .translate('province_code') ??
+                                'Province code',
+                        clear: true,
+                        readOnlys: true,
+                        iconsClose: Icon(Icons.close),
+                        onPressed: () {
+                          if (mounted) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
                             setState(() {
-                              validateVillage = true;
+                              selectedValueProvince =
+                                  AppLocalizations.of(context)!
+                                          .translate('province_code') ??
+                                      'Province code';
+                              selectedValueDistrict =
+                                  AppLocalizations.of(context)!
+                                          .translate('district_code') ??
+                                      'District code';
+                              selectedValueCommune =
+                                  AppLocalizations.of(context)!
+                                          .translate('commune_code') ??
+                                      'Commune code';
+                              selectedValueVillage =
+                                  AppLocalizations.of(context)!
+                                          .translate('village_code') ??
+                                      'Village code';
+                              districtreadOnlys = false;
+                              communereadOnlys = false;
+                              villagereadOnlys = false;
                             });
-                          } else {
-                            AwesomeDialog(
-                                context: context,
-                                // animType: AnimType.LEFTSLIDE,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.INFO,
-                                title: AppLocalizations.of(context)!
-                                        .translate('information') ??
-                                    'Information',
-                                desc: AppLocalizations.of(context)!
-                                        .translate('are_you_sure_you') ??
-                                    'Are you sure you want to register the customer?',
-                                btnOkOnPress: () async {
-                                  if (selectedValueVillage == null ||
-                                      selectedValueVillage ==
-                                          AppLocalizations.of(context)!
-                                              .translate('village_code')) {
-                                    // await onSubmit(context);
+                          }
+                        },
+                        styleTexts: selectedValueProvince != ''
+                            ? TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.black,
+                                fontWeight: fontWeight500)
+                            : TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.grey,
+                                fontWeight: fontWeight500),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                      DropDownCustomerRegister(
+                        icons: Icons.location_on,
+                        selectedValue: selectedValueDistrict,
+                        validate: validateVillage
+                            ? RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              )
+                            : null,
+                        texts: selectedValueDistrict != null
+                            ? selectedValueDistrict
+                            : AppLocalizations.of(context)!
+                                    .translate('district_code') ??
+                                'District code',
+                        title: selectedValueDistrict != null
+                            ? selectedValueDistrict
+                            : AppLocalizations.of(context)!
+                                    .translate('district_code') ??
+                                'District code',
+                        clear: true,
+                        iconsClose: Icon(Icons.close),
+                        onInSidePress: () async {
+                          if (mounted) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            if (districtreadOnlys == true) {
+                              await getDistrict(stateProvince);
+                              await SelectDialog.showModal<String>(
+                                context,
+                                label: AppLocalizations.of(context)!
+                                        .translate('search') ??
+                                    'Search',
+                                items: List.generate(
+                                    listDistricts.length,
+                                    (index) =>
+                                        "${listDistricts[index]['disdes']}"),
+                                onChange: (value) {
+                                  setState(() {
+                                    selectedValueDistrict = value;
+                                    communereadOnlys = true;
+                                  });
+                                },
+                              );
+                            }
+                          }
+                        },
+                        onPressed: () {
+                          if (mounted) {
+                            setState(() {
+                              selectedValueDistrict =
+                                  AppLocalizations.of(context)!
+                                          .translate('district_code') ??
+                                      'District code';
+                              selectedValueCommune =
+                                  AppLocalizations.of(context)!
+                                          .translate('commune_code') ??
+                                      'Commune code';
+                              selectedValueVillage =
+                                  AppLocalizations.of(context)!
+                                          .translate('village_code') ??
+                                      'Village code';
+                              villagereadOnlys = false;
+                              communereadOnlys = false;
+                            });
+                          }
+                        },
+                        readOnlys: districtreadOnlys,
+                        styleTexts: selectedValueDistrict != ''
+                            ? TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.black,
+                                fontWeight: fontWeight500)
+                            : TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.grey,
+                                fontWeight: fontWeight500),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                      DropDownCustomerRegister(
+                        icons: Icons.location_on,
+                        selectedValue: selectedValueCommune,
+                        validate: validateVillage
+                            ? RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              )
+                            : null,
+                        iconsClose: Icon(Icons.close),
+                        onInSidePress: () async {
+                          if (mounted) {
+                            FocusScope.of(context)
+                                .unfocus(disposition: disposition);
+                            if (communereadOnlys == true) {
+                              await getCommune();
+                              SelectDialog.showModal<String>(
+                                context,
+                                label: AppLocalizations.of(context)!
+                                        .translate('search') ??
+                                    'Search',
+                                items: List.generate(
+                                    listComunes.length,
+                                    (index) =>
+                                        "${listComunes[index]['comdes']}"),
+                                onChange: (value) {
+                                  setState(() {
+                                    selectedValueCommune = value;
+                                    villagereadOnlys = true;
+                                  });
+                                },
+                              );
+                            }
+                          }
+                        },
+                        onPressed: () {
+                          if (mounted) {
+                            setState(() {
+                              selectedValueCommune =
+                                  AppLocalizations.of(context)!
+                                          .translate('commune_code') ??
+                                      'Commune code';
+                              selectedValueVillage =
+                                  AppLocalizations.of(context)!
+                                          .translate('village_code') ??
+                                      'Village code';
+                              villagereadOnlys = false;
+                            });
+                          }
+                        },
+                        texts: selectedValueCommune != null
+                            ? selectedValueCommune
+                            : AppLocalizations.of(context)!
+                                    .translate('commune_code') ??
+                                'District code',
+                        title: selectedValueCommune != null
+                            ? selectedValueCommune
+                            : AppLocalizations.of(context)!
+                                    .translate('commune_code') ??
+                                'Commune code',
+                        clear: true,
+                        styleTexts: selectedValueCommune != ''
+                            ? TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.black,
+                                fontWeight: fontWeight500)
+                            : TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.grey,
+                                fontWeight: fontWeight500),
+                        readOnlys: communereadOnlys,
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                      DropDownCustomerRegister(
+                        icons: Icons.location_on,
+                        selectedValue: selectedValueVillage,
+                        validate: validateVillage
+                            ? RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              )
+                            : null,
+                        clear: true,
+                        onInSidePress: () async {
+                          FocusScope.of(context)
+                              .unfocus(disposition: disposition);
+                          if (villagereadOnlys == true) {
+                            await getVillage();
+                            SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)!
+                                      .translate('search') ??
+                                  'Search',
+                              items: List.generate(
+                                  listVillages.length,
+                                  (index) =>
+                                      "${listVillages[index]['vildes']}"),
+                              onChange: (value) async {
+                                setState(() {
+                                  selectedValueVillage = value;
+                                });
+                                listVillages.forEach((item) {
+                                  if (selectedValueVillage == item['vildes']) {
                                     setState(() {
-                                      validateVillage = true;
-                                    });
-                                  } else {
-                                    await onSubmit(context);
-                                    setState(() {
-                                      validateVillage = false;
+                                      idVillage = item['vilcode'];
                                     });
                                   }
-                                },
-                                btnCancelText: AppLocalizations.of(context)!
-                                        .translate('no') ??
-                                    "No",
-                                btnCancelOnPress: () {},
-                                btnCancelIcon: Icons.close,
-                                btnOkIcon: Icons.check_circle,
-                                btnOkColor: logolightGreen,
-                                btnOkText: AppLocalizations.of(context)!
-                                        .translate('yes') ??
-                                    'Yes')
-                              ..show();
+                                });
+                              },
+                            );
+                          } else {
+                            logger().e('false');
                           }
-                        }
-                      },
-                    ),
-                    Padding(padding: EdgeInsets.only(bottom: bottomPadding))
-                  ],
+                        },
+                        iconsClose: Icon(Icons.close),
+                        onPressed: () {
+                          if (mounted) {
+                            setState(() {
+                              selectedValueVillage =
+                                  AppLocalizations.of(context)!
+                                          .translate('village_code') ??
+                                      'Village code';
+                              villagereadOnlys = true;
+                            });
+                          }
+                        },
+                        styleTexts: selectedValueVillage != ''
+                            ? TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.black,
+                                fontWeight: fontWeight500)
+                            : TextStyle(
+                                fontFamily: fontFamily,
+                                fontSize: fontSizeXs,
+                                color: Colors.grey,
+                                fontWeight: fontWeight500),
+                        texts: selectedValueVillage != null
+                            ? selectedValueVillage
+                            : AppLocalizations.of(context)!
+                                    .translate('village_code') ??
+                                'Village code',
+                        title: selectedValueVillage != null
+                            ? selectedValueVillage
+                            : AppLocalizations.of(context)!
+                                    .translate('village_code') ??
+                                'Village code',
+                        readOnlys: villagereadOnlys,
+                      ),
+                      Card(
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.only(left: 5),
+                                      child: Icon(
+                                        Icons.navigation,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      child: Container(
+                                        width: 240,
+                                        child: Container(
+                                          padding: EdgeInsets.all(4),
+                                          child: Column(
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  _currentAddress ??
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'get_location') ??
+                                                      "Get location",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontFamily: fontFamily,
+                                                      fontSize: 17,
+                                                      color: Colors.grey[500],
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        if (mounted) {
+                                          _getCurrentLocation();
+                                        }
+                                      },
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.map,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
+                      AnimatedButton(
+                        text:
+                            AppLocalizations.of(context)!.translate('submit') ??
+                                'Submit',
+                        color: logolightGreen,
+                        pressEvent: () async {
+                          if (khmerName.currentState!.saveAndValidate() &&
+                              englishName.currentState!.saveAndValidate() &&
+                              _gender.currentState!.saveAndValidate() &&
+                              phoneKey.currentState!.saveAndValidate() &&
+                              occupationOfCustomer.currentState!
+                                  .saveAndValidate()) {
+                            // await onSubmit(context);
+                            if (selectedValueVillage == null ||
+                                selectedValueVillage ==
+                                    AppLocalizations.of(context)!
+                                        .translate('village_code')) {
+                              setState(() {
+                                validateVillage = true;
+                              });
+                            } else {
+                              AwesomeDialog(
+                                  context: context,
+                                  // animType: AnimType.LEFTSLIDE,
+                                  headerAnimationLoop: false,
+                                  dialogType: DialogType.INFO,
+                                  title: AppLocalizations.of(context)!
+                                          .translate('information') ??
+                                      'Information',
+                                  desc: AppLocalizations.of(context)!
+                                          .translate('are_you_sure_you') ??
+                                      'Are you sure you want to register the customer?',
+                                  btnOkOnPress: () async {
+                                    if (selectedValueVillage == null ||
+                                        selectedValueVillage ==
+                                            AppLocalizations.of(context)!
+                                                .translate('village_code')) {
+                                      // await onSubmit(context);
+                                      setState(() {
+                                        validateVillage = true;
+                                      });
+                                    } else {
+                                      await onSubmit(context);
+                                      setState(() {
+                                        validateVillage = false;
+                                      });
+                                    }
+                                  },
+                                  btnCancelText: AppLocalizations.of(context)!
+                                          .translate('no') ??
+                                      "No",
+                                  btnCancelOnPress: () {},
+                                  btnCancelIcon: Icons.close,
+                                  btnOkIcon: Icons.check_circle,
+                                  btnOkColor: logolightGreen,
+                                  btnOkText: AppLocalizations.of(context)!
+                                          .translate('yes') ??
+                                      'Yes')
+                                ..show();
+                            }
+                          }
+                        },
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: bottomPadding))
+                    ],
+                  ),
                 ),
               ),
             ),

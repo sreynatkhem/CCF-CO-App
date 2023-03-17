@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
@@ -334,107 +335,103 @@ class _NotificationState extends State<NotificationScreen> {
                     )
                   : RefreshIndicator(
                       onRefresh: _getData,
-                      child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: ListView.builder(
-                              controller: _scrollController,
-                              itemCount: listMessages.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                // var status = statusApproval(parsed[index]['rstatus']);
-                                logger().e(listMessages[index]['rcode']);
-                                if (listMessages.length >= 0) {
-                                  return Container(
-                                    height: 100,
-                                    margin: EdgeInsets.only(bottom: 5.0),
-                                    child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              color: logolightGreen, width: 1),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: InkWell(
-                                            splashColor:
-                                                Colors.blue.withAlpha(30),
-                                            onTap: () {
-                                              // var value = listMessages[index];
-                                              var rcodeGroup;
-                                              var subString;
-                                              var groupLoanCode;
-                                              if (listMessages[index]
-                                                      ['rcode'] !=
-                                                  "") {
-                                                subString = listMessages[index]
-                                                    ['rcode'];
-                                                rcodeGroup =
-                                                    subString.substring(0, 1);
-                                                groupLoanCode = '6';
-                                              }
+                      child: MaxWidthWrapper(
+                        child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: ListView.builder(
+                                controller: _scrollController,
+                                itemCount: listMessages.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  // var status = statusApproval(parsed[index]['rstatus']);
+                                  logger().e(listMessages[index]['rcode']);
+                                  if (listMessages.length >= 0) {
+                                    return Container(
+                                      height: 100,
+                                      margin: EdgeInsets.only(bottom: 5.0),
+                                      child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: logolightGreen,
+                                                width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: InkWell(
+                                              splashColor:
+                                                  Colors.blue.withAlpha(30),
+                                              onTap: () {
+                                                // var value = listMessages[index];
+                                                var rcodeGroup;
+                                                var subString;
+                                                var groupLoanCode;
+                                                if (listMessages[index]
+                                                        ['rcode'] !=
+                                                    "") {
+                                                  subString =
+                                                      listMessages[index]
+                                                          ['rcode'];
+                                                  rcodeGroup =
+                                                      subString.substring(0, 1);
+                                                  groupLoanCode = '6';
+                                                }
 
-                                              // if()
-                                              if (listMessages[index]
-                                                      ['title'] ==
-                                                  "Apsara System") {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        ApprovalLists(),
-                                                  ),
-                                                );
-                                              } else if (groupLoanCode ==
-                                                  rcodeGroup) {
-                                                navigatorGroupLoan(
-                                                    listMessages[index]);
-                                              } else if (listMessages[index]
-                                                      ['data'] ==
-                                                  "announcement") {
-                                                onTapsAnnouncement(
-                                                    listMessages[index]);
-                                              } else if (listMessages[index]
-                                                      ['title'] ==
-                                                  'Loan Arrears') {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        DetailLoanArrear(
-                                                            loanAccountNo:
-                                                                listMessages[
-                                                                        index]
-                                                                    ['lcode']),
-                                                  ),
-                                                );
-                                              } else {
-                                                onTapsDetail(
-                                                    listMessages[index]);
-                                              }
-                                            },
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 5)),
-                                                      // Image(
-                                                      //   image: _imagesFindApproval,
-                                                      //   width: 50,
-                                                      //   height: 50,
-                                                      // ),
-                                                      Padding(
-                                                          padding: EdgeInsets.only(
-                                                              right: isIphoneX(
-                                                                      context)
-                                                                  ? 8
-                                                                  : 5)),
-                                                      Column(
+                                                // if()
+                                                if (listMessages[index]
+                                                        ['title'] ==
+                                                    "Apsara System") {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          ApprovalLists(),
+                                                    ),
+                                                  );
+                                                } else if (groupLoanCode ==
+                                                    rcodeGroup) {
+                                                  navigatorGroupLoan(
+                                                      listMessages[index]);
+                                                } else if (listMessages[index]
+                                                        ['data'] ==
+                                                    "announcement") {
+                                                  onTapsAnnouncement(
+                                                      listMessages[index]);
+                                                } else if (listMessages[index]
+                                                        ['title'] ==
+                                                    'Loan Arrears') {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          DetailLoanArrear(
+                                                              loanAccountNo:
+                                                                  listMessages[
+                                                                          index]
+                                                                      [
+                                                                      'lcode']),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  onTapsDetail(
+                                                      listMessages[index]);
+                                                }
+                                              },
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding: EdgeInsets.all(
+                                                            8.0)),
+                                                    // Image(
+                                                    //   image: _imagesFindApproval,
+                                                    //   width: 50,
+                                                    //   height: 50,
+                                                    // ),
+                                                    Expanded(
+                                                      child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start,
@@ -442,29 +439,14 @@ class _NotificationState extends State<NotificationScreen> {
                                                             MainAxisAlignment
                                                                 .center,
                                                         children: <Widget>[
-                                                          Container(
-                                                              width: isIphoneX(
-                                                                      context)
-                                                                  ? 250
-                                                                  : 200,
-                                                              child: Text(
-                                                                listMessages[
-                                                                        index]
-                                                                    ['title'],
-                                                                style:
-                                                                    mainTitleBlack,
-                                                                maxLines: 1,
-                                                              )),
-                                                          Container(
-                                                            width: isIphoneX(
-                                                                    context)
-                                                                ? 260
-                                                                : 230,
-                                                            child: Text(
-                                                              '${listMessages[index]['body']}',
-                                                              maxLines: 3,
-                                                            ),
-                                                          ),
+                                                          Text(
+                                                              listMessages[
+                                                                      index]
+                                                                  ['title'],
+                                                              style:
+                                                                  mainTitleBlack),
+                                                          Text(
+                                                              '${listMessages[index]['body']}'),
                                                           // Padding(
                                                           //     padding:
                                                           //         EdgeInsets.only(bottom: 2)),
@@ -483,54 +465,45 @@ class _NotificationState extends State<NotificationScreen> {
                                                           //         EdgeInsets.only(bottom: 2)),
                                                         ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: <Widget>[
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 2)),
-                                                      // status,
-                                                      Text(
-                                                        '${listMessages[index]['date']}',
-                                                        style: TextStyle(
-                                                            fontSize: 10),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          // status,
+                                                          Text(
+                                                            '${listMessages[index]['date']}',
+                                                            style: TextStyle(
+                                                                fontSize: 10),
+                                                          ),
+                                                          if (listMessages[
+                                                                      index]
+                                                                  ['mstatus'] ==
+                                                              1)
+                                                            Icon(
+                                                              Icons.done_all,
+                                                              size: 15,
+                                                            ),
+                                                          // if (listMessages[index]['rdate'] != '')
+                                                          //   Text(getDateTimeYMD(
+                                                          //       listMessages[index]['rdate'])),
+                                                        ],
                                                       ),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                        top: 5,
-                                                      )),
-                                                      if (listMessages[index]
-                                                              ['mstatus'] ==
-                                                          1)
-                                                        Icon(
-                                                          Icons.done_all,
-                                                          size: 15,
-                                                        ),
-                                                      // if (listMessages[index]['rdate'] != '')
-                                                      //   Text(getDateTimeYMD(
-                                                      //       listMessages[index]['rdate'])),
-                                                      Text(''),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                        right: 100,
-                                                      ))
-                                                    ],
-                                                  ),
-                                                ]))),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: Text('No notification'),
-                                  );
-                                }
-                              })),
+                                                    ),
+                                                  ]))),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: Text('No notification'),
+                                    );
+                                  }
+                                })),
+                      ),
                     ),
             ),
     );

@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/screens/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalSummary/index.dart';
@@ -33,109 +34,112 @@ class _ReportScreenState extends State<ReportScreen> {
         title: Text(AppLocalizations.of(context)!.translate('report')!),
         backgroundColor: logolightGreen,
       ),
-      body: GridView.count(
-          primary: false,
-          padding: const EdgeInsets.only(left: 45.0, right: 45.0, top: 20),
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 2,
-          children: List.generate(listReport.length, (index) {
-            if (listReport[index].toString() == 'Report Approval') {
-              return MenuCardReport(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ApprovalSummary()),
-                ),
-                color: logolightGreen,
-                icons: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                  size: 50,
-                ),
-                imageNetwork: null,
-                text: listReport[index],
-              );
-            }
-            if (listReport[index].toString() == 'Report Disapproval') {
-              return MenuCardReport(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => DisApprovalSummary()),
-                ),
-                color: logolightGreen,
-                icons: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                  size: 50,
-                ),
-                imageNetwork: null,
-                text: listReport[index],
-              );
-            }
-            if (listReport[index].toString() == 'Report Request') {
-              return MenuCardReport(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RequestSummary()),
-                ),
-                color: logolightGreen,
-                icons: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                  size: 50,
-                ),
-                imageNetwork: null,
-                text: listReport[index],
-              );
-            }
-            if (listReport[index].toString() == 'Report Return') {
-              return MenuCardReport(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ReturnSummary()),
-                ),
-                color: logolightGreen,
-                icons: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                  size: 50,
-                ),
-                imageNetwork: null,
-                text: listReport[index],
-              );
-            }
-            if (listReport[index].toString() == 'Report Summary') {
-              return MenuCardReport(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ApprovalHistory()),
-                ),
-                color: logolightGreen,
-                icons: Icon(
-                  Icons.done,
-                  color: Colors.white,
-                  size: 50,
-                ),
-                imageNetwork: null,
-                text: listReport[index],
-              );
-            } else {
-              return MenuCardReport(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HistoryApsara()),
-                ),
-                color: logolightGreen,
-                icons: Icon(
-                  Icons.checklist,
-                  color: Colors.white,
-                  size: 50,
-                ),
-                imageNetwork: null,
-                text: listReport[index],
-              );
-            }
-          })),
+      body: MaxWidthWrapper(
+        child: GridView.count(
+            primary: false,
+            padding: const EdgeInsets.only(left: 45.0, right: 45.0, top: 20),
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: 2,
+            children: List.generate(listReport.length, (index) {
+              if (listReport[index].toString() == 'Report Approval') {
+                return MenuCardReport(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ApprovalSummary()),
+                  ),
+                  color: logolightGreen,
+                  icons: Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  imageNetwork: null,
+                  text: listReport[index],
+                );
+              }
+              if (listReport[index].toString() == 'Report Disapproval') {
+                return MenuCardReport(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DisApprovalSummary()),
+                  ),
+                  color: logolightGreen,
+                  icons: Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  imageNetwork: null,
+                  text: listReport[index],
+                );
+              }
+              if (listReport[index].toString() == 'Report Request') {
+                return MenuCardReport(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RequestSummary()),
+                  ),
+                  color: logolightGreen,
+                  icons: Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  imageNetwork: null,
+                  text: listReport[index],
+                );
+              }
+              if (listReport[index].toString() == 'Report Return') {
+                return MenuCardReport(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ReturnSummary()),
+                  ),
+                  color: logolightGreen,
+                  icons: Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  imageNetwork: null,
+                  text: listReport[index],
+                );
+              }
+              if (listReport[index].toString() == 'Report Summary') {
+                return MenuCardReport(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ApprovalHistory()),
+                  ),
+                  color: logolightGreen,
+                  icons: Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  imageNetwork: null,
+                  text: listReport[index],
+                );
+              } else {
+                return MenuCardReport(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HistoryApsara()),
+                  ),
+                  color: logolightGreen,
+                  icons: Icon(
+                    Icons.checklist,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  imageNetwork: null,
+                  text: listReport[index],
+                );
+              }
+            })),
+      ),
     );
   }
 }

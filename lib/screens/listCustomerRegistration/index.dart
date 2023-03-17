@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
@@ -269,117 +270,125 @@ class _ListCustomerRegistrationsState extends State<ListCustomerRegistrations> {
             : parsed.length > 0
                 ? RefreshIndicator(
                     onRefresh: _getData,
-                    child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: parsed.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            padding: EdgeInsets.all(5),
-                            // padding: EdgeInsets.only(left: 5, right: 5, top: 3),
-                            child: Card(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: logolightGreen, width: 1),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: InkWell(
-                                      splashColor: Colors.blue.withAlpha(30),
-                                      onTap: () {
-                                        onTapsDetail(parsed[index]);
-                                      },
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Row(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 5)),
-                                                Image(
-                                                  image: profile,
-                                                  width: 50,
-                                                  height: 50,
+                    child: MaxWidthWrapper(
+                      child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: parsed.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              padding: EdgeInsets.all(5),
+                              // padding: EdgeInsets.only(left: 5, right: 5, top: 3),
+                              child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: logolightGreen, width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    child: InkWell(
+                                        splashColor: Colors.blue.withAlpha(30),
+                                        onTap: () {
+                                          onTapsDetail(parsed[index]);
+                                        },
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Image(
+                                                        image: profile,
+                                                        width: 50,
+                                                        height: 50,
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            '${parsed[index]['namekhr']}',
+                                                            style:
+                                                                mainTitleBlack,
+                                                          ),
+                                                          Text(
+                                                              '${parsed[index]['nameeng'] != null ? parsed[index]['nameeng'] : ''}'),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          2)),
+                                                          Text(
+                                                              '${parsed[index]['ccode']}'),
+                                                          Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                            bottom: 2,
+                                                          )),
+                                                          Text(
+                                                              '${parsed[index]['phone1']}'),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          2)),
+                                                          Text(
+                                                              '${parsed[index]['userName'].substring(9)} - ${parsed[index]['branchName']}'),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          2)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 15)),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(8.0),
+                                                child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: <Widget>[
-                                                    Container(
-                                                        width: widthView(
-                                                            context, 0.5),
-                                                        child: Text(
-                                                          '${parsed[index]['namekhr']}',
-                                                          style: mainTitleBlack,
-                                                        )),
-                                                    Text(
-                                                        '${parsed[index]['nameeng'] != null ? parsed[index]['nameeng'] : ''}'),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Text(
-                                                        '${parsed[index]['ccode']}'),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.only(
                                                       bottom: 2,
                                                     )),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                      top: 5,
+                                                    )),
                                                     Text(
-                                                        '${parsed[index]['phone1']}'),
+                                                        '${getDateTimeYMD(parsed[index]['rdate'])}'),
+                                                    Text(''),
                                                     Padding(
                                                         padding:
                                                             EdgeInsets.only(
-                                                                bottom: 2)),
-                                                    Container(
-                                                      width: widthView(
-                                                          context, 0.5),
-                                                      child: Text(
-                                                        '${parsed[index]['userName'].substring(9)} - ${parsed[index]['branchName']}',
-                                                        maxLines: 3,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                bottom: 2)),
+                                                                right: 2,
+                                                                left: 1,
+                                                                bottom: 10))
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                  bottom: 2,
-                                                )),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                  top: 5,
-                                                )),
-                                                Text(
-                                                    '${getDateTimeYMD(parsed[index]['rdate'])}'),
-                                                Text(''),
-                                                Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 2,
-                                                        left: 1,
-                                                        bottom: 10))
-                                              ],
-                                            ),
-                                          ])),
-                                )),
-                          );
-                        }),
+                                              ),
+                                            ])),
+                                  )),
+                            );
+                          }),
+                    ),
                   )
                 : Center(
                     child: Container(

@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/Listdrawer.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/components/menuCard.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/providers/notification/index.dart';
 import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/customerRegister/customerRegister.dart';
+import 'package:chokchey_finance/screens/historyApsara/index.dart';
 import 'package:chokchey_finance/screens/lMap/index.dart';
 import 'package:chokchey_finance/screens/loanArrear/index.dart';
 import 'package:chokchey_finance/screens/notificationLoanArrear/index.dart';
@@ -20,7 +22,9 @@ import 'package:chokchey_finance/screens/login/index.dart';
 import 'package:chokchey_finance/screens/notification/index.dart';
 import 'package:chokchey_finance/screens/policy/index.dart';
 import 'package:chokchey_finance/screens/report/index.dart';
+import 'package:chokchey_finance/screens/returnSummary/index.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
+import 'package:expandable/expandable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +32,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
+import '../approvalHistory/index.dart';
+import '../approvalSummary/index.dart';
+import '../disApprovalSummary/index.dart';
 import '../irr/index.dart';
+import '../requestSummary/index.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -38,6 +46,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _currentIndex = 0;
   PageController? _pageController;
+  ExpandableController? _expandableController;
   final storage = new FlutterSecureStorage();
 
   String userId = '';
@@ -103,6 +112,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    _expandableController = ExpandableController();
     FirebaseMessaging.instance.getNotificationSettings();
     FirebaseMessaging.instance.requestPermission();
 
@@ -295,66 +305,221 @@ class _HomeState extends State<Home> {
                 child: Container(
                   padding: EdgeInsets.only(top: 10),
                   color: Colors.white,
-                  child: Column(
-                    children: <Widget>[
-                      CustomListTile(
-                          Icons.notification_add,
-                          "Notification Loan Arrear",
-                          () => {onPushNotificationLoanArrear()},
-                          null),
-                      CustomListTile(
-                          Icons.monetization_on,
+                  child: Material(
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        CustomListTile(
+                            Icons.notification_add,
+                            "Notification Loan Arrear",
+                            () => {onPushNotificationLoanArrear()},
+                            null),
+                        CustomListTile(
+                            Icons.monetization_on,
+                            AppLocalizations.of(context)!
+                                    .translate('approval_list') ??
+                                'Approval List',
+                            () => {onListLoanApproval()},
+                            null),
+                        CustomListTile(
+                            Icons.face,
+                            AppLocalizations.of(context)!
+                                    .translate('customer_list') ??
+                                'Customer List',
+                            () => {onListCustomerRegistration()},
+                            null),
+                        CustomListTile(
+                            Icons.payment,
+                            AppLocalizations.of(context)!
+                                    .translate('loan_register_list') ??
+                                'Loan Register List',
+                            () => {onListLoanRegistration()},
+                            null),
+                        ExpandablePanel(
+                          controller: _expandableController,
+                          collapsed: Stack(
+                            children: [
+                              Expanded(
+                                child: CustomListTile(
+                                    Icons.report,
+                                    AppLocalizations.of(context)!
+                                            .translate('report') ??
+                                        'Report', () {
+                                  _expandableController?.expanded = true;
+                                }, null),
+                              ),
+                              Positioned(
+                                right: 0,
+                                child: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      _expandableController?.expanded = true;
+                                    },
+                                    icon: Icon(Icons.arrow_drop_down),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          expanded: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  Expanded(
+                                    child: CustomListTile(
+                                      Icons.report,
+                                      AppLocalizations.of(context)!
+                                              .translate('report') ??
+                                          'Report',
+                                      () {
+                                        _expandableController?.expanded = false;
+                                      },
+                                      null,
+                                      showDecoration: false,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    child: SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          _expandableController?.expanded =
+                                              false;
+                                        },
+                                        icon: Icon(Icons.arrow_drop_up),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Container(
+                                  height: 1,
+                                  color: logolightGreen,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: Column(
+                                  children: [
+                                    CustomListTile(
+                                        Icons.payment,
+                                        AppLocalizations.of(context)!
+                                                .translate('report_approval') ??
+                                            'Report Approval', () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ApprovalSummary()),
+                                      );
+                                    }, null),
+                                    CustomListTile(
+                                        Icons.payment,
+                                        AppLocalizations.of(context)!.translate(
+                                                'report_disapproval') ??
+                                            'Report Disapproval', () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DisApprovalSummary()),
+                                      );
+                                    }, null),
+                                    CustomListTile(
+                                        Icons.payment,
+                                        AppLocalizations.of(context)!
+                                                .translate('report_request') ??
+                                            'Report Request', () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RequestSummary()),
+                                      );
+                                    }, null),
+                                    CustomListTile(
+                                        Icons.payment,
+                                        AppLocalizations.of(context)!
+                                                .translate('report_return') ??
+                                            'Report Return', () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ReturnSummary()),
+                                      );
+                                    }, null),
+                                    CustomListTile(
+                                        Icons.payment,
+                                        AppLocalizations.of(context)!
+                                                .translate('report_summary') ??
+                                            'Report Summary', () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ApprovalHistory()),
+                                      );
+                                    }, null),
+                                    CustomListTile(
+                                        Icons.payment,
+                                        AppLocalizations.of(context)!.translate(
+                                                'loan_approval_history') ??
+                                            'Loan Report History', () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                HistoryApsara()),
+                                      );
+                                    }, null),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustomListTile(
+                            Icons.report,
+                            AppLocalizations.of(context)!.translate('report') ??
+                                'Report',
+                            () => {onListReport()},
+                            null),
+                        CustomListTile(
+                          null,
                           AppLocalizations.of(context)!
-                                  .translate('approval_list') ??
-                              'Approval List',
-                          () => {onListLoanApproval()},
-                          null),
-                      CustomListTile(
-                          Icons.face,
-                          AppLocalizations.of(context)!
-                                  .translate('customer_list') ??
-                              'Customer List',
-                          () => {onListCustomerRegistration()},
-                          null),
-                      CustomListTile(
-                          Icons.payment,
-                          AppLocalizations.of(context)!
-                                  .translate('loan_register_list') ??
-                              'Loan Register List',
-                          () => {onListLoanRegistration()},
-                          null),
-                      CustomListTile(
-                          Icons.report,
-                          AppLocalizations.of(context)!.translate('report') ??
-                              'Report',
-                          () => {onListReport()},
-                          null),
-                      CustomListTile(
-                        null,
-                        AppLocalizations.of(context)!
-                                .translate('english_language') ??
-                            'English',
-                        () => {englishLanguage()},
-                        english,
-                      ),
-                      CustomListTile(
-                        null,
-                        'ភាសាខ្មែរ',
-                        () => {khmerLanguage()},
-                        khmer,
-                      ),
-                      CustomListTile(
-                          Icons.lock,
-                          AppLocalizations.of(context)!.translate('log_out') ??
-                              'Log Out',
-                          () => {onLogOut()},
-                          null),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      ListTile(
-                        title: Text("$versionString" + '$version'),
-                        onTap: () {},
-                      ),
-                    ],
+                                  .translate('english_language') ??
+                              'English',
+                          () => {englishLanguage()},
+                          english,
+                        ),
+                        CustomListTile(
+                          null,
+                          'ភាសាខ្មែរ',
+                          () => {khmerLanguage()},
+                          khmer,
+                        ),
+                        CustomListTile(
+                            Icons.lock,
+                            AppLocalizations.of(context)!
+                                    .translate('log_out') ??
+                                'Log Out',
+                            () => {onLogOut()},
+                            null),
+                        Padding(padding: EdgeInsets.only(top: 10)),
+                        ListTile(
+                          title: Text("$versionString" + '$version'),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -522,425 +687,186 @@ class _HomeState extends State<Home> {
                   child: CircularProgressIndicator(),
                 ),
               )
-            : SizedBox.expand(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      width == 838.0952380952381
-                          ? Expanded(
-                              flex: 4,
-                              child: GridView.count(
-                                  primary: false,
-                                  padding: const EdgeInsets.only(
-                                      left: 150.0, right: 150.0, top: 20),
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  crossAxisCount: 3,
-                                  children:
-                                      List.generate(userRoles.length, (index) {
-                                    if (userRoles[index].toString() ==
-                                        '100001') {
-                                      return MenuCard(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ApprovalLists()),
-                                        ),
-                                        color: logolightGreen,
-                                        // imageNetwork: list,
-                                        icons: Icon(
-                                          Icons.checklist,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                        text: AppLocalizations.of(context)!
-                                            .translate('list_loan_approval'),
-                                      );
-                                    }
-                                    // if (userRoles[index].toString() == '100001') {
-                                    //   return Padding(
-                                    //     padding: EdgeInsets.all(10),
-                                    //   );
-                                    // }
-
-                                    if (userRoles[index].toString() ==
-                                        '100002') {
-                                      if (langCode == 'en') {
-                                        return MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CustomerRegister()),
-                                          ),
-                                          color: logolightGreen,
-                                          // imageNetwork: register,
-                                          icons: Icon(
-                                            Icons.person_add,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate('customers') ??
-                                              'Customer',
-                                          // AppLocalizations.of(context)!.locale.languageCode == 'en'
-                                          text2: AppLocalizations.of(context)!
-                                                  .translate('registration') ??
-                                              'Registration',
-                                        );
-                                      } else {
-                                        return MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CustomerRegister()),
-                                          ),
-                                          color: logolightGreen,
-                                          // imageNetwork: register,
-                                          icons: Icon(
-                                            Icons.person_add,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'customer_registration') ??
-                                              'Customer',
-                                        );
-                                      }
-                                    }
-                                    // if (userRoles[index].toString() == '100002') {
-                                    //   return Padding(
-                                    //     padding: EdgeInsets.all(10),
-                                    //   );
-                                    // }
-                                    if (userRoles[index].toString() ==
-                                        '100003') {
-                                      return MenuCard(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoanRegister()),
-                                        ),
-                                        color: logolightGreen,
-                                        // imageNetwork: loanRegistration,
-                                        icons: Icon(
-                                          Icons.edit_note,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                        text: AppLocalizations.of(context)!
-                                                .translate(
-                                                    'loan_registration') ??
-                                            'Loan Registration',
-                                      );
-                                    }
-                                    // if (userRoles[index].toString() == '100003') {
-                                    //   return Padding(
-                                    //     padding: EdgeInsets.all(10),
-                                    //   );
-                                    // }
-                                    if (userRoles[index].toString() ==
-                                        '100004') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PolicyScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          // imageNetwork: policy,
-                                          icons: Icon(
-                                            Icons.auto_stories,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate('policy') ??
-                                              'Policy',
-                                        ),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() == '99') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoanArrearScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          icons: Icon(
-                                            Icons.account_balance_wallet,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate('loan_arrear') ??
-                                              'Loan Arrear',
-                                        ),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() == '98') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LMapScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          icons: Icon(
-                                            Icons.real_estate_agent,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                              .translate('lmap_data'),
-                                        ),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() == '97') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    IRRScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          icons: Icon(
-                                            Icons.calculate,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: 'IRR Calculator',
-                                        ),
-                                      );
-                                    }
-
-                                    return Text("");
-                                  }) // List View
-                                  ),
-                            )
-                          : Expanded(
-                              flex: 4,
-                              child: GridView.count(
-                                  primary: false,
-                                  padding: const EdgeInsets.only(
-                                      left: 45.0, right: 45.0, top: 20),
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  crossAxisCount: 2,
-                                  children:
-                                      List.generate(userRoles.length, (index) {
-                                    if (userRoles[index].toString() ==
-                                        '100001') {
-                                      return MenuCard(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ApprovalLists()),
-                                        ),
-                                        color: logolightGreen,
-                                        // imageNetwork: list,
-                                        icons: Icon(
-                                          Icons.checklist,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                        text: AppLocalizations.of(context)!
-                                            .translate('list_loan_approval'),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() ==
-                                        '100002') {
-                                      if (langCode == 'en') {
-                                        return MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CustomerRegister()),
-                                          ),
-                                          color: logolightGreen,
-                                          // imageNetwork: register,
-                                          icons: Icon(
-                                            Icons.person_add,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate('customers') ??
-                                              'Customer',
-                                          text2: AppLocalizations.of(context)!
-                                                  .translate('registration') ??
-                                              'Registration',
-                                        );
-                                      } else {
-                                        return MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CustomerRegister()),
-                                          ),
-                                          color: logolightGreen,
-                                          // imageNetwork: register,
-                                          icons: Icon(
-                                            Icons.person_add,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'customer_registration') ??
-                                              'Customer',
-                                        );
-                                      }
-                                    }
-                                    if (userRoles[index].toString() ==
-                                        '100003') {
-                                      return MenuCard(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoanRegister()),
-                                        ),
-                                        color: logolightGreen,
-                                        // imageNetwork: loanRegistration,
-                                        icons: Icon(
-                                          Icons.edit_note,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                        text: AppLocalizations.of(context)!
-                                                .translate(
-                                                    'loan_registration') ??
-                                            'Loan Registration',
-                                      );
-                                    }
-                                    if (userRoles[index].toString() ==
-                                        '100004') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PolicyScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          // imageNetwork: policy,
-                                          icons: Icon(
-                                            Icons.auto_stories,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                                  .translate('policy') ??
-                                              'Policy',
-                                        ),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() == '99') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoanArrearScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          icons: Icon(
-                                            Icons.account_balance_wallet,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                              .translate('loan_arrear'),
-                                        ),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() == '98') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LMapScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          icons: Icon(
-                                            Icons.real_estate_agent,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: AppLocalizations.of(context)!
-                                              .translate('lmap_data'),
-                                        ),
-                                      );
-                                    }
-                                    if (userRoles[index].toString() == '97') {
-                                      return Container(
-                                        width: 10,
-                                        height: 20,
-                                        child: MenuCard(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    IRRScreen()),
-                                          ),
-                                          color: logolightGreen,
-                                          icons: Icon(
-                                            Icons.calculate,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                          text: 'IRR Calculator',
-                                        ),
-                                      );
-                                    }
-
-                                    return Text("");
-                                  }) // List View
-                                  ),
+            : MaxWidthWrapper(
+                child: Expanded(
+                  flex: 4,
+                  child: GridView.count(
+                      primary: false,
+                      padding: const EdgeInsets.only(
+                          left: 45.0, right: 45.0, top: 20),
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      crossAxisCount: 2,
+                      children: List.generate(userRoles.length, (index) {
+                        if (userRoles[index].toString() == '100001') {
+                          return MenuCard(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ApprovalLists()),
                             ),
-                    ],
-                  ),
+                            color: logolightGreen,
+                            // imageNetwork: list,
+                            icons: Icon(
+                              Icons.checklist,
+                              color: Colors.white,
+                              size: 50,
+                            ),
+                            text: AppLocalizations.of(context)!
+                                .translate('list_loan_approval'),
+                          );
+                        }
+                        if (userRoles[index].toString() == '100002') {
+                          if (langCode == 'en') {
+                            return MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CustomerRegister()),
+                              ),
+                              color: logolightGreen,
+                              // imageNetwork: register,
+                              icons: Icon(
+                                Icons.person_add,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              text: AppLocalizations.of(context)!
+                                      .translate('customers') ??
+                                  'Customer',
+                              text2: AppLocalizations.of(context)!
+                                      .translate('registration') ??
+                                  'Registration',
+                            );
+                          } else {
+                            return MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CustomerRegister()),
+                              ),
+                              color: logolightGreen,
+                              // imageNetwork: register,
+                              icons: Icon(
+                                Icons.person_add,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              text: AppLocalizations.of(context)!
+                                      .translate('customer_registration') ??
+                                  'Customer',
+                            );
+                          }
+                        }
+                        if (userRoles[index].toString() == '100003') {
+                          return MenuCard(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoanRegister()),
+                            ),
+                            color: logolightGreen,
+                            // imageNetwork: loanRegistration,
+                            icons: Icon(
+                              Icons.edit_note,
+                              color: Colors.white,
+                              size: 50,
+                            ),
+                            text: AppLocalizations.of(context)!
+                                    .translate('loan_registration') ??
+                                'Loan Registration',
+                          );
+                        }
+                        if (userRoles[index].toString() == '100004') {
+                          return Container(
+                            width: 10,
+                            height: 20,
+                            child: MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PolicyScreen()),
+                              ),
+                              color: logolightGreen,
+                              // imageNetwork: policy,
+                              icons: Icon(
+                                Icons.auto_stories,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              text: AppLocalizations.of(context)!
+                                      .translate('policy') ??
+                                  'Policy',
+                            ),
+                          );
+                        }
+                        if (userRoles[index].toString() == '99') {
+                          return Container(
+                            width: 10,
+                            height: 20,
+                            child: MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoanArrearScreen()),
+                              ),
+                              color: logolightGreen,
+                              icons: Icon(
+                                Icons.account_balance_wallet,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              text: AppLocalizations.of(context)!
+                                  .translate('loan_arrear'),
+                            ),
+                          );
+                        }
+                        if (userRoles[index].toString() == '98') {
+                          return Container(
+                            width: 10,
+                            height: 20,
+                            child: MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LMapScreen()),
+                              ),
+                              color: logolightGreen,
+                              icons: Icon(
+                                Icons.real_estate_agent,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              text: AppLocalizations.of(context)!
+                                  .translate('lmap_data'),
+                            ),
+                          );
+                        }
+                        if (userRoles[index].toString() == '97') {
+                          return Container(
+                            width: 10,
+                            height: 20,
+                            child: MenuCard(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => IRRScreen()),
+                              ),
+                              color: logolightGreen,
+                              icons: Icon(
+                                Icons.calculate,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                              text: 'IRR Calculator',
+                            ),
+                          );
+                        }
+
+                        return Text("");
+                      }) // List View
+                      ),
                 ),
-                // IRRScreen(),
-                // HistoryApsara(),
-                // Container(
-                //   color: Colors.white,
-                // ),
               ),
         // bottomNavigationBars: BottomNavyBar(
         //   selectedIndex: _currentIndex,

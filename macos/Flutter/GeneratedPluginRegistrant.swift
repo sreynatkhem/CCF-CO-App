@@ -11,7 +11,7 @@ import firebase_database
 import firebase_messaging
 import geolocator_apple
 import package_info
-import path_provider_macos
+import path_provider_foundation
 import syncfusion_flutter_pdfviewer_macos
 import url_launcher_macos
 

@@ -1,3 +1,4 @@
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -101,95 +102,97 @@ class _PushNotificationLoanLoanArrearState
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Column(
-              children: [
-                Padding(padding: EdgeInsets.only(top: 10)),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 120,
-                  padding: EdgeInsets.all(10),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: logolightGreen, width: 1)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Total Loan Arrear",
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(bottom: 5)),
-                        Text(
-                          "$totalAccount",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 120,
-                  padding: EdgeInsets.all(10),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: logolightGreen, width: 1)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Total Loan Arrear Pushed",
-                          style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(bottom: 5)),
-                        Text(
-                          "${totalAccountPush.toString()}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 90,
-                  padding: EdgeInsets.all(20),
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: logolightGreen,
+          : MaxWidthWrapper(
+              child: Column(
+                children: [
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 120,
+                    padding: EdgeInsets.all(10),
+                    child: Card(
+                      elevation: 5,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    onPressed: () {
-                      onClickPushNotification();
-                    },
-                    label: Text(
-                      "Push Notification Loan Arrear",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                    icon: Icon(
-                      Icons.notification_add,
-                      color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(color: logolightGreen, width: 1)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Total Loan Arrear",
+                            style: TextStyle(
+                              fontSize: 23,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(bottom: 5)),
+                          Text(
+                            "$totalAccount",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                )
-              ],
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 120,
+                    padding: EdgeInsets.all(10),
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(color: logolightGreen, width: 1)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Total Loan Arrear Pushed",
+                            style: TextStyle(
+                              fontSize: 23,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(bottom: 5)),
+                          Text(
+                            "${totalAccountPush.toString()}",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 90,
+                    padding: EdgeInsets.all(20),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: logolightGreen,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () {
+                        onClickPushNotification();
+                      },
+                      label: Text(
+                        "Push Notification Loan Arrear",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      icon: Icon(
+                        Icons.notification_add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
     );
   }

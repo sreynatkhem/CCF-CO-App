@@ -4,6 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/listLoanApproval/indexs.dart';
@@ -445,783 +446,796 @@ class _LoanRegister extends State {
                 child: CircularProgressIndicator(),
               )
             : SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Column(
-                    children: <Widget>[
-                      DropDownCustomerRegister(
-                        icons: Icons.face,
-                        selectedValue: selectedValueCustmerName,
-                        validate: validateCustomer
-                            ? RoundedRectangleBorder(
-                                side: BorderSide(color: Colors.red, width: 1),
-                                borderRadius: BorderRadius.circular(10),
-                              )
-                            : null,
-                        clear: true,
-                        onInSidePress: () async {
-                          await getCustomer();
-                          SelectDialog.showModal<String>(
-                            context,
-                            label: AppLocalizations.of(context)!
-                                    .translate('Search') ??
-                                'Search',
-                            items: List.generate(
-                                listCustomers.length,
-                                (index) =>
-                                    "${listCustomers[index]['ccode']} - ${listCustomers[index]['namekhr']} - ${listCustomers[index]['phone1']}"),
-                            onChange: (value) async {
+                child: MaxWidthWrapper(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Column(
+                      children: <Widget>[
+                        DropDownCustomerRegister(
+                          icons: Icons.face,
+                          selectedValue: selectedValueCustmerName,
+                          validate: validateCustomer
+                              ? RoundedRectangleBorder(
+                                  side: BorderSide(color: Colors.red, width: 1),
+                                  borderRadius: BorderRadius.circular(10),
+                                )
+                              : null,
+                          clear: true,
+                          onInSidePress: () async {
+                            await getCustomer();
+                            SelectDialog.showModal<String>(
+                              context,
+                              label: AppLocalizations.of(context)!
+                                      .translate('Search') ??
+                                  'Search',
+                              items: List.generate(
+                                  listCustomers.length,
+                                  (index) =>
+                                      "${listCustomers[index]['ccode']} - ${listCustomers[index]['namekhr']} - ${listCustomers[index]['phone1']}"),
+                              onChange: (value) async {
+                                if (mounted) {
+                                  setState(() {
+                                    selectedValueCustmerName = value;
+                                    selectedValueCustomer = true;
+                                  });
+                                  setState(() {
+                                    idCcode = value.substring(0, 6);
+                                    selectedCustomerID.text =
+                                        value.substring(0, 6);
+                                  });
+                                }
+                              },
+                            );
+                          },
+                          iconsClose: Icon(Icons.close),
+                          onPressed: () {
+                            if (mounted) {
+                              setState(() {
+                                selectedValueCustmerName = 'Customer';
+                              });
+                            }
+                          },
+                          validateForm: "Customer(*)",
+                          styleTexts: selectedValueCustmerName != ''
+                              ? TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: fontSizeXs,
+                                  color: Colors.black,
+                                  fontWeight: fontWeight500)
+                              : TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: fontSizeXs,
+                                  color: Colors.grey,
+                                  fontWeight: fontWeight500),
+                          texts: selectedValueCustmerName != ''
+                              ? selectedValueCustmerName
+                              : "customer",
+                          title: 'customer',
+                        ),
+                        GroupFromBuilder(
+                          icons: Icons.face,
+                          keys: customerID,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            controller: selectedCustomerID,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('customer_id') ??
+                                  "Customer ID",
+                              border: InputBorder.none,
+                            ),
+                            onSubmitted: (v) {},
+                            onChanged: (v) {
                               if (mounted) {
                                 setState(() {
-                                  selectedValueCustmerName = value;
-                                  selectedValueCustomer = true;
-                                });
-                                setState(() {
-                                  idCcode = value.substring(0, 6);
-                                  selectedCustomerID.text =
-                                      value.substring(0, 6);
+                                  valueAmount = v;
                                 });
                               }
                             },
-                          );
-                        },
-                        iconsClose: Icon(Icons.close),
-                        onPressed: () {
-                          if (mounted) {
-                            setState(() {
-                              selectedValueCustmerName = 'Customer';
-                            });
-                          }
-                        },
-                        validateForm: "Customer(*)",
-                        styleTexts: selectedValueCustmerName != ''
-                            ? TextStyle(
-                                fontFamily: fontFamily,
-                                fontSize: fontSizeXs,
-                                color: Colors.black,
-                                fontWeight: fontWeight500)
-                            : TextStyle(
-                                fontFamily: fontFamily,
-                                fontSize: fontSizeXs,
-                                color: Colors.grey,
-                                fontWeight: fontWeight500),
-                        texts: selectedValueCustmerName != ''
-                            ? selectedValueCustmerName
-                            : "customer",
-                        title: 'customer',
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.face,
-                        keys: customerID,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          controller: selectedCustomerID,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('customer_id') ??
-                                "Customer ID",
-                            border: InputBorder.none,
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context),
+                              FormBuilderValidators.numeric(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate('number_only') ??
+                                      'Number only')
+                            ]),
+                            readOnly: true,
+                            keyboardType: TextInputType.number,
                           ),
-                          onSubmitted: (v) {},
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueAmount = v;
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context),
-                            FormBuilderValidators.numeric(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('number_only') ??
-                                    'Number only')
-                          ]),
-                          readOnly: true,
-                          keyboardType: TextInputType.number,
                         ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.check,
-                        keys: currenciesKey,
-                        childs: FormBuilderDropdown(
-                            name: 'name',
+                        GroupFromBuilder(
+                          icons: Icons.check,
+                          keys: currenciesKey,
+                          childs: FormBuilderDropdown(
+                              name: 'name',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                        .translate('currencies') ??
+                                    "Currencies",
+                                border: InputBorder.none,
+                              ),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context,
+                                    errorText: AppLocalizations.of(context)!
+                                            .translate('currencies_required') ??
+                                        "Currencies Required(*)"),
+                              ]),
+                              hint: Text(
+                                AppLocalizations.of(context)!
+                                        .translate('currencies') ??
+                                    'Currencies',
+                              ),
+                              items: listCurrencies
+                                  .map((e) => DropdownMenuItem(
+                                        value: e['curname'].toString(),
+                                        onTap: () => {
+                                          if (mounted)
+                                            {
+                                              setState(() {
+                                                selectedValueCurrencies = '';
+                                                curcode = e['curcode'];
+                                              }),
+                                              FocusScope.of(context)
+                                                  .requestFocus(loanAmountFocus)
+                                            }
+                                        },
+                                        child: Text("${e['curname']}"),
+                                      ))
+                                  .toList()),
+                        ),
+                        GroupFromBuilder(
+                          icons: Icons.attach_money,
+                          keys: loanAmount,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(context)!
-                                      .translate('currencies') ??
-                                  "Currencies",
+                                      .translate('loan_amount') ??
+                                  "Loan amount",
                               border: InputBorder.none,
                             ),
+                            focusNode: loanAmountFocus,
+                            onSubmitted: (v) {
+                              FocusScope.of(context)
+                                  .requestFocus(numberOfTermFocus);
+                            },
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  valueAmount = v;
+                                });
+                              }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
                             validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.min(context, 1),
                               FormBuilderValidators.required(context,
                                   errorText: AppLocalizations.of(context)!
-                                          .translate('currencies_required') ??
-                                      "Currencies Required(*)"),
+                                          .translate('loan_amount_required') ??
+                                      "Loan amount Required(*)"),
+                              FormBuilderValidators.numeric(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate('number_only') ??
+                                      'Number only')
                             ]),
-                            hint: Text(
-                              AppLocalizations.of(context)!
-                                      .translate('currencies') ??
-                                  'Currencies',
-                            ),
-                            items: listCurrencies
-                                .map((e) => DropdownMenuItem(
-                                      value: e['curname'].toString(),
-                                      onTap: () => {
-                                        if (mounted)
-                                          {
-                                            setState(() {
-                                              selectedValueCurrencies = '';
-                                              curcode = e['curcode'];
-                                            }),
-                                            FocusScope.of(context)
-                                                .requestFocus(loanAmountFocus)
-                                          }
-                                      },
-                                      child: Text("${e['curname']}"),
-                                    ))
-                                .toList()),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.attach_money,
-                        keys: loanAmount,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('loan_amount') ??
-                                "Loan amount",
-                            border: InputBorder.none,
+                            keyboardType: TextInputType.number,
                           ),
-                          focusNode: loanAmountFocus,
-                          onSubmitted: (v) {
-                            FocusScope.of(context)
-                                .requestFocus(numberOfTermFocus);
-                          },
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueAmount = v;
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.min(context, 1),
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('loan_amount_required') ??
-                                    "Loan amount Required(*)"),
-                            FormBuilderValidators.numeric(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('number_only') ??
-                                    'Number only')
-                          ]),
-                          keyboardType: TextInputType.number,
                         ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.check,
-                        keys: loanProductsKey,
-                        childs: FormBuilderDropdown(
-                            name: 'name',
+                        GroupFromBuilder(
+                          icons: Icons.check,
+                          keys: loanProductsKey,
+                          childs: FormBuilderDropdown(
+                              name: 'name',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                        .translate('loan_products') ??
+                                    "Loan Products",
+                                border: InputBorder.none,
+                              ),
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(context,
+                                    errorText: AppLocalizations.of(context)!
+                                            .translate(
+                                                'loan_products_required') ??
+                                        "Loan Products Required(*)"),
+                              ]),
+                              hint: Text(
+                                AppLocalizations.of(context)!
+                                        .translate('loan_products') ??
+                                    'Loan Products',
+                              ),
+                              items: listLoanProducts
+                                  .map((e) => DropdownMenuItem(
+                                        value: e['pname'].toString(),
+                                        onTap: () => {
+                                          if (mounted)
+                                            {
+                                              setState(() {
+                                                pcode = e['pcode'];
+                                              }),
+                                            }
+                                        },
+                                        child: Text("${e['pname']}"),
+                                      ))
+                                  .toList()),
+                        ),
+                        GroupFromBuilder(
+                          icons: Icons.branding_watermark,
+                          keys: numberOfTerm,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            onSubmitted: (v) {
+                              FocusScope.of(context)
+                                  .requestFocus(interestRateFocus);
+                            },
+                            focusNode: numberOfTermFocus,
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
+                              // +
+                              // '(month*)'
                               labelText: AppLocalizations.of(context)!
-                                      .translate('loan_products') ??
-                                  "Loan Products",
+                                      .translate('number_of_term') ??
+                                  'Number of term',
                               border: InputBorder.none,
                             ),
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  valueNumberofTerm = v!;
+                                });
+                              }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(context,
                                   errorText: AppLocalizations.of(context)!
                                           .translate(
-                                              'loan_products_required') ??
-                                      "Loan Products Required(*)"),
+                                              'number_of_term_required') ??
+                                      "Number of term Required(*)"),
+                            ]),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^(\d+)?\.?\d{0,2}'))
+                            ],
+                          ),
+                        ),
+                        GroupFromBuilder(
+                          keys: interestRate,
+                          imageIcon: percentages,
+                          childs: FormBuilderTextField(
+                            controller: monthlyController,
+                            name: 'number',
+                            focusNode: interestRateFocus,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (v) {
+                              FocusScope.of(context)
+                                  .requestFocus(maintenanceFeeFocus);
+                            },
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('monthly_interest_rate') ??
+                                  'Monthly interest rate',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  valueInterest =
+                                      v.toString().replaceAll(",", ".");
+                                });
+                              }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.min(context, 0.1),
+                              FormBuilderValidators.max(context, 1.5),
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate(
+                                              'monthly_interest_rate_required') ??
+                                      "Monthly interest rate required(*)"),
+                            ]),
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9.,]')),
+                            ],
+                          ),
+                        ),
+                        GroupFromBuilder(
+                          keys: maintenanceFee,
+                          imageIcon: percentages,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            focusNode: maintenanceFeeFocus,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (v) {
+                              FocusScope.of(context)
+                                  .requestFocus(adminFeeFocus);
+                            },
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('maintenance_fee') ??
+                                  'Maintenance fee',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  valueMaintenanceFee =
+                                      v.toString().replaceAll(",", ".");
+                                });
+                              }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.max(context, 0.7),
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate(
+                                              'maintenance_fee_required') ??
+                                      "Maintenance fee required(*)"),
+                            ]),
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              // FilteringTextInputFormatter.digitsOnly
+                            ],
+                          ),
+                        ),
+                        GroupFromBuilder(
+                          keys: adminFee,
+                          imageIcon: percentages,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            focusNode: adminFeeFocus,
+                            textInputAction: TextInputAction.next,
+                            // onSubmitted: (v) {
+                            //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
+                            // },
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('admin_fee') ??
+                                  'Admin fee',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (v) => {
+                              if (mounted)
+                                {
+                                  setState(() {
+                                    valueAdminFee =
+                                        v.toString().replaceAll(",", ".");
+                                    valueRepaymentMethod =
+                                        v.toString().replaceAll(",", ".");
+                                  }),
+                                  if (v != "" && v!.length > 1)
+                                    {
+                                      iRRCalculation(),
+                                    }
+                                }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.max(context, 2),
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate('admin_fee_required') ??
+                                      "Admin fee required(*)"),
+                            ]),
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9.,]')),
+                            ],
+                          ),
+                        ),
+                        GroupFromBuilder(
+                          imageIcon: percentages,
+                          keys: iRRKeys,
+                          childs: FormBuilderTextField(
+                            controller: iRRControllers,
+                            readOnly: true,
+                            name: 'number',
+                            focusNode: dscrFocus,
+                            decoration: InputDecoration(
+                              labelText: 'IRR',
+                              border: InputBorder.none,
+                            ),
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            keyboardType: TextInputType.number,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate('irr_required') ??
+                                      "IRR required(*)"),
+                            ]),
+                            inputFormatters: [
+                              // WhitelistingTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                          ),
+                        ),
+                        GroupFromBuilder(
+                          icons: Icons.check,
+                          keys: repaymentMethod,
+                          childs: FormBuilderDropdown(
+                            name: 'name',
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('repayment_method') ??
+                                  "Repayment method",
+                              border: InputBorder.none,
+                            ),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                context,
+                              ),
                             ]),
                             hint: Text(
                               AppLocalizations.of(context)!
-                                      .translate('loan_products') ??
-                                  'Loan Products',
+                                      .translate('repayment_method') ??
+                                  'Repayment method',
                             ),
-                            items: listLoanProducts
-                                .map((e) => DropdownMenuItem(
-                                      value: e['pname'].toString(),
-                                      onTap: () => {
-                                        if (mounted)
-                                          {
-                                            setState(() {
-                                              pcode = e['pcode'];
-                                            }),
-                                          }
-                                      },
-                                      child: Text("${e['pname']}"),
-                                    ))
-                                .toList()),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.branding_watermark,
-                        keys: numberOfTerm,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          onSubmitted: (v) {
-                            FocusScope.of(context)
-                                .requestFocus(interestRateFocus);
-                          },
-                          focusNode: numberOfTermFocus,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            // +
-                            // '(month*)'
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('number_of_term') ??
-                                'Number of term',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueNumberofTerm = v!;
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('number_of_term_required') ??
-                                    "Number of term Required(*)"),
-                          ]),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'^(\d+)?\.?\d{0,2}'))
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        keys: interestRate,
-                        imageIcon: percentages,
-                        childs: FormBuilderTextField(
-                          controller: monthlyController,
-                          name: 'number',
-                          focusNode: interestRateFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (v) {
-                            FocusScope.of(context)
-                                .requestFocus(maintenanceFeeFocus);
-                          },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('monthly_interest_rate') ??
-                                'Monthly interest rate',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueInterest =
-                                    v.toString().replaceAll(",", ".");
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.min(context, 0.1),
-                            FormBuilderValidators.max(context, 1.5),
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate(
-                                            'monthly_interest_rate_required') ??
-                                    "Monthly interest rate required(*)"),
-                          ]),
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[0-9.,]')),
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        keys: maintenanceFee,
-                        imageIcon: percentages,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          focusNode: maintenanceFeeFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (v) {
-                            FocusScope.of(context).requestFocus(adminFeeFocus);
-                          },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('maintenance_fee') ??
-                                'Maintenance fee',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueMaintenanceFee =
-                                    v.toString().replaceAll(",", ".");
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.max(context, 0.7),
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate(
-                                            'maintenance_fee_required') ??
-                                    "Maintenance fee required(*)"),
-                          ]),
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            // FilteringTextInputFormatter.digitsOnly
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        keys: adminFee,
-                        imageIcon: percentages,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          focusNode: adminFeeFocus,
-                          textInputAction: TextInputAction.next,
-                          // onSubmitted: (v) {
-                          //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
-                          // },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('admin_fee') ??
-                                'Admin fee',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (v) => {
-                            if (mounted)
-                              {
-                                setState(() {
-                                  valueAdminFee =
-                                      v.toString().replaceAll(",", ".");
-                                  valueRepaymentMethod =
-                                      v.toString().replaceAll(",", ".");
-                                }),
-                                if (v != "" && v!.length > 1)
-                                  {
-                                    iRRCalculation(),
-                                  }
+                            onChanged: (value) {
+                              if (mounted) {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                setState(() => valueRepaymentMethod = value);
                               }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.max(context, 2),
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('admin_fee_required') ??
-                                    "Admin fee required(*)"),
-                          ]),
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[0-9.,]')),
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        imageIcon: percentages,
-                        keys: iRRKeys,
-                        childs: FormBuilderTextField(
-                          controller: iRRControllers,
-                          readOnly: true,
-                          name: 'number',
-                          focusNode: dscrFocus,
-                          decoration: InputDecoration(
-                            labelText: 'IRR',
-                            border: InputBorder.none,
+                            },
+                            items: [
+                              'Declining',
+                              'Annuity',
+                              'Semi-balloon',
+                              'Balloon',
+                              'Negotiate',
+                            ]
+                                .map(
+                                    (valueGurantorCustomer) => DropdownMenuItem(
+                                        value: valueGurantorCustomer,
+                                        child: Text(
+                                          "$valueGurantorCustomer",
+                                        )))
+                                .toList(),
                           ),
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          keyboardType: TextInputType.number,
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('irr_required') ??
-                                    "IRR required(*)"),
-                          ]),
-                          inputFormatters: [
-                            // WhitelistingTextInputFormatter.digitsOnly
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
                         ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.check,
-                        keys: repaymentMethod,
-                        childs: FormBuilderDropdown(
-                          name: 'name',
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('repayment_method') ??
-                                "Repayment method",
-                            border: InputBorder.none,
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              context,
+                        GroupFromBuilder(
+                          icons: Icons.date_range,
+                          keys: expectedDate,
+                          childs: FormBuilderDateTimePicker(
+                            name: "",
+                            focusNode: firstRepaymentDateFocus,
+                            textInputAction: TextInputAction.next,
+                            inputType: InputType.date,
+                            firstDate: DateTime.now(),
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  expdateDay = v;
+                                });
+                                onCheckDay(v);
+                                FocusScope.of(context).requestFocus(
+                                    generateGracePeriodNumberFocus);
+                              }
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate(
+                                              'expected_date_required') ??
+                                      "Expected date required(*)"),
+                            ]),
+                            initialValue: DateTime(
+                              now.year,
+                              now.month,
+                              now.day + 15,
                             ),
-                          ]),
-                          hint: Text(
-                            AppLocalizations.of(context)!
-                                    .translate('repayment_method') ??
-                                'Repayment method',
+                            format: DateFormat("yyyy-MM-dd"),
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('expected_date') ??
+                                  "Expected date(*)",
+                              border: InputBorder.none,
+                            ),
                           ),
-                          onChanged: (value) {
-                            if (mounted) {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              setState(() => valueRepaymentMethod = value);
-                            }
-                          },
-                          items: [
-                            'Declining',
-                            'Annuity',
-                            'Semi-balloon',
-                            'Balloon',
-                            'Negotiate',
-                          ]
-                              .map((valueGurantorCustomer) => DropdownMenuItem(
-                                  value: valueGurantorCustomer,
-                                  child: Text(
-                                    "$valueGurantorCustomer",
-                                  )))
-                              .toList(),
                         ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.date_range,
-                        keys: expectedDate,
-                        childs: FormBuilderDateTimePicker(
-                          name: "",
-                          focusNode: firstRepaymentDateFocus,
-                          textInputAction: TextInputAction.next,
-                          inputType: InputType.date,
-                          firstDate: DateTime.now(),
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                expdateDay = v;
-                              });
-                              onCheckDay(v);
+                        GroupFromBuilder(
+                          icons: Icons.confirmation_number,
+                          keys: generateGracePeriodNumber,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            focusNode: generateGracePeriodNumberFocus,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (v) {
                               FocusScope.of(context)
-                                  .requestFocus(generateGracePeriodNumberFocus);
-                            }
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('expected_date_required') ??
-                                    "Expected date required(*)"),
-                          ]),
-                          initialValue: DateTime(
-                            now.year,
-                            now.month,
-                            now.day + 15,
-                          ),
-                          format: DateFormat("yyyy-MM-dd"),
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('expected_date') ??
-                                "Expected date(*)",
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.confirmation_number,
-                        keys: generateGracePeriodNumber,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          focusNode: generateGracePeriodNumberFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (v) {
-                            FocusScope.of(context)
-                                .requestFocus(loanPurposeFocus);
-                          },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.translate(
-                                    'generate_grace_period_number') ??
-                                'Generate',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (v) {
-                            valueGenerateGracePeriodNumber = v;
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          keyboardType: TextInputType.number,
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              context,
+                                  .requestFocus(loanPurposeFocus);
+                            },
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate(
+                                          'generate_grace_period_number') ??
+                                  'Generate',
+                              border: InputBorder.none,
                             ),
-                          ]),
-                          inputFormatters: [
-                            // WhitelistingTextInputFormatter.digitsOnly
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.attach_money,
-                        keys: loanPurpose,
-                        childs: FormBuilderTextField(
-                          name: 'name',
-                          focusNode: loanPurposeFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (v) {
-                            FocusScope.of(context).requestFocus(lTVFocus);
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(context,
-                                errorText: AppLocalizations.of(context)!
-                                        .translate('loan_purpose_required') ??
-                                    "Loan purpose required(*)"),
-                          ]),
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('loan_purpose') ??
-                                'Loan purpose',
-                            border: InputBorder.none,
+                            onChanged: (v) {
+                              valueGenerateGracePeriodNumber = v;
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            keyboardType: TextInputType.number,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                context,
+                              ),
+                            ]),
+                            inputFormatters: [
+                              // WhitelistingTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                           ),
-                          onChanged: (v) {
-                            valueLoanPurpose = v;
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          keyboardType: TextInputType.text,
                         ),
-                      ),
-                      GroupFromBuilder(
-                        imageIcon: percentages,
-                        keys: ltvKey,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          focusNode: lTVFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (v) {
-                            FocusScope.of(context).requestFocus(dscrFocus);
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'LTV(*)',
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueLTV = v.toString().replaceAll(",", ".");
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              context,
+                        GroupFromBuilder(
+                          icons: Icons.attach_money,
+                          keys: loanPurpose,
+                          childs: FormBuilderTextField(
+                            name: 'name',
+                            focusNode: loanPurposeFocus,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (v) {
+                              FocusScope.of(context).requestFocus(lTVFocus);
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(context,
+                                  errorText: AppLocalizations.of(context)!
+                                          .translate('loan_purpose_required') ??
+                                      "Loan purpose required(*)"),
+                            ]),
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('loan_purpose') ??
+                                  'Loan purpose',
+                              border: InputBorder.none,
                             ),
-                            FormBuilderValidators.max(context, 0.9)
-                          ]),
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[0-9.,]')),
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        imageIcon: percentages,
-                        keys: dscrKey,
-                        childs: FormBuilderTextField(
-                          name: 'number',
-                          focusNode: dscrFocus,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (v) {
-                            FocusScope.of(context)
-                                .requestFocus(referByWhoFocus);
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'Dscr(*)',
-                            border: InputBorder.none,
+                            onChanged: (v) {
+                              valueLoanPurpose = v;
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            keyboardType: TextInputType.text,
                           ),
-                          onChanged: (v) {
-                            if (mounted) {
-                              setState(() {
-                                valueDscr = v.toString().replaceAll(",", ".");
-                              });
-                            }
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              context,
+                        ),
+                        GroupFromBuilder(
+                          imageIcon: percentages,
+                          keys: ltvKey,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            focusNode: lTVFocus,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (v) {
+                              FocusScope.of(context).requestFocus(dscrFocus);
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'LTV(*)',
+                              border: InputBorder.none,
                             ),
-                            FormBuilderValidators.min(context, 0)
-                          ]),
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp('[0-9.,]')),
-                          ],
-                        ),
-                      ),
-                      GroupFromBuilder(
-                        icons: Icons.face,
-                        keys: referByWho,
-                        childs: FormBuilderTextField(
-                          name: 'name',
-                          focusNode: referByWhoFocus,
-                          textInputAction: TextInputAction.next,
-                          // onSubmitted: (v) {
-                          //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
-                          // },
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!
-                                    .translate('refer_by_who') ??
-                                'Refer by who',
-                            border: InputBorder.none,
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  valueLTV = v.toString().replaceAll(",", ".");
+                                });
+                              }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                context,
+                              ),
+                              FormBuilderValidators.max(context, 0.9)
+                            ]),
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9.,]')),
+                            ],
                           ),
-                          onChanged: (v) {
-                            valueReferByWho = v;
-                          },
-                          valueTransformer: (text) {
-                            return text == null ? null : text;
-                          },
                         ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
-                      AnimatedButton(
-                        text: AppLocalizations.of(context)!.translate('save') ??
-                            'Save',
-                        color: logolightGreen,
-                        pressEvent: () {
-                          // maintenanceFee.currentState!.value['number'] =
-                          //     maintenanceFee.currentState!.value['number']
-                          //         .toString()
-                          //         .replaceAll(",", ".");
+                        GroupFromBuilder(
+                          imageIcon: percentages,
+                          keys: dscrKey,
+                          childs: FormBuilderTextField(
+                            name: 'number',
+                            focusNode: dscrFocus,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (v) {
+                              FocusScope.of(context)
+                                  .requestFocus(referByWhoFocus);
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Dscr(*)',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (v) {
+                              if (mounted) {
+                                setState(() {
+                                  valueDscr = v.toString().replaceAll(",", ".");
+                                });
+                              }
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                context,
+                              ),
+                              FormBuilderValidators.min(context, 0)
+                            ]),
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9.,]')),
+                            ],
+                          ),
+                        ),
+                        GroupFromBuilder(
+                          icons: Icons.face,
+                          keys: referByWho,
+                          childs: FormBuilderTextField(
+                            name: 'name',
+                            focusNode: referByWhoFocus,
+                            textInputAction: TextInputAction.next,
+                            // onSubmitted: (v) {
+                            //   FocusScope.of(context).requestFocus(repaymentMethodFocus);
+                            // },
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                      .translate('refer_by_who') ??
+                                  'Refer by who',
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (v) {
+                              valueReferByWho = v;
+                            },
+                            valueTransformer: (text) {
+                              return text == null ? null : text;
+                            },
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 5, bottom: 5)),
+                        AnimatedButton(
+                          text:
+                              AppLocalizations.of(context)!.translate('save') ??
+                                  'Save',
+                          color: logolightGreen,
+                          pressEvent: () {
+                            // maintenanceFee.currentState!.value['number'] =
+                            //     maintenanceFee.currentState!.value['number']
+                            //         .toString()
+                            //         .replaceAll(",", ".");
 
-                          // logger.e(
-                          //     "maintenanceFee.currentState: ${maintenanceFee.currentState!.value['number']}");
-                          if (currenciesKey.currentState!.saveAndValidate() &&
-                              loanAmount.currentState!.saveAndValidate() &&
-                              loanProductsKey.currentState!.saveAndValidate() &&
-                              numberOfTerm.currentState!.saveAndValidate() &&
-                              interestRate.currentState!.saveAndValidate() &&
-                              maintenanceFee.currentState!.saveAndValidate() &&
-                              adminFee.currentState!.saveAndValidate() &&
-                              iRRKeys.currentState!.saveAndValidate() &&
-                              repaymentMethod.currentState!.saveAndValidate() &&
-                              expectedDate.currentState!.saveAndValidate() &&
-                              generateGracePeriodNumber.currentState!
-                                  .saveAndValidate() &&
-                              loanPurpose.currentState!.saveAndValidate() &&
-                              ltvKey.currentState!.saveAndValidate() &&
-                              dscrKey.currentState!.saveAndValidate()) {
-                            var v = maintenanceFee.currentState!.value['number']
-                                .toString()
-                                .replaceAll(",", ".");
-                            if (double.parse(v) == 0.7) {
-                              maintenanceFee.currentState!.saveAndValidate();
-                            } else if (selectedValueCustomer == false) {
-                              setState(() {
-                                validateCustomer = true;
-                              });
+                            // logger.e(
+                            //     "maintenanceFee.currentState: ${maintenanceFee.currentState!.value['number']}");
+                            if (currenciesKey.currentState!.saveAndValidate() &&
+                                loanAmount.currentState!.saveAndValidate() &&
+                                loanProductsKey.currentState!
+                                    .saveAndValidate() &&
+                                numberOfTerm.currentState!.saveAndValidate() &&
+                                interestRate.currentState!.saveAndValidate() &&
+                                maintenanceFee.currentState!
+                                    .saveAndValidate() &&
+                                adminFee.currentState!.saveAndValidate() &&
+                                iRRKeys.currentState!.saveAndValidate() &&
+                                repaymentMethod.currentState!
+                                    .saveAndValidate() &&
+                                expectedDate.currentState!.saveAndValidate() &&
+                                generateGracePeriodNumber.currentState!
+                                    .saveAndValidate() &&
+                                loanPurpose.currentState!.saveAndValidate() &&
+                                ltvKey.currentState!.saveAndValidate() &&
+                                dscrKey.currentState!.saveAndValidate()) {
+                              var v = maintenanceFee
+                                  .currentState!.value['number']
+                                  .toString()
+                                  .replaceAll(",", ".");
+                              if (double.parse(v) == 0.7) {
+                                maintenanceFee.currentState!.saveAndValidate();
+                              } else if (selectedValueCustomer == false) {
+                                setState(() {
+                                  validateCustomer = true;
+                                });
+                              } else {
+                                AwesomeDialog(
+                                    context: context,
+                                    // animType: AnimType.LEFTSLIDE,
+                                    headerAnimationLoop: false,
+                                    dialogType: DialogType.SUCCES,
+                                    title: AppLocalizations.of(context)!
+                                            .translate('information') ??
+                                        'Information',
+                                    desc: AppLocalizations.of(context)!
+                                            .translate('do_you_want') ??
+                                        'Do you want to upload document and submit request?',
+                                    btnOkOnPress: () async {
+                                      if (selectedValueCustomer == false) {
+                                        setState(() {
+                                          validateCustomer = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          statusEdit = 'add';
+                                        });
+                                        await onAddFile(context);
+                                        setState(() {
+                                          validateCustomer = false;
+                                        });
+                                      }
+                                    },
+                                    btnCancelText: AppLocalizations.of(context)!
+                                            .translate('no') ??
+                                        "No",
+                                    btnCancelOnPress: () {
+                                      // if (selectedValueCustomer == false) {
+                                      //   setState(() {
+                                      //     validateCustomer = true;
+                                      //   });
+                                      // } else {
+                                      //   setState(() {
+                                      //     statusEdit = 'save';
+                                      //   });
+                                      //   await onSubmit(context);
+                                      //   setState(() {
+                                      //     validateCustomer = false;
+                                      //   });
+                                      // }
+                                    },
+                                    btnCancelIcon: Icons.close,
+                                    btnOkIcon: Icons.check_circle,
+                                    btnOkColor: logolightGreen,
+                                    btnOkText: AppLocalizations.of(context)!
+                                            .translate('yes') ??
+                                        'Yes')
+                                  ..show();
+                              }
                             } else {
-                              AwesomeDialog(
-                                  context: context,
-                                  // animType: AnimType.LEFTSLIDE,
-                                  headerAnimationLoop: false,
-                                  dialogType: DialogType.SUCCES,
-                                  title: AppLocalizations.of(context)!
-                                          .translate('information') ??
-                                      'Information',
-                                  desc: AppLocalizations.of(context)!
-                                          .translate('do_you_want') ??
-                                      'Do you want to upload document and submit request?',
-                                  btnOkOnPress: () async {
-                                    if (selectedValueCustomer == false) {
-                                      setState(() {
-                                        validateCustomer = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        statusEdit = 'add';
-                                      });
-                                      await onAddFile(context);
-                                      setState(() {
-                                        validateCustomer = false;
-                                      });
-                                    }
-                                  },
-                                  btnCancelText: AppLocalizations.of(context)!
-                                          .translate('no') ??
-                                      "No",
-                                  btnCancelOnPress: () {
-                                    // if (selectedValueCustomer == false) {
-                                    //   setState(() {
-                                    //     validateCustomer = true;
-                                    //   });
-                                    // } else {
-                                    //   setState(() {
-                                    //     statusEdit = 'save';
-                                    //   });
-                                    //   await onSubmit(context);
-                                    //   setState(() {
-                                    //     validateCustomer = false;
-                                    //   });
-                                    // }
-                                  },
-                                  btnCancelIcon: Icons.close,
-                                  btnOkIcon: Icons.check_circle,
-                                  btnOkColor: logolightGreen,
-                                  btnOkText: AppLocalizations.of(context)!
-                                          .translate('yes') ??
-                                      'Yes')
-                                ..show();
+                              print('error');
                             }
-                          } else {
-                            print('error');
-                          }
-                        },
-                      ),
-                      Padding(padding: EdgeInsets.only(bottom: bottomPadding))
-                    ],
+                          },
+                        ),
+                        Padding(padding: EdgeInsets.only(bottom: bottomPadding))
+                      ],
+                    ),
                   ),
                 ),
               ));

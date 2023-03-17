@@ -1,4 +1,3 @@
-import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:select_dialog/select_dialog.dart';
 
@@ -42,66 +41,69 @@ class DropDownLmapRegister extends StatelessWidget {
       this.isPhoneXParam});
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: validate,
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                width: isPhoneXParam != null
-                    ? isPhoneXParam
-                    : widthView(context, 0.35),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, elevation: 0),
-                    onPressed: onInSidePress ??
-                        () {
-                          readOnlys!
-                              ? SelectDialog.showModal<String>(context,
-                                  label: texts ?? 'Search',
-                                  items: items,
-                                  onChange: onChanged,
-                                  autofocus: autofocus ?? false)
-                              : null;
-                        },
-                    child: Container(
-                        // padding: EdgeInsets.all(4),
-                        child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Center(
-                          child: Text(texts ?? title ?? '', style: styleTexts),
-                        ),
-                        Padding(padding: EdgeInsets.all(1)),
-                        texts != null
-                            ? Padding(padding: EdgeInsets.all(1))
-                            : Container(
-                                alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  validateForm,
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 10),
-                                ),
-                              ),
-                      ],
-                    ))),
-              ),
-              if (clear == true)
-                Container(
-                  child: IconButton(
-                    icon: iconsClose ?? Icon(Icons.close),
-                    color: Colors.grey,
-                    onPressed: onPressed,
-                  ),
-                ),
-              if (clear == false) Text('')
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            padding: EdgeInsets.only(left: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-        ],
-      ),
+          onPressed: onInSidePress ??
+              () {
+                readOnlys!
+                    ? SelectDialog.showModal<String>(context,
+                        label: texts ?? 'Search',
+                        items: items,
+                        onChange: onChanged,
+                        autofocus: autofocus ?? false)
+                    : null;
+              },
+          child: Container(
+              // padding: EdgeInsets.all(4),
+              child: Row(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Center(
+                        child: Text(texts ?? title ?? '', style: styleTexts),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.all(1)),
+                    texts != null
+                        ? Padding(padding: EdgeInsets.all(1))
+                        : Container(
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              validateForm,
+                              style: TextStyle(color: Colors.red, fontSize: 10),
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  if (clear == true)
+                    Container(
+                      child: IconButton(
+                        icon: iconsClose ?? Icon(Icons.close),
+                        color: Colors.grey,
+                        onPressed: onPressed,
+                      ),
+                    ),
+                  if (clear == false) Text('')
+                ],
+              )
+            ],
+          ))),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:chokchey_finance/components/header.dart';
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
 import 'package:chokchey_finance/screens/approvalHistory/cardReport.dart';
@@ -286,49 +287,20 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                   child: CircularProgressIndicator(),
                 ),
               )
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 800,
-                      width: 500,
-                      padding: EdgeInsets.all(1),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 1,
-                                          left: 50,
-                                          top: 1,
-                                          bottom: 2),
-                                      child: CardReport(
-                                        backgroundColors: logolightGreen,
-                                        iconSizes: 25.0,
-                                        icons: Icons.face,
-                                        text: 'total_customer',
-                                        value: totalCustomer.toString(),
-                                      )),
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 1, left: 2, top: 1, bottom: 2),
-                                      child: CardReport(
-                                        backgroundColors: Colors.green,
-                                        iconSizes: 25.0,
-                                        icons: Icons.check_box,
-                                        text: 'total_approved',
-                                        value: totalApproved.toString(),
-                                      )),
-                                ],
-                              ),
-                              Container(
-                                width: widthView(context, 1),
-                                // height: 10,
-                                child: Row(
+            : MaxWidthWrapper(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 800,
+                        width: 500,
+                        padding: EdgeInsets.all(1),
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
                                   children: [
                                     Padding(
                                         padding: const EdgeInsets.only(
@@ -339,229 +311,267 @@ class _ApprovalHistoryState extends State<ApprovalHistory> {
                                         child: CardReport(
                                           backgroundColors: logolightGreen,
                                           iconSizes: 25.0,
-                                          icons: Icons.cancel,
-                                          text: 'total_returned',
-                                          value: totalReturned.toString(),
+                                          icons: Icons.face,
+                                          text: 'total_customer',
+                                          value: totalCustomer.toString(),
                                         )),
-                                    Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 1,
-                                            right: 2,
-                                            bottom: 1,
-                                            top: 2),
-                                        child: CardReport(
-                                          backgroundColors: Colors.red,
-                                          iconSizes: 25.0,
-                                          icons: Icons.receipt,
-                                          text: 'total_disapproved',
-                                          value: totalDisapproved.toString(),
-                                        )),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: widthView(context, 1),
-                                // height: 10,
-                                child: Row(
-                                  children: [
                                     Padding(
                                         padding: const EdgeInsets.only(
                                             right: 1,
-                                            left: 50,
+                                            left: 2,
                                             top: 1,
                                             bottom: 2),
                                         child: CardReport(
-                                          backgroundColors: logolightGreen,
+                                          backgroundColors: Colors.green,
                                           iconSizes: 25.0,
-                                          icons: Icons.cancel,
-                                          text: 'total_loan',
-                                          value: totalReturned.toString(),
-                                        )),
-                                    Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 1,
-                                            right: 2,
-                                            bottom: 1,
-                                            top: 2),
-                                        child: CardReport(
-                                          backgroundColors: Colors.orange,
-                                          iconSizes: 25.0,
-                                          icons: Icons.receipt,
-                                          text: 'total_processing',
-                                          value: totalDisapproved.toString(),
+                                          icons: Icons.check_box,
+                                          text: 'total_approved',
+                                          value: totalApproved.toString(),
                                         )),
                                   ],
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 110,
-                                          right: 50,
-                                          bottom: 5,
-                                          top: 5),
-                                      child: CardReport(
-                                        backgroundColors: logolightGreen,
-                                        iconSizes: 25.0,
-                                        icons: Icons.payment,
-                                        text: 'total_requested',
-                                        value: totalRequested.toString(),
-                                      )),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
+                                Container(
+                                  width: widthView(context, 1),
+                                  // height: 10,
+                                  child: Row(
                                     children: [
-                                      Container(
-                                        width: 150,
-                                        height: 120,
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: 15,
-                                                  height: 15,
-                                                  color: logolightGreen,
-                                                ),
-                                                Text(" Cu  = "),
-                                                Text(
-                                                    "${AppLocalizations.of(context)!.translate('cu') ?? 'customer'}"),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: 15,
-                                                  height: 15,
-                                                  color: Colors.green,
-                                                ),
-                                                Text(" Ap  = "),
-                                                Text(
-                                                    "${AppLocalizations.of(context)!.translate('ap') ?? 'Approves'}"),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: 15,
-                                                  height: 15,
-                                                  color: Colors.orange,
-                                                ),
-                                                Text(" pro = "),
-                                                Text(
-                                                    "${AppLocalizations.of(context)!.translate('pro') ?? 'Processings'}"),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: 15,
-                                                  height: 15,
-                                                  color: logolightGreen,
-                                                ),
-                                                Text(" Re  = "),
-                                                Text(
-                                                    "${AppLocalizations.of(context)!.translate('re') ?? 'Returns'}"),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 1,
+                                              left: 50,
+                                              top: 1,
+                                              bottom: 2),
+                                          child: CardReport(
+                                            backgroundColors: logolightGreen,
+                                            iconSizes: 25.0,
+                                            icons: Icons.cancel,
+                                            text: 'total_returned',
+                                            value: totalReturned.toString(),
+                                          )),
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 1,
+                                              right: 2,
+                                              bottom: 1,
+                                              top: 2),
+                                          child: CardReport(
+                                            backgroundColors: Colors.red,
+                                            iconSizes: 25.0,
+                                            icons: Icons.receipt,
+                                            text: 'total_disapproved',
+                                            value: totalDisapproved.toString(),
+                                          )),
                                     ],
                                   ),
-                                  Container(
-                                    width: 150,
-                                    height: 100,
-                                    child: Column(
+                                ),
+                                Container(
+                                  width: widthView(context, 1),
+                                  // height: 10,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 1,
+                                              left: 50,
+                                              top: 1,
+                                              bottom: 2),
+                                          child: CardReport(
+                                            backgroundColors: logolightGreen,
+                                            iconSizes: 25.0,
+                                            icons: Icons.cancel,
+                                            text: 'total_loan',
+                                            value: totalReturned.toString(),
+                                          )),
+                                      Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 1,
+                                              right: 2,
+                                              bottom: 1,
+                                              top: 2),
+                                          child: CardReport(
+                                            backgroundColors: Colors.orange,
+                                            iconSizes: 25.0,
+                                            icons: Icons.receipt,
+                                            text: 'total_processing',
+                                            value: totalDisapproved.toString(),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 110,
+                                            right: 50,
+                                            bottom: 5,
+                                            top: 5),
+                                        child: CardReport(
+                                          backgroundColors: logolightGreen,
+                                          iconSizes: 25.0,
+                                          icons: Icons.payment,
+                                          text: 'total_requested',
+                                          value: totalRequested.toString(),
+                                        )),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Column(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 15,
-                                              height: 15,
-                                              color: Colors.red,
-                                            ),
-                                            Text(" Dis = "),
-                                            Text(
-                                                "${AppLocalizations.of(context)!.translate('dis') ?? 'DisApproved'}")
-                                          ],
+                                        Container(
+                                          width: 150,
+                                          height: 120,
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: 15,
+                                                    height: 15,
+                                                    color: logolightGreen,
+                                                  ),
+                                                  Text(" Cu  = "),
+                                                  Text(
+                                                      "${AppLocalizations.of(context)!.translate('cu') ?? 'customer'}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: 15,
+                                                    height: 15,
+                                                    color: Colors.green,
+                                                  ),
+                                                  Text(" Ap  = "),
+                                                  Text(
+                                                      "${AppLocalizations.of(context)!.translate('ap') ?? 'Approves'}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: 15,
+                                                    height: 15,
+                                                    color: Colors.orange,
+                                                  ),
+                                                  Text(" pro = "),
+                                                  Text(
+                                                      "${AppLocalizations.of(context)!.translate('pro') ?? 'Processings'}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    width: 15,
+                                                    height: 15,
+                                                    color: logolightGreen,
+                                                  ),
+                                                  Text(" Re  = "),
+                                                  Text(
+                                                      "${AppLocalizations.of(context)!.translate('re') ?? 'Returns'}"),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 15,
-                                              height: 15,
-                                              color: logolightGreen,
-                                            ),
-                                            Text(" Pro = "),
-                                            Text(
-                                                "${AppLocalizations.of(context)!.translate('req') ?? 'Requests'}")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 15,
-                                              height: 15,
-                                              color: logolightGreen,
-                                            ),
-                                            Text(" Lo  = "),
-                                            Text(
-                                                "${AppLocalizations.of(context)!.translate('lo') ?? 'Loans'}")
-                                          ],
-                                        )
                                       ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Expanded(
-                                child: charts.BarChart(
-                                  _createSampleData(),
-                                  animate: true,
-                                  domainAxis: new charts.OrdinalAxisSpec(
-                                      renderSpec: new charts
-                                              .SmallTickRendererSpec(
-
-                                          // Tick and Label styling here.
-                                          labelStyle: new charts.TextStyleSpec(
-                                              fontSize: 10, // size in Pts.
-                                              color:
-                                                  charts.MaterialPalette.black),
-
-                                          // Change the line colors to match text color.
-                                          lineStyle: new charts.LineStyleSpec(
-                                              color: charts
-                                                  .MaterialPalette.black))),
-
-                                  /// Assign a custom style for the measure axis.
-                                  primaryMeasureAxis: new charts
-                                          .NumericAxisSpec(
-                                      renderSpec: new charts
-                                              .GridlineRendererSpec(
-
-                                          // Tick and Label styling here.
-                                          labelStyle: new charts.TextStyleSpec(
-                                              fontSize: 12, // size in Pts.
-                                              color:
-                                                  charts.MaterialPalette.black),
-
-                                          // Change the line colors to match text color.
-                                          lineStyle: new charts.LineStyleSpec(
-                                              color: charts
-                                                  .MaterialPalette.black))),
+                                    Container(
+                                      width: 150,
+                                      height: 100,
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 15,
+                                                height: 15,
+                                                color: Colors.red,
+                                              ),
+                                              Text(" Dis = "),
+                                              Text(
+                                                  "${AppLocalizations.of(context)!.translate('dis') ?? 'DisApproved'}")
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 15,
+                                                height: 15,
+                                                color: logolightGreen,
+                                              ),
+                                              Text(" Pro = "),
+                                              Text(
+                                                  "${AppLocalizations.of(context)!.translate('req') ?? 'Requests'}")
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 15,
+                                                height: 15,
+                                                color: logolightGreen,
+                                              ),
+                                              Text(" Lo  = "),
+                                              Text(
+                                                  "${AppLocalizations.of(context)!.translate('lo') ?? 'Loans'}")
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )
-                            ],
+                                Expanded(
+                                  child: charts.BarChart(
+                                    _createSampleData(),
+                                    animate: true,
+                                    domainAxis: new charts.OrdinalAxisSpec(
+                                        renderSpec: new charts
+                                                .SmallTickRendererSpec(
+
+                                            // Tick and Label styling here.
+                                            labelStyle:
+                                                new charts.TextStyleSpec(
+                                                    fontSize:
+                                                        10, // size in Pts.
+                                                    color: charts
+                                                        .MaterialPalette.black),
+
+                                            // Change the line colors to match text color.
+                                            lineStyle: new charts.LineStyleSpec(
+                                                color: charts
+                                                    .MaterialPalette.black))),
+
+                                    /// Assign a custom style for the measure axis.
+                                    primaryMeasureAxis: new charts
+                                            .NumericAxisSpec(
+                                        renderSpec: new charts
+                                                .GridlineRendererSpec(
+
+                                            // Tick and Label styling here.
+                                            labelStyle:
+                                                new charts.TextStyleSpec(
+                                                    fontSize:
+                                                        12, // size in Pts.
+                                                    color: charts
+                                                        .MaterialPalette.black),
+
+                                            // Change the line colors to match text color.
+                                            lineStyle: new charts.LineStyleSpec(
+                                                color: charts
+                                                    .MaterialPalette.black))),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
         endDrawer: Drawer(

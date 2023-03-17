@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chokchey_finance/components/maxWidthWrapper.dart';
 import 'package:chokchey_finance/components/searchCO.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
 import 'package:chokchey_finance/providers/approvalHistory/index.dart';
@@ -274,115 +275,82 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
                       ),
                     ),
                   )
-                : ListView.builder(
-                    itemCount: listLoanArrear.length,
-                    itemBuilder: (context, index) {
-                      dynamic sumItem = listLoanArrear[index];
-                      if (index == 0) {
-                        return Column(
-                          children: [
-                            Padding(padding: EdgeInsets.only(top: 10)),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    // margin: EdgeInsets.only(top: 20),
-                                    margin: EdgeInsets.all(10),
-                                    child: Card(
-                                      elevation: 5,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.only(top: 10),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text("Total Account",
-                                                        style: TextStyle(
-                                                            fontSize: 12)),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(Icons.numbers,
-                                                        size: 20,
-                                                        color: Colors.red),
-                                                    Text(
-                                                        "${sumItem['totalAcount']}",
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                fontSizeText,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors.red)),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              //total overview amount loan arrears by USD
-                                              Container(
-                                                padding: EdgeInsets.all(10),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Text("Overdue USD",
-                                                            style: TextStyle(
-                                                                fontSize: 12)),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 2,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Icon(Icons.attach_money,
-                                                            size: 25,
-                                                            color: Colors.red),
-                                                        Text(
-                                                            "${currencyUSD.toStringAsFixed(2)}",
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    fontSizeText,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: Colors
-                                                                    .red)),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
+                : MaxWidthWrapper(
+                    child: ListView.builder(
+                      itemCount: listLoanArrear.length,
+                      itemBuilder: (context, index) {
+                        dynamic sumItem = listLoanArrear[index];
+                        if (index == 0) {
+                          return Column(
+                            children: [
+                              Padding(padding: EdgeInsets.only(top: 10)),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      // margin: EdgeInsets.only(top: 20),
+                                      margin: EdgeInsets.all(10),
+                                      child: Card(
+                                        elevation: 5,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.only(top: 10),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text("Total Account",
+                                                          style: TextStyle(
+                                                              fontSize: 12)),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(Icons.numbers,
+                                                          size: 20,
+                                                          color: Colors.red),
+                                                      Text(
+                                                          "${sumItem['totalAcount']}",
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  fontSizeText,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  Colors.red)),
+                                                    ],
+                                                  )
+                                                ],
                                               ),
-                                              //total overview amount loan arrears by Khmer
-                                              Expanded(
-                                                child: Container(
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                //total overview amount loan arrears by USD
+                                                Container(
                                                   padding: EdgeInsets.all(10),
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -392,124 +360,166 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
                                                         MainAxisAlignment
                                                             .center,
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                          Text("Overdue KHM",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      12)),
-                                                        ],
-                                                      ),
+                                                      Text("Overdue USD",
+                                                          style: TextStyle(
+                                                              fontSize: 12)),
                                                       SizedBox(
                                                         height: 2,
                                                       ),
                                                       Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                              Icons
+                                                                  .attach_money,
+                                                              size: 25,
+                                                              color:
+                                                                  Colors.red),
+                                                          Text(
+                                                              "${currencyUSD.toStringAsFixed(2)}",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      fontSizeText,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .red)),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                //total overview amount loan arrears by Khmer
+                                                Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text("Overdue KHM",
+                                                          style: TextStyle(
+                                                              fontSize: 12)),
+                                                      SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
                                                           Image.asset(
                                                               "assets/images/khm.png",
                                                               width: 18,
                                                               color:
                                                                   Colors.red),
-                                                          Expanded(
-                                                            child: Text(
-                                                                "${currencyKhmer.toStringAsFixed(1)}",
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        fontSizeText,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    color: Colors
-                                                                        .red)),
-                                                          ),
+                                                          Text(
+                                                              "${currencyKhmer.toStringAsFixed(1)}",
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      fontSizeText,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .red)),
                                                         ],
                                                       )
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Container(
-                          margin: EdgeInsets.all(10),
-                          child: Card(
-                            elevation: 5,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailLoanArrear(
-                                      loanAccountNo: listLoanArrear[index]
-                                              ['loanAccountNo']
-                                          .toString(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  Padding(padding: EdgeInsets.only(top: 10)),
-                                  WidgetViewTextLoanArrear(
-                                      title: 'Loan Account No : ',
-                                      // value: listLoanArrear[index]['loanAccountNo']
-                                      //     .substring(3)),
-                                      value:
-                                          sumItem['totalAmount1'].toString()),
-                                  WidgetViewTextLoanArrear(
-                                      title: 'Customer No : ',
-                                      value: listLoanArrear[index]['customerNo']
-                                          .substring(5)),
-                                  WidgetViewTextLoanArrear(
-                                      title: "Customer Name : ",
-                                      value: listLoanArrear[index]
-                                          ['customerName']),
-                                  WidgetViewTextLoanArrear(
-                                      title: "Phone No : ",
-                                      value: listLoanArrear[index]
-                                          ['cellPhoneNo']),
-                                  WidgetViewTextLoanArrear(
-                                      title: "Over Due Days : ",
-                                      value: listLoanArrear[index]
-                                              ['overdueDays']
-                                          .toString()),
-                                  WidgetViewTextLoanArrear(
-                                      title: "Total Repayment : ",
-                                      value: listLoanArrear[index]
-                                              ['totalAmount1']
-                                          .toString()),
-                                  WidgetViewTextLoanArrear(
-                                      title: "CO Name : ",
-                                      value: listLoanArrear[index]
-                                              ['employeeName']
-                                          .toString()),
-                                  WidgetViewTextLoanArrear(
-                                      title: "CO ID : ",
-                                      value: listLoanArrear[index]
-                                              ['refereneceEmployeeNo']
-                                          .toString()),
-                                  Padding(padding: EdgeInsets.only(bottom: 10))
+                                  )
                                 ],
                               ),
+                            ],
+                          );
+                        } else {
+                          return Container(
+                            margin: EdgeInsets.all(10),
+                            child: Card(
+                              elevation: 5,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailLoanArrear(
+                                        loanAccountNo: listLoanArrear[index]
+                                                ['loanAccountNo']
+                                            .toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Column(
+                                  children: [
+                                    Padding(padding: EdgeInsets.only(top: 10)),
+                                    WidgetViewTextLoanArrear(
+                                        title: 'Loan Account No : ',
+                                        // value: listLoanArrear[index]['loanAccountNo']
+                                        //     .substring(3)),
+                                        value:
+                                            sumItem['totalAmount1'].toString()),
+                                    WidgetViewTextLoanArrear(
+                                        title: 'Customer No : ',
+                                        value: listLoanArrear[index]
+                                                ['customerNo']
+                                            .substring(5)),
+                                    WidgetViewTextLoanArrear(
+                                        title: "Customer Name : ",
+                                        value: listLoanArrear[index]
+                                            ['customerName']),
+                                    WidgetViewTextLoanArrear(
+                                        title: "Phone No : ",
+                                        value: listLoanArrear[index]
+                                            ['cellPhoneNo']),
+                                    WidgetViewTextLoanArrear(
+                                        title: "Over Due Days : ",
+                                        value: listLoanArrear[index]
+                                                ['overdueDays']
+                                            .toString()),
+                                    WidgetViewTextLoanArrear(
+                                        title: "Total Repayment : ",
+                                        value: listLoanArrear[index]
+                                                ['totalAmount1']
+                                            .toString()),
+                                    WidgetViewTextLoanArrear(
+                                        title: "CO Name : ",
+                                        value: listLoanArrear[index]
+                                                ['employeeName']
+                                            .toString()),
+                                    WidgetViewTextLoanArrear(
+                                        title: "CO ID : ",
+                                        value: listLoanArrear[index]
+                                                ['refereneceEmployeeNo']
+                                            .toString()),
+                                    Padding(
+                                        padding: EdgeInsets.only(bottom: 10))
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    },
+                          );
+                        }
+                      },
+                    ),
                   ),
         endDrawer: Drawer(
           child: SingleChildScrollView(
             child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -713,46 +723,39 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
                       ],
                     ),
                   ),
-                  listBranch != null
-                      ? Container(
-                          height: 480,
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: listBranch != null
-                                ? listBranch.length
-                                : [].length,
-                            padding: EdgeInsets.only(top: 15.0),
-                            itemBuilder: (context, index) {
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    side: BorderSide(
-                                        color: logolightGreen, width: 1)),
-                                child: InkWell(
-                                  onTap: () =>
-                                      _onClickListBranch(listBranch[index]),
-                                  child: Center(
-                                    child: Container(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text(
-                                        '${listBranch[index]['bname']}',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          color: bcode ==
-                                                  listBranch[index]['bcode']
-                                              ? logolightGreen
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                    ),
+                  SizedBox(
+                    height: 500,
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: listBranch.length,
+                      padding: EdgeInsets.only(top: 15.0),
+                      itemBuilder: (context, index) {
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side:
+                                  BorderSide(color: logolightGreen, width: 1)),
+                          child: InkWell(
+                            onTap: () => _onClickListBranch(listBranch[index]),
+                            child: Center(
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  '${listBranch[index]['bname']}',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: bcode == listBranch[index]['bcode']
+                                        ? logolightGreen
+                                        : Colors.black,
                                   ),
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           ),
-                        )
-                      : Padding(padding: EdgeInsets.only(bottom: 1)),
+                        );
+                      },
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
