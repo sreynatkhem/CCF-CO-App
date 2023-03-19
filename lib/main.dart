@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> isLogin() async {
     String? ids = await storage.read(key: 'user_id');
     logger().e("ids: ${ids}");
-    if (ids != null) {
+    if (ids != '') {
       setState(() {
         _isLogin = true;
       });

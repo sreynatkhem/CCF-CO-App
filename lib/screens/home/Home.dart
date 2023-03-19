@@ -178,8 +178,8 @@ class _HomeState extends State<Home> {
     String? userIds = await storage.read(key: 'user_id');
     String? userNames = await storage.read(key: 'user_name');
     setState(() {
-      userName = userNames!;
-      userId = userIds!;
+      userName = '$userNames';
+      userId = '$userIds';
     });
   }
 
