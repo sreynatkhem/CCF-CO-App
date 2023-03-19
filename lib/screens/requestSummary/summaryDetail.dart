@@ -98,7 +98,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
     try {
       final Response response = await api().get(url, headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
+        "Authorization": "Bearer $token"
       });
       final parsed = jsonDecode(response.body);
       setState(() {
@@ -443,8 +443,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                                     '${snapshot.data![index].lstatus}',
                                               ),
                                               //
-                                              if (_imageDocument != null &&
-                                                  _imageDocument.length > 0)
+                                              if (_imageDocument.length > 0)
                                                 Container(
                                                   width: 300,
                                                   height: 600,

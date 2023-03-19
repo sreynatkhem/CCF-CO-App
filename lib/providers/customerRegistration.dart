@@ -76,7 +76,7 @@ class CustomerRegistrationProvider with ChangeNotifier {
           Uri.parse(baseURLInternal + 'Customers'),
           headers: {
             "content-type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           },
           body: json.encode(boyrow));
       final parsed = jsonDecode(response.body);
@@ -102,7 +102,7 @@ class CustomerRegistrationProvider with ChangeNotifier {
         Uri.parse(baseURLInternal + 'valuelists/idtypes'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);

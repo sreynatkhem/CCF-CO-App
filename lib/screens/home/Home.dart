@@ -175,11 +175,11 @@ class _HomeState extends State<Home> {
 
   getStoreUser() async {
     var langCode = AppLocalizations.of(context)!.locale.languageCode;
-    String userIds = await storage.read(key: 'user_id');
-    String userNames = await storage.read(key: 'user_name');
+    String? userIds = await storage.read(key: 'user_id');
+    String? userNames = await storage.read(key: 'user_name');
     setState(() {
-      userName = userNames;
-      userId = userIds;
+      userName = userNames!;
+      userId = userIds!;
     });
   }
 

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chokchey_finance/components/dropdownCustomersRegister.dart';
 import 'package:chokchey_finance/components/groupFormBuilder.dart';
@@ -9,7 +8,6 @@ import 'package:chokchey_finance/providers/manageService.dart';
 import 'package:chokchey_finance/screens/loanRegistration/addReferentDocument.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -321,7 +319,7 @@ class _EditLoanRegister extends State<EditLoanRegister> {
           Uri.parse(baseURLInternal + 'loans/' + widget.list['lcode']),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           },
           body: json.encode(boyrow));
       final parsed = jsonDecode(response.body);
@@ -390,7 +388,7 @@ class _EditLoanRegister extends State<EditLoanRegister> {
         Uri.parse(baseURLInternal + 'valuelists/currencies'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);
@@ -410,7 +408,7 @@ class _EditLoanRegister extends State<EditLoanRegister> {
         Uri.parse(baseURLInternal + 'valuelists/loanproducts'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);
@@ -428,10 +426,10 @@ class _EditLoanRegister extends State<EditLoanRegister> {
 
     try {
       final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'valuelists/customers/' + user_ucode),
+        Uri.parse(baseURLInternal + 'valuelists/customers/' + "$user_ucode"),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);

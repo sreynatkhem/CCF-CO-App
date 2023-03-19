@@ -8,7 +8,6 @@ import 'package:chokchey_finance/providers/groupLoan/index.dart';
 import 'package:chokchey_finance/screens/detail/comment.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/index.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabApproved.dart';
-import 'package:chokchey_finance/screens/groupLoanApprove/tabApproved.dart';
 import 'package:chokchey_finance/screens/groupLoanApprove/tabDetail.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +54,7 @@ class _GroupLoanApproveDetailState extends State<GroupLoanApproveDetail> {
     var listUserRoles = storage.read(key: 'roles');
     listUserRoles.then(
       (value) => setState(() {
-        userRoles = jsonDecode(value);
+        userRoles = jsonDecode("$value");
       }),
     );
   }

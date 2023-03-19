@@ -107,7 +107,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
     // });
     try {
       final storage = new FlutterSecureStorage();
-      String userId = await storage.read(key: 'user_id');
+      String? userId = await storage.read(key: 'user_id');
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
       request.body =
@@ -218,7 +218,7 @@ class _HistoryApsaraState extends State<HistoryApsara> {
 
     try {
       final storage = new FlutterSecureStorage();
-      String userId = await storage.read(key: 'user_id');
+      String? userId = await storage.read(key: 'user_id');
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0005'));
       request.body =

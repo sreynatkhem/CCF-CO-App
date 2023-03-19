@@ -56,9 +56,9 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
 
   Future fetchLoanArrear() async {
     // branch
-    String branch = await storage.read(key: 'branch');
-    String level = await storage.read(key: 'level');
-    String user_ucode = await storage.read(key: 'user_ucode');
+    String? branch = await storage.read(key: 'branch');
+    String? level = await storage.read(key: 'level');
+    String? user_ucode = await storage.read(key: 'user_ucode');
 
     setState(() {
       _isLoading = true;
@@ -70,15 +70,15 @@ class _LoanArrearScreenState extends State<LoanArrearScreen> {
     String referenEmployeeNo = "";
 
     if (branch != "0100") {
-      mgmtBranchCode = branch;
+      mgmtBranchCode = branch!;
     }
 
     if (level == '3') {
-      mgmtBranchCode = branch;
+      mgmtBranchCode = branch!;
     }
     if (level == '1') {
-      mgmtBranchCode = branch;
-      referenEmployeeNo = user_ucode;
+      mgmtBranchCode = branch!;
+      referenEmployeeNo = user_ucode!;
     }
 
     if (bcode != "") {

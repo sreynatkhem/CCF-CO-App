@@ -172,7 +172,7 @@ class LoanInternal with ChangeNotifier {
         Uri.parse(baseURLInternal + 'loans/' + loansID),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer " + '$token'
         },
       );
       final parsed = jsonDecode(response.body);
@@ -181,7 +181,6 @@ class LoanInternal with ChangeNotifier {
       notifyListeners();
       return parsed;
       // return data.map<CreateLoan>((json) => CreateLoan.fromJson(json)).toList();
-
     } catch (error) {
       print("error $error");
       _isFetching = false;
@@ -242,7 +241,7 @@ class LoanInternal with ChangeNotifier {
           Uri.parse(baseURLInternal + 'loans/' + lcode),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + '$token'
           },
           body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);

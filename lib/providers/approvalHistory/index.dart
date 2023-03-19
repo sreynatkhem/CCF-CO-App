@@ -90,7 +90,8 @@ class ApprovalHistoryProvider {
         "Authorization": "Bearer $token"
       };
       final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'valuelists/branches/byuser/' + user_ucode),
+        Uri.parse(
+            baseURLInternal + 'valuelists/branches/byuser/' + "$user_ucode"),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -116,7 +117,7 @@ class ApprovalHistoryProvider {
       final Response response = await api().get(
         Uri.parse(baseURLInternal +
             'valuelists/users/co/' +
-            user_ucode +
+            "$user_ucode" +
             '/' +
             nameCO),
         headers: headers,
@@ -142,7 +143,7 @@ class ApprovalHistoryProvider {
         "Authorization": "Bearer $token"
       };
       final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'ValueLists/Users/CO/' + user_ucode),
+        Uri.parse(baseURLInternal + 'ValueLists/Users/CO/' + "$user_ucode"),
         headers: headers,
       );
       if (response.statusCode == 200) {

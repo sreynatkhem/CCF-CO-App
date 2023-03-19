@@ -93,7 +93,7 @@ class GroupLoanProvider with ChangeNotifier {
 
   Future postGroupLoan(gname, groupLoanDetail) async {
     final storage = new FlutterSecureStorage();
-    String user_id = await storage.read(key: 'user_id');
+    String? user_id = await storage.read(key: 'user_id');
     var token = await storage.read(key: 'user_token');
     var branch = await storage.read(key: 'branch');
     // final boyrow =
@@ -109,7 +109,7 @@ class GroupLoanProvider with ChangeNotifier {
           Uri.parse(baseURLInternal + 'GroupLoan/creategrouploan'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + '$token'
           },
           body: json.encode(bodyRow));
       final list = jsonDecode(response.body);
@@ -177,7 +177,7 @@ class GroupLoanProvider with ChangeNotifier {
           Uri.parse(baseURLInternal + 'GroupLoan/' + gcode),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + '$token'
           },
           body: json.encode(bodyRow));
       final list = jsonDecode(response.body);
@@ -214,7 +214,7 @@ class GroupLoanProvider with ChangeNotifier {
           Uri.parse(baseURLInternal + 'GroupLoan/Post/' + gcode + '/' + status),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + '$token'
           },
           body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);

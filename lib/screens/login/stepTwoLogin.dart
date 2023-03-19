@@ -58,12 +58,12 @@ class _LoginState extends State<StepTwoLogin> {
   }
 
   Future<void> getStore() async {
-    String ids = await storage.read(key: 'user_id');
-    String passwords = await storage.read(key: 'password');
+    String? ids = await storage.read(key: 'user_id');
+    String? passwords = await storage.read(key: 'password');
     if (mounted) {
       setState(() {
-        id.text = ids;
-        password.text = passwords;
+        id.text = ids!;
+        password.text = passwords!;
       });
     }
   }
@@ -136,7 +136,7 @@ class _LoginState extends State<StepTwoLogin> {
     final Map<String, dynamic> bodyRow = {"mtoken": "$tokens"};
     try {
       final Response response = await api().post(
-          Uri.parse(baseURLInternal + 'users/' + userUcode + '/mtoken'),
+          Uri.parse(baseURLInternal + 'users/' + "$userUcode" + '/mtoken'),
           headers: headers,
           body: json.encode(bodyRow));
     } catch (error) {

@@ -72,7 +72,7 @@ class NotificationProvider with ChangeNotifier {
         Uri.parse(baseURLInternal + 'messages/read/' + number),
         headers: {
           "contentType": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);
@@ -95,7 +95,7 @@ class NotificationProvider with ChangeNotifier {
         Uri.parse(baseURLInternal + 'announcements/' + number),
         headers: {
           "contentType": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);
@@ -178,7 +178,7 @@ class NotificationProvider with ChangeNotifier {
           Uri.parse(baseURLInternal + 'Announcements/CEOMessage'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           });
       final parsed = jsonDecode(response.body);
       return parsed;

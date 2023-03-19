@@ -134,7 +134,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
           Uri.parse(baseURLInternal + 'loanDocuments/byloan/' + widget.list),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           });
       final parsed = jsonDecode(response.body);
       setState(() {
@@ -495,8 +495,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
                                     value: '${detiaLoan['lstatus']}',
                                   ),
                                   //
-                                  if (_imageDocument != null &&
-                                      _imageDocument.length > 0)
+                                  if (_imageDocument.length > 0)
                                     Container(
                                       width: 300,
                                       height: 600,

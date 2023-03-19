@@ -248,12 +248,12 @@ class _GroupLoanSelectState extends State<GroupLoanSelect> {
       //       Colors.redAccent);
       // });
       var token = await storage.read(key: 'user_token');
-      String userId = await storage.read(key: 'user_id');
+      String? userId = await storage.read(key: 'user_id');
       var branch = await storage.read(key: 'branch');
 
       var headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer $token'
       };
       var request = http.Request(
           'POST', Uri.parse(baseURLInternal + 'GroupLoan/creategrouploan'));

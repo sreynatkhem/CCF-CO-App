@@ -3,21 +3,12 @@ import 'dart:convert';
 import 'package:chokchey_finance/components/button.dart';
 import 'package:chokchey_finance/components/cardDetial.dart';
 import 'package:chokchey_finance/localizations/appLocalizations.dart';
-import 'package:chokchey_finance/providers/approvalList.dart';
-import 'package:chokchey_finance/providers/detailList.dart';
-import 'package:chokchey_finance/providers/detialJson.dart';
 import 'package:chokchey_finance/providers/manageService.dart';
-import 'package:chokchey_finance/providers/registerApproval.dart';
-import 'package:chokchey_finance/providers/reject.dart';
-import 'package:chokchey_finance/providers/returnFuc.dart';
-import 'package:chokchey_finance/screens/approval/approvalList.dart';
 import 'package:chokchey_finance/screens/home/Home.dart';
 import 'package:chokchey_finance/utils/storages/colors.dart';
-import 'package:chokchey_finance/screens/detail/cardDetail.dart';
 import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import 'comment.dart';
@@ -94,8 +85,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
       _isLoading = true;
     });
     var comments = controller.text;
-    String user_id = await storage.read(key: 'user_id');
-    String user_name = await storage.read(key: 'user_name');
+    String? user_id = await storage.read(key: 'user_id');
+    String? user_name = await storage.read(key: 'user_name');
     // final bodyRow =
     //     "{\n    \"header\": {\n        \"userID\" :\"SYSTEM\",\n\t\t\"channelTypeCode\" :\"08\",\n\t\t\"previousTransactionID\" :\"\",\n\t\t\"previousTransactionDate\" :\"\"\n    },\n    \"body\": {\n    \"authorizerEmployeeNo\": \"$user_id\",\n    \"authorizerEmpName\": \"$user_name\",\n    \"evaluateStatusCode\": \"20\",\n    \"loanApprovalApplicationNo\": \"${widget.loanApprovalApplicationNo}\",\n    \"authorizationOpinionContents\": \"$comments\"\n    }\n}";
     // registerApproval(
@@ -138,8 +129,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
     http.Client client,
   ) async {
     var comments = controller.text;
-    String user_id = await storage.read(key: 'user_id');
-    String user_name = await storage.read(key: 'user_name');
+    String? user_id = await storage.read(key: 'user_id');
+    String? user_name = await storage.read(key: 'user_name');
     setState(() {
       _isLoading = true;
     });
@@ -186,8 +177,8 @@ class _TabBarMenuState extends State<TabBarMenu> {
       _isLoading = true;
     });
     var comments = controller.text;
-    String user_id = await storage.read(key: 'user_id');
-    String user_name = await storage.read(key: 'user_name');
+    String? user_id = await storage.read(key: 'user_id');
+    String? user_name = await storage.read(key: 'user_name');
 
     try {
       setState(() {

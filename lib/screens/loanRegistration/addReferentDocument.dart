@@ -130,7 +130,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
     try {
       final Response response = await api().get(url, headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
+        "Authorization": "Bearer " + '$token'
       });
       final parsed = jsonDecode(response.body);
       setState(() {
@@ -460,7 +460,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
 
     Map<String, String> headers = {
       "Content-Type": "multipart/form-data",
-      "Authorization": "Bearer " + token
+      "Authorization": "Bearer " + '$token'
     }; // ignore this headers if there is no authentication
 
     // multipart that takes file
@@ -663,8 +663,8 @@ class _GridHeaderState extends State<AddReferentDocument> {
     var loanCode =
         widget.listLoan != null ? widget.listLoan['lcode'] : widget.editLoan;
     request.fields['lcode'] = loanCode;
-    request.fields['bcode'] = branch;
-    request.fields['ucode'] = userUcode;
+    request.fields['bcode'] = '$branch';
+    request.fields['ucode'] = '$userUcode';
     setState(() {
       _isLoading = true;
     });
@@ -725,7 +725,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         context: context,
         // animType: AnimType.LEFTSLIDE,
         headerAnimationLoop: false,
-        dialogType: DialogType.SUCCES,
+        dialogType: DialogType.success,
         title: AppLocalizations.of(context)!.translate('information') ??
             'Information',
         desc: AppLocalizations.of(context)!.translate('do_you_want') ??
@@ -752,7 +752,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
         Uri.parse(baseURLInternal + 'loandocuments/' + value + '/delete'),
         headers: {
           "contentType": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer " + '$token'
         },
       );
       setState(() {
@@ -1354,7 +1354,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer " + '$token'
                             },
                           );
                           setState(() {
@@ -1395,7 +1395,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer " + '$token'
                             },
                           );
                           setState(() {
@@ -1448,7 +1448,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer " + '$token'
                             },
                           );
                           setState(() {
@@ -1489,7 +1489,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer " + '$token'
                             },
                           );
                           setState(() {
@@ -1555,7 +1555,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer " + '$token'
                             },
                           );
                           setState(() {
@@ -1604,7 +1604,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1659,7 +1659,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1704,7 +1704,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1760,7 +1760,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1806,7 +1806,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1870,7 +1870,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1911,7 +1911,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -1967,7 +1967,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2012,7 +2012,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2067,7 +2067,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2112,7 +2112,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2167,7 +2167,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2205,14 +2205,14 @@ class _GridHeaderState extends State<AddReferentDocument> {
                       if (businessOtherID != null) {
                         var token = await storage.read(key: 'user_token');
                         try {
-                          final Response response = await api().post(
+                          await api().post(
                             Uri.parse(baseURLInternal +
                                 'loandocuments/' +
                                 businessOtherID +
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2276,7 +2276,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {
@@ -2317,7 +2317,7 @@ class _GridHeaderState extends State<AddReferentDocument> {
                                 '/delete'),
                             headers: {
                               "contentType": "application/json",
-                              "Authorization": "Bearer " + token
+                              "Authorization": "Bearer $token"
                             },
                           );
                           setState(() {

@@ -46,7 +46,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
     var listUserRoles = storage.read(key: 'roles');
     listUserRoles.then(
       (value) => setState(() {
-        userRoles = jsonDecode(value);
+        userRoles = jsonDecode("$value");
         arrayRoles = userRoles;
       }),
     );
@@ -70,7 +70,7 @@ class _CardDetailLoanState extends State<CardDetailLoan> {
       Uri.parse(baseURLInternal + 'loanRequests/Applications/' + list['rcode']),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
+        "Authorization": "Bearer $token"
       },
     );
     final parsed = jsonDecode(response.body);

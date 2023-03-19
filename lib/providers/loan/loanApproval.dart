@@ -137,7 +137,7 @@ class LoanApproval with ChangeNotifier {
               baseURLInternal + 'loanRequests/post/' + rcode + '/Approve'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           },
           body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);
@@ -178,7 +178,7 @@ class LoanApproval with ChangeNotifier {
               baseURLInternal + 'loanRequests/post/' + rcode + '/Disapprove'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer " + "$token"
           },
           body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);
@@ -214,7 +214,7 @@ class LoanApproval with ChangeNotifier {
           Uri.parse(baseURLInternal + 'loanRequests/post/' + rcode + '/Return'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           },
           body: json.encode(bodyRow));
       final parsed = jsonDecode(response.body);

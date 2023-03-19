@@ -260,7 +260,7 @@ class _CustomerRegister extends State {
         Uri.parse(baseURLInternal + 'valuelists/idtypes'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);
@@ -284,7 +284,7 @@ class _CustomerRegister extends State {
         Uri.parse(baseURLInternal + 'addresses/provinces'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);
@@ -308,7 +308,7 @@ class _CustomerRegister extends State {
         Uri.parse(baseURLInternal + 'addresses/districts/' + idProvince),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);
@@ -337,7 +337,7 @@ class _CustomerRegister extends State {
         Uri.parse(baseURLInternal + 'addresses/communes/' + idDistrict),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);
@@ -363,7 +363,7 @@ class _CustomerRegister extends State {
         Uri.parse(baseURLInternal + 'addresses/Villages/' + idCommune),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);
@@ -836,7 +836,7 @@ class _CustomerRegister extends State {
                                   baseURLInternal + 'addresses/provinces'),
                               headers: {
                                 "Content-Type": "application/json",
-                                "Authorization": "Bearer " + token
+                                "Authorization": "Bearer $token"
                               },
                             );
                             list = jsonDecode(response.body);

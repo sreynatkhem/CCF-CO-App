@@ -149,7 +149,7 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
           Uri.parse(baseURLInternal + 'Customers/' + '$ccode'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           },
           body: json.encode(boyrow));
       if (response.statusCode == 201) {
@@ -175,7 +175,7 @@ class ListCustomerRegistrationProvider with ChangeNotifier {
         Uri.parse(baseURLInternal + 'customers/' + customerID),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final parsed = jsonDecode(response.body);

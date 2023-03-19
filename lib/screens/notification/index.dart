@@ -15,7 +15,8 @@ import 'package:chokchey_finance/utils/storages/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
-import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
+import 'package:slide_popup_dialog_null_safety/slide_popup_dialog.dart'
+    as slideDialog;
 
 import 'messageFromCEO.dart';
 

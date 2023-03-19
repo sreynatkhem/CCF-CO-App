@@ -48,7 +48,7 @@ class LoginProvider with ChangeNotifier {
         _isFetching = false;
         final bodyRow = "{\n    \"upassword\": \"$upassword\"\n}\n";
         final Response response = await api().post(
-          Uri.parse(baseURLInternal + 'Users/ChangePassword/' + user_ucode),
+          Uri.parse(baseURLInternal + 'Users/ChangePassword/$user_ucode'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token

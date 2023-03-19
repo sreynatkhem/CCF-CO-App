@@ -227,7 +227,7 @@ class _LoanRegister extends State {
           Uri.parse(baseURLInternal + 'loans'),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           },
           body: json.encode(boyrow));
       final parsed = jsonDecode(response.body);
@@ -337,10 +337,10 @@ class _LoanRegister extends State {
 
     try {
       final Response response = await api().get(
-        Uri.parse(baseURLInternal + 'valuelists/customers/' + userUcode),
+        Uri.parse(baseURLInternal + 'valuelists/customers/' + "$userUcode"),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);
@@ -365,7 +365,7 @@ class _LoanRegister extends State {
         Uri.parse(baseURLInternal + 'valuelists/currencies'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);
@@ -385,7 +385,7 @@ class _LoanRegister extends State {
         Uri.parse(baseURLInternal + 'valuelists/loanproducts'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
+          "Authorization": "Bearer $token"
         },
       );
       final list = jsonDecode(response.body);

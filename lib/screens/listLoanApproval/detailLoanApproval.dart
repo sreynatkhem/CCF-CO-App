@@ -122,7 +122,7 @@ class _CardDetailLoanRegitrationState extends State<CardDetailLoanRegitration> {
               baseURLInternal + 'loanDocuments/byloan/' + locode['lcode']),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
+            "Authorization": "Bearer $token"
           });
       final parsed = jsonDecode(response.body);
       setState(() {

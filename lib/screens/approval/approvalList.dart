@@ -130,7 +130,7 @@ class _ApprovalListsState extends State<ApprovalLists>
     });
     try {
       final storage = new FlutterSecureStorage();
-      String user_id = await storage.read(key: 'user_id');
+      String? user_id = await storage.read(key: 'user_id');
       var headers = {'Content-Type': 'application/json'};
       var request = http.Request('POST', Uri.parse(baseUrl + 'LRA0002'));
       request.body =

@@ -262,7 +262,7 @@ class _ListLoanApprovalsState extends State<ListLoanApprovals> {
       };
       final Response response = await api().get(
         Uri.parse(
-            baseURLInternal + 'valuelists/users/co/' + userUcode + '/' + ''),
+            baseURLInternal + 'valuelists/users/co/' + "$userUcode" + '/' + ''),
         headers: headers,
       );
       if (response.statusCode == 200) {
